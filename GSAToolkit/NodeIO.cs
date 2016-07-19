@@ -15,8 +15,6 @@ namespace GSAToolkit
         {
             ids = new List<string>();
 
-            Project.ActiveProject.MergeWithin(0.00000000001);
-
             foreach (Node n in nodes)
             {
                 string cmd;

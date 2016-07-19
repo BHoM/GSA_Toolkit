@@ -24,12 +24,12 @@ namespace GSAToolkit
         /// <returns></returns>
         public static bool GetBars(ComAuto GSA, out List<Bar> outputBars, string barNumbers = "all")
         {
-            ObjectManager<int, Bar> bars = new ObjectManager<int, Bar>(Utils.NUM_KEY, FilterOption.UserData);
-            ObjectManager<SectionProperty> sections = new ObjectManager<SectionProperty>();
-            ObjectManager<BarRelease> releases = new ObjectManager<BarRelease>();
-            ObjectManager<BarConstraint> constraints = new ObjectManager<BarConstraint>();
-            ObjectManager<Material> materials = new ObjectManager<Material>();
-            ObjectManager<int, Node> nodes = new ObjectManager<int, Node>(Utils.NUM_KEY, FilterOption.UserData);
+            ObjectManager<int, Bar> bars = new ObjectManager<int, Bar>(Project.ActiveProject, Utils.NUM_KEY, FilterOption.UserData);
+            ObjectManager<SectionProperty> sections = new ObjectManager<SectionProperty>(Project.ActiveProject);
+            ObjectManager<BarRelease> releases = new ObjectManager<BarRelease>(Project.ActiveProject);
+            ObjectManager<BarConstraint> constraints = new ObjectManager<BarConstraint>(Project.ActiveProject);
+            ObjectManager<Material> materials = new ObjectManager<Material>(Project.ActiveProject);
+            ObjectManager<int, Node> nodes = new ObjectManager<int, Node>(Project.ActiveProject, Utils.NUM_KEY, FilterOption.UserData);
 
             int maxIndex = GSA.GwaCommand("HIGHEST, EL");
             int[] potentialBeamRefs = new int[maxIndex];
@@ -66,8 +66,6 @@ namespace GSAToolkit
             ids = new List<string>();
             List<string> nodeIDs = new List<string>();
             List<string> secProps = PropertyIO.GetSectionPropertyStringList(GSA);
-
-            Project.ActiveProject.MergeWithin(0.00000000001);
 
             foreach (Bar bar in str_bars)
             {
@@ -120,73 +118,6 @@ namespace GSAToolkit
             GSA.UpdateViews();
             return true;
         }
-
-        /// <summary>
-        /// Create GSA bars from ALL bars in project
-        /// </summary>
-        /// <returns></returns>
-        public static bool CreateBars2(ComAuto GSA, List<Bar> str_bars, out List<string> ids)
-        {
-            ids = new List<string>();
-            List<string> nodeIDs = new List<string>();
-            List<string> secProps = PropertyIO.GetSectionPropertyStringList(GSA);
-
-            Project.ActiveProject.MergeWithin(0.00000000001);
-
-            str_bars = new BHoM.Global.ObjectFilter<Bar>().ToList();
-
-            foreach (Bar bar in str_bars)
-            {
-                int index = int.Parse(bar.Name);
-                string name = bar.Name;
-                string type = "BEAM";
-                string sectionPropertyIndex = "";
-
-                foreach (string secPropString in secProps)
-                    if (PropertyIO.GetDataStringFromSecPropStr(secPropString, 3) == bar.SectionProperty.Name)
-                        sectionPropertyIndex = PropertyIO.GetDataStringFromSecPropStr(secPropString, 1);
-
-                if (sectionPropertyIndex == "")
-                {
-                    PropertyIO.SetSectionProperty(GSA, bar.SectionProperty, out sectionPropertyIndex);
-                    secProps.Add(PropertyIO.GetSectionPropertyString(GSA, int.Parse(sectionPropertyIndex)));
-                }
-
-                int group = 0;
-                int startIndex = int.Parse(bar.StartNode.Name);
-                int endIndex = int.Parse(bar.EndNode.Name);
-                string orientationAngle = bar.OrientationAngle.ToString();
-                string startR = "FFFFFF";
-                string endR = "FFFFFF";
-                string dummy = "";
-
-                ids.Add(index.ToString());
-
-                if (GSA.GwaCommand("EXIST, NODE, " + startIndex) == 0)
-                    NodeIO.CreateNodes(GSA, new List<Node>() { bar.StartNode }, out nodeIDs);
-
-                if (GSA.GwaCommand("EXIST, NODE, " + endIndex) == 0)
-                    NodeIO.CreateNodes(GSA, new List<Node>() { bar.EndNode }, out nodeIDs);
-
-                string command = "EL.2";
-
-                string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + sectionPropertyIndex + ", " + group + ", " + startIndex + ", " + endIndex + " , 0 ," + orientationAngle + ", RLS, " + startR + " , " + endR + ", NO_OFFSET," + dummy;
-
-                //string str = "EL.2, 1,, NO_RGB , BEAM , 1, 1, 1, 2 , 0 ,0, RLS, FFFFFF , FFFFFF, NO_OFFSET, ";
-                dynamic commandResult = GSA.GwaCommand(str);
-
-                if (1 == (int)commandResult) continue;
-                else
-                {
-                    Utils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
-                    return false;
-                }
-            }
-
-            GSA.UpdateViews();
-            return true;
-        }
-
 
         public static string CreateReleaseString(NodeConstraint bhomData)
         {

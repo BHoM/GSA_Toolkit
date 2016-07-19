@@ -7,7 +7,7 @@
         <member name="M:BHoM.Geometry.GeometryBase.ShallowClone">
             <summary>Create a shallow copy of the object</summary>
         </member>
-        <member name="M:BHoM.Geometry.GeometryBase.FromJSON(System.String)">
+        <member name="M:BHoM.Geometry.GeometryBase.FromJSON(System.String,BHoM.Global.Project)">
             <summary>
             Creates a geometry object from a json format string
             </summary>
@@ -614,7 +614,7 @@
             Method which convert the object as a Json string
             </summary>
         </member>
-        <member name="M:BHoM.Global.BHoMObject.FromJSON(System.String)">
+        <member name="M:BHoM.Global.BHoMObject.FromJSON(System.String,BHoM.Global.Project)">
             <summary>
             Method which convert the object as a Json string
             </summary>
@@ -635,7 +635,7 @@
             
             </summary>
         </member>
-        <member name="M:BHoM.Global.ObjectFilter`1.#ctor">
+        <member name="M:BHoM.Global.ObjectFilter`1.#ctor(BHoM.Global.Project)">
             <summary>
             
             </summary>
@@ -687,7 +687,7 @@
             </summary>
             <typeparam name="TValue">Type of BHoMObject</typeparam>
         </member>
-        <member name="M:BHoM.Global.ObjectManager`1.#ctor">
+        <member name="M:BHoM.Global.ObjectManager`1.#ctor(BHoM.Global.Project)">
             <summary>
             Initialises a new object manager where the BHoM object name is used as the default key
             </summary>
@@ -700,7 +700,7 @@
             <typeparam name="TKey">Type of unique identifier</typeparam>
             <typeparam name="TValue">Type of BHoMObject</typeparam>
         </member>
-        <member name="M:BHoM.Global.ObjectManager`2.#ctor(System.String,BHoM.Global.FilterOption)">
+        <member name="M:BHoM.Global.ObjectManager`2.#ctor(BHoM.Global.Project,System.String,BHoM.Global.FilterOption)">
             <summary>
             Initialises a new object manager based on the input name and option
             </summary>
@@ -1154,6 +1154,9 @@
             Node Number
             </summary>
             <summary>Node position as a point object</summary>
+        </member>
+        <member name="P:BHoM.Structural.Node.Mass">
+            <summary>Node mass</summary>
         </member>
         <member name="P:BHoM.Structural.Node.Constraint">
             <summary>Node constraint (support/restraint)</summary>
@@ -1625,6 +1628,12 @@
             <summary>
             Prestress load on a bar
             </summary>
+        </member>
+        <member name="P:BHoM.Structural.Loads.GeometricalLoad.Force">
+            <summary>Force - fx, fy, fz defined as a BHoM.Geometry.Vector</summary>
+        </member>
+        <member name="P:BHoM.Structural.Loads.GeometricalLoad.Moment">
+            <summary>Moment - mx, my, mz defined as a BHoM.Geometry.Vector</summary>
         </member>
         <member name="T:BHoM.Structural.Loads.ILoad">
             <summary>
@@ -2379,7 +2388,10 @@
         <member name="P:BHoM.Structural.SectionProperties.SectionProperty.MassPerMetre">
             <summary>Mass per metre based on section properties</summary>
         </member>
-        <member name="M:BHoM.Structural.SectionProperties.SectionProperty.LoadFromDB(System.String)">
+        <member name="P:BHoM.Structural.SectionProperties.SectionProperty.Area">
+            <summary>Explicitly defined area</summary>
+        </member>
+        <member name="M:BHoM.Structural.SectionProperties.SectionProperty.LoadFromDB(BHoM.Global.Project,System.String)">
             <summary>
             Searches for the input name in the selected database and returns the corresponding section
             </summary>
