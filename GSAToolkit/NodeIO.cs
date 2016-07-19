@@ -23,15 +23,16 @@ namespace GSAToolkit
                 int ID = int.Parse(n.Name);
                 string restraint = GetRestraintString(n);
                 ids.Add(n.Name.ToString());
+                string command = "NODE.2";
 
-                cmd = "NODE.2, " + ID + ", , NO_RGB, " + n.X + " , " + n.Y + " , " + n.Z + ", NO_GRID, " + 0 + ", REST, 0 , 0 , 0 , 0 , 0 , 0, STIFF,0,0,0,0,0,0";
+                cmd = command + ", " + ID + ", , NO_RGB, " + n.X + " , " + n.Y + " , " + n.Z + ", NO_GRID, " + 0 + ", REST," + restraint + ", STIFF,0,0,0,0,0,0";
                 //cmd = "NODE.2, 1 , , NO_RGB,0 , 2 , 0, NO_GRID,0, REST,0,0,0,0,0,0, STIFF,0,0,0,0,0,0";
                 dynamic commandResult = GSA.GwaCommand(cmd);
 
                 if (1 == (int)commandResult) continue;
                 else
                 {
-                    //SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
+                    Utils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
                     return false;
                 }
             }

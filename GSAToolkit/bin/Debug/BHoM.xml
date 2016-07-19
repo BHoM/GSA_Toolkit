@@ -903,7 +903,7 @@
             <summary>Type of DOF (linear/non-linear etc)</summary>
         </member>
         <member name="P:BHoM.Structural.DOF.Value">
-            <summary>DOF value</summary>
+            <summary>DOF value, -1 for fixed, 0 for free</summary>
         </member>
         <member name="M:BHoM.Structural.DOF.#ctor">
             <summary>Constructs an empty DOF object</summary>
