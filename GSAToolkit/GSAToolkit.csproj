@@ -53,11 +53,13 @@
     <Compile Include="BarIO.cs" />
     <Compile Include="LoadcaseIO.cs" />
     <Compile Include="LoadIO.cs" />
+    <Compile Include="MaterialIO.cs" />
     <Compile Include="NodeIO.cs" />
     <Compile Include="ObjectAdapter.cs" />
+    <Compile Include="PanelIO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyIO.cs" />
-    <Compile Include="Utilities\Utils.cs" />
+    <Compile Include="Utilities\GSAUtils.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

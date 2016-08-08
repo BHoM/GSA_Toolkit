@@ -11,7 +11,7 @@ namespace GSAToolkit
 {
     class LoadcaseIO
     {
-        static public bool AddLoadCases(ComAuto gsa, List<ICase> cases)
+        static public bool AddLoadCases(ComAuto GSA, List<ICase> cases)
         {
             foreach (ICase icase in cases)
             {
@@ -28,12 +28,12 @@ namespace GSAToolkit
 
                 str = command + "," + caseNo + "," + title + "," + type + "," + bridge;
 
-                dynamic commandResult = gsa.GwaCommand(str);
+                dynamic commandResult = GSA.GwaCommand(str);
 
                 if (1 == (int)commandResult) continue;
                 else
                 {
-                    Utils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
+                    GSAUtils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
                     return false;
                 }
             }
@@ -43,19 +43,19 @@ namespace GSAToolkit
         private static string GSALoadType(LoadNature loadNature)
         {
             if (loadNature == LoadNature.Dead)
-                return Utils.GsaEnums.LoadType.DEAD.ToString();
+                return GSAUtils.GsaEnums.LoadType.DEAD.ToString();
             if (loadNature == LoadNature.Live)
-                return Utils.GsaEnums.LoadType.IMPOSED.ToString();
+                return GSAUtils.GsaEnums.LoadType.IMPOSED.ToString();
             if (loadNature == LoadNature.Other)
-                return Utils.GsaEnums.LoadType.UNDEF.ToString();
+                return GSAUtils.GsaEnums.LoadType.UNDEF.ToString();
             if (loadNature == LoadNature.Seismic)
-                return Utils.GsaEnums.LoadType.SEISMIC.ToString();
+                return GSAUtils.GsaEnums.LoadType.SEISMIC.ToString();
             if (loadNature == LoadNature.Snow)
-                return Utils.GsaEnums.LoadType.SNOW.ToString();
+                return GSAUtils.GsaEnums.LoadType.SNOW.ToString();
             if (loadNature == LoadNature.Temperature)
-                return Utils.GsaEnums.LoadType.IMPOSED.ToString();
+                return GSAUtils.GsaEnums.LoadType.IMPOSED.ToString();
             if (loadNature == LoadNature.Wind)
-                return Utils.GsaEnums.LoadType.WIND.ToString();
+                return GSAUtils.GsaEnums.LoadType.WIND.ToString();
             return "";
         }
     }

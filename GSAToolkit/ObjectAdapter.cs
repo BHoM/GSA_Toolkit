@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using BHoM.Structural;
 using BHoM.Structural.Loads;
+using BHoM.Materials;
+using BHoM.Structural.SectionProperties;
 using Interop.gsa_8_7;
 
 namespace GSAToolkit
@@ -24,7 +26,11 @@ namespace GSAToolkit
         public GSAAdapter(string filePath)
         {
             GSA = new ComAuto();
-            short result = GSA.Open(filePath);
+            short result;
+            if (filePath != "")
+                 result = GSA.Open(filePath);
+            else
+                result = GSA.NewFile();           
         }
 
         /// <summary>
@@ -85,6 +91,11 @@ namespace GSAToolkit
             throw new NotImplementedException();
         }
 
+        public bool GetGrids(out List<Grid> grids, string option = "")
+        {
+            throw new NotImplementedException();
+        }
+
         public bool SetNodes(List<Node> nodes, out List<string> ids, string option = "")
         {
             return NodeIO.CreateNodes(GSA, nodes, out ids);
@@ -97,8 +108,7 @@ namespace GSAToolkit
 
         public bool SetPanels(List<Panel> panels, out List<string> ids, string option = "")
         {
-            //return PanelIO.CreatePanels(Robot, panels, out ids);
-            throw new NotImplementedException();
+            return PanelIO.CreatePanels(GSA, panels, out ids);
         }
 
         public bool SetOpenings(List<Opening> opening, out List<string> ids, string option = "")
@@ -107,6 +117,11 @@ namespace GSAToolkit
         }
 
         public bool SetLevels(List<Storey> stores, out List<string> ids, string option = "")
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SetGrids(List<Grid> grids, out List<string> ids, string option = "")
         {
             throw new NotImplementedException();
         }

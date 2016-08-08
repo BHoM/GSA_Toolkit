@@ -706,6 +706,7 @@
             </summary>
             <param name="name">Name of the BHoM Property or userdata name</param>
             <param name="option">Fliter option defines the type of key to be used</param>
+            
         </member>
         <member name="M:BHoM.Global.ObjectManager`2.GetUniqueNumber">
             <summary>
@@ -817,6 +818,18 @@
             IStructuralObject implemented
             </summary>
         </member>
+        <member name="P:BHoM.Structural.Opening.Edges">
+            <summary>
+            A group of curves which define the perimeter of panel object
+            </summary>
+        </member>
+        <member name="M:BHoM.Structural.Opening.#ctor(BHoM.Geometry.Group{BHoM.Geometry.Curve})">
+            <summary>
+            Creates a panel object from a group of curve objects. Note: Curves must be able to join together to form a single closed curve or panel will be invalid
+            </summary>
+            <param name="edges"></param>
+            <param name="number"></param>
+        </member>
         <member name="T:BHoM.Structural.Panel">
             <summary>
             Panel Class
@@ -827,7 +840,8 @@
             A group of curves which define the perimeter of panel object
             </summary>
         </member>
-        <member name="M:BHoM.Structural.Panel.#ctor(BHoM.Geometry.Group{BHoM.Geometry.Curve})">
+        <!-- Badly formed XML comment ignored for member "M:BHoM.Structural.Panel.#ctor(BHoM.Geometry.Group{BHoM.Geometry.Curve})" -->
+        <member name="M:BHoM.Structural.Panel.#ctor(System.Collections.Generic.List{BHoM.Geometry.Curve})">
             <summary>
             Creates a panel object from a group of curve objects. Note: Curves must be able to join together to form a single closed curve or panel will be invalid
             </summary>
@@ -964,7 +978,7 @@
         <member name="P:BHoM.Structural.Storey.Number">
             <summary>Storey number</summary>
         </member>
-        <member name="P:BHoM.Structural.Storey.Level">
+        <member name="P:BHoM.Structural.Storey.Elevation">
             <summary>Storey level (in metres)</summary>
         </member>
         <member name="P:BHoM.Structural.Storey.Name">
@@ -972,6 +986,11 @@
         </member>
         <member name="P:BHoM.Structural.Storey.Height">
             <summary>Storey height</summary>
+        </member>
+        <member name="P:BHoM.Structural.Storey.Plane">
+            <summary>
+            
+            </summary>
         </member>
         <member name="M:BHoM.Structural.Storey.#ctor">
             <summary>
@@ -1154,9 +1173,6 @@
             Node Number
             </summary>
             <summary>Node position as a point object</summary>
-        </member>
-        <member name="P:BHoM.Structural.Node.Mass">
-            <summary>Node mass</summary>
         </member>
         <member name="P:BHoM.Structural.Node.Constraint">
             <summary>Node constraint (support/restraint)</summary>
@@ -1599,19 +1615,12 @@
             Varying load distributed over an area
             </summary>
         </member>
-        <member name="T:BHoM.Structural.Loads.BarGravityLoad">
-            <summary>
-            Gravity load
-            </summary>
-        </member>
         <member name="T:BHoM.Structural.Loads.BarPointLoad">
             <summary>
-            Point load along a bar
-            </summary>
-        </member>
-        <member name="T:BHoM.Structural.Loads.BarUniformlyDistributedLoad">
+            Gravity load
+            </summary>  
             <summary>
-            Uniform load on bar
+            Point load along a bar
             </summary>
         </member>
         <member name="T:BHoM.Structural.Loads.BarTemperatureLoad">
@@ -1629,11 +1638,11 @@
             Prestress load on a bar
             </summary>
         </member>
-        <member name="P:BHoM.Structural.Loads.GeometricalLoad.Force">
+        <member name="P:BHoM.Structural.Loads.GeometricalAreaLoad.Force">
             <summary>Force - fx, fy, fz defined as a BHoM.Geometry.Vector</summary>
         </member>
-        <member name="P:BHoM.Structural.Loads.GeometricalLoad.Moment">
-            <summary>Moment - mx, my, mz defined as a BHoM.Geometry.Vector</summary>
+        <member name="P:BHoM.Structural.Loads.GeometricalLineLoad.ForceA">
+            <summary>Force - fx, fy, fz defined as a BHoM.Geometry.Vector</summary>
         </member>
         <member name="T:BHoM.Structural.Loads.ILoad">
             <summary>
@@ -2444,16 +2453,19 @@
         </member>
         <member name="P:BHoM.Structural.SectionProperties.SectionProperty.Shape">
             <summary>Section type</summary>
+            
         </member>
         <member name="P:BHoM.Structural.SectionProperties.SectionProperty.SectionMaterial">
             <summary>
             Type of material
             </summary>
+            
         </member>
         <member name="P:BHoM.Structural.SectionProperties.SectionProperty.Orientation">
             <summary>
             Orientation
             </summary>
+            
         </member>
         <member name="P:BHoM.Structural.SectionProperties.SectionProperty.GrossArea">
             <summary>Cross sectional area</summary>
@@ -2499,6 +2511,7 @@
         </member>
         <member name="P:BHoM.Structural.SectionProperties.SectionProperty.Description">
             <summary>Information regarding section property type for the user</summary>
+            
         </member>
         <member name="T:BHoM.Structural.SectionProperties.SteelUCSection">
             <summary>

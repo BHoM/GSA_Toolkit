@@ -10,7 +10,7 @@ namespace GSAToolkit
     /// <summary>
     /// 
     /// </summary>
-    public static class Utils
+    public static class GSAUtils
     {
         public const string NUM_KEY = "GSA Number";
 
@@ -176,6 +176,16 @@ namespace GSAToolkit
                 NOTIONAL,
                 SEISMIC,
                 UNDEF              
+            }
+
+            public enum MaterialType
+            {
+                MT_STEEL,
+                MT_CONCRETE,
+                MT_ALUMINIUM,
+                MT_GLASS,
+                MT_TIMBER,
+                MT_UNDEF
             }
 
 

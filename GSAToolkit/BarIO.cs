@@ -24,12 +24,12 @@ namespace GSAToolkit
         /// <returns></returns>
         public static bool GetBars(ComAuto GSA, out List<Bar> outputBars, string barNumbers = "all")
         {
-            ObjectManager<int, Bar> bars = new ObjectManager<int, Bar>(Project.ActiveProject, Utils.NUM_KEY, FilterOption.UserData);
+            ObjectManager<int, Bar> bars = new ObjectManager<int, Bar>(Project.ActiveProject, GSAUtils.NUM_KEY, FilterOption.UserData);
             ObjectManager<SectionProperty> sections = new ObjectManager<SectionProperty>(Project.ActiveProject);
             ObjectManager<BarRelease> releases = new ObjectManager<BarRelease>(Project.ActiveProject);
             ObjectManager<BarConstraint> constraints = new ObjectManager<BarConstraint>(Project.ActiveProject);
             ObjectManager<Material> materials = new ObjectManager<Material>(Project.ActiveProject);
-            ObjectManager<int, Node> nodes = new ObjectManager<int, Node>(Project.ActiveProject, Utils.NUM_KEY, FilterOption.UserData);
+            ObjectManager<int, Node> nodes = new ObjectManager<int, Node>(Project.ActiveProject, GSAUtils.NUM_KEY, FilterOption.UserData);
 
             int maxIndex = GSA.GwaCommand("HIGHEST, EL");
             int[] potentialBeamRefs = new int[maxIndex];
@@ -57,6 +57,7 @@ namespace GSAToolkit
             return true;
         }
 
+
         /// <summary>
         /// Create GSA bars
         /// </summary>
@@ -64,53 +65,39 @@ namespace GSAToolkit
         public static bool CreateBars(ComAuto GSA, List<Bar> str_bars, out List<string> ids)
         {
             ids = new List<string>();
-            List<string> nodeIDs = new List<string>();
             List<string> secProps = PropertyIO.GetSectionPropertyStringList(GSA);
+            List<string> materials = MaterialIO.GetMaterialStringList(GSA);
+            List<string> nodeIds = new List<string>();
 
             foreach (Bar bar in str_bars)
             {
-                int index = int.Parse(bar.Name);
+                string command = "EL.2";
+                string index = bar.Name;
                 string name = bar.Name;
                 string type = "BEAM";
-                string sectionPropertyIndex = "";
-
-                foreach (string secPropString in secProps)
-                    if (PropertyIO.GetDataStringFromSecPropStr(secPropString, 3) == bar.SectionProperty.Name)
-                        sectionPropertyIndex = PropertyIO.GetDataStringFromSecPropStr(secPropString, 1);
-
-                if (sectionPropertyIndex == "")
-                {
-                    PropertyIO.SetSectionProperty(GSA, bar.SectionProperty, out sectionPropertyIndex);
-                    secProps.Add(PropertyIO.GetSectionPropertyString(GSA, int.Parse(sectionPropertyIndex)));
-                }
-
+                string sectionPropertyIndex = PropertyIO.GetOrCreateSectionPropertyIndex(GSA, bar, secProps, materials);
                 int group = 0;
-                int startIndex = int.Parse(bar.StartNode.Name);
-                int endIndex = int.Parse(bar.EndNode.Name);
+
+                NodeIO.CreateNodes(GSA, new List<Node>() { bar.StartNode, bar.EndNode }, out nodeIds);
+                string startIndex = nodeIds[0];
+                string endIndex = nodeIds[1];
+
                 string orientationAngle = bar.OrientationAngle.ToString();
-                string startR = "FFFFFF";
-                string endR = "FFFFFF";
+                string startR = CreateReleaseString(bar.StartNode);
+                string endR = CreateReleaseString(bar.EndNode);
                 string dummy = "";
 
-                ids.Add(index.ToString());
-
-                if (GSA.GwaCommand("EXIST, NODE, " + startIndex)==0)
-                    NodeIO.CreateNodes(GSA, new List<Node>() { bar.StartNode }, out nodeIDs);
-
-                if (GSA.GwaCommand("EXIST, NODE, " + endIndex)==0)
-                    NodeIO.CreateNodes(GSA, new List<Node>() { bar.EndNode }, out nodeIDs);
-
-                string command = "EL.2";
-
                 string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + sectionPropertyIndex + ", " + group + ", " + startIndex + ", " + endIndex + " , 0 ," + orientationAngle + ", RLS, " + startR + " , " + endR + ", NO_OFFSET," + dummy;
+                dynamic commandResult = GSA.GwaCommand(str); //"EL.2, 1,, NO_RGB , BEAM , 1, 1, 1, 2 , 0 ,0, RLS, FFFFFF , FFFFFF, NO_OFFSET, "
 
-                //string str = "EL.2, 1,, NO_RGB , BEAM , 1, 1, 1, 2 , 0 ,0, RLS, FFFFFF , FFFFFF, NO_OFFSET, ";
-                dynamic commandResult = GSA.GwaCommand(str);
-
-                if (1 == (int)commandResult) continue;
+                if (1 == (int)commandResult)
+                {
+                    ids.Add(index);
+                    continue;
+                }
                 else
                 {
-                    Utils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
+                    GSAUtils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
                     return false;
                 }
             }
@@ -119,45 +106,28 @@ namespace GSAToolkit
             return true;
         }
 
-        public static string CreateReleaseString(NodeConstraint bhomData)
+
+
+        public static string CreateReleaseString(Node node)
         {
-            return "FFFFFF";
+            string UX = "F";
+            string UY = "F";
+            string UZ = "F";
+            string RX = "F";
+            string RY = "F";
+            string RZ = "F";
+
+            if (node.IsConstrained)
+            {
+                UX = ((node.Constraint.UX.Type == DOFType.Fixed) ? "R" : "F").ToString();
+                UY = ((node.Constraint.UY.Type == DOFType.Fixed) ? "R" : "F").ToString();
+                UZ = ((node.Constraint.UZ.Type == DOFType.Fixed) ? "R" : "F").ToString();
+                RX = ((node.Constraint.RX.Type == DOFType.Fixed) ? "R" : "F").ToString();
+                RY = ((node.Constraint.RY.Type == DOFType.Fixed) ? "R" : "F").ToString();
+                RZ = ((node.Constraint.RZ.Type == DOFType.Fixed) ? "R" : "F").ToString();
+            }
+            return UX + UY + UZ + RX + RY + RZ;
         }
 
-        ///// <summary>
-        ///// Get the  robot end release value from the degree of freedom type
-        ///// </summary>
-        ///// <param name="endRelease"></param>
-        ///// <returns></returns>
-        //public static string GetReleaseType(DOFType endRelease)
-        //{
-        //    switch (endRelease)
-        //    {
-        //        case DOFType.Spring:
-        //            return IRobotBarEndReleaseValue.I_BERV_ELASTIC;
-        //        case DOFType.SpringNegative:
-        //            return IRobotBarEndReleaseValue.I_BERV_ELASTIC_MINUS;
-        //        case DOFType.SpringPositive:
-        //            return IRobotBarEndReleaseValue.I_BERV_ELASTIC_PLUS;
-        //        case DOFType.Free:
-        //            return IRobotBarEndReleaseValue.I_BERV_NONE;
-        //        case DOFType.FixedNegative:
-        //            return IRobotBarEndReleaseValue.I_BERV_MINUS;
-        //        case DOFType.FixedPositive:
-        //            return IRobotBarEndReleaseValue.I_BERV_PLUS;
-        //        case DOFType.Fixed:
-        //            return IRobotBarEndReleaseValue.I_BERV_STD;
-        //        case DOFType.NonLinear:
-        //            return IRobotBarEndReleaseValue.I_BERV_NONLINEAR;
-        //        case DOFType.SpringRelative:
-        //            return IRobotBarEndReleaseValue.I_BERV_ELASTIC_REDUCED;
-        //        case DOFType.SpringRelativeNegative:
-        //            return IRobotBarEndReleaseValue.I_BERV_ELASTIC_REDUCED_MINUS;
-        //        case DOFType.SpringRelativePositive:
-        //            return IRobotBarEndReleaseValue.I_BERV_ELASTIC_REDUCED_PLUS;
-        //        default:
-        //            return IRobotBarEndReleaseValue.I_BERV_NONE;
-        //    }
-        //}
     }
 }

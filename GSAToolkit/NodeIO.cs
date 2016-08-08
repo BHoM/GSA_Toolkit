@@ -15,24 +15,40 @@ namespace GSAToolkit
         {
             ids = new List<string>();
 
+            int highestIndex = GSA.GwaCommand("HIGHEST, NODE") + 1;
+
             foreach (Node n in nodes)
             {
                 string cmd;
-                int ID = int.Parse(n.Name);
-                string restraint = GetRestraintString(n);
-                ids.Add(n.Name.ToString());
                 string command = "NODE.2";
+                string ID = n.Name;
 
-                cmd = command + ", " + ID + ", , NO_RGB, " + n.X + " , " + n.Y + " , " + n.Z + ", NO_GRID, " + 0 + ", REST," + restraint + ", STIFF,0,0,0,0,0,0";
-                //cmd = "NODE.2, 1 , , NO_RGB,0 , 2 , 0, NO_GRID,0, REST,0,0,0,0,0,0, STIFF,0,0,0,0,0,0";
-                dynamic commandResult = GSA.GwaCommand(cmd);
-
-                if (1 == (int)commandResult) continue;
-                else
+                if (ID == null || ID == "" || ID == "0")
                 {
-                    Utils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
-                    return false;
+                    ID = (highestIndex + 1).ToString();
+                    highestIndex++;
                 }
+
+                if (GSA.GwaCommand("EXIST, NODE, " + n.Name) == 0)
+                {
+                    string restraint = GetRestraintString(n);
+
+                    string str = command + ", " + ID + ", , NO_RGB, " + n.X + " , " + n.Y + " , " + n.Z + ", NO_GRID, " + 0 + ", REST," + restraint + ", STIFF,0,0,0,0,0,0";
+                    dynamic commandResult = GSA.GwaCommand(str); //"NODE.2, 1 , , NO_RGB,0 , 2 , 0, NO_GRID,0, REST,0,0,0,0,0,0, STIFF,0,0,0,0,0,0"
+
+                    if (1 == (int)commandResult)
+                    {
+                        ids.Add(ID);
+                        continue;
+                    }
+                    else
+                    {
+                        GSAUtils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
+                        return false;
+                    }
+                }
+                else
+                    ids.Add(ID);
             }
             GSA.UpdateViews();
             return true;

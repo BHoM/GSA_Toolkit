@@ -5,4 +5,3 @@ C:\Users\jisaksso\Documents\GitHub\GSAToolkit\GSAToolkit\obj\Debug\GSAToolkit.pd
 C:\Users\jisaksso\Documents\GitHub\GSAToolkit\GSAToolkit\bin\Debug\BHoM.dll
 C:\Users\jisaksso\Documents\GitHub\GSAToolkit\GSAToolkit\bin\Debug\BHoM.pdb
 C:\Users\jisaksso\Documents\GitHub\GSAToolkit\GSAToolkit\bin\Debug\BHoM.xml
-C:\Users\jisaksso\Documents\GitHub\GSAToolkit\GSAToolkit\obj\Debug\GSAToolkit.csprojResolveAssemblyReference.cache

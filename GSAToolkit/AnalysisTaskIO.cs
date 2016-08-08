@@ -9,7 +9,7 @@ namespace GSAToolkit
 {
     public class AnalysisTaskIO
     {
-        static public bool AddAnalysisTask(ComAuto gsa, string taskNo, string name, string type, string stage, string anal_caseNo)
+        static public bool AddAnalysisTask(ComAuto GSA, string taskNo, string name, string type, string stage, string anal_caseNo)
         {
             string addTask;
             string command = "TASK";
@@ -67,9 +67,9 @@ namespace GSAToolkit
                      + ", 0"                 //shift 
                      + ", 1";                //stiff
 
-                dynamic commandResult = gsa.GwaCommand(addTask);
+                dynamic commandResult = GSA.GwaCommand(addTask);
                 if (1 == (int)commandResult) return true;
-                return Utils.CommandFailed(command);
+                return GSAUtils.CommandFailed(command);
             }
             else
             {
@@ -115,13 +115,13 @@ namespace GSAToolkit
                     + ", FF_SAVE_SPACER_FORCE_TO_ELEM"                          //Fix for GSA Build 45                
                     + ", DRCEFNSU";             //results
 
-                dynamic commandResult = gsa.GwaCommand(addTask);
+                dynamic commandResult = GSA.GwaCommand(addTask);
                 if (1 == (int)commandResult) return true;
-                return Utils.CommandFailed(command);
+                return GSAUtils.CommandFailed(command);
             }
         }
 
-        static public bool AddAnalysisCase(ComAuto gsa, string anal_caseNo, string name, string taskNo, string desc)
+        static public bool AddAnalysisCase(ComAuto GSA, string anal_caseNo, string name, string taskNo, string desc)
         {
             string addCase;
             string command = "ANAL";
@@ -132,9 +132,9 @@ namespace GSAToolkit
                 + "," + taskNo
                 + "," + desc;
 
-            dynamic commandResult = gsa.GwaCommand(addCase);
+            dynamic commandResult = GSA.GwaCommand(addCase);
             if (1 == (int)commandResult) return true;
-            return Utils.CommandFailed(command);
+            return GSAUtils.CommandFailed(command);
         }
     }
 }
