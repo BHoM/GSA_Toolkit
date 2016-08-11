@@ -1,0 +1,2 @@
+C:\BuroHappoldEngineeringGit\GSA_Toolkit\GSAToolkit\obj\Debug\GSA_Adapter.csprojResolveAssemblyReference.cache
+C:\BuroHappoldEngineeringGit\GSA_Toolkit\GSA_Adapter\obj\Debug\GSA_Adapter.csprojResolveAssemblyReference.cache

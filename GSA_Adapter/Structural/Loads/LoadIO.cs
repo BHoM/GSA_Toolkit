@@ -4,20 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Interop.gsa_8_7;
-using BHoM.Structural.Loads;
-using BHoM.Structural;
+using BHoMG = BHoM.Geometry;
+using BHoME = BHoM.Structural.Elements;
+using BHoML = BHoM.Structural.Loads;
+using BHoMB = BHoM.Base;
+using GSA_Adapter.Utility;
 
-namespace GSAToolkit
+namespace GSA_Adapter.Structural.Loads
 {
     public class LoadIO
     {
-        static public bool AddLoads(ComAuto GSA, List<ILoad> loads)
+        static public bool AddLoads(ComAuto GSA, List<BHoML.ILoad> loads)
         {
-            foreach (ILoad load in loads)
+            foreach (BHoML.ILoad load in loads)
             {
-                if (load is BarPrestressLoad)
+                if (load is BHoML.BarPrestressLoad)
                     AddPreStressLoad(GSA, load);
-                if (load is AreaUniformalyDistributedLoad)
+                if (load is BHoML.AreaUniformalyDistributedLoad)
                     AddFaceLoad(GSA, load);
                 else
                     AddGravityLoad(GSA, load);
@@ -26,9 +29,9 @@ namespace GSAToolkit
             return true;
 
         }
-        static public bool AddPreStressLoad(ComAuto GSA, ILoad load)
+        static public bool AddPreStressLoad(ComAuto GSA, BHoML.ILoad load)
         {
-            BarPrestressLoad psLoad = load as BarPrestressLoad;
+            BHoML.BarPrestressLoad psLoad = load as BHoML.BarPrestressLoad;
             string name = psLoad.Name;
             string list = CreateBarIDList(psLoad.Objects);
             string caseNo = psLoad.Loadcase.Number.ToString();
@@ -37,7 +40,7 @@ namespace GSAToolkit
             string command = "LOAD_BEAM_PRE.2";
             string str;
 
-            str = command + ",," + list + "," + caseNo + "," + value * GetUnitFactor(GSA, GSAUtils.GsaEnums.UnitType.FORCE);
+            str = command + ",," + list + "," + caseNo + "," + value * GetUnitFactor(GSA, Utils.GsaEnums.UnitType.FORCE);
 
             dynamic commandResult = GSA.GwaCommand(str);
             GSA.UpdateViews();
@@ -45,16 +48,16 @@ namespace GSAToolkit
             if (1 == (int)commandResult) return true;
             else
             {
-                GSAUtils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
+                Utils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
                 return false;
             }
         }
 
 
 
-        static public bool AddGravityLoad(ComAuto GSA, ILoad load)
+        static public bool AddGravityLoad(ComAuto GSA, BHoML.ILoad load)
         {
-            Load<Bar> gload = load as Load<Bar>;
+            BHoML.Load<BHoME.Bar> gload = load as BHoML.Load<BHoME.Bar>;
 
             string command = "LOAD_GRAVITY.2";
             string name = gload.Name;
@@ -72,14 +75,20 @@ namespace GSAToolkit
             if (1 == (int)commandResult) return true;
             else
             {
-                GSAUtils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
+                Utils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
                 return false;
             }
         }
 
-        static public bool AddFaceLoad(ComAuto GSA, ILoad load)
+        /// <summary>
+        /// ASSUMES Z DIRECTION CURRENTLY
+        /// </summary>
+        /// <param name="GSA"></param>
+        /// <param name="load"></param>
+        /// <returns></returns>
+        static public bool AddFaceLoad(ComAuto GSA, BHoML.ILoad load)
         {
-            AreaUniformalyDistributedLoad aLoad = load as AreaUniformalyDistributedLoad;
+            BHoML.AreaUniformalyDistributedLoad aLoad = load as BHoML.AreaUniformalyDistributedLoad;
 
             string command = "LOAD_2D_FACE";
             string name = aLoad.Name;
@@ -89,7 +98,7 @@ namespace GSAToolkit
             string type = "CONS";
             string proj = "NO";
             string dir = "Z";
-            string value = aLoad.PressureValue.ToString();
+            string value = aLoad.Pressure.U.ToString();
             string str;
 
             str = command + ",," + list + "," + caseNo + "," + axis + "," + type + "," + proj + "," + dir + "," + value;
@@ -99,12 +108,12 @@ namespace GSAToolkit
             if (1 == (int)commandResult) return true;
             else
             {
-                GSAUtils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
+                Utils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
                 return false;
             }
         }
 
-        static public double GetUnitFactor(ComAuto GSA, GSAUtils.GsaEnums.UnitType unitType)
+        static public double GetUnitFactor(ComAuto GSA, Utils.GsaEnums.UnitType unitType)
         {
             string iUnitFactor = GSA.GwaCommand("GET, UNIT_DATA, " + unitType.ToString());
 
@@ -115,20 +124,20 @@ namespace GSAToolkit
             return unitFactor;
         }
 
-        public static string CreateBarIDList(List<Bar> bars)
+        public static string CreateBarIDList(List<BHoME.Bar> bars)
         {
             string str = "";
-            foreach (Bar bar in bars)
+            foreach (BHoME.Bar bar in bars)
             {
                 str = str + " " + bar.Name;
             }
             return str;
         }
 
-        public static string CreatePanelIDList(List<Panel> panels)
+        public static string CreatePanelIDList(List<BHoME.Panel> panels)
         {
             string str = "";
-            foreach (Panel panel in panels)
+            foreach (BHoME.Panel panel in panels)
             {
                 str = str + " " + panel.Name;
             }

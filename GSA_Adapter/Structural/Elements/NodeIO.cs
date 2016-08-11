@@ -4,20 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Interop.gsa_8_7;
-using BHoM.Structural;
-using BHoM.Global;
+using BHoMB = BHoM.Base;
+using BHoME = BHoM.Structural.Elements;
+using BHoMP = BHoM.Structural.Properties;
+using GSA_Adapter.Utility;
 
-namespace GSAToolkit
+namespace GSA_Adapter.Structural.Elements
 {
     public class NodeIO
     {
-        public static bool CreateNodes(ComAuto GSA, List<Node> nodes, out List<string> ids)
+        public static bool CreateNodes(ComAuto GSA, List<BHoME.Node> nodes, out List<string> ids)
         {
             ids = new List<string>();
 
             int highestIndex = GSA.GwaCommand("HIGHEST, NODE") + 1;
 
-            foreach (Node n in nodes)
+            foreach (BHoME.Node n in nodes)
             {
                 string cmd;
                 string command = "NODE.2";
@@ -43,7 +45,7 @@ namespace GSAToolkit
                     }
                     else
                     {
-                        GSAUtils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
+                        Utils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
                         return false;
                     }
                 }
@@ -54,7 +56,7 @@ namespace GSAToolkit
             return true;
         }      
 
-        public static string GetRestraintString(Node node)
+        public static string GetRestraintString(BHoME.Node node)
         {
             int X = 0;
             int Y = 0;
@@ -65,12 +67,12 @@ namespace GSAToolkit
 
             if (node.IsConstrained)
             {
-                X = ((node.Constraint.UX.Type == DOFType.Fixed) ? 1 : 0);
-                Y = ((node.Constraint.UY.Type == DOFType.Fixed) ? 1 : 0);
-                Z = ((node.Constraint.UZ.Type == DOFType.Fixed) ? 1 : 0);
-                XX = ((node.Constraint.RX.Type == DOFType.Fixed) ? 1 : 0);
-                YY = ((node.Constraint.RY.Type == DOFType.Fixed) ? 1 : 0);
-                ZZ = ((node.Constraint.RZ.Type == DOFType.Fixed) ? 1 : 0);
+                X = ((node.Constraint.UX.Type == BHoMP.DOFType.Fixed) ? 1 : 0);
+                Y = ((node.Constraint.UY.Type == BHoMP.DOFType.Fixed) ? 1 : 0);
+                Z = ((node.Constraint.UZ.Type == BHoMP.DOFType.Fixed) ? 1 : 0);
+                XX = ((node.Constraint.RX.Type == BHoMP.DOFType.Fixed) ? 1 : 0);
+                YY = ((node.Constraint.RY.Type == BHoMP.DOFType.Fixed) ? 1 : 0);
+                ZZ = ((node.Constraint.RZ.Type == BHoMP.DOFType.Fixed) ? 1 : 0);
             }
 
             return X + "," + Y + "," + Z + "," + XX + "," + YY + "," + ZZ;

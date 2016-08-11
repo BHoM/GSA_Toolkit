@@ -4,10 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Interop.gsa_8_7;
-using BHoM.Structural;
-using BHoM.Geometry;
+using BHoMB = BHoM.Base;
+using BHoMG = BHoM.Geometry;
+using BHoME = BHoM.Structural.Elements;
+using BHoMP = BHoM.Structural.Properties;
+using BHoMM = BHoM.Materials;
+using GSA_Adapter.Structural.Properties;
+using GSA_Adapter.Utility;
 
-namespace GSAToolkit
+namespace GSA_Adapter.Structural.Elements
 {
     /// <summary>
     /// GSA panel class, for all panel objects and operations
@@ -18,14 +23,14 @@ namespace GSAToolkit
         /// Create GSA Panels
         /// </summary>
         /// <returns></returns>
-        public static bool CreatePanels(ComAuto GSA, List<Panel> str_panels, out List<string> ids)
+        public static bool CreatePanels(ComAuto GSA, List<BHoME.Panel> str_panels, out List<string> ids)
         {
             ids = new List<string>();
 
             List<string> props = PropertyIO.Get2DPropertyStringList(GSA);
             int highestIndex = GSA.GwaCommand("HIGHEST, EL") + 1;
 
-            foreach (Panel panel in str_panels)
+            foreach (BHoME.Panel panel in str_panels)
             {
                 string command = "";
                 if (panel.Vertices.Count == 4)
@@ -54,7 +59,7 @@ namespace GSAToolkit
                 }
                 else
                 {
-                    GSAUtils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
+                    Utils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
                     return false;
                 }
             }
@@ -63,7 +68,7 @@ namespace GSAToolkit
             return true;
         }
 
-        public static string GetPanelNodeIndexString(ComAuto GSA, Panel panel)
+        public static string GetPanelNodeIndexString(ComAuto GSA, BHoME.Panel panel)
         {
             string str = "";
             List<string> IDs;

@@ -4,15 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Interop.gsa_8_7;
-using BHoM.Structural.SectionProperties;
-using BHoM.Structural;
-using BHoM.Materials;
+using BHoME = BHoM.Structural.Elements;
+using BHoMP = BHoM.Structural.Properties;
+using BHoMM = BHoM.Materials;
+using GSA_Adapter.Utility;
 
-namespace GSAToolkit
+
+namespace GSA_Adapter.Structural.Properties
 {
     public class PropertyIO
     {
-        static public bool SetSectionProperty(ComAuto GSA, SectionProperty secProp, Material material, out string id)
+        static public bool SetSectionProperty(ComAuto GSA, BHoMP.SectionProperty secProp, BHoMM.Material material, out string id)
         {
             id = "";
             int index = GSA.GwaCommand("HIGHEST, PROP_SEC") + 1;
@@ -21,7 +23,7 @@ namespace GSAToolkit
             string mat = material.Name;
             string desc = secProp.Description;
 
-            string area = secProp.Area.ToString();
+            string area = secProp.GrossArea.ToString();
             string Iyy = "";
             string Izz = "";
             string J = "";
@@ -52,7 +54,7 @@ namespace GSAToolkit
             }
             else
             {
-                GSAUtils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
+                Utils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
                 return false;
             }
 
@@ -103,9 +105,9 @@ namespace GSAToolkit
 
 
         /// <summary></summary>
-        public static BHoM.Structural.SectionProperties.SectionProperty GetSection(string gsaString)
+        public static BHoMP.SectionProperty GetSection(string gsaString)
         {
-            BHoM.Structural.SectionProperties.SectionProperty secProp = new SectionProperty();
+            BHoMP.SectionProperty secProp = new BHoMP.SectionProperty();
 
             return secProp;
         }
@@ -164,7 +166,7 @@ namespace GSAToolkit
             }
         }
 
-        public static string GetOrCreateSectionPropertyIndex(ComAuto GSA, Bar bar, List<string> secProps, List<string> materials)
+        public static string GetOrCreateSectionPropertyIndex(ComAuto GSA, BHoME.Bar bar, List<string> secProps, List<string> materials)
         {
             string sectionPropertyIndex = "";
             string materialIndex = "";
@@ -280,15 +282,15 @@ namespace GSAToolkit
             }
         }
 
-        public static string GetOrCreate2DPropertyIndex(ComAuto GSA, Panel panel, List<string> props)
+        public static string GetOrCreate2DPropertyIndex(ComAuto GSA, BHoME.Panel panel, List<string> props)
         {
             string propertyIndex = "";
 
-            if (panel.ThicknessProperty == null)
+            if (panel.PanelProperty == null)
                 return "1";
 
             foreach (string propString in props)
-                if (PropertyIO.GetDataStringFromSecPropStr(propString, 3) == panel.ThicknessProperty.Name)
+                if (PropertyIO.GetDataStringFromSecPropStr(propString, 3) == panel.PanelProperty.Name)
                     propertyIndex = PropertyIO.GetDataStringFromSecPropStr(propString, 1);
 
             //if (propertyIndex == "")

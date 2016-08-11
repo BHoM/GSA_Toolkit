@@ -4,8 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Interop.gsa_8_7;
+using BHoMG = BHoM.Geometry;
+using BHoML = BHoM.Structural.Loads;
+using BHoMB = BHoM.Base;
+using GSA_Adapter.Utility;
 
-namespace GSAToolkit
+namespace GSA_Adapter.Structural.Loads
 {
     public class AnalysisTaskIO
     {
@@ -69,7 +73,7 @@ namespace GSAToolkit
 
                 dynamic commandResult = GSA.GwaCommand(addTask);
                 if (1 == (int)commandResult) return true;
-                return GSAUtils.CommandFailed(command);
+                return Utils.CommandFailed(command);
             }
             else
             {
@@ -117,7 +121,7 @@ namespace GSAToolkit
 
                 dynamic commandResult = GSA.GwaCommand(addTask);
                 if (1 == (int)commandResult) return true;
-                return GSAUtils.CommandFailed(command);
+                return Utils.CommandFailed(command);
             }
         }
 
@@ -134,7 +138,7 @@ namespace GSAToolkit
 
             dynamic commandResult = GSA.GwaCommand(addCase);
             if (1 == (int)commandResult) return true;
-            return GSAUtils.CommandFailed(command);
+            return Utils.CommandFailed(command);
         }
     }
 }

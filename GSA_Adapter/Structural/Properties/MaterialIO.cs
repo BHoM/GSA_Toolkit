@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Interop.gsa_8_7;
-using BHoM.Structural;
-using BHoM.Materials;
-using BHoM.Geometry;
+using BHoMP = BHoM.Structural.Properties;
+using BHoMM = BHoM.Materials;
+using BHoMD = BHoM.Structural.Databases;
+using GSA_Adapter.Utility;
 
-namespace GSAToolkit
+namespace GSA_Adapter.Structural.Properties
 {
     /// <summary>
     /// GSA material class, for all material objects and operations
@@ -19,7 +20,7 @@ namespace GSAToolkit
         /// Create GSA Material
         /// </summary>
         /// <returns></returns>
-        public static bool SetMaterial(ComAuto GSA, Material material, out string id)
+        public static bool SetMaterial(ComAuto GSA, BHoMM.Material material, out string id)
         {
             id = "";
 
@@ -45,7 +46,7 @@ namespace GSAToolkit
             }
             else
             {
-                GSAUtils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
+                Utils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
                 return false;
             }
 
@@ -53,33 +54,33 @@ namespace GSAToolkit
             return true;
         }
 
-        static public GSAUtils.GsaEnums.MaterialType GetMaterialType(ComAuto GSA, Material material)
+        static public Utils.GsaEnums.MaterialType GetMaterialType(ComAuto GSA, BHoMM.Material material)
         {
             switch (material.Type)
             {
-                case MaterialType.Aluminium:
-                    return GSAUtils.GsaEnums.MaterialType.MT_ALUMINIUM;
+                case BHoMM.MaterialType.Aluminium:
+                    return Utils.GsaEnums.MaterialType.MT_ALUMINIUM;
 
-                case MaterialType.Concrete:
-                    return GSAUtils.GsaEnums.MaterialType.MT_CONCRETE;
+                case BHoMM.MaterialType.Concrete:
+                    return Utils.GsaEnums.MaterialType.MT_CONCRETE;
 
-                case MaterialType.Glass:
-                    return GSAUtils.GsaEnums.MaterialType.MT_GLASS;
+                case BHoMM.MaterialType.Glass:
+                    return Utils.GsaEnums.MaterialType.MT_GLASS;
 
-                case MaterialType.Rebar:
-                    return GSAUtils.GsaEnums.MaterialType.MT_UNDEF;
+                case BHoMM.MaterialType.Rebar:
+                    return Utils.GsaEnums.MaterialType.MT_UNDEF;
 
-                case MaterialType.Steel:
-                    return GSAUtils.GsaEnums.MaterialType.MT_STEEL;
+                case BHoMM.MaterialType.Steel:
+                    return Utils.GsaEnums.MaterialType.MT_STEEL;
 
-                case MaterialType.Tendon:
-                    return GSAUtils.GsaEnums.MaterialType.MT_UNDEF;
+                case BHoMM.MaterialType.Tendon:
+                    return Utils.GsaEnums.MaterialType.MT_UNDEF;
 
-                case MaterialType.Timber:
-                    return GSAUtils.GsaEnums.MaterialType.MT_TIMBER;
+                case BHoMM.MaterialType.Timber:
+                    return Utils.GsaEnums.MaterialType.MT_TIMBER;
 
                 default:
-                    return GSAUtils.GsaEnums.MaterialType.MT_UNDEF;
+                    return Utils.GsaEnums.MaterialType.MT_UNDEF;
             }
         }
 

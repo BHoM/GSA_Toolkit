@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GSAToolkit
+namespace GSA_Adapter.Utility
 {
     /// <summary>
     /// 
     /// </summary>
-    public static class GSAUtils
+    public static class Utils
     {
         public const string NUM_KEY = "GSA Number";
 

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("GSAToolkit")]
+[assembly: AssemblyTitle("GSA_Adapter")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Buro Happold")]
-[assembly: AssemblyProduct("GSAToolkit")]
+[assembly: AssemblyProduct("GSA_Adapter")]
 [assembly: AssemblyCopyright("Copyright © Buro Happold 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
