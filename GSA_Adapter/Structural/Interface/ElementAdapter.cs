@@ -108,7 +108,7 @@ namespace GSA_Adapter.Structural.Interface
 
         public bool SetPanels(List<BHoME.Panel> panels, out List<string> ids, string option = "")
         {
-            return Structural.Elements.PanelIO.CreatePanels(GSA, panels, out ids);
+            return Structural.Elements.FaceIO.CreateFaces(GSA, panels, out ids);
         }
 
         public bool SetOpenings(List<BHoME.Opening> opening, out List<string> ids, string option = "")

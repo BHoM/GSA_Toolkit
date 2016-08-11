@@ -17,28 +17,30 @@ namespace GSA_Adapter.Structural.Elements
     /// <summary>
     /// GSA panel class, for all panel objects and operations
     /// </summary>
-    public class PanelIO
+    public class FaceIO
     {
         /// <summary>
         /// Create GSA Panels
         /// </summary>
         /// <returns></returns>
-        public static bool CreatePanels(ComAuto GSA, List<BHoME.Panel> str_panels, out List<string> ids)
+        public static bool CreateFaces(ComAuto GSA, List<BHoME.Panel> panels, out List<string> ids)
         {
             ids = new List<string>();
 
             List<string> props = PropertyIO.Get2DPropertyStringList(GSA);
             int highestIndex = GSA.GwaCommand("HIGHEST, EL") + 1;
 
-            foreach (BHoME.Panel panel in str_panels)
+            foreach (BHoME.Panel panel in panels)
             {
+                panel.MeshAsSingleFace();
+                BHoME.Face face = panel.GetMeshFaces[0];
                 string command = "";
-                if (panel.Vertices.Count == 4)
+                if (face.Nodes.Count == 4)
                     command = "EL_QUAD4";
-                if (panel.Vertices.Count == 3)
+                if (face.Nodes.Count == 3)
                     command = "EL_TRI3";
 
-                string index = panel.Name;
+                string index = face.Name;
                 if (index == null || index == "" || index == "0")
                 {
                     index = highestIndex.ToString();
@@ -47,7 +49,7 @@ namespace GSA_Adapter.Structural.Elements
 
                 string propertyIndex = PropertyIO.GetOrCreate2DPropertyIndex(GSA, panel, props);
                 string group = "0";
-                string indexString = GetPanelNodeIndexString(GSA, panel);
+                string indexString = GetPanelNodeIndexString(GSA, face);
 
                 string str = command + "," + index + "," + propertyIndex + "," + group + "," + indexString + "0,REAL";
                 dynamic commandResult = GSA.GwaCommand(str);
@@ -68,7 +70,7 @@ namespace GSA_Adapter.Structural.Elements
             return true;
         }
 
-        public static string GetPanelNodeIndexString(ComAuto GSA, BHoME.Panel panel)
+        public static string GetPanelNodeIndexString(ComAuto GSA, BHoME.Face face)
         {
             string str = "";
             List<string> IDs;
@@ -80,7 +82,7 @@ namespace GSA_Adapter.Structural.Elements
             //foreach (Node vertex in panel.Vertices)
             //    edgeNodes.Add(vertex);
 
-            NodeIO.CreateNodes(GSA, panel.Vertices, out IDs);
+            NodeIO.CreateNodes(GSA, face.Nodes, out IDs);
 
             foreach (string ID in IDs)
                 str = str + ID + ",";

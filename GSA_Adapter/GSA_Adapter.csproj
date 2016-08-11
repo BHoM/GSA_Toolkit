@@ -56,7 +56,7 @@
     <Compile Include="Structural\Properties\MaterialIO.cs" />
     <Compile Include="Structural\Elements\NodeIO.cs" />
     <Compile Include="Structural\Interface\ElementAdapter.cs" />
-    <Compile Include="Structural\Elements\PanelIO.cs" />
+    <Compile Include="Structural\Elements\FaceIO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Structural\Properties\PropertyIO.cs" />
     <Compile Include="Utility\Utils.cs" />
