@@ -23,7 +23,7 @@ namespace GSA_Adapter.Structural.Properties
             string mat = material.Name;
             string desc = secProp.Description;
 
-            string area = secProp.GrossArea.ToString();
+            string area = ""; // secProp.GrossArea.ToString();
             string Iyy = "";
             string Izz = "";
             string J = "";
