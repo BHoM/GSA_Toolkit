@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Structural\Interface\ResultAdapter.cs" />
     <Compile Include="Structural\Loads\AnalysisTaskIO.cs" />
     <Compile Include="Structural\Interface\App.cs" />
     <Compile Include="Structural\Elements\BarIO.cs" />
