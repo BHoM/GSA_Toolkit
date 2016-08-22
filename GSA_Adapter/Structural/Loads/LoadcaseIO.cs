@@ -18,7 +18,7 @@ namespace GSA_Adapter.Structural.Loads
             foreach (BHoML.ICase icase in cases)
             {
                 BHoML.Loadcase loadcase = icase as BHoML.Loadcase;
-                string caseNo = loadcase.Number.ToString();
+                string caseNo = "0"; // TODO: add loadcase.Number.ToString(); into BHoM
                 string title = loadcase.Name; ;
                 string type = GSALoadType(loadcase.Nature);
 

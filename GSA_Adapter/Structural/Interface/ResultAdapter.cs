@@ -10,7 +10,7 @@ namespace GSA_Adapter.Structural.Interface
 {
     public partial class ResultAdapter : BHoM.Structural.Interface.IResultAdapter
     {
-        public bool GetBarForces(List<string> bars, List<string> cases, int divisions, ResultOrder orderBy, out Dictionary<string, ResultSet<BarForce>> results)
+        public bool GetBarForces(List<string> bars, List<string> cases, int divisions, ResultOrder orderBy, out Dictionary<string, IResultSet> results)
         {
             throw new NotImplementedException();
         }
@@ -25,32 +25,37 @@ namespace GSA_Adapter.Structural.Interface
             throw new NotImplementedException();
         }
 
-        public bool GetNodeAccelerations()
+        public bool GetNodeAccelerations(List<string> nodes, List<string> cases, ResultOrder orderBy, out Dictionary<string, IResultSet> results)
         {
             throw new NotImplementedException();
         }
 
-        public bool GetNodeDisplacements()
+        public bool GetNodeDisplacements(List<string> nodes, List<string> cases, ResultOrder orderBy, out Dictionary<string, IResultSet> results)
         {
             throw new NotImplementedException();
         }
 
-        public bool GetNodeReactions(List<string> nodes, List<string> cases, ResultOrder orderBy, out Dictionary<string, ResultSet<NodeReaction>> results)
+        public bool GetNodeReactions(List<string> nodes, List<string> cases, ResultOrder orderBy, out Dictionary<string, IResultSet> results)
         {
             throw new NotImplementedException();
         }
 
-        public bool GetNodeVelocities()
+        public bool GetNodeVelocities(List<string> nodes, List<string> cases, ResultOrder orderBy, out Dictionary<string, IResultSet> results)
         {
             throw new NotImplementedException();
         }
 
-        public bool GetPanelForces()
+        public bool GetPanelForces(List<string> panels, List<string> cases, ResultOrder orderBy, out Dictionary<string, IResultSet> results)
         {
             throw new NotImplementedException();
         }
 
-        public bool GetPanelStress()
+        public bool GetPanelStress(List<string> panels, List<string> cases, ResultOrder orderBy, out Dictionary<string, IResultSet> results)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool StoreResults(string filename, List<ResultType> resultTypes, List<string> loadcases, bool append = false)
         {
             throw new NotImplementedException();
         }

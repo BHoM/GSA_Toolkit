@@ -34,7 +34,7 @@ namespace GSA_Adapter.Structural.Loads
             BHoML.BarPrestressLoad psLoad = load as BHoML.BarPrestressLoad;
             string name = psLoad.Name;
             string list = CreateBarIDList(psLoad.Objects);
-            string caseNo = psLoad.Loadcase.Number.ToString();
+            string caseNo = "0"; // TODO: add loadcase.Number.ToString(); into BHoM psLoad.Loadcase.Number.ToString();
             double value = psLoad.PrestressValue;
 
             string command = "LOAD_BEAM_PRE.2";
@@ -62,7 +62,7 @@ namespace GSA_Adapter.Structural.Loads
             string command = "LOAD_GRAVITY.2";
             string name = gload.Name;
             string list = CreateBarIDList(gload.Objects);
-            string caseNo = gload.Loadcase.Number.ToString();
+            string caseNo = "0"; // TODO: add loadcase.Number.ToString(); into BHoM= gload.Loadcase.Number.ToString();
             string x = "0.00";
             string y = "0.00";
             string z = "-1.00";
@@ -93,7 +93,7 @@ namespace GSA_Adapter.Structural.Loads
             string command = "LOAD_2D_FACE";
             string name = aLoad.Name;
             string list = CreatePanelIDList(aLoad.Objects);
-            string caseNo = aLoad.Loadcase.Number.ToString();
+            string caseNo = "0"; // TODO: add loadcase.Number.ToString(); into BHoM = aLoad.Loadcase.Number.ToString();
             string axis = "LOCAL";
             string type = "CONS";
             string proj = "NO";

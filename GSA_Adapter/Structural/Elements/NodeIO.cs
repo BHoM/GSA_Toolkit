@@ -67,12 +67,12 @@ namespace GSA_Adapter.Structural.Elements
 
             if (node.IsConstrained)
             {
-                X = ((node.Constraint.UX.Type == BHoMP.DOFType.Fixed) ? 1 : 0);
-                Y = ((node.Constraint.UY.Type == BHoMP.DOFType.Fixed) ? 1 : 0);
-                Z = ((node.Constraint.UZ.Type == BHoMP.DOFType.Fixed) ? 1 : 0);
-                XX = ((node.Constraint.RX.Type == BHoMP.DOFType.Fixed) ? 1 : 0);
-                YY = ((node.Constraint.RY.Type == BHoMP.DOFType.Fixed) ? 1 : 0);
-                ZZ = ((node.Constraint.RZ.Type == BHoMP.DOFType.Fixed) ? 1 : 0);
+                X = ((node.Constraint.UX == BHoMP.DOFType.Fixed) ? 1 : 0);
+                Y = ((node.Constraint.UY == BHoMP.DOFType.Fixed) ? 1 : 0);
+                Z = ((node.Constraint.UZ == BHoMP.DOFType.Fixed) ? 1 : 0);
+                XX = ((node.Constraint.RX == BHoMP.DOFType.Fixed) ? 1 : 0);
+                YY = ((node.Constraint.RY == BHoMP.DOFType.Fixed) ? 1 : 0);
+                ZZ = ((node.Constraint.RZ == BHoMP.DOFType.Fixed) ? 1 : 0);
             }
 
             return X + "," + Y + "," + Z + "," + XX + "," + YY + "," + ZZ;

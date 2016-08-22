@@ -121,12 +121,12 @@ namespace GSA_Adapter.Structural.Elements
 
             if (node.IsConstrained)
             {
-                UX = ((node.Constraint.UX.Type == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
-                UY = ((node.Constraint.UY.Type == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
-                UZ = ((node.Constraint.UZ.Type == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
-                RX = ((node.Constraint.RX.Type == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
-                RY = ((node.Constraint.RY.Type == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
-                RZ = ((node.Constraint.RZ.Type == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
+                UX = ((node.Constraint.UX == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
+                UY = ((node.Constraint.UY == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
+                UZ = ((node.Constraint.UZ == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
+                RX = ((node.Constraint.RX == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
+                RY = ((node.Constraint.RY == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
+                RZ = ((node.Constraint.RZ == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
             }
             return UX + UY + UZ + RX + RY + RZ;
         }
