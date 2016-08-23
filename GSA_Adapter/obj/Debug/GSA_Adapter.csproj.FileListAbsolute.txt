@@ -1,9 +1,0 @@
-C:\BuroHappoldEngineeringGit\GSA_Toolkit\GSAToolkit\obj\Debug\GSA_Adapter.csprojResolveAssemblyReference.cache
-C:\BuroHappoldEngineeringGit\GSA_Toolkit\GSA_Adapter\obj\Debug\GSA_Adapter.csprojResolveAssemblyReference.cache
-C:\BuroHappoldEngineeringGit\GSA_Toolkit\GSA_Adapter\bin\Debug\GSA_Adapter.dll
-C:\BuroHappoldEngineeringGit\GSA_Toolkit\GSA_Adapter\bin\Debug\GSA_Adapter.pdb
-C:\BuroHappoldEngineeringGit\GSA_Toolkit\GSA_Adapter\bin\Debug\BHoM.dll
-C:\BuroHappoldEngineeringGit\GSA_Toolkit\GSA_Adapter\bin\Debug\BHoM.pdb
-C:\BuroHappoldEngineeringGit\GSA_Toolkit\GSA_Adapter\bin\Debug\BHoM.xml
-C:\BuroHappoldEngineeringGit\GSA_Toolkit\GSA_Adapter\obj\Debug\GSA_Adapter.dll
-C:\BuroHappoldEngineeringGit\GSA_Toolkit\GSA_Adapter\obj\Debug\GSA_Adapter.pdb

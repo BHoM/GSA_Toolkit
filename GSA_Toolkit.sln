@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GSA_Adapter", "GSA_Adapter\GSA_Adapter.csproj", "{9740253E-8C50-44FA-BA20-96FCFA7B0520}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GSA_Test", "GSA_Test\GSA_Test.csproj", "{34AE04A1-9CAB-415E-903A-EFE285E6B661}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9740253E-8C50-44FA-BA20-96FCFA7B0520} = {9740253E-8C50-44FA-BA20-96FCFA7B0520}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

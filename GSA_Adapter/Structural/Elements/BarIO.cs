@@ -77,7 +77,7 @@ namespace GSA_Adapter.Structural.Elements
                 string index = bar.Name;
                 string name = bar.Name;
                 string type = "BEAM";
-                string sectionPropertyIndex = PropertyIO.GetOrCreateSectionPropertyIndex(GSA, bar, secProps, materials);
+                string sectionPropertyIndex = "1"; //TODO: PropertyIO.GetOrCreateSectionPropertyIndex(GSA, bar, secProps, materials);
                 int group = 0;
 
                 NodeIO.CreateNodes(GSA, new List<BHoME.Node>() { bar.StartNode, bar.EndNode }, out nodeIds);

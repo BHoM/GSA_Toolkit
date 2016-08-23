@@ -1,7 +1,0 @@
-C:\Users\jisaksso\Documents\GitHub\GSAToolkit\GSAToolkit\bin\Debug\GSAToolkit.dll
-C:\Users\jisaksso\Documents\GitHub\GSAToolkit\GSAToolkit\bin\Debug\GSAToolkit.pdb
-C:\Users\jisaksso\Documents\GitHub\GSAToolkit\GSAToolkit\obj\Debug\GSAToolkit.dll
-C:\Users\jisaksso\Documents\GitHub\GSAToolkit\GSAToolkit\obj\Debug\GSAToolkit.pdb
-C:\Users\jisaksso\Documents\GitHub\GSAToolkit\GSAToolkit\bin\Debug\BHoM.dll
-C:\Users\jisaksso\Documents\GitHub\GSAToolkit\GSAToolkit\bin\Debug\BHoM.pdb
-C:\Users\jisaksso\Documents\GitHub\GSAToolkit\GSAToolkit\bin\Debug\BHoM.xml
