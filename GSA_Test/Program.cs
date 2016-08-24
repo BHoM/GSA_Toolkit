@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using GSA_Adapter.Structural.Interface;
 using BHoM.Structural.Elements;
 using BHoM.Geometry;
+using BHoMBR = BHoM.Base.Results;
 
 namespace GSA_Test
 {
@@ -16,8 +17,8 @@ namespace GSA_Test
         {
             //TestNodes();
             //TestSetBars();
-            TestGetBars();
-                
+            //TestGetBars();
+            TestExtractBarForces();
         }
 
 
@@ -68,6 +69,26 @@ namespace GSA_Test
                 bar.Name = i.ToString();
                 app.CreateBars(bars, out ids);
             }
+
+        }
+
+        private static void TestExtractBarForces()
+        {
+            GSAAdapter app = new GSAAdapter(@"C:\Users\nsmithie\Desktop\NS_Test.gwb");
+            List<String> bars = new List<String> { "1", "2" };
+            List<String> cases = new List<String> { "C1" };
+            Dictionary<string, BHoMBR.IResultSet> testResults = new Dictionary<string, BHoMBR.IResultSet>();
+            BHoMBR.IResultSet test;
+
+
+            app.GetBarForces(bars, cases, 0, BHoMBR.ResultOrder.Loadcase, out testResults);
+
+            if (testResults.TryGetValue("1", out test)) // Returns true.
+            {
+                Console.WriteLine("Hello World"); // This is the value at "1".
+            }
+
+            Console.WriteLine("end");
 
         }
     }
