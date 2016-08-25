@@ -13,7 +13,7 @@ namespace GSA_Adapter.Structural.Interface
     {
         public bool GetBarForces(List<string> bars, List<string> cases, int divisions, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.IResultSet> results)
         {
-            BHoMBR.ResultServer<BHoM.Structural.Results.BarForce> resultServer = new BHoM.Base.Results.ResultServer<BHoM.Structural.Results.BarForce>();
+            BHoMBR.ResultServer<BHoM.Structural.Results.BarForce<int, string, int>> resultServer = new BHoM.Base.Results.ResultServer<BHoM.Structural.Results.BarForce<int, string, int>>();
             resultServer.OrderBy = orderBy;
             BarResults.GetBarForces(GSA, resultServer, bars, cases, divisions);
             results = resultServer.LoadData();

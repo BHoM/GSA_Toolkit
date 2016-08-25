@@ -21,10 +21,10 @@ namespace GSA_Adapter.Structural.Results
         /// <param name="cases"></param>
         /// <param name="divisions"></param>
         /// <returns></returns>
-        public static bool GetBarForces(ComAuto gsa, BHoMBR.ResultServer<BHoMSR.BarForce> resultServer, List<string> bars, List<string> cases, int divisions)
+        public static bool GetBarForces(ComAuto gsa, BHoMBR.ResultServer<BHoMSR.BarForce<int,string,int>> resultServer, List<string> bars, List<string> cases, int divisions)
         {
             string message = "";
-            List<BHoMSR.BarForce> barForces = new List<BHoMSR.BarForce>();
+            List<BHoMSR.BarForce<int, string, int>> barForces = new List<BHoMSR.BarForce<int, string, int>>();
             int counter = 0;
 
             if (bars == null || bars.Count == 0)
@@ -84,6 +84,7 @@ namespace GSA_Adapter.Structural.Results
 
             foreach (string ac in cases)
             {
+                string descriptionCase = ac;
                 int idCase = Convert.ToInt32(Char.IsLetter(ac[0]) ? ac.Trim().Substring(1) : ac.Trim());
                 if (!CheckAnalysisCaseExists(gsa, idCase, ac, out message))
                 {
@@ -98,9 +99,11 @@ namespace GSA_Adapter.Structural.Results
                     List<double[]> beamResults;
                     int idPos = 0; //not sure how to set position ID?
                     if (GetBeamResults(gsa, idBar, ac, out beamResults, out message))
+                    {
+                        divisions = beamResults.Count;
                         foreach (double[] br in beamResults)
                         {
-                            barForces.Add(new BHoMSR.BarForce(idBar, idCase, idPos , 1, br[1], br[2], br[3], br[4], br[5], br[6]));
+                            barForces.Add(new BHoMSR.BarForce<int, string, int>(idBar, descriptionCase, idPos, divisions, 1, br[1], br[2], br[3], br[4], br[5], br[6]));
                             idPos++;
                             counter++;
                             if (counter % 1000000 == 0 && resultServer.CanStore)
@@ -109,6 +112,8 @@ namespace GSA_Adapter.Structural.Results
                                 barForces.Clear();
                             }
                         }
+                    }
+                        
                 }
 
             }

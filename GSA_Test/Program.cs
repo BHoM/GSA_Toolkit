@@ -75,13 +75,13 @@ namespace GSA_Test
         private static void TestExtractBarForces()
         {
             GSAAdapter app = new GSAAdapter(@"C:\Users\nsmithie\Desktop\NS_Test.gwb");
-            List<String> bars = new List<String> { "1", "2" };
+            List<String> bars = new List<String> { "1" };
             List<String> cases = new List<String> { "C1" };
             Dictionary<string, BHoMBR.IResultSet> testResults = new Dictionary<string, BHoMBR.IResultSet>();
             BHoMBR.IResultSet test;
 
 
-            app.GetBarForces(bars, cases, 0, BHoMBR.ResultOrder.Loadcase, out testResults);
+            app.GetBarForces(bars, cases, 0, BHoMBR.ResultOrder.Name, out testResults);
 
             if (testResults.TryGetValue("1", out test)) // Returns true.
             {
