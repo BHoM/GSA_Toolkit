@@ -13,8 +13,8 @@ namespace GSA_Adapter.Structural.Interface
 {
     public partial class GSAAdapter : BHoM.Structural.Interface.IElementAdapter
     {
-        private ComAuto GSA;
-        private string Settings;
+        private ComAuto gsa;
+        private string settings;
 
         public string Filename { get; }
 
@@ -33,17 +33,17 @@ namespace GSA_Adapter.Structural.Interface
 
         public GSAAdapter()
         {
-            GSA = new ComAuto();
+            gsa = new ComAuto();
         }
 
         public GSAAdapter(string filePath)
         {
-            GSA = new ComAuto();
+            gsa = new ComAuto();
             short result;
             if (filePath != "")
-                 result = GSA.Open(filePath);
+                 result = gsa.Open(filePath);
             else
-                result = GSA.NewFile();           
+                result = gsa.NewFile();           
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace GSA_Adapter.Structural.Interface
         /// <returns>true is successful</returns>
         public List<string> GetBars(out List<BHoME.Bar> bars, List<string> ids = null)
         {
-            Structural.Elements.BarIO.GetBars(GSA, out bars);
+            Structural.Elements.BarIO.GetBars(gsa, out bars);
             return null; //TODO: Return list of bar ids
         }
 
@@ -66,7 +66,7 @@ namespace GSA_Adapter.Structural.Interface
         /// <returns></returns>
         public bool CreateBars(List<BHoME.Bar> bars, out List<string> ids)
         {
-            Structural.Elements.BarIO.CreateBars(GSA, bars, out ids);
+            Structural.Elements.BarIO.CreateBars(gsa, bars, out ids);
             return true;
         }
 
@@ -111,17 +111,17 @@ namespace GSA_Adapter.Structural.Interface
 
         public bool SetNodes(List<BHoME.Node> nodes, out List<string> ids)
         {
-            return Structural.Elements.NodeIO.CreateNodes(GSA, nodes, out ids);
+            return Structural.Elements.NodeIO.CreateNodes(gsa, nodes, out ids);
         }
 
         public bool SetBars(List<BHoME.Bar> bars, out List<string> ids)
         {
-            return Structural.Elements.BarIO.CreateBars(GSA, bars, out ids);
+            return Structural.Elements.BarIO.CreateBars(gsa, bars, out ids);
         }
 
         public bool SetPanels(List<BHoME.Panel> panels, out List<string> ids)
         {
-            return Structural.Elements.FaceIO.CreateFaces(GSA, panels, out ids);
+            return Structural.Elements.FaceIO.CreateFaces(gsa, panels, out ids);
         }
 
         public bool SetOpenings(List<BHoME.Opening> opening, out List<string> ids)
@@ -141,12 +141,12 @@ namespace GSA_Adapter.Structural.Interface
 
         public bool SetLoads(List<BHoML.ILoad> loads, List<string> ids = null)
         {
-            return Structural.Loads.LoadIO.AddLoads(GSA, loads);
+            return Structural.Loads.LoadIO.AddLoads(gsa, loads);
         }
 
         public bool SetLoadcases(List<BHoML.ICase> cases)
         {
-            return Structural.Loads.LoadcaseIO.AddLoadCases(GSA, cases);
+            return Structural.Loads.LoadcaseIO.AddLoadCases(gsa, cases);
         }
 
         public List<string> GetLevels(out List<BHoME.Storey> levels, List<string> ids = null)
@@ -154,12 +154,12 @@ namespace GSA_Adapter.Structural.Interface
             throw new NotImplementedException();
         }
 
-        bool IElementAdapter.GetLoads(out List<BHoML.ILoad> loads, List<string> ids)
+        public bool SetLoads(List<BHoML.ILoad> loads)
         {
             throw new NotImplementedException();
         }
 
-        public bool SetLoads(List<BHoML.ILoad> loads)
+        bool IElementAdapter.GetLoads(out List<BHoML.ILoad> loads, List<string> ids)
         {
             throw new NotImplementedException();
         }

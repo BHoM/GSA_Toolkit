@@ -191,16 +191,15 @@ namespace GSA_Adapter.Utility
 
         }
 
-        static public void SendErrorMessage(string message)
-        {
-            MessageBox.Show(message, "Error");
-        }
-
         static public bool CommandFailed(string command)
         {
             SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
             return false;
+        }
 
+        static public void SendErrorMessage(string message)
+        {
+            MessageBox.Show(message, "Error");
         }
 
     }

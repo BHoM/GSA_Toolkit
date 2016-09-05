@@ -24,7 +24,7 @@ namespace GSA_Adapter.Structural.Elements
         /// Get bars method, gets bars from a GSA model and all associated data. 
         /// </summary>
         /// <returns></returns>
-        public static bool GetBars(ComAuto GSA, out List<BHoME.Bar> outputBars, string barNumbers = "all")
+        public static bool GetBars(ComAuto gsa, out List<BHoME.Bar> barList, string barNumbers = "all")
         {
             BHoMB.ObjectManager<int, BHoME.Bar> bars = new BHoMB.ObjectManager<int, BHoME.Bar>(BHoMG.Project.ActiveProject, Utils.NUM_KEY, BHoMB.FilterOption.UserData);
             BHoMB.ObjectManager<BHoMP.SectionProperty> sections = new BHoMB.ObjectManager<BHoMP.SectionProperty>(BHoMG.Project.ActiveProject);
@@ -33,29 +33,42 @@ namespace GSA_Adapter.Structural.Elements
             BHoMB.ObjectManager<BHoMM.Material> materials = new BHoMB.ObjectManager<BHoMM.Material>(BHoMG.Project.ActiveProject);
             BHoMB.ObjectManager<int, BHoME.Node> nodes = new BHoMB.ObjectManager<int, BHoME.Node>(BHoMG.Project.ActiveProject, Utils.NUM_KEY, BHoMB.FilterOption.UserData);
 
-            int maxIndex = GSA.GwaCommand("HIGHEST, EL");
+
+            sections = PropertyIO.GetSections(gsa); //name as key
+                                                    //need to ref by GSA_id too
+
+            int maxIndex = gsa.GwaCommand("HIGHEST, EL");
             int[] potentialBeamRefs = new int[maxIndex];
             for (int i = 0; i < maxIndex; i++)
                 potentialBeamRefs[i] = i + 1;
 
-            GsaElement[] elements = new GsaElement[potentialBeamRefs.Length];
-            GSA.Elements(potentialBeamRefs, out elements);
+            GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
+            gsa.Elements(potentialBeamRefs, out gsaElements);
 
-            for (int i = 0; i < elements.Length; i++)
+            for (int i = 0; i < gsaElements.Length; i++)
             {
-                GsaElement gbar = elements[i];
+                GsaElement gsaBar = gsaElements[i]; //TODO: filter elements based on topology
 
-                GsaNode[] endNodes;
-                GSA.Nodes(gbar.Topo, out endNodes);
-                BHoME.Node n1 = new BHoME.Node(endNodes[0].Coor[0], endNodes[0].Coor[1], endNodes[0].Coor[2]);
-                BHoME.Node  n2 = new BHoME.Node(endNodes[1].Coor[0], endNodes[1].Coor[1], endNodes[1].Coor[2]);
+                GsaNode[] gsaNodes;
+                gsa.Nodes(gsaBar.Topo, out gsaNodes);
+                BHoME.Node n1 = new BHoME.Node(gsaNodes[0].Coor[0], gsaNodes[0].Coor[1], gsaNodes[0].Coor[2]);
+                BHoME.Node  n2 = new BHoME.Node(gsaNodes[1].Coor[0], gsaNodes[1].Coor[1], gsaNodes[1].Coor[2]);
 
-                BHoME.Bar str_bar = bars.Add(gbar.Ref, new BHoME.Bar(n1, n2, gbar.Ref.ToString()));
+                BHoME.Bar bar = bars.Add(gsaBar.Ref, new BHoME.Bar(n1, n2, gsaBar.Ref.ToString()));
+               
+                bar.OrientationAngle = gsaBar.Beta;
 
-                str_bar.OrientationAngle = gbar.Beta;
+                //bar.Release
+
+                //bar.SectionProperty = gsaBar.Property;
+                //bar.SectionProperty = sections
+
+                //bar.Material
+
+                //TODO: implement property and material setting
             }
 
-            outputBars = bars.ToList();
+            barList = bars.ToList();
             return true;
         }
 
@@ -64,23 +77,30 @@ namespace GSA_Adapter.Structural.Elements
         /// Create GSA bars
         /// </summary>
         /// <returns></returns>
-        public static bool CreateBars(ComAuto GSA, List<BHoME.Bar> str_bars, out List<string> ids)
+        public static bool CreateBars(ComAuto gsa, List<BHoME.Bar> bars, out List<string> ids)
         {
             ids = new List<string>();
-            List<string> secProps = PropertyIO.GetSectionPropertyStringList(GSA);
-            List<string> materials = MaterialIO.GetMaterialStringList(GSA);
-            List<string> nodeIds = new List<string>();
 
-            foreach (BHoME.Bar bar in str_bars)
+            BHoMB.ObjectManager<BHoMP.SectionProperty> sections = new BHoMB.ObjectManager<BHoMP.SectionProperty>(BHoMG.Project.ActiveProject);
+            BHoMB.ObjectManager<BHoMM.Material> materials = new BHoMB.ObjectManager<BHoMM.Material>(BHoMG.Project.ActiveProject);
+
+            sections = PropertyIO.GetSections(gsa, true);
+
+            //TODO: Create dictionary of properties and materials - do this at higher level for repeat use
+            List<string> secProps = PropertyIO.GetGsaSectionPropertyStrings(gsa);
+            List<string> materialList = MaterialIO.GetMaterialStringList(gsa);
+            List<string> nodeIds = new List<string>(); 
+
+            foreach (BHoME.Bar bar in bars)
             {
                 string command = "EL.2";
                 string index = bar.Name;
                 string name = bar.Name;
                 string type = "BEAM";
-                string sectionPropertyIndex = "1"; //TODO: PropertyIO.GetOrCreateSectionPropertyIndex(GSA, bar, secProps, materials);
+                string sectionPropertyIndex = PropertyIO.GetOrCreateGSA_id(gsa, bar, sections);
                 int group = 0;
 
-                NodeIO.CreateNodes(GSA, new List<BHoME.Node>() { bar.StartNode, bar.EndNode }, out nodeIds);
+                NodeIO.CreateNodes(gsa, new List<BHoME.Node>() { bar.StartNode, bar.EndNode }, out nodeIds);
                 string startIndex = nodeIds[0];
                 string endIndex = nodeIds[1];
 
@@ -90,7 +110,7 @@ namespace GSA_Adapter.Structural.Elements
                 string dummy = "";
 
                 string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + sectionPropertyIndex + ", " + group + ", " + startIndex + ", " + endIndex + " , 0 ," + orientationAngle + ", RLS, " + startR + " , " + endR + ", NO_OFFSET," + dummy;
-                dynamic commandResult = GSA.GwaCommand(str); //"EL.2, 1,, NO_RGB , BEAM , 1, 1, 1, 2 , 0 ,0, RLS, FFFFFF , FFFFFF, NO_OFFSET, "
+                dynamic commandResult = gsa.GwaCommand(str); //"EL.2, 1,, NO_RGB , BEAM , 1, 1, 1, 2 , 0 ,0, RLS, FFFFFF , FFFFFF, NO_OFFSET, "
 
                 if (1 == (int)commandResult)
                 {
@@ -99,12 +119,13 @@ namespace GSA_Adapter.Structural.Elements
                 }
                 else
                 {
-                    Utils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
-                    return false;
+                    return Utils.CommandFailed(command);
                 }
             }
 
-            GSA.UpdateViews();
+            //PropertyIO.SetSections(sections);
+
+            gsa.UpdateViews();
             return true;
         }
 

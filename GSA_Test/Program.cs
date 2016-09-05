@@ -54,21 +54,27 @@ namespace GSA_Test
 
 
 
-            for (int i = 1; i < 10; i++)
-            {
-                Point p1 = new Point(0, 0, 0);
-                Point p2 = new Point(10, i, 0);
+           
+            Point p1 = new Point(10, 10, 10);
+            Point p2 = new Point(5, 5, 5);
 
-                Bar bar = new Bar(p1, p2);
-                List<Bar> bars = new List<Bar>();
-                bars.Add(bar);
-                BHoM.Structural.Properties.SectionProperty sec = new BHoM.Structural.Properties.SectionProperty(BHoM.Structural.Properties.ShapeType.Rectangle, BHoM.Structural.Properties.SectionType.Steel, 100, 50, 5, 5, 5, 5);
-                bar.SetSectionProperty(sec);
-                bar.Material = BHoM.Materials.Material.LoadFromDB("Steel");
-                List<string> ids = null;
-                bar.Name = i.ToString();
-                app.CreateBars(bars, out ids);
-            }
+            Bar bar = new Bar(p1, p2);
+            List<Bar> bars = new List<Bar>();
+            bars.Add(bar);
+            BHoM.Structural.Properties.SectionProperty sec = new BHoM.Structural.Properties.SectionProperty(BHoM.Structural.Properties.ShapeType.Rectangle, BHoM.Structural.Properties.SectionType.Steel, 100, 50, 5, 5, 5, 5);
+            sec.Description = "EXP";
+            bar.SetSectionProperty(sec);
+            BHoM.Materials.Material material = BHoM.Materials.Material.Default(BHoM.Materials.MaterialType.Steel);
+
+            BHoM.Materials.Material material2 = new BHoM.Materials.Material("Test", BHoM.Materials.MaterialType.Steel, 210, 0, 0, 0, 7840);
+       
+
+            bar.Material = material2;    
+
+            List<string> ids = null;
+            bar.Name = "10";
+            app.CreateBars(bars, out ids);
+            
 
         }
 
