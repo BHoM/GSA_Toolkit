@@ -60,6 +60,7 @@
     <Compile Include="Structural\Elements\FaceIO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Structural\Properties\PropertyIO.cs" />
+    <Compile Include="Structural\Properties\PropertyStringGenerators.cs" />
     <Compile Include="Structural\Results\BarResults.cs" />
     <Compile Include="Utility\Utils.cs" />
   </ItemGroup>

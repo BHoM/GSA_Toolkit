@@ -7,6 +7,7 @@ using Interop.gsa_8_7;
 using BHoMP = BHoM.Structural.Properties;
 using BHoMM = BHoM.Materials;
 using BHoMD = BHoM.Structural.Databases;
+using BHoME = BHoM.Structural.Elements;
 using GSA_Adapter.Utility;
 
 namespace GSA_Adapter.Structural.Properties
@@ -16,16 +17,122 @@ namespace GSA_Adapter.Structural.Properties
     /// </summary>
     public class MaterialIO
     {
+
+        //static public string GetOrCreateMasterialGSA_id(ComAuto gsa, BHoME.Bar bar, Dictionary<string, BHoMM.Material> materials)
+        //{
+            
+        //    string sectionPropertyIndex;
+        //    BHoMM.Material material;
+        //    //object id;
+
+        //    if (!materials.TryGetValue(bar.Material.Name, out material)/* || !bar.Material.CustomData.TryGetValue("GSA_id", out id) || id == null*/)
+        //    {
+        //        material = bar.Material;
+        //        int index = gsa.GwaCommand("HIGHEST, PROP_SEC") + 1;
+
+        //        if (SetMaterial(gsa, material, out sectionPropertyIndex))
+        //        {
+        //            //material.CustomData.Add("GSA_id", index);
+        //            materials.Add(material.Name, material);
+        //        }
+
+        //    }
+
+        //    return material.CustomData["GSA_id"].ToString();
+        //}
+
+        public static Dictionary<string, BHoMM.Material> GetMaterials(ComAuto gsa, bool nameAsKey = true, bool includeStandardMaterials = false)
+        {
+            Dictionary<string, BHoMM.Material> materials;
+            if (includeStandardMaterials)
+                materials = GetStandardGsaMaterials(nameAsKey);
+            else
+                materials = new Dictionary<string, BHoM.Materials.Material>();
+
+            List<string> gsaMats = GetMaterialStringList(gsa);
+
+            foreach (string gsaMat in gsaMats)
+            {
+                BHoMM.Material mat = GetMaterialFromGsaString(gsaMat);
+                if (nameAsKey) materials.Add(mat.Name, mat);
+                else materials.Add(mat.CustomData["GSA_id"].ToString(), mat);
+            }
+
+            return materials;
+        }
+
+        private static Dictionary<string, BHoMM.Material> GetStandardGsaMaterials(bool nameAsKey)
+        {
+            Dictionary<string, BHoMM.Material> materials = new Dictionary<string, BHoM.Materials.Material>();
+            AddStandardGsaMaterial(ref materials, "STEEL", nameAsKey);
+            AddStandardGsaMaterial(ref materials, "CONC_SHORT", nameAsKey);
+            AddStandardGsaMaterial(ref materials, "CONC_LONG", nameAsKey);
+            AddStandardGsaMaterial(ref materials, "ALUMINIUM", nameAsKey);
+            AddStandardGsaMaterial(ref materials, "GLASS", nameAsKey);
+            return materials;
+        }
+
+        private static void AddStandardGsaMaterial(ref Dictionary<string, BHoMM.Material> materials, string name, bool nameAsKey)
+        {
+            BHoMM.Material mat = new BHoMM.Material("GSA Standard "+name);
+            mat.CustomData.Add("GSA_id", name);
+
+            if (nameAsKey)
+                materials.Add(mat.Name, mat);
+            else
+                materials.Add(name, mat);
+
+        }
+
+        public static void CreateMaterials(ComAuto gsa, List<BHoMM.Material> materials)
+        {
+            Dictionary<string, BHoMM.Material> gsaMaterials = GetMaterials(gsa, true);
+
+            int highestId = gsa.GwaCommand("HIGHEST, MAT") + 1;
+
+            foreach (BHoMM.Material mat in materials)
+            {
+                object gsaIdobj;
+
+                //Replace material at position "id"
+                if (mat.CustomData.TryGetValue("GSA_id", out gsaIdobj))
+                {
+                    string id = gsaIdobj.ToString();
+                    SetMaterial(gsa, mat, id);
+                    if (gsaMaterials.ContainsKey(mat.Name))
+                        gsaMaterials[mat.Name] = mat;
+                    else
+                        gsaMaterials.Add(mat.Name, mat);
+
+                }
+                //Check if exists, otherwhise add
+                else if (!gsaMaterials.ContainsKey(mat.Name))
+                {
+                    string id = highestId.ToString();
+                    highestId++;
+                    SetMaterial(gsa, mat, id);
+                    mat.CustomData.Add("GSA_id", id);
+                    gsaMaterials.Add(mat.Name, mat);
+                }
+                else
+                {
+                    mat.CustomData.Add("GSA_id", gsaMaterials[mat.Name].CustomData["GSA_id"]);
+                }
+            }
+
+        }
+
+
         /// <summary>
         /// Create GSA Material
         /// </summary>
         /// <returns></returns>
-        public static bool SetMaterial(ComAuto GSA, BHoMM.Material material, out string id)
+        public static bool SetMaterial(ComAuto GSA, BHoMM.Material material, string id)
         {
-            id = "";
+            //id = "";
 
             string command = "MAT";
-            string num = (GSA.GwaCommand("HIGHEST, PROP_SEC") + 1).ToString();
+            string num = id;//(GSA.GwaCommand("HIGHEST, PROP_SEC") + 1).ToString();
             string mModel = "MAT_ELAS_ISO";
             string name = material.Name;
             string colour = "NO_RGB";
@@ -42,7 +149,7 @@ namespace GSA_Adapter.Structural.Properties
 
             if (1 == (int)commandResult)
             {
-                id = num;
+                //id = num;
             }
             else
             {
@@ -149,5 +256,63 @@ namespace GSA_Adapter.Structural.Properties
                 return secProp;
             }
         }
+
+        public static BHoMM.Material GetMaterialFromGsaString(string gsaString)
+        {
+            if (string.IsNullOrWhiteSpace(gsaString))
+                return null;
+
+            string[] gStr = gsaString.Split(',');
+
+            if (gStr.Length < 11)
+                return null;
+
+            BHoMM.MaterialType type = GetTypeFromString(gStr[2]);
+            string name = gStr[3];
+            double E, v, tC, G, rho;
+
+            if (!double.TryParse(gStr[7], out E))
+                return null;
+            if (!double.TryParse(gStr[8], out v))
+                return null;
+            if (!double.TryParse(gStr[10], out tC))
+                return null;
+            if (!double.TryParse(gStr[11], out G))
+                return null;
+            if (!double.TryParse(gStr[9], out rho))
+                return null;
+
+            BHoMM.Material mat =new BHoM.Materials.Material(name, type, E, v, tC, G, rho);
+
+            mat.CustomData.Add("GSA_id", gStr[1].ToString());
+
+            return mat;
+        }
+
+        private static BHoMM.MaterialType GetTypeFromString(string gsaString)
+        {
+            switch (gsaString)
+            {
+                case "MT_ALUMINIUM":
+                    return BHoMM.MaterialType.Aluminium;
+
+                case "MT_CONCRETE":
+                    return BHoMM.MaterialType.Concrete;
+
+                case "MT_GLASS":
+                    return BHoMM.MaterialType.Glass;
+
+                case "MT_STEEL":
+                    return BHoMM.MaterialType.Steel;
+
+                case "MT_TIMBER":
+                    return BHoMM.MaterialType.Timber;
+                    //Undef set to steel for now. Need to implement an undef material enum.
+                case "MT_UNDEF":
+                default:
+                    return BHoMM.MaterialType.Steel;
+            }
+        }
+
     }
 }

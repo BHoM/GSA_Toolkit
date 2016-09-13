@@ -202,5 +202,17 @@ namespace GSA_Adapter.Utility
             MessageBox.Show(message, "Error");
         }
 
+
+        static public int[] CreateIntSequence(int maxId)
+        {
+            int[] ids = new int[maxId];
+
+            for (int i = 0; i < maxId; i++)
+            {
+                ids[i] = i + 1;
+            }
+
+            return ids;
+        }
     }
 }

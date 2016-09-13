@@ -34,7 +34,7 @@ namespace GSA_Adapter.Structural.Elements
             BHoMB.ObjectManager<int, BHoME.Node> nodes = new BHoMB.ObjectManager<int, BHoME.Node>(BHoMG.Project.ActiveProject, Utils.NUM_KEY, BHoMB.FilterOption.UserData);
 
 
-            sections = PropertyIO.GetSections(gsa); //name as key
+            //sections = PropertyIO.GetSections(gsa); //name as key
                                                     //need to ref by GSA_id too
 
             int maxIndex = gsa.GwaCommand("HIGHEST, EL");
@@ -52,7 +52,7 @@ namespace GSA_Adapter.Structural.Elements
                 GsaNode[] gsaNodes;
                 gsa.Nodes(gsaBar.Topo, out gsaNodes);
                 BHoME.Node n1 = new BHoME.Node(gsaNodes[0].Coor[0], gsaNodes[0].Coor[1], gsaNodes[0].Coor[2]);
-                BHoME.Node  n2 = new BHoME.Node(gsaNodes[1].Coor[0], gsaNodes[1].Coor[1], gsaNodes[1].Coor[2]);
+                BHoME.Node n2 = new BHoME.Node(gsaNodes[1].Coor[0], gsaNodes[1].Coor[1], gsaNodes[1].Coor[2]);
 
                 BHoME.Bar bar = bars.Add(gsaBar.Ref, new BHoME.Bar(n1, n2, gsaBar.Ref.ToString()));
                
@@ -81,32 +81,52 @@ namespace GSA_Adapter.Structural.Elements
         {
             ids = new List<string>();
 
-            BHoMB.ObjectManager<BHoMP.SectionProperty> sections = new BHoMB.ObjectManager<BHoMP.SectionProperty>(BHoMG.Project.ActiveProject);
-            BHoMB.ObjectManager<BHoMM.Material> materials = new BHoMB.ObjectManager<BHoMM.Material>(BHoMG.Project.ActiveProject);
+            //BHoMB.ObjectManager<BHoMP.SectionProperty> sections = new BHoMB.ObjectManager<BHoMP.SectionProperty>(BHoMG.Project.ActiveProject);
+            //BHoMB.ObjectManager<BHoMM.Material> materials = new BHoMB.ObjectManager<BHoMM.Material>(BHoMG.Project.ActiveProject);
 
-            sections = PropertyIO.GetSections(gsa, true);
+            
+            Dictionary<string, BHoMP.SectionProperty> sections = PropertyIO.GetSections(gsa, true);
+
+            List<BHoMP.SectionProperty> sectionProperties = bars.Select(x => x.SectionProperty).Distinct().ToList();
+
+            PropertyIO.CreateSectionProperties(gsa, sectionProperties);
 
             //TODO: Create dictionary of properties and materials - do this at higher level for repeat use
-            List<string> secProps = PropertyIO.GetGsaSectionPropertyStrings(gsa);
-            List<string> materialList = MaterialIO.GetMaterialStringList(gsa);
-            List<string> nodeIds = new List<string>(); 
+            //List<string> secProps = PropertyIO.GetGsaSectionPropertyStrings(gsa);
+            //List<string> materialList = MaterialIO.GetMaterialStringList(gsa);
+            List<string> nodeIds = new List<string>();
+
+            List<BHoME.Node> nodes = bars.SelectMany(x => new List<BHoME.Node> { x.StartNode, x.EndNode }).Distinct().ToList();
+
+            NodeIO.CreateNodes(gsa, nodes);
+
+            int highestIndex = gsa.GwaCommand("HIGHEST, EL") + 1;
 
             foreach (BHoME.Bar bar in bars)
             {
                 string command = "EL.2";
-                string index = bar.Name;
+                string index;
+                if (bar.CustomData.ContainsKey("GSA_id"))
+                    index = bar.CustomData["GSA_id"].ToString();
+                else
+                {
+                    index = highestIndex.ToString();
+                    highestIndex++;
+                }
                 string name = bar.Name;
-                string type = "BEAM";
-                string sectionPropertyIndex = PropertyIO.GetOrCreateGSA_id(gsa, bar, sections);
+                string type = GetElementTypeString(bar);
+                //string materialId = MaterialIO.GetOrCreateMasterialGSA_id(gsa, bar, materials);
+                string sectionPropertyIndex = bar.SectionProperty.CustomData["GSA_id"].ToString();// PropertyIO.GetOrCreateGSA_id(gsa, bar, sections, materialId);
                 int group = 0;
 
-                NodeIO.CreateNodes(gsa, new List<BHoME.Node>() { bar.StartNode, bar.EndNode }, out nodeIds);
-                string startIndex = nodeIds[0];
-                string endIndex = nodeIds[1];
+                //NodeIO.CreateNodes(gsa, new List<BHoME.Node>() { bar.StartNode, bar.EndNode }, out nodeIds);
+                string startIndex = bar.StartNode.CustomData["GSA_id"].ToString();// nodeIds[0];
+                string endIndex = bar.EndNode.CustomData["GSA_id"].ToString();// nodeIds[1];
 
                 string orientationAngle = bar.OrientationAngle.ToString();
-                string startR = CreateReleaseString(bar.StartNode);
-                string endR = CreateReleaseString(bar.EndNode);
+                // TODO: Make sure that these are doing the correct thing. Release vs restraint corresponding to true vs false
+                string startR = CreateReleaseString(bar.Release.StartConstraint);
+                string endR = CreateReleaseString(bar.Release.EndConstraint);
                 string dummy = "";
 
                 string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + sectionPropertyIndex + ", " + group + ", " + startIndex + ", " + endIndex + " , 0 ," + orientationAngle + ", RLS, " + startR + " , " + endR + ", NO_OFFSET," + dummy;
@@ -129,9 +149,27 @@ namespace GSA_Adapter.Structural.Elements
             return true;
         }
 
+        private static string GetElementTypeString(BHoME.Bar bar)
+        {
+            switch (bar.FEAType)
+            {
+                case BHoME.BarFEAType.Bar:
+                    return "BAR";
+                case BHoME.BarFEAType.Beam:
+                    return "BEAM";
+                case BHoME.BarFEAType.Tie:
+                    return "TIE";
+                case BHoME.BarFEAType.Strut:
+                    return "STRUT";
+                default:
+                    return "BEAM";
+                    //Returning beam by default as it is the most generic type.
+                    //Might be better flagging this as an error
+            }
 
+        }
 
-        public static string CreateReleaseString(BHoME.Node node)
+        public static string CreateReleaseString(BHoMP.NodeConstraint nodeConstraint)
         {
             string UX = "F";
             string UY = "F";
@@ -140,17 +178,16 @@ namespace GSA_Adapter.Structural.Elements
             string RY = "F";
             string RZ = "F";
 
-            if (node.IsConstrained)
-            {
-                UX = ((node.Constraint.UX == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
-                UY = ((node.Constraint.UY == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
-                UZ = ((node.Constraint.UZ == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
-                RX = ((node.Constraint.RX == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
-                RY = ((node.Constraint.RY == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
-                RZ = ((node.Constraint.RZ == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
-            }
+            UX = ((nodeConstraint.UX == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
+            UY = ((nodeConstraint.UY == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
+            UZ = ((nodeConstraint.UZ == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
+            RX = ((nodeConstraint.RX == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
+            RY = ((nodeConstraint.RY == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
+            RZ = ((nodeConstraint.RZ == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
+
             return UX + UY + UZ + RX + RY + RZ;
         }
+
 
     }
 }

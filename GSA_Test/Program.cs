@@ -61,7 +61,7 @@ namespace GSA_Test
             Bar bar = new Bar(p1, p2);
             List<Bar> bars = new List<Bar>();
             bars.Add(bar);
-            BHoM.Structural.Properties.SectionProperty sec = new BHoM.Structural.Properties.SectionProperty(BHoM.Structural.Properties.ShapeType.Rectangle, BHoM.Structural.Properties.SectionType.Steel, 100, 50, 5, 5, 5, 5);
+            BHoM.Structural.Properties.SectionProperty sec = new BHoM.Structural.Properties.SectionProperty(BHoM.Structural.Properties.ShapeType.Rectangle, /*BHoM.Structural.Properties.SectionType.Steel,*/ 100, 50, 5, 5, 5, 5);
             sec.Description = "EXP";
             bar.SetSectionProperty(sec);
             BHoM.Materials.Material material = BHoM.Materials.Material.Default(BHoM.Materials.MaterialType.Steel);

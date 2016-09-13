@@ -15,7 +15,7 @@ namespace GSA_Adapter.Structural.Interface
         {
             BHoMBR.ResultServer<BHoM.Structural.Results.BarForce<int, string, int>> resultServer = new BHoM.Base.Results.ResultServer<BHoM.Structural.Results.BarForce<int, string, int>>();
             resultServer.OrderBy = orderBy;
-            BarResults.GetBarForces(GSA, resultServer, bars, cases, divisions);
+            BarResults.GetBarForces(gsa, resultServer, bars, cases, divisions);
             results = resultServer.LoadData();
 
             return true;
