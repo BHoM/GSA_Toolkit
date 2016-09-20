@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Interop.gsa_8_7;
 using BHoMBR = BHoM.Base.Results;
 using BHoMSR = BHoM.Structural.Results;
-using GSAUtil = GSA_Adapter.Utility.Utils; // not sure if I should do this?
+using GSAUtil = GSA_Adapter.Utility; // not sure if I should do this?
 
 namespace GSA_Adapter.Structural.Results
 {
@@ -88,7 +88,7 @@ namespace GSA_Adapter.Structural.Results
                 int idCase = Convert.ToInt32(Char.IsLetter(ac[0]) ? ac.Trim().Substring(1) : ac.Trim());
                 if (!CheckAnalysisCaseExists(gsa, idCase, ac, out message))
                 {
-                    GSAUtil.SendErrorMessage(message);
+                    GSAUtil.Utils.SendErrorMessage(message);
                     break;
                 } 
 
@@ -209,7 +209,7 @@ namespace GSA_Adapter.Structural.Results
 
             if (GSA.Output_Init_Arr(inputFlags, sAxis, caseDescription, header, 0) != 0)
             {
-                GSAUtil.SendErrorMessage("Initialisation failed");
+                GSAUtil.Utils.SendErrorMessage("Initialisation failed");
                 GSAresults = null;
                 return false;
             }
@@ -218,15 +218,15 @@ namespace GSA_Adapter.Structural.Results
             {
                 if (GSA.Output_Extract_Arr(bId, out GSAresults, out nComp) != 0)
                 {
-                    GSAUtil.SendErrorMessage("Extraction failed");
+                    GSAUtil.Utils.SendErrorMessage("Extraction failed");
                     return false;
                 }
             }
 
             catch (Exception e)
             {
-                GSAUtil.SendErrorMessage(e.Message);
-                GSAUtil.SendErrorMessage("Extraction failed on element " + bId);
+                GSAUtil.Utils.SendErrorMessage(e.Message);
+                GSAUtil.Utils.SendErrorMessage("Extraction failed on element " + bId);
 
                 GSAresults = new GsaResults[0];
 

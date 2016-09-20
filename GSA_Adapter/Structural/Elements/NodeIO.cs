@@ -1,25 +1,28 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Interop.gsa_8_7;
-using BHoMB = BHoM.Base;
-using BHoME = BHoM.Structural.Elements;
-using BHoMP = BHoM.Structural.Properties;
+using BHB = BHoM.Base;
+using BHE = BHoM.Structural.Elements;
+using BHP = BHoM.Structural.Properties;
 using GSA_Adapter.Utility;
 
 namespace GSA_Adapter.Structural.Elements
 {
     public class NodeIO
     {
-        public static bool CreateNodes(ComAuto GSA, List<BHoME.Node> nodes, out List<string> ids)
+        /***************************************/
+
+        public static bool CreateNodes(ComAuto GSA, List<BHE.Node> nodes, out List<string> ids)
         {
             ids = new List<string>();
 
             int highestIndex = GSA.GwaCommand("HIGHEST, NODE") + 1;
 
-            foreach (BHoME.Node n in nodes)
+            foreach (BHE.Node n in nodes)
             {
                 string cmd;
                 string command = "NODE.2";
@@ -56,17 +59,18 @@ namespace GSA_Adapter.Structural.Elements
             return true;
         }
 
+        /***************************************/
 
-        public static bool CreateNodes(ComAuto gsa, List<BHoME.Node> nodes)
+        public static bool CreateNodes(ComAuto gsa, List<BHE.Node> nodes)
         {
             //ids = new List<string>();
 
-            List<BHoME.Node> idNodes = nodes.Where(x => x.CustomData.ContainsKey("GSA_id")).ToList();
-            List<BHoME.Node> nonIdNodes = nodes.Where(x => !x.CustomData.ContainsKey("GSA_id")).ToList();
-
+            List<BHE.Node> idNodes = nodes.Where(x => x.CustomData.ContainsKey("GSA_id")).ToList();
+            List<BHE.Node> nonIdNodes = nodes.Where(x => !x.CustomData.ContainsKey("GSA_id")).ToList();
+            
 
             //Replace nodes in gsa with nodes that have a custom data GSA_id
-            foreach (BHoME.Node n in idNodes)
+            foreach (BHE.Node n in idNodes)
             {
                 string id = n.CustomData["GSA_id"].ToString();
                 SetNode(gsa, n, id);
@@ -82,15 +86,16 @@ namespace GSA_Adapter.Structural.Elements
 
 
             //Grab all nodes in gsa and store them in a matrix based on their position
-            BHoM.Generic.PointMatrix<BHoME.Node> gsaNodes = GetNodes(gsa, Utils.CreateIntSequence(highestIndex));
+            BHoM.Generic.PointMatrix<BHE.Node> gsaNodes = GetNodes(gsa, Utils.CreateIntSequence(highestIndex));
 
             highestIndex++;
 
-            foreach (BHoME.Node n in nonIdNodes)
+            foreach (BHE.Node n in nonIdNodes)
             {
 
                 //Check if there is a node at the same position as the previous ones
-                BHoME.Node closeNode = gsaNodes.GetClosestPoint(n.Point, tol).Data;
+                BHE.Node closeNode = gsaNodes.GetClosestPoint(n.Point, tol).Data;
+
 
                 //If no node is found add a new one
                 if (closeNode == null)
@@ -104,15 +109,29 @@ namespace GSA_Adapter.Structural.Elements
                 //Otherwhise add the found nodes GSA_id to the node
                 else
                 {
-                    n.CustomData.Add("GSA_id", closeNode.CustomData["GSA_id"]);
+
+                    string sectionPropertyIndex = closeNode.CustomData["GSA_id"].ToString();
+
+                    //If the name of the node has been uppdated or if the provided node is constrained,
+                    //the current existing node is overwritten
+                    if (n.Name != closeNode.Name || n.IsConstrained)
+                    {
+                        SetNode(gsa, n, sectionPropertyIndex);
+                    }
+
+                    n.CustomData.Add("GSA_id", sectionPropertyIndex);
                 }
 
 
             }
+            gsa.UpdateViews();
             return true;
+            
         }
 
-        public static bool SetNode(ComAuto gsa, BHoME.Node n, string index)
+        /***************************************/
+
+        public static bool SetNode(ComAuto gsa, BHE.Node n, string index)
         {
             string command = "NODE.2";
             string name = n.Name;
@@ -131,9 +150,74 @@ namespace GSA_Adapter.Structural.Elements
                 return false;
             }
 
-            gsa.UpdateViews();
+            
             return true;
         }
+
+        /***************************************/
+
+         /// <summary>
+         /// Methods used by load setting comands for nodal loads to get the ids.
+         /// TODO: Should the create node methods be used instead?
+         /// </summary>
+         /// <param name="gsa"></param>
+         /// <param name="nodes"></param>
+         /// <param name="ids"></param>
+         /// <returns></returns>
+        public static bool GetOrCreateNodes(ComAuto gsa, List<BHE.Node> nodes, out List<string> ids)
+        {
+
+            List<BHE.Node> idNodes = nodes.Where(x => x.CustomData.ContainsKey("GSA_id")).ToList();
+            List<BHE.Node> nonIdNodes = nodes.Where(x => !x.CustomData.ContainsKey("GSA_id")).ToList();
+
+            ids = idNodes.Select(x => x.CustomData["GSA_id"].ToString()).ToList();
+
+            if (nonIdNodes.Count < 1)
+                return true;
+
+            //Hardcoded tolerance, need to be able to set this
+            double tol = 0.001;
+
+            int highestIndex = gsa.GwaCommand("HIGHEST, NODE");
+
+
+            //Grab all nodes in gsa and store them in a matrix based on their position
+            BHoM.Generic.PointMatrix<BHE.Node> gsaNodes = GetNodes(gsa, Utils.CreateIntSequence(highestIndex));
+
+            highestIndex++;
+
+            foreach (BHE.Node n in nonIdNodes)
+            {
+
+                //Check if there is a node at the same position as the previous ones
+                BHE.Node closeNode = gsaNodes.GetClosestPoint(n.Point, tol).Data;
+
+
+                //If no node is found add a new one
+                if (closeNode == null)
+                {
+                    string sectionPropertyIndex = highestIndex.ToString();
+                    highestIndex++;
+                    SetNode(gsa, n, sectionPropertyIndex);
+                    n.CustomData.Add("GSA_id", sectionPropertyIndex);
+                    gsaNodes.AddPoint(n.Point, n);
+                    ids.Add(sectionPropertyIndex);
+                }
+                //Otherwhise add the found nodes GSA_id to the node
+                else
+                {
+                    ids.Add(closeNode.CustomData["GSA_id"].ToString());
+                }
+
+
+            }
+            gsa.UpdateViews();
+            return true;
+
+
+        }
+
+        /***************************************/
 
         //public static List<BHoME.Node> GetNodes(ComAuto gsa, int[] nodeNumbers)
         //{
@@ -158,18 +242,18 @@ namespace GSA_Adapter.Structural.Elements
         //        //TODO: Add restraints
 
         //        nodes.AddPoint(node.Point, node);
-                
+
         //    }
 
 
         //    return nodes;
         //}
 
-        public static BHoM.Generic.PointMatrix<BHoME.Node> GetNodes(ComAuto gsa, int[] nodeNumbers)
+        public static BHoM.Generic.PointMatrix<BHE.Node> GetNodes(ComAuto gsa, int[] nodeNumbers)
         {
 
             //Hardcoded cell size. Will need to be specified more carefully
-            BHoM.Generic.PointMatrix<BHoME.Node> nodes = new BHoM.Generic.PointMatrix<BHoM.Structural.Elements.Node>(0.001);
+            BHoM.Generic.PointMatrix<BHE.Node> nodes = new BHoM.Generic.PointMatrix<BHoM.Structural.Elements.Node>(0.001);
 
             if (nodeNumbers.Length < 1)
                 return nodes;
@@ -184,10 +268,12 @@ namespace GSA_Adapter.Structural.Elements
 
             foreach (GsaNode gn in gsaNodes)
             {
-                BHoME.Node node = new BHoME.Node(gn.Coor[0], gn.Coor[1], gn.Coor[2], gn.Name);
+                BHE.Node node = new BHE.Node(gn.Coor[0], gn.Coor[1], gn.Coor[2], gn.Name);
                 node.CustomData.Add("GSA_id", gn.Ref);
 
-                //TODO: Add restraints
+                //Check if the node is restrained in some way
+                if(gn.Restraint != 0 || gn.Stiffness.Sum() != 0)
+                    node.Constraint = GetConstraint(gn.Restraint, gn.Stiffness);
 
                 nodes.AddPoint(node.Point, node);
 
@@ -197,7 +283,37 @@ namespace GSA_Adapter.Structural.Elements
             return nodes;
         }
 
-        public static string GetRestraintString(BHoME.Node node)
+        private static BHP.NodeConstraint GetConstraint(int gsaConst, double[] stiffnesses)
+        {
+            //Construct the constraint
+            BitArray arr = new BitArray(new int[] { gsaConst });
+            bool[] fixities = new bool[6];
+
+            for (int i = 0; i < 6; i++)
+            {
+                fixities[i] = arr[i];
+            }
+            
+            
+            //char[] restr = Convert.ToString(gsaConst, 2).ToCharArray().Reverse().ToArray();
+
+            //bool[] fixities = new bool[] { false, false, false, false, false, false };
+
+            //for (int i = 0; i < restr.Length; i++)
+            //{
+            //    if (restr[i] == '1')
+            //        fixities[i] = true;
+            //}
+
+            
+
+            BHP.NodeConstraint con = new BHoM.Structural.Properties.NodeConstraint("", fixities, stiffnesses);
+
+            return con;
+
+        }
+
+        public static string GetRestraintString(BHE.Node node)
         {
             int X = 0;
             int Y = 0;
@@ -208,12 +324,12 @@ namespace GSA_Adapter.Structural.Elements
 
             if (node.IsConstrained)
             {
-                X = ((node.Constraint.UX == BHoMP.DOFType.Fixed) ? 1 : 0);
-                Y = ((node.Constraint.UY == BHoMP.DOFType.Fixed) ? 1 : 0);
-                Z = ((node.Constraint.UZ == BHoMP.DOFType.Fixed) ? 1 : 0);
-                XX = ((node.Constraint.RX == BHoMP.DOFType.Fixed) ? 1 : 0);
-                YY = ((node.Constraint.RY == BHoMP.DOFType.Fixed) ? 1 : 0);
-                ZZ = ((node.Constraint.RZ == BHoMP.DOFType.Fixed) ? 1 : 0);
+                X = ((node.Constraint.UX == BHP.DOFType.Fixed) ? 1 : 0);
+                Y = ((node.Constraint.UY == BHP.DOFType.Fixed) ? 1 : 0);
+                Z = ((node.Constraint.UZ == BHP.DOFType.Fixed) ? 1 : 0);
+                XX = ((node.Constraint.RX == BHP.DOFType.Fixed) ? 1 : 0);
+                YY = ((node.Constraint.RY == BHP.DOFType.Fixed) ? 1 : 0);
+                ZZ = ((node.Constraint.RZ == BHP.DOFType.Fixed) ? 1 : 0);
             }
 
             return X + "," + Y + "," + Z + "," + XX + "," + YY + "," + ZZ;

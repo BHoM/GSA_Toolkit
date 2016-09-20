@@ -161,33 +161,33 @@ namespace GSA_Adapter.Structural.Properties
             return true;
         }
 
-        static public Utils.GsaEnums.MaterialType GetMaterialType(ComAuto GSA, BHoMM.Material material)
+        static public GsaEnums.MaterialType GetMaterialType(ComAuto GSA, BHoMM.Material material)
         {
             switch (material.Type)
             {
                 case BHoMM.MaterialType.Aluminium:
-                    return Utils.GsaEnums.MaterialType.MT_ALUMINIUM;
+                    return GsaEnums.MaterialType.MT_ALUMINIUM;
 
                 case BHoMM.MaterialType.Concrete:
-                    return Utils.GsaEnums.MaterialType.MT_CONCRETE;
+                    return GsaEnums.MaterialType.MT_CONCRETE;
 
                 case BHoMM.MaterialType.Glass:
-                    return Utils.GsaEnums.MaterialType.MT_GLASS;
+                    return GsaEnums.MaterialType.MT_GLASS;
 
                 case BHoMM.MaterialType.Rebar:
-                    return Utils.GsaEnums.MaterialType.MT_UNDEF;
+                    return GsaEnums.MaterialType.MT_UNDEF;
 
                 case BHoMM.MaterialType.Steel:
-                    return Utils.GsaEnums.MaterialType.MT_STEEL;
+                    return GsaEnums.MaterialType.MT_STEEL;
 
                 case BHoMM.MaterialType.Tendon:
-                    return Utils.GsaEnums.MaterialType.MT_UNDEF;
+                    return GsaEnums.MaterialType.MT_UNDEF;
 
                 case BHoMM.MaterialType.Timber:
-                    return Utils.GsaEnums.MaterialType.MT_TIMBER;
+                    return GsaEnums.MaterialType.MT_TIMBER;
 
                 default:
-                    return Utils.GsaEnums.MaterialType.MT_UNDEF;
+                    return GsaEnums.MaterialType.MT_UNDEF;
             }
         }
 

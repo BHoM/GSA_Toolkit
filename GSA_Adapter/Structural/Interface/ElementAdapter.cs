@@ -111,7 +111,9 @@ namespace GSA_Adapter.Structural.Interface
 
         public bool SetNodes(List<BHoME.Node> nodes, out List<string> ids)
         {
-            return Structural.Elements.NodeIO.CreateNodes(gsa, nodes, out ids);
+            //TODO: returning ids
+            ids = new List<string>();
+            return Structural.Elements.NodeIO.CreateNodes(gsa, nodes);
         }
 
         public bool SetBars(List<BHoME.Bar> bars, out List<string> ids)
@@ -156,7 +158,7 @@ namespace GSA_Adapter.Structural.Interface
 
         public bool SetLoads(List<BHoML.ILoad> loads)
         {
-            throw new NotImplementedException();
+            return Structural.Loads.LoadIO.AddLoads(gsa, loads);
         }
 
         bool IElementAdapter.GetLoads(out List<BHoML.ILoad> loads, List<string> ids)

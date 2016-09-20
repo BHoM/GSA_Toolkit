@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Interop.gsa_8_7;
-using BHoMB = BHoM.Base;
-using BHoMG = BHoM.Global;
-using BHoME = BHoM.Structural.Elements;
-using BHoMP = BHoM.Structural.Properties;
-using BHoMM = BHoM.Materials;
+using BHB = BHoM.Base;
+using BHG = BHoM.Global;
+using BHE = BHoM.Structural.Elements;
+using BHP = BHoM.Structural.Properties;
+using BHM = BHoM.Materials;
 using GSA_Adapter.Structural.Properties;
 using GSA_Adapter.Utility;
 
@@ -24,14 +24,14 @@ namespace GSA_Adapter.Structural.Elements
         /// Get bars method, gets bars from a GSA model and all associated data. 
         /// </summary>
         /// <returns></returns>
-        public static bool GetBars(ComAuto gsa, out List<BHoME.Bar> barList, string barNumbers = "all")
+        public static bool GetBars(ComAuto gsa, out List<BHE.Bar> barList, string barNumbers = "all")
         {
-            BHoMB.ObjectManager<int, BHoME.Bar> bars = new BHoMB.ObjectManager<int, BHoME.Bar>(BHoMG.Project.ActiveProject, Utils.NUM_KEY, BHoMB.FilterOption.UserData);
-            BHoMB.ObjectManager<BHoMP.SectionProperty> sections = new BHoMB.ObjectManager<BHoMP.SectionProperty>(BHoMG.Project.ActiveProject);
-            BHoMB.ObjectManager<BHoMP.BarRelease> releases = new BHoMB.ObjectManager<BHoMP.BarRelease>(BHoMG.Project.ActiveProject);
-            BHoMB.ObjectManager<BHoMP.BarConstraint> constraints = new BHoMB.ObjectManager<BHoMP.BarConstraint>(BHoMG.Project.ActiveProject);
-            BHoMB.ObjectManager<BHoMM.Material> materials = new BHoMB.ObjectManager<BHoMM.Material>(BHoMG.Project.ActiveProject);
-            BHoMB.ObjectManager<int, BHoME.Node> nodes = new BHoMB.ObjectManager<int, BHoME.Node>(BHoMG.Project.ActiveProject, Utils.NUM_KEY, BHoMB.FilterOption.UserData);
+            BHB.ObjectManager<int, BHE.Bar> bars = new BHB.ObjectManager<int, BHE.Bar>(BHG.Project.ActiveProject, Utils.NUM_KEY, BHB.FilterOption.UserData);
+            BHB.ObjectManager<BHP.SectionProperty> sections = new BHB.ObjectManager<BHP.SectionProperty>(BHG.Project.ActiveProject);
+            BHB.ObjectManager<BHP.BarRelease> releases = new BHB.ObjectManager<BHP.BarRelease>(BHG.Project.ActiveProject);
+            BHB.ObjectManager<BHP.BarConstraint> constraints = new BHB.ObjectManager<BHP.BarConstraint>(BHG.Project.ActiveProject);
+            BHB.ObjectManager<BHM.Material> materials = new BHB.ObjectManager<BHM.Material>(BHG.Project.ActiveProject);
+            BHB.ObjectManager<int, BHE.Node> nodes = new BHB.ObjectManager<int, BHE.Node>(BHG.Project.ActiveProject, Utils.NUM_KEY, BHB.FilterOption.UserData);
 
 
             //sections = PropertyIO.GetSections(gsa); //name as key
@@ -51,10 +51,10 @@ namespace GSA_Adapter.Structural.Elements
 
                 GsaNode[] gsaNodes;
                 gsa.Nodes(gsaBar.Topo, out gsaNodes);
-                BHoME.Node n1 = new BHoME.Node(gsaNodes[0].Coor[0], gsaNodes[0].Coor[1], gsaNodes[0].Coor[2]);
-                BHoME.Node n2 = new BHoME.Node(gsaNodes[1].Coor[0], gsaNodes[1].Coor[1], gsaNodes[1].Coor[2]);
+                BHE.Node n1 = new BHE.Node(gsaNodes[0].Coor[0], gsaNodes[0].Coor[1], gsaNodes[0].Coor[2]);
+                BHE.Node n2 = new BHE.Node(gsaNodes[1].Coor[0], gsaNodes[1].Coor[1], gsaNodes[1].Coor[2]);
 
-                BHoME.Bar bar = bars.Add(gsaBar.Ref, new BHoME.Bar(n1, n2, gsaBar.Ref.ToString()));
+                BHE.Bar bar = bars.Add(gsaBar.Ref, new BHE.Bar(n1, n2, gsaBar.Ref.ToString()));
                
                 bar.OrientationAngle = gsaBar.Beta;
 
@@ -72,12 +72,30 @@ namespace GSA_Adapter.Structural.Elements
             return true;
         }
 
+        internal static bool GetOrCreateBars(ComAuto gsa, List<BHE.Bar> bars, out List<string> ids)
+        {
+
+            List<BHE.Bar> idBars = bars.Where(x => x.CustomData.ContainsKey("GSA_id")).ToList();
+            List<BHE.Bar> nonIdBars = bars.Where(x => !x.CustomData.ContainsKey("GSA_id")).ToList();
+
+            ids = idBars.Select(x => x.CustomData["GSA_id"].ToString()).ToList();
+
+            
+
+            if (nonIdBars.Count < 1)
+                return true;
+
+            //TODO: Should bars without an GSA_id be added here...??
+            Utils.SendErrorMessage("Please only provide bars with an GSA_id when creating bar loads");
+            return false;
+        }
+
 
         /// <summary>
         /// Create GSA bars
         /// </summary>
         /// <returns></returns>
-        public static bool CreateBars(ComAuto gsa, List<BHoME.Bar> bars, out List<string> ids)
+        public static bool CreateBars(ComAuto gsa, List<BHE.Bar> bars, out List<string> ids)
         {
             ids = new List<string>();
 
@@ -85,9 +103,9 @@ namespace GSA_Adapter.Structural.Elements
             //BHoMB.ObjectManager<BHoMM.Material> materials = new BHoMB.ObjectManager<BHoMM.Material>(BHoMG.Project.ActiveProject);
 
             
-            Dictionary<string, BHoMP.SectionProperty> sections = PropertyIO.GetSections(gsa, true);
+            Dictionary<string, BHP.SectionProperty> sections = PropertyIO.GetSections(gsa, true);
 
-            List<BHoMP.SectionProperty> sectionProperties = bars.Select(x => x.SectionProperty).Distinct().ToList();
+            List<BHP.SectionProperty> sectionProperties = bars.Select(x => x.SectionProperty).Distinct().ToList();
 
             PropertyIO.CreateSectionProperties(gsa, sectionProperties);
 
@@ -96,13 +114,13 @@ namespace GSA_Adapter.Structural.Elements
             //List<string> materialList = MaterialIO.GetMaterialStringList(gsa);
             List<string> nodeIds = new List<string>();
 
-            List<BHoME.Node> nodes = bars.SelectMany(x => new List<BHoME.Node> { x.StartNode, x.EndNode }).Distinct().ToList();
+            List<BHE.Node> nodes = bars.SelectMany(x => new List<BHE.Node> { x.StartNode, x.EndNode }).Distinct().ToList();
 
             NodeIO.CreateNodes(gsa, nodes);
 
             int highestIndex = gsa.GwaCommand("HIGHEST, EL") + 1;
 
-            foreach (BHoME.Bar bar in bars)
+            foreach (BHE.Bar bar in bars)
             {
                 string command = "EL.2";
                 string index;
@@ -149,17 +167,17 @@ namespace GSA_Adapter.Structural.Elements
             return true;
         }
 
-        private static string GetElementTypeString(BHoME.Bar bar)
+        private static string GetElementTypeString(BHE.Bar bar)
         {
             switch (bar.FEAType)
             {
-                case BHoME.BarFEAType.Bar:
+                case BHE.BarFEAType.Axial:
                     return "BAR";
-                case BHoME.BarFEAType.Beam:
+                case BHE.BarFEAType.Flexural:
                     return "BEAM";
-                case BHoME.BarFEAType.Tie:
+                case BHE.BarFEAType.TensionOnly:
                     return "TIE";
-                case BHoME.BarFEAType.Strut:
+                case BHE.BarFEAType.CompressionOnly:
                     return "STRUT";
                 default:
                     return "BEAM";
@@ -169,7 +187,7 @@ namespace GSA_Adapter.Structural.Elements
 
         }
 
-        public static string CreateReleaseString(BHoMP.NodeConstraint nodeConstraint)
+        public static string CreateReleaseString(BHP.NodeConstraint nodeConstraint)
         {
             string UX = "F";
             string UY = "F";
@@ -178,12 +196,12 @@ namespace GSA_Adapter.Structural.Elements
             string RY = "F";
             string RZ = "F";
 
-            UX = ((nodeConstraint.UX == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
-            UY = ((nodeConstraint.UY == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
-            UZ = ((nodeConstraint.UZ == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
-            RX = ((nodeConstraint.RX == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
-            RY = ((nodeConstraint.RY == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
-            RZ = ((nodeConstraint.RZ == BHoMP.DOFType.Fixed) ? "R" : "F").ToString();
+            UX = ((nodeConstraint.UX == BHP.DOFType.Fixed) ? "R" : "F").ToString();
+            UY = ((nodeConstraint.UY == BHP.DOFType.Fixed) ? "R" : "F").ToString();
+            UZ = ((nodeConstraint.UZ == BHP.DOFType.Fixed) ? "R" : "F").ToString();
+            RX = ((nodeConstraint.RX == BHP.DOFType.Fixed) ? "R" : "F").ToString();
+            RY = ((nodeConstraint.RY == BHP.DOFType.Fixed) ? "R" : "F").ToString();
+            RZ = ((nodeConstraint.RZ == BHP.DOFType.Fixed) ? "R" : "F").ToString();
 
             return UX + UY + UZ + RX + RY + RZ;
         }

@@ -52,8 +52,10 @@
     <Compile Include="Structural\Loads\AnalysisTaskIO.cs" />
     <Compile Include="Structural\Interface\App.cs" />
     <Compile Include="Structural\Elements\BarIO.cs" />
+    <Compile Include="Structural\Loads\BarLoadIO.cs" />
     <Compile Include="Structural\Loads\LoadcaseIO.cs" />
     <Compile Include="Structural\Loads\LoadIO.cs" />
+    <Compile Include="Structural\Loads\NodeLodeIO.cs" />
     <Compile Include="Structural\Properties\MaterialIO.cs" />
     <Compile Include="Structural\Elements\NodeIO.cs" />
     <Compile Include="Structural\Interface\ElementAdapter.cs" />
@@ -62,6 +64,7 @@
     <Compile Include="Structural\Properties\PropertyIO.cs" />
     <Compile Include="Structural\Properties\PropertyStringGenerators.cs" />
     <Compile Include="Structural\Results\BarResults.cs" />
+    <Compile Include="Utility\GsaEnums.cs" />
     <Compile Include="Utility\Utils.cs" />
   </ItemGroup>
   <ItemGroup />
