@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Structural\Elements\RigidLinkIO.cs" />
     <Compile Include="Structural\Interface\ResultAdapter.cs" />
     <Compile Include="Structural\Loads\AnalysisTaskIO.cs" />
     <Compile Include="Structural\Interface\App.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="Structural\Loads\LoadcaseIO.cs" />
     <Compile Include="Structural\Loads\LoadIO.cs" />
     <Compile Include="Structural\Loads\NodeLodeIO.cs" />
+    <Compile Include="Structural\Properties\LinkPropertyIO.cs" />
     <Compile Include="Structural\Properties\MaterialIO.cs" />
     <Compile Include="Structural\Elements\NodeIO.cs" />
     <Compile Include="Structural\Interface\ElementAdapter.cs" />

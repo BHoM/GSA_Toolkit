@@ -103,7 +103,7 @@ namespace GSA_Adapter.Structural.Elements
             //BHoMB.ObjectManager<BHoMM.Material> materials = new BHoMB.ObjectManager<BHoMM.Material>(BHoMG.Project.ActiveProject);
 
             
-            Dictionary<string, BHP.SectionProperty> sections = PropertyIO.GetSections(gsa, true);
+            //Dictionary<string, BHP.SectionProperty> sections = PropertyIO.GetSections(gsa, true);
 
             List<BHP.SectionProperty> sectionProperties = bars.Select(x => x.SectionProperty).Distinct().ToList();
 

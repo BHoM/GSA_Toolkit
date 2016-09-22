@@ -114,7 +114,7 @@ namespace GSA_Adapter.Structural.Elements
 
                     //If the name of the node has been uppdated or if the provided node is constrained,
                     //the current existing node is overwritten
-                    if (n.Name != closeNode.Name || n.IsConstrained)
+                    if (!(string.IsNullOrWhiteSpace(n.Name) && n.Name != closeNode.Name) || n.IsConstrained)
                     {
                         SetNode(gsa, n, sectionPropertyIndex);
                     }

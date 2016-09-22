@@ -58,6 +58,7 @@ namespace GSA_Adapter.Structural.Properties
                 case BHoMP.ShapeType.DoubleChannel:
                     CreateDoubleChannelString(secProp, out desc, out prop);
                     break;
+                case BHoMP.ShapeType.Cable:
                 default:
                     CreateCustomDataString(secProp, out desc, out prop);
                     break;
@@ -249,12 +250,26 @@ namespace GSA_Adapter.Structural.Properties
 
             if (description == "EXP")
             {
-                secProp = new BHoMP.SectionProperty();
-                double a, iyy, izz, j;
+                //prop = "PROP," + area + "," + Iyy + "," + Izz + "," + J + "," + Avy + "," + Avz;
+
+
+                BHoMP.ExplicitSectionProperty expSecProp = new BHoMP.ExplicitSectionProperty();
+                double a, iyy, izz, j, avy, avz;
                 double.TryParse(gsaStrings[6], out a);
                 double.TryParse(gsaStrings[7], out iyy);
                 double.TryParse(gsaStrings[8], out izz);
                 double.TryParse(gsaStrings[9], out j);
+                double.TryParse(gsaStrings[10], out avy);
+                double.TryParse(gsaStrings[11], out avz);
+
+                expSecProp.GrossArea = a;
+                expSecProp.Ix = iyy;
+                expSecProp.Iy = izz;
+                expSecProp.J = j;
+                expSecProp.Asx = avy;
+                expSecProp.Asy = avz;
+
+                secProp = expSecProp;
             }
 
             if (description.StartsWith("STD") /*|| description.StartsWith("CAT") */)
@@ -270,7 +285,7 @@ namespace GSA_Adapter.Structural.Properties
                         W = double.Parse(desc[3]);
                         T = double.Parse(desc[4]);
                         t = double.Parse(desc[5]);
-                        secProp = new BHoMP.SectionProperty(BHoMP.ShapeType.ISection, /*BHoMP.SectionType.Steel,*/ D, W, T, t, 0, 0);
+                        secProp = new BHoMP.SteelSection(BHoMP.ShapeType.ISection, /*BHoMP.SectionType.Steel,*/ D, W, T, t, 0, 0);
                         break;
                     case "GI":
                         D = double.Parse(desc[2]);
@@ -284,14 +299,14 @@ namespace GSA_Adapter.Structural.Properties
                     case "CHS":
                         D = double.Parse(desc[2]);
                         t = double.Parse(desc[3]);
-                        secProp = new BHoMP.SectionProperty(BHoMP.ShapeType.Tube, /*BHoMP.SectionType.Steel,*/ D, D, t, t, 0, 0);
+                        secProp = new BHoMP.SteelSection(BHoMP.ShapeType.Tube, /*BHoMP.SectionType.Steel,*/ D, D, t, t, 0, 0);
                         break;
                     case "RHS":
                         D = double.Parse(desc[2]);
                         W = double.Parse(desc[3]);
                         T = double.Parse(desc[4]);
                         t = double.Parse(desc[5]);
-                        secProp = new BHoMP.SectionProperty(BHoMP.ShapeType.Rectangle, /*BHoMP.SectionType.Steel,*/ D, W, T, t, 0, 0);
+                        secProp = new BHoMP.SteelSection(BHoMP.ShapeType.Rectangle, /*BHoMP.SectionType.Steel,*/ D, W, T, t, 0, 0);
                         break;
 
                     default:
