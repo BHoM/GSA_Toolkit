@@ -65,14 +65,14 @@ namespace GSA_Adapter.Structural.Elements
         {
             //ids = new List<string>();
 
-            List<BHE.Node> idNodes = nodes.Where(x => x.CustomData.ContainsKey("GSA_id")).ToList();
-            List<BHE.Node> nonIdNodes = nodes.Where(x => !x.CustomData.ContainsKey("GSA_id")).ToList();
+            List<BHE.Node> idNodes = nodes.Where(x => x.CustomData.ContainsKey(Utils.ID)).ToList();
+            List<BHE.Node> nonIdNodes = nodes.Where(x => !x.CustomData.ContainsKey(Utils.ID)).ToList();
             
 
             //Replace nodes in gsa with nodes that have a custom data GSA_id
             foreach (BHE.Node n in idNodes)
             {
-                string id = n.CustomData["GSA_id"].ToString();
+                string id = n.CustomData[Utils.ID].ToString();
                 SetNode(gsa, n, id);
             }
 
@@ -103,14 +103,14 @@ namespace GSA_Adapter.Structural.Elements
                     string sectionPropertyIndex = highestIndex.ToString();
                     highestIndex++;
                     SetNode(gsa, n, sectionPropertyIndex);
-                    n.CustomData.Add("GSA_id", sectionPropertyIndex);
+                    n.CustomData.Add(Utils.ID, sectionPropertyIndex);
                     gsaNodes.AddPoint(n.Point, n);
                 }
                 //Otherwhise add the found nodes GSA_id to the node
                 else
                 {
 
-                    string sectionPropertyIndex = closeNode.CustomData["GSA_id"].ToString();
+                    string sectionPropertyIndex = closeNode.CustomData[Utils.ID].ToString();
 
                     //If the name of the node has been uppdated or if the provided node is constrained,
                     //the current existing node is overwritten
@@ -119,7 +119,7 @@ namespace GSA_Adapter.Structural.Elements
                         SetNode(gsa, n, sectionPropertyIndex);
                     }
 
-                    n.CustomData.Add("GSA_id", sectionPropertyIndex);
+                    n.CustomData.Add(Utils.ID, sectionPropertyIndex);
                 }
 
 
@@ -167,10 +167,10 @@ namespace GSA_Adapter.Structural.Elements
         public static bool GetOrCreateNodes(ComAuto gsa, List<BHE.Node> nodes, out List<string> ids)
         {
 
-            List<BHE.Node> idNodes = nodes.Where(x => x.CustomData.ContainsKey("GSA_id")).ToList();
-            List<BHE.Node> nonIdNodes = nodes.Where(x => !x.CustomData.ContainsKey("GSA_id")).ToList();
+            List<BHE.Node> idNodes = nodes.Where(x => x.CustomData.ContainsKey(Utils.ID)).ToList();
+            List<BHE.Node> nonIdNodes = nodes.Where(x => !x.CustomData.ContainsKey(Utils.ID)).ToList();
 
-            ids = idNodes.Select(x => x.CustomData["GSA_id"].ToString()).ToList();
+            ids = idNodes.Select(x => x.CustomData[Utils.ID].ToString()).ToList();
 
             if (nonIdNodes.Count < 1)
                 return true;
@@ -199,14 +199,14 @@ namespace GSA_Adapter.Structural.Elements
                     string sectionPropertyIndex = highestIndex.ToString();
                     highestIndex++;
                     SetNode(gsa, n, sectionPropertyIndex);
-                    n.CustomData.Add("GSA_id", sectionPropertyIndex);
+                    n.CustomData.Add(Utils.ID, sectionPropertyIndex);
                     gsaNodes.AddPoint(n.Point, n);
                     ids.Add(sectionPropertyIndex);
                 }
                 //Otherwhise add the found nodes GSA_id to the node
                 else
                 {
-                    ids.Add(closeNode.CustomData["GSA_id"].ToString());
+                    ids.Add(closeNode.CustomData[Utils.ID].ToString());
                 }
 
 
@@ -237,7 +237,7 @@ namespace GSA_Adapter.Structural.Elements
         //    foreach (GsaNode gn in gsaNodes)
         //    {
         //        BHoME.Node node = new BHoME.Node(gn.Coor[0], gn.Coor[1], gn.Coor[2], gn.Name);
-        //        node.CustomData.Add("GSA_id", gn.Ref);
+        //        node.CustomData.Add(Utils.ID, gn.Ref);
 
         //        //TODO: Add restraints
 
@@ -269,7 +269,7 @@ namespace GSA_Adapter.Structural.Elements
             foreach (GsaNode gn in gsaNodes)
             {
                 BHE.Node node = new BHE.Node(gn.Coor[0], gn.Coor[1], gn.Coor[2], gn.Name);
-                node.CustomData.Add("GSA_id", gn.Ref);
+                node.CustomData.Add(Utils.ID, gn.Ref);
 
                 //Check if the node is restrained in some way
                 if(gn.Restraint != 0 || gn.Stiffness.Sum() != 0)

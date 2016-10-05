@@ -25,20 +25,20 @@ namespace GSA_Adapter.Structural.Properties
         //    BHoMM.Material material;
         //    //object id;
 
-        //    if (!materials.TryGetValue(bar.Material.Name, out material)/* || !bar.Material.CustomData.TryGetValue("GSA_id", out id) || id == null*/)
+        //    if (!materials.TryGetValue(bar.Material.Name, out material)/* || !bar.Material.CustomData.TryGetValue(Utils.ID, out id) || id == null*/)
         //    {
         //        material = bar.Material;
         //        int index = gsa.GwaCommand("HIGHEST, PROP_SEC") + 1;
 
         //        if (SetMaterial(gsa, material, out sectionPropertyIndex))
         //        {
-        //            //material.CustomData.Add("GSA_id", index);
+        //            //material.CustomData.Add(Utils.ID, index);
         //            materials.Add(material.Name, material);
         //        }
 
         //    }
 
-        //    return material.CustomData["GSA_id"].ToString();
+        //    return material.CustomData[Utils.ID].ToString();
         //}
 
         public static Dictionary<string, BHoMM.Material> GetMaterials(ComAuto gsa, bool nameAsKey = true, bool includeStandardMaterials = false)
@@ -55,7 +55,7 @@ namespace GSA_Adapter.Structural.Properties
             {
                 BHoMM.Material mat = GetMaterialFromGsaString(gsaMat);
                 if (nameAsKey) materials.Add(mat.Name, mat);
-                else materials.Add(mat.CustomData["GSA_id"].ToString(), mat);
+                else materials.Add(mat.CustomData[Utils.ID].ToString(), mat);
             }
 
             return materials;
@@ -75,7 +75,7 @@ namespace GSA_Adapter.Structural.Properties
         private static void AddStandardGsaMaterial(ref Dictionary<string, BHoMM.Material> materials, string name, bool nameAsKey)
         {
             BHoMM.Material mat = new BHoMM.Material("GSA Standard "+name);
-            mat.CustomData.Add("GSA_id", name);
+            mat.CustomData.Add(Utils.ID, name);
 
             if (nameAsKey)
                 materials.Add(mat.Name, mat);
@@ -95,7 +95,7 @@ namespace GSA_Adapter.Structural.Properties
                 object gsaIdobj;
 
                 //Replace material at position "id"
-                if (mat.CustomData.TryGetValue("GSA_id", out gsaIdobj))
+                if (mat.CustomData.TryGetValue(Utils.ID, out gsaIdobj))
                 {
                     string id = gsaIdobj.ToString();
                     SetMaterial(gsa, mat, id);
@@ -111,12 +111,12 @@ namespace GSA_Adapter.Structural.Properties
                     string id = highestId.ToString();
                     highestId++;
                     SetMaterial(gsa, mat, id);
-                    mat.CustomData.Add("GSA_id", id);
+                    mat.CustomData.Add(Utils.ID, id);
                     gsaMaterials.Add(mat.Name, mat);
                 }
                 else
                 {
-                    mat.CustomData.Add("GSA_id", gsaMaterials[mat.Name].CustomData["GSA_id"]);
+                    mat.CustomData.Add(Utils.ID, gsaMaterials[mat.Name].CustomData[Utils.ID]);
                 }
             }
 
@@ -284,7 +284,7 @@ namespace GSA_Adapter.Structural.Properties
 
             BHoMM.Material mat =new BHoM.Materials.Material(name, type, E, v, tC, G, rho);
 
-            mat.CustomData.Add("GSA_id", gStr[1].ToString());
+            mat.CustomData.Add(Utils.ID, gStr[1].ToString());
 
             return mat;
         }

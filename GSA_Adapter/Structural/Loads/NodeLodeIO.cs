@@ -46,24 +46,24 @@ namespace GSA_Adapter.Structural.Loads
             string name = load.Name;
             string str;
 
-            string appliedTo;
+            string appliedTo = LoadIO.CreateIdListOrGroupName(gsa, load.Objects);
 
-            if (string.IsNullOrWhiteSpace(load.Objects.Name))
-            {
-                List<string> ids;
-                if (!GSAE.NodeIO.GetOrCreateNodes(gsa, load.Objects, out ids)) { return false; }
-                appliedTo = ids.GetSpaceSeparatedString();
-            }
-            else
-            {
-                appliedTo = "\"" + load.Objects.Name + "\"";
-            }
+            //if (string.IsNullOrWhiteSpace(load.Objects.Name))
+            //{
+            //    List<string> ids;
+            //    if (!GSAE.NodeIO.GetOrCreateNodes(gsa, load.Objects, out ids)) { return false; }
+            //    appliedTo = ids.GetSpaceSeparatedString();
+            //}
+            //else
+            //{
+            //    appliedTo = "\"" + load.Objects.Name + "\"";
+            //}
 
 
 
-            string caseNo;
+            string caseNo = load.Loadcase.Number.ToString();
 
-            if(!LoadcaseIO.GetOrCreateLoadCaseId(gsa, load.Loadcase, out caseNo)) { return false; }
+            //if(!LoadcaseIO.GetOrCreateLoadCaseId(gsa, load.Loadcase, out caseNo)) { return false; }
 
             str = command + "," + name + "," + appliedTo + "," + caseNo + "," + "GLOBAL";
 

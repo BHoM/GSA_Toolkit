@@ -42,7 +42,7 @@ namespace GSA_Adapter.Structural.Elements
                 string name = link.Name;
                 int group = 0;
 
-                string startIndex = link.MasterNode.CustomData["GSA_id"].ToString();// nodeIds[0];
+                string startIndex = link.MasterNode.CustomData[Utils.ID].ToString();// nodeIds[0];
 
                 string dummy = "";
 
@@ -54,7 +54,7 @@ namespace GSA_Adapter.Structural.Elements
                     string index = highestIndex.ToString();
                     highestIndex++;
 
-                    string endIndex = slave.CustomData["GSA_id"].ToString();// nodeIds[1];
+                    string endIndex = slave.CustomData[Utils.ID].ToString();// nodeIds[1];
 
                     string str = command + ", " + index + ", " + propId + ", " + group + ", " + startIndex + ", " + endIndex + ", " + dummy;
 

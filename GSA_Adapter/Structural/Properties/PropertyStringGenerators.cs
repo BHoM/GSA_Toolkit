@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BHoMP = BHoM.Structural.Properties;
 using BHoMM = BHoM.Materials;
 using BHoM.Structural.Databases;
+using GSA_Adapter.Utility;
 
 namespace GSA_Adapter.Structural.Properties
 {
@@ -276,50 +277,77 @@ namespace GSA_Adapter.Structural.Properties
             {
                 double D, W, T, t, Wt, Wb, Tt, Tb;
                 string[] desc = description.Split('%');
-                switch (desc[1])
+                double factor;
+                string type;
+
+                if (desc[1].Contains("(cm)"))
+                {
+                    factor = 0.01;
+                    type = desc[1].Replace("(cm)", "");
+                }
+                else if (desc[1].Contains("(m)"))
+                {
+                    factor = 1;
+                    type = desc[1].Replace("(m)", "");
+                }
+                else
+                {
+                    factor = 0.001;
+                    type = desc[1];
+                }
+
+                switch (type)
                 {
                     case "UC":
                     case "UB":
                     case "I":
-                        D = double.Parse(desc[2]);
-                        W = double.Parse(desc[3]);
-                        T = double.Parse(desc[4]);
-                        t = double.Parse(desc[5]);
+                        D = double.Parse(desc[2]) * factor;
+                        W = double.Parse(desc[3]) * factor;
+                        T = double.Parse(desc[4]) * factor;
+                        t = double.Parse(desc[5]) * factor;
                         secProp = new BHoMP.SteelSection(BHoMP.ShapeType.ISection, /*BHoMP.SectionType.Steel,*/ D, W, T, t, 0, 0);
                         break;
                     case "GI":
-                        D = double.Parse(desc[2]);
-                        Wt = double.Parse(desc[3]);
-                        Wb = double.Parse(desc[4]);
-                        Tt = double.Parse(desc[5]);
-                        Tb = double.Parse(desc[6]);
-                        t = double.Parse(desc[7]);
+                        D = double.Parse(desc[2]) * factor;
+                        Wt = double.Parse(desc[3]) * factor;
+                        Wb = double.Parse(desc[4]) * factor;
+                        Tt = double.Parse(desc[5]) * factor;
+                        Tb = double.Parse(desc[6]) * factor;
+                        t = double.Parse(desc[7]) * factor;
                         secProp = BHoMP.SectionProperty.CreateISection(/*BHoMP.SectionType.Steel,*/ Wt, Wb, D, Tt, Tb, t, 0, 0);
                         break;
                     case "CHS":
-                        D = double.Parse(desc[2]);
-                        t = double.Parse(desc[3]);
+                        D = double.Parse(desc[2]) * factor;
+                        t = double.Parse(desc[3]) * factor;
                         secProp = new BHoMP.SteelSection(BHoMP.ShapeType.Tube, /*BHoMP.SectionType.Steel,*/ D, D, t, t, 0, 0);
                         break;
                     case "RHS":
-                        D = double.Parse(desc[2]);
-                        W = double.Parse(desc[3]);
-                        T = double.Parse(desc[4]);
-                        t = double.Parse(desc[5]);
-                        secProp = new BHoMP.SteelSection(BHoMP.ShapeType.Rectangle, /*BHoMP.SectionType.Steel,*/ D, W, T, t, 0, 0);
+                        D = double.Parse(desc[2]) * factor;
+                        W = double.Parse(desc[3]) * factor;
+                        T = double.Parse(desc[4]) * factor;
+                        t = double.Parse(desc[5]) * factor;
+                        secProp = new BHoMP.SteelSection(BHoMP.ShapeType.Box, /*BHoMP.SectionType.Steel,*/ D, W, T, t, 0, 0);
                         break;
-
+                    case "R":
+                        D = double.Parse(desc[2]) * factor;
+                        W = double.Parse(desc[3]) * factor;
+                        secProp = new BHoMP.SteelSection(BHoMP.ShapeType.Rectangle, D, W, 0, 0, 0, 0);
+                        break;
                     default:
                         break;
                 }
 
             }
 
-            secProp.CustomData.Add("GSA_id", id);
+            secProp.CustomData.Add(Utils.ID, id);
             secProp.Name = name;
-            secProp.Description = description;
             secProp.Material = materials[materialId];
             return secProp;
+        }
+
+        public static BHoMP.PanelProperty GetPanelPropertyFromGsaString(string gsaProp, Dictionary<string, BHoMM.Material> materials)
+        {
+            throw new NotImplementedException();
         }
     }
 }

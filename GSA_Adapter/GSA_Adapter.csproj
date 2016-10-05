@@ -48,11 +48,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Structural\Elements\GroupIO.cs" />
+    <Compile Include="Structural\Elements\MeshIO.cs" />
     <Compile Include="Structural\Elements\RigidLinkIO.cs" />
     <Compile Include="Structural\Interface\ResultAdapter.cs" />
     <Compile Include="Structural\Loads\AnalysisTaskIO.cs" />
     <Compile Include="Structural\Interface\App.cs" />
     <Compile Include="Structural\Elements\BarIO.cs" />
+    <Compile Include="Structural\Loads\AreaLoadIO.cs" />
     <Compile Include="Structural\Loads\BarLoadIO.cs" />
     <Compile Include="Structural\Loads\LoadcaseIO.cs" />
     <Compile Include="Structural\Loads\LoadIO.cs" />

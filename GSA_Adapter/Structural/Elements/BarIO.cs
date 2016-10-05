@@ -75,18 +75,16 @@ namespace GSA_Adapter.Structural.Elements
         internal static bool GetOrCreateBars(ComAuto gsa, List<BHE.Bar> bars, out List<string> ids)
         {
 
-            List<BHE.Bar> idBars = bars.Where(x => x.CustomData.ContainsKey("GSA_id")).ToList();
-            List<BHE.Bar> nonIdBars = bars.Where(x => !x.CustomData.ContainsKey("GSA_id")).ToList();
+            List<BHE.Bar> idBars = bars.Where(x => x.CustomData.ContainsKey(Utils.ID)).ToList();
+            List<BHE.Bar> nonIdBars = bars.Where(x => !x.CustomData.ContainsKey(Utils.ID)).ToList();
 
-            ids = idBars.Select(x => x.CustomData["GSA_id"].ToString()).ToList();
-
-            
+            ids = idBars.Select(x => x.CustomData[Utils.ID].ToString()).ToList();
 
             if (nonIdBars.Count < 1)
                 return true;
 
             //TODO: Should bars without an GSA_id be added here...??
-            Utils.SendErrorMessage("Please only provide bars with an GSA_id when creating bar loads");
+            Utils.SendErrorMessage("Please only provide bars with an GSA_id when creating bar loads or bar groups");
             return false;
         }
 
@@ -97,26 +95,37 @@ namespace GSA_Adapter.Structural.Elements
         /// <returns></returns>
         public static bool CreateBars(ComAuto gsa, List<BHE.Bar> bars, out List<string> ids)
         {
+            //Shallowclone the bars and their custom data
+            bars.ForEach(x => x = (BHE.Bar)x.ShallowClone());
+            bars.ForEach(x => x.CustomData = new Dictionary<string, object>(x.CustomData));
+
             ids = new List<string>();
 
-            //BHoMB.ObjectManager<BHoMP.SectionProperty> sections = new BHoMB.ObjectManager<BHoMP.SectionProperty>(BHoMG.Project.ActiveProject);
-            //BHoMB.ObjectManager<BHoMM.Material> materials = new BHoMB.ObjectManager<BHoMM.Material>(BHoMG.Project.ActiveProject);
+            //Get unique section properties and clone the ones that does not contain a gsa ID
+            Dictionary<Guid, BHP.SectionProperty> sectionProperties = bars.Select(x => x.SectionProperty).Distinct().ToDictionary(x => x.BHoM_Guid);
+            Dictionary<Guid, BHP.SectionProperty> clonedSecProps = Utils.CloneSectionProperties(sectionProperties);
 
-            
-            //Dictionary<string, BHP.SectionProperty> sections = PropertyIO.GetSections(gsa, true);
 
-            List<BHP.SectionProperty> sectionProperties = bars.Select(x => x.SectionProperty).Distinct().ToList();
+            //Create the section properties
+            PropertyIO.CreateSectionProperties(gsa, clonedSecProps.Values.ToList());
 
-            PropertyIO.CreateSectionProperties(gsa, sectionProperties);
+            //Get unique nodes and clone the ones that does not contain a gsa ID
+            Dictionary<Guid, BHE.Node> nodes = bars.SelectMany(x => new List<BHE.Node> { x.StartNode, x.EndNode }).Distinct().ToDictionary(x => x.BHoM_Guid);
+            //Dictionary<Guid, BHE.Node> clonedNodes = nodes.Select(x => x.Value.CustomData.ContainsKey(Utils.ID) ? x : new KeyValuePair<Guid, BHE.Node>(x.Key, (BHE.Node)x.Value.ShallowClone())).ToDictionary(x => x.Key, x => x.Value);
+            Dictionary<Guid, BHE.Node> clonedNodes = Utils.CloneObjects(nodes);
 
-            //TODO: Create dictionary of properties and materials - do this at higher level for repeat use
-            //List<string> secProps = PropertyIO.GetGsaSectionPropertyStrings(gsa);
-            //List<string> materialList = MaterialIO.GetMaterialStringList(gsa);
-            List<string> nodeIds = new List<string>();
 
-            List<BHE.Node> nodes = bars.SelectMany(x => new List<BHE.Node> { x.StartNode, x.EndNode }).Distinct().ToList();
+            //Assign the clones section properties to the abrs
+            bars.ForEach(x => x.SectionProperty = clonedSecProps[x.SectionProperty.BHoM_Guid]);
 
-            NodeIO.CreateNodes(gsa, nodes);
+            //Assign the cloned nodes to the bars
+            bars.ForEach(x => x.StartNode = clonedNodes[x.StartNode.BHoM_Guid]);
+            bars.ForEach(x => x.EndNode = clonedNodes[x.EndNode.BHoM_Guid]);
+
+            //bars = CloneBars(bars, clonedSecProps, clonedNodes);
+
+            //Create nodes
+            NodeIO.CreateNodes(gsa, clonedNodes.Values.ToList());
 
             int highestIndex = gsa.GwaCommand("HIGHEST, EL") + 1;
 
@@ -124,28 +133,28 @@ namespace GSA_Adapter.Structural.Elements
             {
                 string command = "EL.2";
                 string index;
-                if (bar.CustomData.ContainsKey("GSA_id"))
-                    index = bar.CustomData["GSA_id"].ToString();
-                else
+
+                if(!Utils.CheckAndGetGsaId(bar, out index))
                 {
                     index = highestIndex.ToString();
                     highestIndex++;
                 }
+
                 string name = bar.Name;
                 string type = GetElementTypeString(bar);
                 //string materialId = MaterialIO.GetOrCreateMasterialGSA_id(gsa, bar, materials);
-                string sectionPropertyIndex = bar.SectionProperty.CustomData["GSA_id"].ToString();// PropertyIO.GetOrCreateGSA_id(gsa, bar, sections, materialId);
+                string sectionPropertyIndex = bar.SectionProperty.CustomData[Utils.ID].ToString();// PropertyIO.GetOrCreateGSA_id(gsa, bar, sections, materialId);
                 int group = 0;
 
                 //NodeIO.CreateNodes(gsa, new List<BHoME.Node>() { bar.StartNode, bar.EndNode }, out nodeIds);
-                string startIndex = bar.StartNode.CustomData["GSA_id"].ToString();// nodeIds[0];
-                string endIndex = bar.EndNode.CustomData["GSA_id"].ToString();// nodeIds[1];
+                string startIndex = bar.StartNode.CustomData[Utils.ID].ToString();// nodeIds[0];
+                string endIndex = bar.EndNode.CustomData[Utils.ID].ToString();// nodeIds[1];
 
                 string orientationAngle = bar.OrientationAngle.ToString();
                 // TODO: Make sure that these are doing the correct thing. Release vs restraint corresponding to true vs false
-                string startR = CreateReleaseString(bar.Release.StartConstraint);
-                string endR = CreateReleaseString(bar.Release.EndConstraint);
-                string dummy = "";
+                string startR = bar.Release != null ? CreateReleaseString(bar.Release.StartConstraint) : "FFFFFF";
+                string endR = bar.Release != null ? CreateReleaseString(bar.Release.EndConstraint) : "FFFFFF";
+                string dummy = Utils.CheckDummy(bar);
 
                 string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + sectionPropertyIndex + ", " + group + ", " + startIndex + ", " + endIndex + " , 0 ," + orientationAngle + ", RLS, " + startR + " , " + endR + ", NO_OFFSET," + dummy;
                 dynamic commandResult = gsa.GwaCommand(str); //"EL.2, 1,, NO_RGB , BEAM , 1, 1, 1, 2 , 0 ,0, RLS, FFFFFF , FFFFFF, NO_OFFSET, "
@@ -153,6 +162,7 @@ namespace GSA_Adapter.Structural.Elements
                 if (1 == (int)commandResult)
                 {
                     ids.Add(index);
+                    bar.CustomData[Utils.ID] = index;
                     continue;
                 }
                 else
@@ -161,11 +171,10 @@ namespace GSA_Adapter.Structural.Elements
                 }
             }
 
-            //PropertyIO.SetSections(sections);
-
             gsa.UpdateViews();
             return true;
         }
+
 
         private static string GetElementTypeString(BHE.Bar bar)
         {
@@ -196,13 +205,15 @@ namespace GSA_Adapter.Structural.Elements
             string RY = "F";
             string RZ = "F";
 
-            UX = ((nodeConstraint.UX == BHP.DOFType.Fixed) ? "R" : "F").ToString();
-            UY = ((nodeConstraint.UY == BHP.DOFType.Fixed) ? "R" : "F").ToString();
-            UZ = ((nodeConstraint.UZ == BHP.DOFType.Fixed) ? "R" : "F").ToString();
-            RX = ((nodeConstraint.RX == BHP.DOFType.Fixed) ? "R" : "F").ToString();
-            RY = ((nodeConstraint.RY == BHP.DOFType.Fixed) ? "R" : "F").ToString();
-            RZ = ((nodeConstraint.RZ == BHP.DOFType.Fixed) ? "R" : "F").ToString();
-
+            if (nodeConstraint != null)
+            {
+                UX = ((nodeConstraint.UX == BHP.DOFType.Fixed) ? "R" : "F").ToString();
+                UY = ((nodeConstraint.UY == BHP.DOFType.Fixed) ? "R" : "F").ToString();
+                UZ = ((nodeConstraint.UZ == BHP.DOFType.Fixed) ? "R" : "F").ToString();
+                RX = ((nodeConstraint.RX == BHP.DOFType.Fixed) ? "R" : "F").ToString();
+                RY = ((nodeConstraint.RY == BHP.DOFType.Fixed) ? "R" : "F").ToString();
+                RZ = ((nodeConstraint.RZ == BHP.DOFType.Fixed) ? "R" : "F").ToString();
+            }
             return UX + UY + UZ + RX + RY + RZ;
         }
 

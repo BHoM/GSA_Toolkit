@@ -4,16 +4,49 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Interop.gsa_8_7;
-using BHoMG = BHoM.Geometry;
-using BHoML = BHoM.Structural.Loads;
-using BHoMB = BHoM.Base;
+using BHG = BHoM.Geometry;
+using BHL = BHoM.Structural.Loads;
+using BHB = BHoM.Base;
 using GSA_Adapter.Utility;
 
 namespace GSA_Adapter.Structural.Loads
 {
     public class AnalysisTaskIO
     {
-        static public bool AddAnalysisTask(ComAuto GSA, string taskNo, string name, string type, string stage, string anal_caseNo)
+
+        public static bool AddLoadCombination(ComAuto gsa, BHL.LoadCombination comb, string combNo)
+        {
+            string name = comb.Name;
+            string desc = GenerateCombinationString(gsa, comb);
+
+            if (!AddAnalysisCase(gsa, combNo, name, combNo, desc))
+                return false;
+
+            string type = GetTaskType(comb);
+
+            if (!AddAnalysisTask(gsa, combNo, name, type, "1", combNo))
+                return false;
+
+            return true;
+        }
+
+        static public bool AddAnalysisCase(ComAuto gsa, string anal_caseNo, string name, string taskNo, string desc)
+        {
+            string addCase;
+            string command = "ANAL";
+
+            addCase = command
+                + "," + anal_caseNo
+                + "," + name
+                + "," + taskNo
+                + "," + desc;
+
+            dynamic commandResult = gsa.GwaCommand(addCase);
+            if (1 == (int)commandResult) return true;
+            return Utils.CommandFailed(command);
+        }
+
+        static public bool AddAnalysisTask(ComAuto gsa, string taskNo, string name, string type, string stage, string anal_caseNo)
         {
             string addTask;
             string command = "TASK";
@@ -71,7 +104,7 @@ namespace GSA_Adapter.Structural.Loads
                      + ", 0"                 //shift 
                      + ", 1";                //stiff
 
-                dynamic commandResult = GSA.GwaCommand(addTask);
+                dynamic commandResult = gsa.GwaCommand(addTask);
                 if (1 == (int)commandResult) return true;
                 return Utils.CommandFailed(command);
             }
@@ -119,26 +152,37 @@ namespace GSA_Adapter.Structural.Loads
                     + ", FF_SAVE_SPACER_FORCE_TO_ELEM"                          //Fix for GSA Build 45                
                     + ", DRCEFNSU";             //results
 
-                dynamic commandResult = GSA.GwaCommand(addTask);
+                dynamic commandResult = gsa.GwaCommand(addTask);
                 if (1 == (int)commandResult) return true;
                 return Utils.CommandFailed(command);
             }
         }
 
-        static public bool AddAnalysisCase(ComAuto GSA, string anal_caseNo, string name, string taskNo, string desc)
+        private static string GetTaskType(BHL.LoadCombination comb)
         {
-            string addCase;
-            string command = "ANAL";
+            if (comb.CustomData.ContainsKey("Task Type"))
+                return comb.CustomData["Task Type"].ToString();
 
-            addCase = command
-                + "," + anal_caseNo
-                + "," + name
-                + "," + taskNo
-                + "," + desc;
+            return "STATIC";
+        }
 
-            dynamic commandResult = GSA.GwaCommand(addCase);
-            if (1 == (int)commandResult) return true;
-            return Utils.CommandFailed(command);
+        private static string GenerateCombinationString(ComAuto gsa, BHL.LoadCombination comb)
+        {
+            if (comb.Loadcases.Count != comb.LoadFactors.Count)
+            {
+                Utils.SendErrorMessage("The number of Loadfactors and Loadcases must match up");
+                return null;
+            }
+            string str = "";
+            for (int i = 0; i < comb.Loadcases.Count; i++)
+            {
+                str += comb.LoadFactors[i].ToString() +"L"+ ((BHL.Loadcase)comb.Loadcases[i]).Number;
+
+                if (i != comb.Loadcases.Count-1)
+                    str += " + ";
+            }
+
+            return str;
         }
     }
 }

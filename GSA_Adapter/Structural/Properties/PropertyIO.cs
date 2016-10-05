@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Interop.gsa_8_7;
-using BHoMB = BHoM.Base;
-using BHoMG = BHoM.Global;
-using BHoME = BHoM.Structural.Elements;
-using BHoMP = BHoM.Structural.Properties;
-using BHoMM = BHoM.Materials;
+using BHB = BHoM.Base;
+using BHG = BHoM.Global;
+using BHE = BHoM.Structural.Elements;
+using BHP = BHoM.Structural.Properties;
+using BHM = BHoM.Materials;
 using GSA_Adapter.Utility;
 
 
@@ -16,30 +16,33 @@ namespace GSA_Adapter.Structural.Properties
 {
     public class PropertyIO
     {
-        public static Dictionary<string,BHoMP.SectionProperty> GetSections(ComAuto gsa, bool nameAsKey = true)
+        /*******************************************************/
+        /*********** Section Property Get Methods **************/
+        /*******************************************************/
+
+        public static Dictionary<string,BHP.SectionProperty> GetSections(ComAuto gsa, bool nameAsKey = true)
         {
             //BHoMB.ObjectManager<BHoMP.SectionProperty> secProps = new BHoMB.ObjectManager<BHoMP.SectionProperty>(BHoMG.Project.ActiveProject);
 
-            Dictionary<string, BHoMP.SectionProperty> secProps = new Dictionary<string, BHoMP.SectionProperty>();
+            Dictionary<string, BHP.SectionProperty> secProps = new Dictionary<string, BHP.SectionProperty>();
             List<string> gsaProps = GetGsaSectionPropertyStrings(gsa);
-            Dictionary<string, BHoMM.Material> materials = MaterialIO.GetMaterials(gsa, false, true);
+            Dictionary<string, BHM.Material> materials = MaterialIO.GetMaterials(gsa, false, true);
 
             foreach (string gsaProp in gsaProps)
             {
-                BHoMP.SectionProperty secProp = PropertyStringGenerators.GetSectionFromGsaString(gsaProp, materials);
+                BHP.SectionProperty secProp = PropertyStringGenerators.GetSectionFromGsaString(gsaProp, materials);
                 if (nameAsKey)
                 {
                     if(!secProps.ContainsKey(secProp.Name))
                         secProps.Add(secProp.Name, secProp);
                 }
-                else secProps.Add(secProp.CustomData["GSA_id"].ToString(), secProp);
+                else secProps.Add(secProp.CustomData[Utils.ID].ToString(), secProp);
             }
 
             return secProps;
         }
 
-
-        
+        /*******************************************************/
 
         /// <summary>
         /// Gets all section properties in a list of the format [SEC_PROP | num | prop | name | mat | desc | area | Iyy | Izz | J | Ky | Kz]
@@ -70,121 +73,7 @@ namespace GSA_Adapter.Structural.Properties
             return gsaProps;
         }
 
-        static public bool SetSectionProperty(ComAuto GSA, BHoMP.SectionProperty secProp, string index)
-        {
-            //id = "";
-            //Check to see if "GSA_id" Custom data
-            //int index = GSA.GwaCommand("HIGHEST, PROP_SEC") + 1;
-            //string num = index.ToString();
-            string name = secProp.Name;
-
-            //Test to check if name is set, if no name found it is set to the property number. 
-            //Might be a better way to do this
-
-            //if (string.IsNullOrWhiteSpace(secProp.Name))
-            //{
-            //    name = num;
-            //}
-            //else
-            //{
-            //    name = secProp.Name;
-            //}
-
-            string mat = secProp.Material.CustomData["GSA_id"].ToString();// materialId;  //"STEEL";// material.Name;
-
-            string desc;// = "EXP";// secProp.Description;
-            string props;
-
-            PropertyStringGenerators.CreateDescAndPropString(secProp, out desc, out props);
-
-            //double ModA; double ModIyy; double ModIzz; double ModJ;
-
-            string command = "PROP_SEC";
-            string colour = "NO_RGB";
-            string principle = "NO";
-            string type = "NA";
-            string cost = "0";
-            string plate_type = "FLAME_CUT";
-            string calc_J = "NO_J";
-
-            //string props = "PROP," + area + "," + Iyy + "," + Izz + "," + J + "," + Avy + "," + Avz;
-            //string props = "NO_PROP";
-            //string mods = "MOD_PROP, BY," + ModA + ",BY," + ModIyy + ",BY," + ModIzz + ",BY," + ModJ + ",BY, 1, BY, 1, NO, NO_MOD";
-            string mods = "NO_MOD_PROP";
-            //PROP_SEC    2   Section 2   NO_RGB  1   CAT % UB % UB914x419x388 % 19990407   NO NA  0   NO_PROP NO_MOD_PROP FLAME_CUT NO_J
-
-            string str = command + "," + index + "," + name + "," + colour + "," + mat + "," + desc + "," + principle + "," + type + "," + cost + "," + props + "," + mods + "," + plate_type + "," + calc_J;
-
-            dynamic commandResult = GSA.GwaCommand(str);
-
-            if (1 == (int)commandResult)
-            {
-                //id = num;
-            }
-            else
-            {
-                Utils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
-                return false;
-            }
-
-            GSA.UpdateViews();
-            return true;
-        }
-
-       
-
-        //static public bool SetSectionProperty(ComAuto gsa, BHoMP.SectionProperty secProp, out string id)
-        //{
-        //    id = "";
-        //    string index = secProp.CustomData["GSA_id"].ToString();
-        //    if (index == null)
-        //    {
-        //        index = gsa.GwaCommand("HIGHEST, PROP_SEC") + 1;
-        //    }
-        
-        //    string num = index.ToString();
-        //    string name = secProp.Name;
-        //    string mat = secProp.Material.CustomData["GSA_id"].ToString();// material.Name;
-        //    string desc = secProp.Description;
-
-        //    string area = ""; // secProp.GrossArea.ToString();
-        //    string Iyy = "";
-        //    string Izz = "";
-        //    string J = "";
-        //    string Avy = "";
-        //    string Avz = "";
-        //    double ModA; double ModIyy; double ModIzz; double ModJ;
-
-        //    string command = "PROP_SEC";
-        //    string colour = "NO_RGB";
-        //    string principle = "NO";
-        //    string type = "NA";
-        //    string cost = "0";
-        //    string plate_type = "FLAME_CUT";
-        //    string calc_J = "NO_J";
-
-        //    string props = "PROP," + area + "," + Iyy + "," + Izz + "," + J + "," + Avy + "," + Avz;
-        //    //string props = "NO_PROP";
-        //    //string mods = "MOD_PROP, BY," + ModA + ",BY," + ModIyy + ",BY," + ModIzz + ",BY," + ModJ + ",BY, 1, BY, 1, NO, NO_MOD";
-        //    string mods = "NO_MOD_PROP";
-
-        //    string str = command + "," + num + "," + name + "," + colour + "," + mat + "," + desc + "," + principle + "," + type + "," + cost + "," + props + "," + mods + "," + plate_type + "," + calc_J;
-
-        //    dynamic commandResult = gsa.GwaCommand(str);
-
-        //    if (1 == (int)commandResult)
-        //    {
-        //        id = num;
-        //    }
-        //    else
-        //    {
-        //        Utils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
-        //        return false;
-        //    }
-
-        //    gsa.UpdateViews();
-        //    return true;
-        //}
+        /*******************************************************/
 
         /// <summary>
         /// Gets a section property in the format [SEC_PROP | num | prop | name | mat | desc | area | Iyy | Izz | J | Ky | Kz]
@@ -197,6 +86,8 @@ namespace GSA_Adapter.Structural.Properties
             string sResult = gsa.GwaCommand("GET, SEC_PROP," + index).ToString();
             return sResult;
         }
+
+        /*******************************************************/
 
         static public string GetSectionPropertyTypeFromGSAString(string gsaString)
         {
@@ -227,8 +118,8 @@ namespace GSA_Adapter.Structural.Properties
                 return "unknown";
         }
 
+        /*******************************************************/
 
-       
 
         /// <summary>
         /// Gets a specific section property from a string of section properties
@@ -251,43 +142,24 @@ namespace GSA_Adapter.Structural.Properties
         }
 
 
-        //static public string GetOrCreateGSA_id(ComAuto gsa, BHoME.Bar bar, Dictionary<string,BHoMP.SectionProperty> sections, string materialId)
-        //{
-        //    //BHoMP.SectionProperty section = sections[bar.SectionProperty.Name];
+        /*******************************************************/
+        /*********** Section Property Set Methods **************/
+        /*******************************************************/
 
-        //    BHoMP.SectionProperty section;
-
-
-        //    string sectionPropertyIndex;
-
-        //    //Saving the sectionnames with name+material id to make sure that identical section properties with different names gets added
-
-        //    if (!sections.TryGetValue(bar.SectionProperty.Name+materialId, out section)/* || section.CustomData["GSA_id"] == null*/)
-        //    {
-        //        int index = gsa.GwaCommand("HIGHEST, PROP_SEC") + 1;
-        //        section = bar.SectionProperty;
-
-        //        if (SetSectionProperty(gsa, section, materialId, out sectionPropertyIndex))
-        //        {
-        //            //section.CustomData.Add("GSA_id", index);
-        //            sections.Add(section.Name+materialId, section);
-        //        }
-                
-        //    }
-
-        //    return section.CustomData["GSA_id"].ToString();
-        //}
-
-        static public void CreateSectionProperties(ComAuto gsa, List<BHoMP.SectionProperty> sectionProperties)
+        static public void CreateSectionProperties(ComAuto gsa, List<BHP.SectionProperty> sectionProperties)
         {
             //Get existing GSA section properties sorted by name as key
-            Dictionary<string, BHoMP.SectionProperty> gsaSections = PropertyIO.GetSections(gsa, true);
+            Dictionary<string, BHP.SectionProperty> gsaSections = GetSections(gsa, true);
 
-            //Get all unique materials from imported secttionproperties
-            List<BHoMM.Material> materials = sectionProperties.Select(x => x.Material).Distinct().ToList();
+            //Get all unique materials from imported sectionproperties
+            Dictionary<Guid, BHM.Material> materials = sectionProperties.Select(x => x.Material).Distinct().ToDictionary(x => x.BHoM_Guid);
+            //Dictionary<Guid, BHM.Material> clonedMaterials = materials.Select(x => x.Value.CustomData.ContainsKey(Utils.ID) ? x : new KeyValuePair<Guid, BHM.Material>(x.Key, (BHM.Material)x.Value.ShallowClone())).ToDictionary(x => x.Key, x => x.Value);
+            Dictionary<Guid, BHM.Material> clonedMaterials = Utils.CloneObjects(materials);
+            //Assign cloned materials to section properties
+            sectionProperties.ForEach(x => x.Material = clonedMaterials[x.Material.BHoM_Guid]);
 
             //Create all new materials
-            MaterialIO.CreateMaterials(gsa, materials);
+            MaterialIO.CreateMaterials(gsa, clonedMaterials.Values.ToList());
 
             string sectionPropertyIndex;
             
@@ -295,103 +167,111 @@ namespace GSA_Adapter.Structural.Properties
             int index = gsa.GwaCommand("HIGHEST, PROP_SEC") + 1;
 
             //Loop trough and add all nonexisting section properties to gsa
-            foreach (BHoMP.SectionProperty sectionProperty in sectionProperties)
+            foreach (BHP.SectionProperty sectionProperty in sectionProperties)
             {
                 object gsaIdobj;
 
                 //Replace section property at position "id"
-                if (sectionProperty.CustomData.TryGetValue("GSA_id", out gsaIdobj))
+                if (sectionProperty.CustomData.TryGetValue(Utils.ID, out gsaIdobj))
                 {
                     string id = gsaIdobj.ToString();
                     SetSectionProperty(gsa, sectionProperty, id);
-                    if (gsaSections.ContainsKey(sectionProperty.Name))
-                        gsaSections[sectionProperty.Name] = sectionProperty;
+                    if (gsaSections.ContainsKey(Utils.GetName(sectionProperty)))
+                        gsaSections[Utils.GetName(sectionProperty)] = sectionProperty;
                     else
-                        gsaSections.Add(sectionProperty.Name, sectionProperty);
+                        gsaSections.Add(Utils.GetName(sectionProperty), sectionProperty);
 
                 }
                 //Add section property
-                else if (!gsaSections.ContainsKey(sectionProperty.Name))
+                else if (!gsaSections.ContainsKey(Utils.GetName(sectionProperty)))
                 {
                     sectionPropertyIndex = index.ToString();
                     index++;
 
                     if (SetSectionProperty(gsa, sectionProperty, sectionPropertyIndex))
                     {
-                        sectionProperty.CustomData.Add("GSA_id", sectionPropertyIndex);
-                        gsaSections.Add(sectionProperty.Name, sectionProperty);
+                        sectionProperty.CustomData.Add(Utils.ID, sectionPropertyIndex);
+                        gsaSections.Add(Utils.GetName(sectionProperty), sectionProperty);
                     }
 
                 }
                 else
                 {
-                    sectionProperty.CustomData.Add("GSA_id", gsaSections[sectionProperty.Name].CustomData["GSA_id"]);
+                    sectionProperty.CustomData.Add(Utils.ID, gsaSections[Utils.GetName(sectionProperty)].CustomData[Utils.ID]);
                 }
             }
         }
 
+        /*******************************************************/
 
-        //public static string GetOrCreateSectionPropertyIndex(ComAuto gsa, BHoME.Bar bar, List<string> secProps, List<string> materials)
-        //{
-        //    string sectionPropertyIndex = "";
-        //    string materialIndex = "";
-        //    foreach (string secPropString in secProps)
-        //        if (PropertyIO.GetDataStringFromSecPropStr(secPropString, 3) == bar.SectionProperty.Name)
-        //            sectionPropertyIndex = PropertyIO.GetDataStringFromSecPropStr(secPropString, 1);
+        static public bool SetSectionProperty(ComAuto gsa, BHP.SectionProperty secProp, string index)
+        {
+            string name = Utils.GetName(secProp);
 
-        //    foreach (string matString in materials)
-        //        if (MaterialIO.GetDataStringFromMatStr(matString, 3) == bar.Material.Name)
-        //            materialIndex = MaterialIO.GetDataStringFromMatStr(matString, 1);
+            string mat = secProp.Material.CustomData[Utils.ID].ToString();// materialId;  //"STEEL";// material.Name;
 
-        //    if(materialIndex =="")
-        //    {
-        //        MaterialIO.SetMaterial(gsa, bar.Material, out materialIndex);
-        //        materials.Add(MaterialIO.GetMaterialString(gsa, int.Parse(materialIndex)));
+            string desc;
+            string props;
 
-        //    }
+            PropertyStringGenerators.CreateDescAndPropString(secProp, out desc, out props);
 
-        //    if (sectionPropertyIndex == "")
-        //    {
+            string command = "PROP_SEC";
+            string colour = "NO_RGB";
+            string principle = "NO";
+            string type = "NA";
+            string cost = "0";
+            string plate_type = "FLAME_CUT";
+            string calc_J = "NO_J";
+            string mods = "NO_MOD_PROP";
 
-        //        PropertyIO.SetSectionProperty(gsa, bar.SectionProperty, bar.Material, out sectionPropertyIndex);
-        //        secProps.Add(PropertyIO.GetSectionPropertyString(gsa, int.Parse(sectionPropertyIndex)));
-        //    }
-        //    return sectionPropertyIndex;
-        //}
 
-        //static public bool Set2DProperty(ComAuto gsa, ThicknessProperty thickProp, out string num)
-        //{
+            //PROP_SEC    2   Section 2   NO_RGB  1   CAT % UB % UB914x419x388 % 19990407   NO NA  0   NO_PROP NO_MOD_PROP FLAME_CUT NO_J
 
-        //    string name = thickProp.Name;
-        //    string mat = secProp.SectionMaterial.ToString();
-        //    string desc = secProp.Description;
+            string str = command + "," + index + "," + name + "," + colour + "," + mat + "," + desc + "," + principle + "," + type + "," + cost + "," + props + "," + mods + "," + plate_type + "," + calc_J;
 
-        //    double area; double Iyy; double Izz; double J; double Avy; double Avz;
-        //    double ModA; double ModIyy; double ModIzz; double ModJ;
+            dynamic commandResult = gsa.GwaCommand(str);
 
-        //    string command = "PROP_2D";
-        //    string index = gsa.GwaCommand("HIGHEST, PROP_2D") + 1;
-        //    string colour = "NO_RGB";
-        //    string principle = "NO";
-        //    string type = "NA";
-        //    string cost = "0";
-        //    string plate_type = "FLAME_CUT";
-        //    string calc_J = "NO_J";
+            if (1 == (int)commandResult)
+            {
+                //id = num;
+            }
+            else
+            {
+                Utils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
+                return false;
+            }
 
-        //    //string props = "PROP," + area + "," + Iyy + "," + Izz + "," + J + "," + Avy + "," + Avz;
-        //    string props = "NO_PROP";
-        //    //string mods = "MOD_PROP, BY," + ModA + ",BY," + ModIyy + ",BY," + ModIzz + ",BY," + ModJ + ",BY, 1, BY, 1, NO, NO_MOD";
-        //    string mods = "NO_MOD_PROP";
+            gsa.UpdateViews();
+            return true;
+        }
 
-        //    string str = command + "," + num + "," + name + "," + colour + "," + mat + "," + desc + "," + principle + "," + type + "," + cost + "," + props + "," + mods + "," + plate_type + "," + calc_J;
+        /*******************************************************/
+        /************* Panel Property Get Methods **************/
+        /*******************************************************/
 
-        //    dynamic commandResult = gsa.GwaCommand(str);
+        public static Dictionary<string, BHP.PanelProperty> GetPanelProperties(ComAuto gsa, bool nameAsKey = true)
+        {
+            //BHoMB.ObjectManager<BHoMP.SectionProperty> secProps = new BHoMB.ObjectManager<BHoMP.SectionProperty>(BHoMG.Project.ActiveProject);
 
-        //    if (1 == (int)commandResult) return true;
+            Dictionary<string, BHP.PanelProperty> panProps = new Dictionary<string, BHP.PanelProperty>();
+            List<string> gsaProps = Get2DPropertyStringList(gsa);
+            Dictionary<string, BHM.Material> materials = MaterialIO.GetMaterials(gsa, false, true);
 
-        //    return GSAUtils.CommandFailed(command);
+            foreach (string gsaProp in gsaProps)
+            {
+                BHP.PanelProperty panProp = PropertyStringGenerators.GetPanelPropertyFromGsaString(gsaProp, materials);
+                if (nameAsKey)
+                {
+                    if (!panProps.ContainsKey(panProp.Name))
+                        panProps.Add(panProp.Name, panProp);
+                }
+                else panProps.Add(panProp.CustomData[Utils.ID].ToString(), panProp);
+            }
 
-        //}
+            return panProps;
+        }
+
+        /*******************************************************/
 
         /// <summary>
         /// Gets all 2D properties in a list of the format [PROP_2D | num | prop | name | mat | desc | area | Iyy | Izz | J | Ky | Kz]
@@ -427,6 +307,8 @@ namespace GSA_Adapter.Structural.Properties
             return sResult;
         }
 
+        /*******************************************************/
+
         /// <summary>
         /// Gets a specific 2D property from a string of 2D properties
         /// </summary>
@@ -447,7 +329,9 @@ namespace GSA_Adapter.Structural.Properties
             }
         }
 
-        public static string GetOrCreate2DPropertyIndex(ComAuto GSA, BHoME.Panel panel, List<string> props)
+        /*******************************************************/
+
+        public static string GetOrCreate2DPropertyIndex(ComAuto GSA, BHE.Panel panel, List<string> props)
         {
             string propertyIndex = "";
 
@@ -464,6 +348,123 @@ namespace GSA_Adapter.Structural.Properties
             //    secProps.Add(PropertyIO.GetSectionPropertyString(GSA, int.Parse(propertyIndex)));
             //}
             return propertyIndex;
+        }
+
+
+        /*******************************************************/
+        /************* Panel Property Set Methods **************/
+        /*******************************************************/
+
+
+        static public void CreatePanelProperties(ComAuto gsa, List<BHP.PanelProperty> panel)
+        {
+            //Get existing GSA section properties sorted by name as key
+            //Getting panel properties not implemented yet. Uncomment as soon as this function works
+            //Dictionary<string, BHP.PanelProperty> gsaSections = PropertyIO.GetPanelProperties(gsa, true);
+
+            //Get all unique materials from imported sectionproperties
+            Dictionary<Guid, BHM.Material> materials = panel.Select(x => x.Material).Distinct().ToDictionary(x => x.BHoM_Guid);
+            //Dictionary<Guid, BHM.Material> clonedMaterials = materials.Select(x => x.Value.CustomData.ContainsKey(Utils.ID) ? x : new KeyValuePair<Guid, BHM.Material>(x.Key, (BHM.Material)x.Value.ShallowClone())).ToDictionary(x => x.Key, x => x.Value);
+            Dictionary<Guid, BHM.Material> clonedMaterials = Utils.CloneObjects(materials);
+            //Assign cloned materials to section properties
+            panel.ForEach(x => x.Material = clonedMaterials[x.Material.BHoM_Guid]);
+
+            //Create all new materials
+            MaterialIO.CreateMaterials(gsa, clonedMaterials.Values.ToList());
+
+            string sectionPropertyIndex;
+
+            //Get the highest section property index
+            int index = gsa.GwaCommand("HIGHEST, PROP_SEC") + 1;
+
+            //Loop trough and add all nonexisting section properties to gsa
+            foreach (BHP.PanelProperty panProp in panel)
+            {
+                if (!(panProp is BHP.ConstantThickness))
+                {
+                    Utils.SendErrorMessage("Only constant thickness panel property is implemented in GSA");
+                    return;
+                }
+
+
+                object gsaIdobj;
+
+                if (panProp.CustomData.TryGetValue(Utils.ID, out gsaIdobj))
+                {
+                    string id = gsaIdobj.ToString();
+                    Set2DProperty(gsa, (BHP.ConstantThickness)panProp, id);
+
+                    //if (gsaSections.ContainsKey(Utils.GetName(sectionProperty)))
+                    //    gsaSections[Utils.GetName(sectionProperty)] = sectionProperty;
+                    //else
+                    //    gsaSections.Add(Utils.GetName(sectionProperty), sectionProperty);
+
+                }
+                else
+                {
+                    string num = index.ToString();
+                    index++;
+
+                    if (Set2DProperty(gsa, (BHP.ConstantThickness)panProp, num))
+                    {
+                        panProp.CustomData.Add(Utils.ID, num);
+                    }
+                }
+                //Uncomment bit bellow as soon as get panel properties has been implemented
+
+
+
+
+                ////Add section property
+                //else if (!gsaSections.ContainsKey(Utils.GetName(sectionProperty)))
+                //{
+                //    sectionPropertyIndex = index.ToString();
+                //    index++;
+
+                //    if (SetSectionProperty(gsa, sectionProperty, sectionPropertyIndex))
+                //    {
+                //        sectionProperty.CustomData.Add(Utils.ID, sectionPropertyIndex);
+                //        gsaSections.Add(Utils.GetName(sectionProperty), sectionProperty);
+                //    }
+
+                //}
+                //else
+                //{
+                //    sectionProperty.CustomData.Add(Utils.ID, gsaSections[Utils.GetName(sectionProperty)].CustomData[Utils.ID]);
+                //}
+            }
+        }
+
+        /*******************************************************/
+
+        static public bool Set2DProperty(ComAuto gsa, BHP.ConstantThickness panProp, string num)
+        {
+
+            string name = panProp.Name;
+            string mat = panProp.Material.CustomData[Utils.ID].ToString();
+
+
+            string command = "PROP_2D";
+            string colour = "NO_RGB";
+            string type = "SHELL";
+            string axis = "GLOBAL";
+            string thick = panProp.Thickness.ToString();
+            string mass = "100%";
+            string bending = "100%";
+            string inplane = "100%";
+            string weight = "0";
+
+            string str = command + "," + num + "," + name + "," + colour + "," + axis + "," + mat + "," + type + "," + thick +"," + weight + "," + mass + "," + bending + "," + inplane;
+
+            dynamic commandResult = gsa.GwaCommand(str);
+
+            if (1 == (int)commandResult)
+            {
+                return true;
+            }
+
+            return Utils.CommandFailed(command);
+
         }
 
     }

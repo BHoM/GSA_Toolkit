@@ -76,7 +76,7 @@ namespace GSA_Adapter.Structural.Interface
             throw new NotImplementedException();
         }
 
-        public List<string> GetLoads(out List<BHL.ILoad> loads, List<string> ids = null)
+        public bool GetLoads(out List<BHL.ILoad> loads, List<string> ids = null)
         {
             throw new NotImplementedException();
         }
@@ -115,7 +115,7 @@ namespace GSA_Adapter.Structural.Interface
             throw new NotImplementedException();
         }
 
-        public List<string> GetGroups(out List<BHB.Group<object>> groups, List<string> ids = null)
+        public List<string> GetGroups(out List<BHB.IGroup> groups, List<string> ids = null)
         {
             throw new NotImplementedException();
         }
@@ -158,9 +158,9 @@ namespace GSA_Adapter.Structural.Interface
             return Structural.Elements.RigidLinkIO.CreateRigidLinks(gsa, rigidLinks, out ids);
         }
 
-        public bool SetGroups(List<BHB.Group<object>> groups, out List<string> ids)
+        public bool SetGroups(List<BHB.IGroup> groups, out List<string> ids)
         {
-            throw new NotImplementedException();
+            return Elements.GroupIO.SetGroups(gsa, groups, out ids);
         }
 
         public bool SetLoads(List<BHL.ILoad> loads, List<string> ids = null)
@@ -183,9 +183,14 @@ namespace GSA_Adapter.Structural.Interface
             return Structural.Loads.LoadIO.AddLoads(gsa, loads);
         }
 
-        bool IElementAdapter.GetLoads(out List<BHL.ILoad> loads, List<string> ids)
+        public List<string> GetFEMeshes(out List<BHE.FEMesh> meshes, List<string> ids = null)
         {
             throw new NotImplementedException();
+        }
+
+        public bool SetFEMeshes(List<BHE.FEMesh> meshes, out List<string> ids)
+        {
+            return Structural.Elements.MeshIO.CreateMeshes(gsa, meshes, out ids);
         }
     }
 

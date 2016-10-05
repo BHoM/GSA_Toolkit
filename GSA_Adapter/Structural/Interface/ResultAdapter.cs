@@ -9,7 +9,7 @@ using GSA_Adapter.Structural.Results;
 
 namespace GSA_Adapter.Structural.Interface
 {
-    public partial class GSAAdapter : BHoM.Structural.Interface.IElementAdapter
+    public partial class GSAAdapter : BHoM.Structural.Interface.IResultAdapter
     {
         public bool GetBarForces(List<string> bars, List<string> cases, int divisions, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.IResultSet> results)
         {

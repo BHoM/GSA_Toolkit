@@ -20,30 +20,29 @@ namespace GSA_Adapter.Structural.Loads
             List<string> forceStrings;// = new List<string>();
 
 
-            List<string> ids;
+            string appliedTo = LoadIO.CreateIdListOrGroupName(gsa, load.Objects);
 
-            if (!GSAE.BarIO.GetOrCreateBars(gsa, load.Objects, out ids)) { return false; }
+            if (appliedTo == null)
+                return false;
 
-            string list = ids.GetSpaceSeparatedString();
+            string caseNo = load.Loadcase.Number.ToString();
 
-            string caseNo;
-
-            if (!LoadcaseIO.GetOrCreateLoadCaseId(gsa, load.Loadcase, out caseNo)) { return false; }
+            //if (!LoadcaseIO.GetOrCreateLoadCaseId(gsa, load.Loadcase, out caseNo)) { return false; }
 
             switch (load.LoadType)
             {
                 case BHL.LoadType.BarPointLoad:
-                    CreateBarPointLoadStrings((BHL.BarPointLoad)load, loadFactor, lengthFactor, list, caseNo, out forceStrings);
+                    CreateBarPointLoadStrings((BHL.BarPointLoad)load, loadFactor, lengthFactor, appliedTo, caseNo, out forceStrings);
                     break;
                 case BHL.LoadType.BarUniformLoad:
-                    CreateBarUniformLoadStrings((BHL.BarUniformlyDistributedLoad)load, loadFactor, list, caseNo, out forceStrings);
+                    CreateBarUniformLoadStrings((BHL.BarUniformlyDistributedLoad)load, loadFactor, appliedTo, caseNo, out forceStrings);
                     break;
                 case BHL.LoadType.BarVaryingLoad:
                     BHL.BarVaryingDistributedLoad barLoad = load as BHL.BarVaryingDistributedLoad;
                     if (barLoad.DistanceFromA == 0 && barLoad.DistanceFromB == 0)
-                        CreateBarLineLoadStrings(barLoad, loadFactor, list, caseNo, out forceStrings);
+                        CreateBarLineLoadStrings(barLoad, loadFactor, appliedTo, caseNo, out forceStrings);
                     else
-                        CreateBarTriLineLoadStrings(barLoad, loadFactor, lengthFactor, list, caseNo, out forceStrings);
+                        CreateBarTriLineLoadStrings(barLoad, loadFactor, lengthFactor, appliedTo, caseNo, out forceStrings);
                     break;
                 default:
                     LoadIO.LoadNotImplementedWarning(load.LoadType.ToString());
@@ -144,6 +143,50 @@ namespace GSA_Adapter.Structural.Loads
             //LOAD_BEAM_POINT	name	2	1	GLOBAL	NO	Z	3	60		
 
             throw new NotImplementedException();
+        }
+
+        static public bool AddPreStressLoad(ComAuto gsa, BHL.BarPrestressLoad psLoad)
+        {
+            string name = psLoad.Name;
+            string list = LoadIO.CreateIdListOrGroupName(gsa, psLoad.Objects);
+            string caseNo = psLoad.Loadcase.Number.ToString(); ;
+            double value = psLoad.PrestressValue;
+
+            string command = "LOAD_BEAM_PRE.2";
+            string str;
+
+            str = command + ",," + list + "," + caseNo + "," + value * LoadIO.GetUnitFactor(gsa, GsaEnums.UnitType.FORCE);
+
+            dynamic commandResult = gsa.GwaCommand(str);
+            gsa.UpdateViews();
+
+            if (1 == (int)commandResult) return true;
+            else
+            {
+                Utils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
+                return false;
+            }
+        }
+
+        static public bool AddThermalLoad(ComAuto gsa, BHL.BarTemperatureLoad load)
+        {
+            string command = "TEMP_BEAM";
+            string str;
+            string list = LoadIO.CreateIdListOrGroupName(gsa, load.Objects);
+            string caseNo = load.Loadcase.Number.ToString();
+            string type = "CONS";
+            string value = load.TemperatureChange.X.ToString();
+
+            str = command + ",," + list + "," + caseNo + "," + type + "," + value;
+
+            dynamic commandResult = gsa.GwaCommand(str);
+
+            if (1 == (int)commandResult) return true;
+            else
+            {
+                Utils.CommandFailed(command);
+                return false;
+            }
         }
     }
 }
