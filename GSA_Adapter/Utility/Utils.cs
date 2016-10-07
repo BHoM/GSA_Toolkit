@@ -122,25 +122,33 @@ namespace GSA_Adapter.Utility
         {
             bool isSecProp;
 
-            if (isSecProp =(typeof(T) != typeof(BHP.SectionProperty)) && typeof(T) != typeof(BHP.PanelProperty))
+            if (!(isSecProp =(typeof(T) == typeof(BHP.SectionProperty))) && typeof(T) != typeof(BHP.PanelProperty))
                 return null;
 
             Dictionary<Guid, T> clones = new Dictionary<Guid, T>();
 
             foreach (KeyValuePair<Guid, T> kvp in dict)
             {
-                if (kvp.Value.CustomData.ContainsKey(Utils.ID) &&
-                    isSecProp ? (kvp.Value as BHP.SectionProperty).Material.CustomData.ContainsKey(Utils.ID)
-                    : (kvp.Value as BHP.PanelProperty).Material.CustomData.ContainsKey(Utils.ID))
+                bool flag = false;
+                if (kvp.Value.CustomData.ContainsKey(Utils.ID))
                 {
-                    clones.Add(kvp.Key, kvp.Value);
+
+                    if (isSecProp)
+                        flag = (kvp.Value as BHP.SectionProperty).Material.CustomData.ContainsKey(Utils.ID);
+                    else
+                        flag = (kvp.Value as BHP.PanelProperty).Material.CustomData.ContainsKey(Utils.ID);
+    
+                    if(flag)
+                        clones.Add(kvp.Key, kvp.Value);
                 }
-                else
+
+                if (!flag)
                 {
                     T obj = (T)kvp.Value.ShallowClone();
                     obj.CustomData = new Dictionary<string, object>(kvp.Value.CustomData);
                     clones.Add(kvp.Key, obj);
                 }
+
             }
 
             return clones;

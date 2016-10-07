@@ -173,19 +173,19 @@ namespace GSA_Adapter.Structural.Loads
 
             List<string> ids;
 
-            if (group is BHB.Group<BHE.Node>)
-                Elements.NodeIO.GetOrCreateNodes(gsa, group as List<BHE.Node>, out ids);
-            else
-            {
+            //if (group is BHB.Group<BHE.Node>)
+            //    Elements.NodeIO.GetOrCreateNodes(gsa, group as List<BHE.Node>, out ids);
+            //else
+            //{
                 List<T> nonIdItems = group.Where(x => !x.CustomData.ContainsKey(Utils.ID)).ToList();
 
-                if (nonIdItems.Count < 1)
+                if (nonIdItems.Count > 0)
                     return null;
 
                 List<T> idItems = group.Where(x => x.CustomData.ContainsKey(Utils.ID)).ToList();
 
                 ids = idItems.Select(x => x.CustomData[Utils.ID].ToString()).ToList();
-            }
+            //}
 
             IEnumerable<int> intIds = ids.Select(x => int.Parse(x));
 

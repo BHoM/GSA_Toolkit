@@ -113,7 +113,7 @@ namespace GSA_Adapter.Structural.Properties
 
             d = secProp.SectionData[(int)SteelSectionData.Height] * 1000;
 
-            desc = string.Format("STD%C%{0}.", d);
+            desc = string.Format("STD%C%{0}", d.ToStringWithDecimalPoint());
 
         }
 
@@ -128,7 +128,7 @@ namespace GSA_Adapter.Structural.Properties
             d = secProp.SectionData[(int)SteelSectionData.Height] * 1000;
             t = secProp.SectionData[(int)SteelSectionData.TW] * 1000;
 
-            desc = string.Format("STD%CHS%{0}.%{1}.", d, t);
+            desc = string.Format("STD%CHS%{0}%{1}", d.ToStringWithDecimalPoint(), t.ToStringWithDecimalPoint());
         }
 
         private static void CreateChannelString(BHoMP.SectionProperty secProp, out string desc, out string prop)
@@ -149,7 +149,7 @@ namespace GSA_Adapter.Structural.Properties
             wt = secProp.SectionData[(int)SteelSectionData.TW] * 1000;
             ft = secProp.SectionData[(int)SteelSectionData.TF1] * 1000;
 
-            desc = string.Format("STD%T%{0}.%{1}.%{2}.%{3}.", h, w, wt, ft);
+            desc = string.Format("STD%T%{0}%{1}%{2}%{3}", h.ToStringWithDecimalPoint(), w.ToStringWithDecimalPoint(), wt.ToStringWithDecimalPoint(), ft.ToStringWithDecimalPoint());
 
         }
 
@@ -172,12 +172,12 @@ namespace GSA_Adapter.Structural.Properties
             if (widthB == widthT && ftB == ftT)
             {
                 //STD%I%150.%100.%5.%20.
-                desc = string.Format("STD%I%{0}.%{1}.%{2}.%{3}.", h, widthT, wt, ftT);
+                desc = string.Format("STD%I%{0}%{1}%{2}%{3}", h.ToStringWithDecimalPoint(), widthT.ToStringWithDecimalPoint(), wt.ToStringWithDecimalPoint(), ftT.ToStringWithDecimalPoint());
             }
             else
             {
                 //STD%GI%150.%100.%50.%6.%10.%5.
-                desc = string.Format("STD%GI%{0}.%{1}.%{2}.%{3}.%{4}.%{5}.", h, widthT, widthB, wt, ftT, ftB);
+                desc = string.Format("STD%GI%{0}%{1}%{2}%{3}%{4}%{5}", h.ToStringWithDecimalPoint(), widthT.ToStringWithDecimalPoint(), widthB.ToStringWithDecimalPoint(), wt.ToStringWithDecimalPoint(), ftT.ToStringWithDecimalPoint(), ftB.ToStringWithDecimalPoint());
 
             }
         }
@@ -195,7 +195,7 @@ namespace GSA_Adapter.Structural.Properties
             wt = secProp.SectionData[(int)SteelSectionData.TW] * 1000;
             ft = secProp.SectionData[(int)SteelSectionData.TF1] * 1000;
 
-            desc = string.Format("STD%A%{0}.%{1}.%{2}.%{3}.", h, w, wt, ft);
+            desc = string.Format("STD%A%{0}%{1}%{2}%{3}", h.ToStringWithDecimalPoint(), w.ToStringWithDecimalPoint(), wt.ToStringWithDecimalPoint(), ft.ToStringWithDecimalPoint());
         }
 
         private static void CreateBoxString(BHoMP.SectionProperty secProp, out string desc, out string prop)
@@ -209,7 +209,7 @@ namespace GSA_Adapter.Structural.Properties
             wt = secProp.SectionData[(int)SteelSectionData.TW] * 1000;
             ft = secProp.SectionData[(int)SteelSectionData.TF1] * 1000;
 
-            desc = string.Format("STD%RHS%{0}.%{1}.%{2}.%{3}.", h, w, wt, ft);
+            desc = string.Format("STD%RHS%{0}%{1}%{2}%{3}", h.ToStringWithDecimalPoint(), w.ToStringWithDecimalPoint(), wt.ToStringWithDecimalPoint(), ft.ToStringWithDecimalPoint());
 
             //STD%RHS%800.%400.%12.%16.
 
@@ -224,10 +224,15 @@ namespace GSA_Adapter.Structural.Properties
             h = secProp.SectionData[(int)SteelSectionData.Height] * 1000;
             w = secProp.SectionData[(int)SteelSectionData.Width] * 1000;
 
-            desc = string.Format("STD%R%{0}.%{1}.", h, w);
+            desc = string.Format("STD%R%{0}%{1}", h.ToStringWithDecimalPoint(), w.ToStringWithDecimalPoint());
             //STD%R%50.%20.
 
 
+        }
+
+        private static string ToStringWithDecimalPoint(this double d)
+        {
+            return Math.Abs(d - (int)d) < double.Epsilon ? d.ToString() + "." : d.ToString();
         }
 
         /// <summary>Creates a BHoM section from a gsa string</summary>
