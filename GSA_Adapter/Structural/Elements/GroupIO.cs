@@ -82,7 +82,7 @@ namespace GSA_Adapter.Structural.Elements
             {
                 return CreateElementGroupString(gsa, group);
             }
-            else if (group.ObjectType == typeof(BHE.Panel))
+            else if (group.ObjectType == typeof(BHE.FEMesh))
             {
                 return CreateElementGroupString(gsa, group);
             }
@@ -101,6 +101,7 @@ namespace GSA_Adapter.Structural.Elements
                 if (!BarIO.GetOrCreateBars(gsa, ((BHB.Group<BHE.Bar>)group).Data, out strIds))
                     return null;
 
+
                 IEnumerable<int> ids = strIds.Select(x => int.Parse(x));
 
                 str += Utils.GeterateIdString(ids);
@@ -108,8 +109,32 @@ namespace GSA_Adapter.Structural.Elements
                 return str;
 
             }
+            else if (group is BHB.Group<BHE.FEMesh>)
+            {
+                List<int> idItems = new List<int>();
+                foreach (BHE.FEMesh mesh in group as BHB.Group<BHE.FEMesh>)
+                {
+                    foreach (BHE.FEFace face in mesh.Faces)
+                    {
+                        string id;
+                        if (Utils.CheckAndGetGsaId(face, out id))
+                            idItems.Add(int.Parse(id));
+                        else
+                        {
+                            Utils.SendErrorMessage("All faces in the mesh needs to have an GSA_id to be able to be assigned to a group");
+                            return null;
+                        }
+                    }
+                }
 
-            throw new NotImplementedException();
+                str += Utils.GeterateIdString(idItems);
+
+                return str;
+            }
+
+
+
+            return null;
         }
 
         private static string CreateNodeGroupString(ComAuto gsa, BHB.IGroup group)

@@ -169,7 +169,7 @@ namespace GSA_Adapter.Structural.Loads
         public static string CreateIdListOrGroupName<T>(ComAuto gsa, BHB.Group<T> group) where T : BHB.BHoMObject
         {
             if (!string.IsNullOrWhiteSpace(group.Name))
-                return "\" " +group.Name + "\"";
+                return "\" " + group.Name + "\"";
 
             List<string> ids;
 
@@ -177,15 +177,36 @@ namespace GSA_Adapter.Structural.Loads
             //    Elements.NodeIO.GetOrCreateNodes(gsa, group as List<BHE.Node>, out ids);
             //else
             //{
+            List<T> idItems;
+
+            bool isMesh = group is BHB.Group<BHE.FEMesh>;
+
+            if (isMesh)
+            {
+                idItems = new List<T>();
+                foreach (BHE.FEMesh mesh in group as BHB.Group<BHE.FEMesh>)
+                {
+                    foreach (BHE.FEFace face in mesh.Faces)
+                    {
+                        if (face.CustomData.ContainsKey(Utils.ID))
+                            idItems.Add(face as T);
+                        else
+                            return null;
+                    }
+                }
+            }
+            else
+            {
+
                 List<T> nonIdItems = group.Where(x => !x.CustomData.ContainsKey(Utils.ID)).ToList();
 
                 if (nonIdItems.Count > 0)
                     return null;
 
-                List<T> idItems = group.Where(x => x.CustomData.ContainsKey(Utils.ID)).ToList();
+                idItems = group.Where(x => x.CustomData.ContainsKey(Utils.ID)).ToList();
+            }
 
-                ids = idItems.Select(x => x.CustomData[Utils.ID].ToString()).ToList();
-            //}
+            ids = idItems.Select(x => x.CustomData[Utils.ID].ToString()).ToList();
 
             IEnumerable<int> intIds = ids.Select(x => int.Parse(x));
 
