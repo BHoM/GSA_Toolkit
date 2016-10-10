@@ -169,7 +169,7 @@ namespace GSA_Adapter.Structural.Loads
         public static string CreateIdListOrGroupName<T>(ComAuto gsa, BHB.Group<T> group) where T : BHB.BHoMObject
         {
             if (!string.IsNullOrWhiteSpace(group.Name))
-                return "\" " + group.Name + "\"";
+                return "\"" + group.Name + "\"";
 
             List<string> ids;
 
