@@ -17,34 +17,45 @@ namespace GSA_Adapter.Structural.Loads
         /// <summary>
         /// ASSUMES Z DIRECTION CURRENTLY
         /// </summary>
-        /// <param name="GSA"></param>
+        /// <param name="gsa"></param>
         /// <param name="load"></param>
         /// <returns></returns>
-        static public bool AddFaceLoad(ComAuto GSA, BHL.ILoad load)
+        static public bool AddFaceLoad(ComAuto gsa, BHL.AreaUniformalyDistributedLoad load, double factor)
         {
-            BHL.AreaUniformalyDistributedLoad aLoad = load as BHL.AreaUniformalyDistributedLoad;
 
             string command = "LOAD_2D_FACE";
-            string name = aLoad.Name;
-            string list = "";//CreatePanelIDList(aLoad.Objects);
-            string caseNo = "0"; // TODO: add loadcase.Number.ToString(); into BHoM = aLoad.Loadcase.Number.ToString();
+            string name = load.Name;
+            string list = LoadIO.CreateIdListOrGroupName(gsa, load.Objects);
+            string caseNo = load.Loadcase.Number.ToString();
             string axis = "LOCAL";
             string type = "CONS";
             string proj = "NO";
-            string dir = "Z";
-            string value = aLoad.Pressure.U.ToString();
+            //string dir = "Z";
+            //string value = load.Pressure.U.ToString();
             string str;
 
-            str = command + ",," + list + "," + caseNo + "," + axis + "," + type + "," + proj + "," + dir + "," + value;
+            //str = command + ",," + list + "," + caseNo + "," + axis + "," + type + "," + proj + "," + dir + "," + value;
 
-            dynamic commandResult = GSA.GwaCommand(str);
+            List<string> forceStrings = new List<string>();
 
-            if (1 == (int)commandResult) return true;
-            else
+            str = command + "," + name + "," + list + "," + caseNo + "," + axis + "," + type + "," + proj;
+
+            LoadIO.AddVectorDataToStringSingle(str, load.Pressure, ref forceStrings, factor, true);
+
+            foreach (string s in forceStrings)
             {
-                Utils.SendErrorMessage("Application of command " + command + " error. Invalid arguments?");
-                return false;
+                dynamic commandResult = gsa.GwaCommand(s);
+
+                if (1 == (int)commandResult) continue;
+                else
+                {
+                    Utils.CommandFailed(command);
+                    return false;
+                }
             }
+
+            return true;
+
         }
 
     }

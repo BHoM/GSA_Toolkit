@@ -39,7 +39,7 @@ namespace GSA_Adapter.Structural.Loads
                         break;
 
                     case BHL.LoadType.AreaUniformLoad:
-                        AreaLoadIO.AddFaceLoad(gsa, load);
+                        AreaLoadIO.AddFaceLoad(gsa, (BHL.AreaUniformalyDistributedLoad)load, unitFactors[(int)GsaEnums.UnitType.FORCE]*Math.Pow(unitFactors[(int)GsaEnums.UnitType.LENGTH],2));
                         break;
 
                     case BHL.LoadType.PointVelocity:
