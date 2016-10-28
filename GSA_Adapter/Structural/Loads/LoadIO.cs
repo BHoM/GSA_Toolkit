@@ -136,9 +136,9 @@ namespace GSA_Adapter.Structural.Loads
             string caseNo = load.Loadcase.Number.ToString();
             //if (!LoadcaseIO.GetOrCreateLoadCaseId(gsa, load.Loadcase, out caseNo)) { return false; }
 
-            string x = load.GravityDriection.X.ToString();
-            string y = load.GravityDriection.Y.ToString();
-            string z = load.GravityDriection.Z.ToString();
+            string x = load.GravityDirection.X.ToString();
+            string y = load.GravityDirection.Y.ToString();
+            string z = load.GravityDirection.Z.ToString();
             string str;
 
             str = command + ",," + list + "," + caseNo + "," + x + "," + y + "," + z;
