@@ -41,56 +41,59 @@ namespace GSA_Adapter.Structural.Results
                 int nobeams = gsaElements.Length;
                 foreach (GsaElement e in gsaElements)
                 {
-                    bars.Add(e.Ref.ToString());
+                    //Check if the elements are either bars, beams, spring, cables, struts or ties
+                    if(e.eType == 1 || e.eType == 2 || e.eType == 3 || e.eType == 10 || e.eType == 20 || e.eType == 21)
+                        bars.Add(e.Ref.ToString());
                 }
             }
 
-            if (cases == null || cases.Count == 0)
-            {
-                cases = new List<string>();
-                string sResult;
-                int maxIndex = gsa.GwaCommand("HIGHEST, ANAL");
-                int maxCombIndex = gsa.GwaCommand("HIGHEST, COMBINATION");
+            //if (cases == null || cases.Count == 0)
+            //{
+            //    cases = new List<string>();
+            //    string sResult;
+            //    int maxIndex = gsa.GwaCommand("HIGHEST, ANAL");
+            //    int maxCombIndex = gsa.GwaCommand("HIGHEST, COMBINATION");
 
-                for (int i = 1; i <= maxIndex; i++)
-                {
-                    try
-                    {
-                        sResult = gsa.GwaCommand("GET, ANAL," + i).ToString();
-                        cases.Add("A" + gsa.Arg(1, sResult));
-                    }
-                    catch
-                    {
-                        //Utilities.SendErrorMessage("Analysis task " + i + "could not be found in the model.");
-                        //return false;
-                    }
-                }
+            //    for (int i = 1; i <= maxIndex; i++)
+            //    {
+            //        try
+            //        {
+            //            sResult = gsa.GwaCommand("GET, ANAL," + i).ToString();
+            //            cases.Add("A" + gsa.Arg(1, sResult));
+            //        }
+            //        catch
+            //        {
+            //            //Utilities.SendErrorMessage("Analysis task " + i + "could not be found in the model.");
+            //            //return false;
+            //        }
+            //    }
 
-                for (int i = 1; i <= maxCombIndex; i++)
-                {
-                    try
-                    {
-                        sResult = gsa.GwaCommand("GET, COMBINATION," + i).ToString();
-                        cases.Add("C" + gsa.Arg(1, sResult));
-                    }
-                    catch
-                    {
-                        //Utilities.SendErrorMessage("Analysis task " + i + "could not be found in the model.");
-                        //return false;
-                    }
-                }
-            }
+            //    for (int i = 1; i <= maxCombIndex; i++)
+            //    {
+            //        try
+            //        {
+            //            sResult = gsa.GwaCommand("GET, COMBINATION," + i).ToString();
+            //            cases.Add("C" + gsa.Arg(1, sResult));
+            //        }
+            //        catch
+            //        {
+            //            //Utilities.SendErrorMessage("Analysis task " + i + "could not be found in the model.");
+            //            //return false;
+            //        }
+            //    }
+            //}
 
+            cases = ResultUtilities.CheckAndGetAnalysisCases(gsa, cases);
 
             foreach (string ac in cases)
             {
-                string descriptionCase = ac;
-                int idCase = Convert.ToInt32(Char.IsLetter(ac[0]) ? ac.Trim().Substring(1) : ac.Trim());
-                if (!CheckAnalysisCaseExists(gsa, idCase, ac, out message))
-                {
-                    GSAUtil.Utils.SendErrorMessage(message);
-                    break;
-                } 
+                //string descriptionCase = ac;
+                //int idCase = Convert.ToInt32(Char.IsLetter(ac[0]) ? ac.Trim().Substring(1) : ac.Trim());
+                //if (!ResultUtilities.CheckAnalysisCaseExists(gsa, idCase, ac, out message))
+                //{
+                //    GSAUtil.Utils.SendErrorMessage(message);
+                //    break;
+                //} 
 
 
                 foreach (string b in bars)
@@ -103,7 +106,7 @@ namespace GSA_Adapter.Structural.Results
                         divisions = beamResults.Count;
                         foreach (double[] br in beamResults)
                         {
-                            barForces.Add(new BHoMSR.BarForce<int, string, int>(idBar, descriptionCase, idPos, divisions, 1, br[1], br[2], br[3], br[4], br[5], br[6]));
+                            barForces.Add(new BHoMSR.BarForce<int, string, int>(idBar, ac, idPos, divisions, 1, br[1], br[2], br[3], br[4], br[5], br[6]));
                             idPos++;
                             counter++;
                             if (counter % 1000000 == 0 && resultServer.CanStore)
@@ -241,25 +244,7 @@ namespace GSA_Adapter.Structural.Results
             return true;
         }
 
-        static public bool CheckAnalysisCaseExists(ComAuto GSA, int caseId, string caseDescription, out string message) //to be mover to AnalysisIO or similar
-        {
 
-            if (GSA.CaseExist(caseDescription[0].ToString(), caseId) != 1)
-            {
-                message = "Error, analysis case " + caseDescription + " does not exist.";
-                return false;
-            }
-
-            if (GSA.CaseResultsExist(caseDescription[0].ToString(), caseId, 0) != 1)
-            {
-                message = "Error, analysis case " + caseDescription + " has no results.";
-                return false;
-            }
-
-            message = "Success";
-            return true;
-
-        }
 
     }
 }

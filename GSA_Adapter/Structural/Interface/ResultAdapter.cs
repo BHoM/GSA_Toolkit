@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Interop.gsa_8_7;
 using BHoMBR = BHoM.Base.Results;
+using BHoMSR = BHoM.Structural.Results;
 using GSA_Adapter.Structural.Results;
 
 namespace GSA_Adapter.Structural.Interface
@@ -38,12 +39,24 @@ namespace GSA_Adapter.Structural.Interface
 
         public bool GetNodeDisplacements(List<string> nodes, List<string> cases, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.IResultSet> results)
         {
+            BHoMBR.ResultServer<BHoMSR.NodeDisplacement<int, string, int>> resultServer = new BHoMBR.ResultServer<BHoMSR.NodeDisplacement<int, string, int>>();
+            resultServer.OrderBy = orderBy;
+            NodeResults.GetNodeDisplacements(gsa, resultServer, nodes, cases);
+            results = resultServer.LoadData();
+
+            return true;
+
             throw new NotImplementedException();
         }
 
         public bool GetNodeReactions(List<string> nodes, List<string> cases, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.IResultSet> results)
         {
-            throw new NotImplementedException();
+            BHoMBR.ResultServer<BHoMSR.NodeReaction<int,string,int>> resultServer = new BHoMBR.ResultServer<BHoMSR.NodeReaction<int, string, int>>();
+            resultServer.OrderBy = orderBy;
+            NodeResults.GetNodeReacions(gsa, resultServer, nodes, cases);
+            results = resultServer.LoadData();
+
+            return true;
         }
 
         public bool GetNodeVelocities(List<string> nodes, List<string> cases, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.IResultSet> results)
@@ -63,7 +76,29 @@ namespace GSA_Adapter.Structural.Interface
 
         public bool StoreResults(string filename, List<BHoMBR.ResultType> resultTypes, List<string> loadcases, bool append = false)
         {
-            throw new NotImplementedException();
+            foreach (BHoMBR.ResultType t in resultTypes)
+            {
+                switch (t)
+                {
+                    case BHoM.Base.Results.ResultType.BarForce:
+                        BarResults.GetBarForces(gsa, new BHoMBR.ResultServer<BHoMSR.BarForce<int, string, int>>(filename, append), null, loadcases, 3);
+                        break;
+                    case BHoM.Base.Results.ResultType.BarStress:
+                        break;
+                    case BHoMBR.ResultType.NodeReaction:
+                        NodeResults.GetNodeReacions(gsa, new BHoMBR.ResultServer<BHoMSR.NodeReaction<int, string, int>>(filename, append), null, loadcases);
+                        break;
+                    case BHoMBR.ResultType.NodeDisplacement:
+                        NodeResults.GetNodeDisplacements(gsa, new BHoMBR.ResultServer<BHoMSR.NodeDisplacement<int, string, int>>(filename, append), null, loadcases);
+                        break;
+                    case BHoMBR.ResultType.PanelForce:
+                        break;
+                    case BHoMBR.ResultType.PanelStress:
+                        break;
+
+                }
+            }
+            return true;
         }
     }
 }

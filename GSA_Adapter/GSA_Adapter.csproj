@@ -69,6 +69,8 @@
     <Compile Include="Structural\Properties\PropertyIO.cs" />
     <Compile Include="Structural\Properties\PropertyStringGenerators.cs" />
     <Compile Include="Structural\Results\BarResults.cs" />
+    <Compile Include="Structural\Results\NodeResults.cs" />
+    <Compile Include="Structural\Results\ResultUtilities.cs" />
     <Compile Include="Utility\GsaEnums.cs" />
     <Compile Include="Utility\Utils.cs" />
   </ItemGroup>
