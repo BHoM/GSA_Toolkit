@@ -24,7 +24,7 @@ namespace GSA_Adapter.Structural.Loads
 
             string type = GetTaskType(comb);
 
-            if (!AddAnalysisTask(gsa, combNo, name, type, "1", combNo))
+            if (!AddAnalysisTask(gsa, combNo, name, type, "0", combNo))
                 return false;
 
             return true;

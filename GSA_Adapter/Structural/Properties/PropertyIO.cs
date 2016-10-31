@@ -363,11 +363,11 @@ namespace GSA_Adapter.Structural.Properties
             //Dictionary<string, BHP.PanelProperty> gsaSections = PropertyIO.GetPanelProperties(gsa, true);
 
             //Get all unique materials from imported sectionproperties
-            Dictionary<Guid, BHM.Material> materials = panel.Select(x => x.Material).Distinct().ToDictionary(x => x.BHoM_Guid);
+            Dictionary<Guid, BHM.Material> materials = panel.Select(x => x.Material).Where(x => x != null).Distinct().ToDictionary(x => x.BHoM_Guid);
             //Dictionary<Guid, BHM.Material> clonedMaterials = materials.Select(x => x.Value.CustomData.ContainsKey(Utils.ID) ? x : new KeyValuePair<Guid, BHM.Material>(x.Key, (BHM.Material)x.Value.ShallowClone())).ToDictionary(x => x.Key, x => x.Value);
             Dictionary<Guid, BHM.Material> clonedMaterials = Utils.CloneObjects(materials);
             //Assign cloned materials to section properties
-            panel.ForEach(x => x.Material = clonedMaterials[x.Material.BHoM_Guid]);
+            panel.ForEach(x => x.Material = x.Material != null? clonedMaterials[x.Material.BHoM_Guid] : null);
 
             //Create all new materials
             MaterialIO.CreateMaterials(gsa, clonedMaterials.Values.ToList());
@@ -375,14 +375,15 @@ namespace GSA_Adapter.Structural.Properties
             string sectionPropertyIndex;
 
             //Get the highest section property index
-            int index = gsa.GwaCommand("HIGHEST, PROP_SEC") + 1;
+            int index = gsa.GwaCommand("HIGHEST, PROP_2D") + 1;
 
             //Loop trough and add all nonexisting section properties to gsa
             foreach (BHP.PanelProperty panProp in panel)
             {
-                if (!(panProp is BHP.ConstantThickness))
+
+                if (!(panProp is BHP.ConstantThickness || panProp is BHP.LoadingPanelProperty))
                 {
-                    Utils.SendErrorMessage("Only constant thickness panel property is implemented in GSA");
+                    Utils.SendErrorMessage("Only constant thickness panel property and loading panel property is implemented in GSA");
                     return;
                 }
 
@@ -392,7 +393,7 @@ namespace GSA_Adapter.Structural.Properties
                 if (panProp.CustomData.TryGetValue(Utils.ID, out gsaIdobj))
                 {
                     string id = gsaIdobj.ToString();
-                    Set2DProperty(gsa, (BHP.ConstantThickness)panProp, id);
+                    Set2DProperty(gsa, panProp, id);
 
                     //if (gsaSections.ContainsKey(Utils.GetName(sectionProperty)))
                     //    gsaSections[Utils.GetName(sectionProperty)] = sectionProperty;
@@ -405,7 +406,7 @@ namespace GSA_Adapter.Structural.Properties
                     string num = index.ToString();
                     index++;
 
-                    if (Set2DProperty(gsa, (BHP.ConstantThickness)panProp, num))
+                    if (Set2DProperty(gsa, panProp, num))
                     {
                         panProp.CustomData.Add(Utils.ID, num);
                     }
@@ -437,7 +438,20 @@ namespace GSA_Adapter.Structural.Properties
 
         /*******************************************************/
 
-        static public bool Set2DProperty(ComAuto gsa, BHP.ConstantThickness panProp, string num)
+        public static bool Set2DProperty(ComAuto gsa, BHP.PanelProperty panProp, string num)
+        {
+
+            if (panProp is BHP.ConstantThickness)
+                return SetConstantThicknessProperty(gsa, (BHP.ConstantThickness)panProp, num);
+
+            if (panProp is BHP.LoadingPanelProperty)
+                return SetLoadingPanelProperty(gsa, (BHP.LoadingPanelProperty)panProp, num);
+
+            return false;
+        }
+
+
+        static public bool SetConstantThicknessProperty(ComAuto gsa, BHP.ConstantThickness panProp, string num)
         {
 
             string name = panProp.Name;
@@ -467,5 +481,49 @@ namespace GSA_Adapter.Structural.Properties
 
         }
 
+        private static bool SetLoadingPanelProperty(ComAuto gsa, BHP.LoadingPanelProperty panProp, string num)
+        {
+            string command = "PROP_2D";
+            string name = panProp.Name;
+            string colour = "NO_RGB";
+            string axis = "0";
+            string mat = "0";
+            string type = "LOAD";
+            string support = GetLoadPanelSupportConditions(panProp.LoadApplication);
+            string edge = panProp.ReferenceEdge.ToString();
+
+            string str = command + "," + num + "," + name + "," + colour + "," + axis + "," + mat + "," + type + "," + support + "," + edge;
+
+            dynamic commandResult = gsa.GwaCommand(str);
+
+            if (1 == (int)commandResult)
+            {
+                return true;
+            }
+
+            return Utils.CommandFailed(command);
+
+        }
+
+        private static string GetLoadPanelSupportConditions(BHP.LoadPanelSupportConditions cond)
+        {
+            switch (cond)
+            {
+                case BHP.LoadPanelSupportConditions.AllSides:
+                    return "SUP_ALL";
+                case BHP.LoadPanelSupportConditions.ThreeSides:
+                    return "SUP_THREE";
+                case BHP.LoadPanelSupportConditions.TwoSides:
+                    return "SUP_TWO";
+                case BHP.LoadPanelSupportConditions.TwoAdjacentSides:
+                    return "SUP_TWO_ADJ";
+                case BHP.LoadPanelSupportConditions.OneSide:
+                    return "SUP_ONE";
+                case BHP.LoadPanelSupportConditions.Cantilever:
+                    return "SUP_ONE_MOM";
+                default:
+                    return "SUP_AUTO";
+            }
+        }
     }
 }
