@@ -16,11 +16,11 @@ namespace GSA_Adapter.Structural.Elements
     {
         /***************************************/
 
-        public static bool CreateNodes(ComAuto GSA, List<BHE.Node> nodes, out List<string> ids)
+        public static bool CreateNodes(IComAuto gsa, List<BHE.Node> nodes, out List<string> ids)
         {
             ids = new List<string>();
 
-            int highestIndex = GSA.GwaCommand("HIGHEST, NODE") + 1;
+            int highestIndex = gsa.GwaCommand("HIGHEST, NODE") + 1;
 
             foreach (BHE.Node n in nodes)
             {
@@ -34,12 +34,12 @@ namespace GSA_Adapter.Structural.Elements
                     highestIndex++;
                 }
 
-                if (GSA.GwaCommand("EXIST, NODE, " + n.Name) == 0)
+                if (gsa.GwaCommand("EXIST, NODE, " + n.Name) == 0)
                 {
                     string restraint = GetRestraintString(n);
 
                     string str = command + ", " + ID + ", , NO_RGB, " + n.X + " , " + n.Y + " , " + n.Z + ", NO_GRID, " + 0 + ", REST," + restraint + ", STIFF,0,0,0,0,0,0";
-                    dynamic commandResult = GSA.GwaCommand(str); //"NODE.2, 1 , , NO_RGB,0 , 2 , 0, NO_GRID,0, REST,0,0,0,0,0,0, STIFF,0,0,0,0,0,0"
+                    dynamic commandResult = gsa.GwaCommand(str); //"NODE.2, 1 , , NO_RGB,0 , 2 , 0, NO_GRID,0, REST,0,0,0,0,0,0, STIFF,0,0,0,0,0,0"
 
                     if (1 == (int)commandResult)
                     {
@@ -55,13 +55,13 @@ namespace GSA_Adapter.Structural.Elements
                 else
                     ids.Add(ID);
             }
-            GSA.UpdateViews();
+            gsa.UpdateViews();
             return true;
         }
 
         /***************************************/
 
-        public static bool CreateNodes(ComAuto gsa, List<BHE.Node> nodes)
+        public static bool CreateNodes(IComAuto gsa, List<BHE.Node> nodes)
         {
             //ids = new List<string>();
 
@@ -131,7 +131,7 @@ namespace GSA_Adapter.Structural.Elements
 
         /***************************************/
 
-        public static bool SetNode(ComAuto gsa, BHE.Node n, string index)
+        public static bool SetNode(IComAuto gsa, BHE.Node n, string index)
         {
             string command = "NODE.2";
             string name = n.Name;
@@ -249,7 +249,7 @@ namespace GSA_Adapter.Structural.Elements
         //    return nodes;
         //}
 
-        public static BHoM.Generic.PointMatrix<BHE.Node> GetNodes(ComAuto gsa, int[] nodeNumbers)
+        public static BHoM.Generic.PointMatrix<BHE.Node> GetNodes(IComAuto gsa, int[] nodeNumbers)
         {
 
             //Hardcoded cell size. Will need to be specified more carefully

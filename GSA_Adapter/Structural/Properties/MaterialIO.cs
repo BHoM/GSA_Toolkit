@@ -41,7 +41,7 @@ namespace GSA_Adapter.Structural.Properties
         //    return material.CustomData[Utils.ID].ToString();
         //}
 
-        public static Dictionary<string, BHoMM.Material> GetMaterials(ComAuto gsa, bool nameAsKey = true, bool includeStandardMaterials = false)
+        public static Dictionary<string, BHoMM.Material> GetMaterials(IComAuto gsa, bool nameAsKey = true, bool includeStandardMaterials = false)
         {
             Dictionary<string, BHoMM.Material> materials;
             if (includeStandardMaterials)
@@ -84,7 +84,7 @@ namespace GSA_Adapter.Structural.Properties
 
         }
 
-        public static void CreateMaterials(ComAuto gsa, List<BHoMM.Material> materials)
+        public static void CreateMaterials(IComAuto gsa, List<BHoMM.Material> materials)
         {
             Dictionary<string, BHoMM.Material> gsaMaterials = GetMaterials(gsa, true);
 
@@ -127,7 +127,7 @@ namespace GSA_Adapter.Structural.Properties
         /// Create GSA Material
         /// </summary>
         /// <returns></returns>
-        public static bool SetMaterial(ComAuto GSA, BHoMM.Material material, string id)
+        public static bool SetMaterial(IComAuto GSA, BHoMM.Material material, string id)
         {
             //id = "";
 
@@ -161,7 +161,7 @@ namespace GSA_Adapter.Structural.Properties
             return true;
         }
 
-        static public GsaEnums.MaterialType GetMaterialType(ComAuto GSA, BHoMM.Material material)
+        static public GsaEnums.MaterialType GetMaterialType(IComAuto GSA, BHoMM.Material material)
         {
             switch (material.Type)
             {
@@ -208,7 +208,7 @@ namespace GSA_Adapter.Structural.Properties
         /// </summary>
         /// <param name="gsa"></param>
         /// <returns>A list of strings for all material properties</returns>
-        static public List<string> GetMaterialStringList(ComAuto GSA)
+        static public List<string> GetMaterialStringList(IComAuto GSA)
         {
             List<string> sResult = new List<string>();
             bool b = true;

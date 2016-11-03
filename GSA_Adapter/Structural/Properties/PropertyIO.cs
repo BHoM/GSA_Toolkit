@@ -20,7 +20,7 @@ namespace GSA_Adapter.Structural.Properties
         /*********** Section Property Get Methods **************/
         /*******************************************************/
 
-        public static Dictionary<string,BHP.SectionProperty> GetSections(ComAuto gsa, bool nameAsKey = true)
+        public static Dictionary<string,BHP.SectionProperty> GetSections(IComAuto gsa, bool nameAsKey = true)
         {
             //BHoMB.ObjectManager<BHoMP.SectionProperty> secProps = new BHoMB.ObjectManager<BHoMP.SectionProperty>(BHoMG.Project.ActiveProject);
 
@@ -49,7 +49,7 @@ namespace GSA_Adapter.Structural.Properties
         /// </summary>
         /// <param name="gsa"></param>
         /// <returns>A list of strings for all section properties</returns>
-        static public List<string> GetGsaSectionPropertyStrings(ComAuto gsa)
+        static public List<string> GetGsaSectionPropertyStrings(IComAuto gsa)
         {
             List<string> gsaProps = new List<string>();
 
@@ -146,7 +146,7 @@ namespace GSA_Adapter.Structural.Properties
         /*********** Section Property Set Methods **************/
         /*******************************************************/
 
-        static public void CreateSectionProperties(ComAuto gsa, List<BHP.SectionProperty> sectionProperties)
+        static public void CreateSectionProperties(IComAuto gsa, List<BHP.SectionProperty> sectionProperties)
         {
             //Get existing GSA section properties sorted by name as key
             Dictionary<string, BHP.SectionProperty> gsaSections = GetSections(gsa, true);
@@ -204,7 +204,7 @@ namespace GSA_Adapter.Structural.Properties
 
         /*******************************************************/
 
-        static public bool SetSectionProperty(ComAuto gsa, BHP.SectionProperty secProp, string index)
+        static public bool SetSectionProperty(IComAuto gsa, BHP.SectionProperty secProp, string index)
         {
             string name = Utils.GetName(secProp);
 

@@ -48,9 +48,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Structural\DesignMembers\BarMemberIO.cs" />
+    <Compile Include="Structural\DesignMembers\DesignPropertyIO.cs" />
+    <Compile Include="Structural\DesignMembers\DesignRestraintIO.cs" />
     <Compile Include="Structural\Elements\GroupIO.cs" />
     <Compile Include="Structural\Elements\MeshIO.cs" />
     <Compile Include="Structural\Elements\RigidLinkIO.cs" />
+    <Compile Include="Structural\Interface\DesignMemberAdapter.cs" />
     <Compile Include="Structural\Interface\ResultAdapter.cs" />
     <Compile Include="Structural\Loads\AnalysisTaskIO.cs" />
     <Compile Include="Structural\Interface\App.cs" />
