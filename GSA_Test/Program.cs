@@ -18,9 +18,17 @@ namespace GSA_Test
             //TestNodes();
             //TestSetBars();
             //TestGetBars();
-            TestExtractBarForces();
+            //TestExtractBarForces();
+            TestExtractBarUtil();
         }
 
+
+        private static void TestExtractBarUtil()
+        {
+            GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\QF Stadium\161102 -  QF Stadium Roof B.gwb");
+            Dictionary<string, BHoM.Base.Results.IResultSet> res;
+            app.GetBarUtilisation(null, null, BHoM.Base.Results.ResultOrder.Loadcase, out res);
+        }
 
         private static void TestNodes()
         {
@@ -48,35 +56,35 @@ namespace GSA_Test
 
         }
 
-        private static void TestSetBars()
-        {
-            GSAAdapter app = new GSAAdapter(@"C:\Users\afisher\Desktop\Project Shortcuts\_Test\Al_Test.gwb");
+        //private static void TestSetBars()
+        //{
+        //    GSAAdapter app = new GSAAdapter(@"C:\Users\afisher\Desktop\Project Shortcuts\_Test\Al_Test.gwb");
 
 
 
            
-            Point p1 = new Point(10, 10, 10);
-            Point p2 = new Point(5, 5, 5);
+        //    Point p1 = new Point(10, 10, 10);
+        //    Point p2 = new Point(5, 5, 5);
 
-            Bar bar = new Bar(p1, p2);
-            List<Bar> bars = new List<Bar>();
-            bars.Add(bar);
-            BHoM.Structural.Properties.SectionProperty sec = new BHoM.Structural.Properties.SectionProperty(BHoM.Structural.Properties.ShapeType.Rectangle, /*BHoM.Structural.Properties.SectionType.Steel,*/ 100, 50, 5, 5, 5, 5);
-            sec.Description = "EXP";
-            bar.SetSectionProperty(sec);
-            BHoM.Materials.Material material = BHoM.Materials.Material.Default(BHoM.Materials.MaterialType.Steel);
+        //    Bar bar = new Bar(p1, p2);
+        //    List<Bar> bars = new List<Bar>();
+        //    bars.Add(bar);
+        //    BHoM.Structural.Properties.SectionProperty sec = new BHoM.Structural.Properties.SectionProperty(BHoM.Structural.Properties.ShapeType.Rectangle, /*BHoM.Structural.Properties.SectionType.Steel,*/ 100, 50, 5, 5, 5, 5);
+        //    sec.Description = "EXP";
+        //    bar.SetSectionProperty(sec);
+        //    BHoM.Materials.Material material = BHoM.Materials.Material.Default(BHoM.Materials.MaterialType.Steel);
 
-            BHoM.Materials.Material material2 = new BHoM.Materials.Material("Test", BHoM.Materials.MaterialType.Steel, 210, 0, 0, 0, 7840);
+        //    BHoM.Materials.Material material2 = new BHoM.Materials.Material("Test", BHoM.Materials.MaterialType.Steel, 210, 0, 0, 0, 7840);
        
 
-            bar.Material = material2;    
+        //    bar.Material = material2;    
 
-            List<string> ids = null;
-            bar.Name = "10";
-            app.CreateBars(bars, out ids);
+        //    List<string> ids = null;
+        //    bar.Name = "10";
+        //    app.CreateBars(bars, out ids);
             
 
-        }
+        //}
 
         private static void TestExtractBarForces()
         {

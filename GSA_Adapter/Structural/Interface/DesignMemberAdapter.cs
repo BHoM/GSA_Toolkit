@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BHoM.Structural.Elements;
+using BHoMBR = BHoM.Base.Results;
 
 namespace GSA_Adapter.Structural.Interface
 {
@@ -13,11 +14,7 @@ namespace GSA_Adapter.Structural.Interface
         {
             return Structural.DesignMembers.BarMemberIO.SetBarMember(gsa, bars, out ids);
 
-
-
         }
-
-
 
     }
 }

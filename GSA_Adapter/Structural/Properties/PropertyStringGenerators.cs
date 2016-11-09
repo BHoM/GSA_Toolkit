@@ -53,9 +53,9 @@ namespace GSA_Adapter.Structural.Properties
                 case BHoMP.ShapeType.DoubleAngle:
                     CreateDoubleAngleString(secProp, out desc, out prop);
                     break;
-                case BHoMP.ShapeType.CutISection:
-                    CreateCutIString(secProp, out desc, out prop);
-                    break;
+                //case BHoMP.ShapeType.DoubleISection:
+                    //CreateCutIString(secProp, out desc, out prop);
+                    //break;
                 case BHoMP.ShapeType.DoubleChannel:
                     CreateDoubleChannelString(secProp, out desc, out prop);
                     break;

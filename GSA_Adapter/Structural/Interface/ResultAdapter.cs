@@ -74,6 +74,18 @@ namespace GSA_Adapter.Structural.Interface
             throw new NotImplementedException();
         }
 
+        public bool GetBarUtilisation(List<string> bars, List<string> cases, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.IResultSet> results)
+        {
+            BHoMBR.ResultServer<BHoM.Structural.Results.SteelUtilisation<int, string, int>> resultServer = new BHoM.Base.Results.ResultServer<BHoM.Structural.Results.SteelUtilisation<int, string, int>>();
+            resultServer.OrderBy = orderBy;
+            GSA_Adapter.Structural.Results.Utilisation.GetSteelBarUtilisation(gsa, resultServer, bars, cases);
+            results = resultServer.LoadData();
+
+            return true;
+
+        }
+
+
         public bool StoreResults(string filename, List<BHoMBR.ResultType> resultTypes, List<string> loadcases, bool append = false)
         {
             foreach (BHoMBR.ResultType t in resultTypes)
@@ -94,6 +106,9 @@ namespace GSA_Adapter.Structural.Interface
                     case BHoMBR.ResultType.PanelForce:
                         break;
                     case BHoMBR.ResultType.PanelStress:
+                        break;
+                    case BHoMBR.ResultType.Utilisation:
+                        Utilisation.GetSteelBarUtilisation(gsa, new BHoMBR.ResultServer<BHoMSR.SteelUtilisation<int, string, int>>(filename, append), null, loadcases);
                         break;
 
                 }

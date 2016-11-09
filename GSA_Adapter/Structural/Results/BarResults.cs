@@ -27,74 +27,12 @@ namespace GSA_Adapter.Structural.Results
             List<BHoMSR.BarForce<int, string, int>> barForces = new List<BHoMSR.BarForce<int, string, int>>();
             int counter = 0;
 
-            if (bars == null || bars.Count == 0)
-            {
-                bars = new List<string>();
-                int maxIndex = gsa.GwaCommand("HIGHEST, EL");
-                int[] potentialBeamRefs = new int[maxIndex];
-                for (int i = 0; i < maxIndex; i++)
-                    potentialBeamRefs[i] = i + 1;
-
-                GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
-                gsa.Elements(potentialBeamRefs, out gsaElements);
-
-                int nobeams = gsaElements.Length;
-                foreach (GsaElement e in gsaElements)
-                {
-                    //Check if the elements are either bars, beams, spring, cables, struts or ties
-                    if(e.eType == 1 || e.eType == 2 || e.eType == 3 || e.eType == 10 || e.eType == 20 || e.eType == 21)
-                        bars.Add(e.Ref.ToString());
-                }
-            }
-
-            //if (cases == null || cases.Count == 0)
-            //{
-            //    cases = new List<string>();
-            //    string sResult;
-            //    int maxIndex = gsa.GwaCommand("HIGHEST, ANAL");
-            //    int maxCombIndex = gsa.GwaCommand("HIGHEST, COMBINATION");
-
-            //    for (int i = 1; i <= maxIndex; i++)
-            //    {
-            //        try
-            //        {
-            //            sResult = gsa.GwaCommand("GET, ANAL," + i).ToString();
-            //            cases.Add("A" + gsa.Arg(1, sResult));
-            //        }
-            //        catch
-            //        {
-            //            //Utilities.SendErrorMessage("Analysis task " + i + "could not be found in the model.");
-            //            //return false;
-            //        }
-            //    }
-
-            //    for (int i = 1; i <= maxCombIndex; i++)
-            //    {
-            //        try
-            //        {
-            //            sResult = gsa.GwaCommand("GET, COMBINATION," + i).ToString();
-            //            cases.Add("C" + gsa.Arg(1, sResult));
-            //        }
-            //        catch
-            //        {
-            //            //Utilities.SendErrorMessage("Analysis task " + i + "could not be found in the model.");
-            //            //return false;
-            //        }
-            //    }
-            //}
+            bars = CheckAndGetBars(gsa, bars);
 
             cases = ResultUtilities.CheckAndGetAnalysisCases(gsa, cases);
 
             foreach (string ac in cases)
             {
-                //string descriptionCase = ac;
-                //int idCase = Convert.ToInt32(Char.IsLetter(ac[0]) ? ac.Trim().Substring(1) : ac.Trim());
-                //if (!ResultUtilities.CheckAnalysisCaseExists(gsa, idCase, ac, out message))
-                //{
-                //    GSAUtil.Utils.SendErrorMessage(message);
-                //    break;
-                //} 
-
 
                 foreach (string b in bars)
                 {
@@ -122,6 +60,31 @@ namespace GSA_Adapter.Structural.Results
             }
             resultServer.StoreData(barForces);
             return true;
+        }
+
+        static public List<string> CheckAndGetBars(IComAuto gsa, List<string> bars)
+        {
+            if (bars == null || bars.Count == 0)
+            {
+                bars = new List<string>();
+                int maxIndex = gsa.GwaCommand("HIGHEST, EL");
+                int[] potentialBeamRefs = new int[maxIndex];
+                for (int i = 0; i < maxIndex; i++)
+                    potentialBeamRefs[i] = i + 1;
+
+                GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
+                gsa.Elements(potentialBeamRefs, out gsaElements);
+
+                int nobeams = gsaElements.Length;
+                foreach (GsaElement e in gsaElements)
+                {
+                    //Check if the elements are either bars, beams, spring, cables, struts or ties
+                    if (e.eType == 1 || e.eType == 2 || e.eType == 3 || e.eType == 10 || e.eType == 20 || e.eType == 21)
+                        bars.Add(e.Ref.ToString());
+                }
+            }
+
+            return bars;
         }
 
         static public bool GetBeamResults(ComAuto gsa, int bId, string caseDescription, out List<double[]> resultsPos, out string message)

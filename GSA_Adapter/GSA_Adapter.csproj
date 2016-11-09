@@ -75,6 +75,7 @@
     <Compile Include="Structural\Results\BarResults.cs" />
     <Compile Include="Structural\Results\NodeResults.cs" />
     <Compile Include="Structural\Results\ResultUtilities.cs" />
+    <Compile Include="Structural\Results\Utilisation.cs" />
     <Compile Include="Utility\GsaEnums.cs" />
     <Compile Include="Utility\Utils.cs" />
   </ItemGroup>
