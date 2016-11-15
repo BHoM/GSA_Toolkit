@@ -213,6 +213,26 @@ namespace GSA_Adapter.Structural.Loads
             return Utils.GeterateIdString(intIds);
         }
 
+        public static string GetAxis(BHL.ILoad load)
+        {
+            switch (load.Axis)
+            {
+                case BHL.LoadAxis.Local:
+                    return "LOCAL";
+                case BHL.LoadAxis.Global:
+                default:
+                    return "GLOBAL";
+            }
+        }
+
+        public static string CheckProjected(BHL.ILoad load)
+        {
+            if (load.Projected)
+                return "YES";
+            else
+                return "NO";
+        }
+
         //public static string CreateBarIDList(List<BHE.Bar> bars)
         //{
         //    string str = "";

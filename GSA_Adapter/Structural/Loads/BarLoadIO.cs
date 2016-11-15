@@ -70,8 +70,10 @@ namespace GSA_Adapter.Structural.Loads
             //LOAD_BEAM_LINE	name	none 	1	GLOBAL	NO	Z	30	40		
 
             string name = load.Name;
+            string axis = LoadIO.GetAxis(load);
+            string proj = LoadIO.CheckProjected(load);
 
-            string str = command + "," + name + "," + list + "," + caseNo + "," + "GLOBAL" + "," + "NO";
+            string str = command + "," + name + "," + list + "," + caseNo + "," + axis + "," + proj;
 
             forceStrings = new List<string>();
 

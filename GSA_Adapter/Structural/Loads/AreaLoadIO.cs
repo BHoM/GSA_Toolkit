@@ -27,9 +27,9 @@ namespace GSA_Adapter.Structural.Loads
             string name = load.Name;
             string list = LoadIO.CreateIdListOrGroupName(gsa, load.Objects);
             string caseNo = load.Loadcase.Number.ToString();
-            string axis = "LOCAL";
+            string axis = LoadIO.GetAxis(load);
             string type = "CONS";
-            string proj = "NO";
+            string proj = LoadIO.CheckProjected(load);
             //string dir = "Z";
             //string value = load.Pressure.U.ToString();
             string str;

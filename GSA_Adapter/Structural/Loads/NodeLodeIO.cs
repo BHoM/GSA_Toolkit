@@ -65,7 +65,9 @@ namespace GSA_Adapter.Structural.Loads
 
             //if(!LoadcaseIO.GetOrCreateLoadCaseId(gsa, load.Loadcase, out caseNo)) { return false; }
 
-            str = command + "," + name + "," + appliedTo + "," + caseNo + "," + "GLOBAL";
+            string axis = LoadIO.GetAxis(load);
+
+            str = command + "," + name + "," + appliedTo + "," + caseNo + "," + axis;
 
             LoadIO.AddVectorDataToStringSingle(str, trans, ref forceStrings, factor, true);
             LoadIO.AddVectorDataToStringSingle(str, rot, ref forceStrings, factor, false);

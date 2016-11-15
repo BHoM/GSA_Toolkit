@@ -25,8 +25,9 @@ namespace GSA_Test
 
         private static void TestExtractBarUtil()
         {
-            GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\QF Stadium\161102 -  QF Stadium Roof B.gwb");
+            GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\QF Stadium\161109 -  QF Stadium Roof.gwb");
             Dictionary<string, BHoM.Base.Results.IResultSet> res;
+            app.GetBarForces(null, null,3, BHoM.Base.Results.ResultOrder.Loadcase, out res);
             app.GetBarUtilisation(null, null, BHoM.Base.Results.ResultOrder.Loadcase, out res);
         }
 

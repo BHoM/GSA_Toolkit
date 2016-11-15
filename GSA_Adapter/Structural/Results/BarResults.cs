@@ -69,19 +69,44 @@ namespace GSA_Adapter.Structural.Results
                 bars = new List<string>();
                 int maxIndex = gsa.GwaCommand("HIGHEST, EL");
                 int[] potentialBeamRefs = new int[maxIndex];
-                for (int i = 0; i < maxIndex; i++)
-                    potentialBeamRefs[i] = i + 1;
+                //for (int i = 0; i < maxIndex; i++)
+                //    potentialBeamRefs[i] = i + 1;
 
-                GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
-                gsa.Elements(potentialBeamRefs, out gsaElements);
 
-                int nobeams = gsaElements.Length;
-                foreach (GsaElement e in gsaElements)
+
+                string barStr = gsa.GwaCommand("GET_ALL, EL");
+
+                foreach (string str in barStr.Split('\n'))
                 {
-                    //Check if the elements are either bars, beams, spring, cables, struts or ties
-                    if (e.eType == 1 || e.eType == 2 || e.eType == 3 || e.eType == 10 || e.eType == 20 || e.eType == 21)
-                        bars.Add(e.Ref.ToString());
+                    string[] barProps = str.Split(',');
+                    if (barProps.Length < 1)
+                        continue;
+
+                    string type = barProps[4];
+
+                    //Check type
+                    if (!(type == "BEAM" || type == "BAR" || type == "TIE" || type == "STRUT"))
+                        continue;
+
+                    //Check if dummy
+                    if (barProps[barProps.Length - 1] == "DUMMY")
+                        continue;
+
+                    bars.Add(barProps[1]);
+
                 }
+
+                //GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
+                //gsa.Elements(potentialBeamRefs, out gsaElements);
+
+                //int nobeams = gsaElements.Length;
+                //foreach (GsaElement e in gsaElements)
+                //{
+                    
+                //    //Check if the elements are either bars, beams, spring, cables, struts or ties
+                //    if (e.eType == 1 || e.eType == 2 || e.eType == 3 || e.eType == 10 || e.eType == 20 || e.eType == 21)
+                //        bars.Add(e.Ref.ToString());
+                //}
             }
 
             return bars;
