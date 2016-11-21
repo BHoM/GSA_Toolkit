@@ -166,7 +166,7 @@ namespace GSA_Adapter.Structural.Loads
             return unitFactor;
         }
 
-        public static string CreateIdListOrGroupName<T>(ComAuto gsa, BHB.Group<T> group) where T : BHB.BHoMObject
+        public static string CreateIdListOrGroupName<T>(ComAuto gsa, BHB.Group<T> group) where T : BHB.IBase
         {
             if (!string.IsNullOrWhiteSpace(group.Name))
                 return "\"" + group.Name + "\"";
@@ -177,19 +177,19 @@ namespace GSA_Adapter.Structural.Loads
             //    Elements.NodeIO.GetOrCreateNodes(gsa, group as List<BHE.Node>, out ids);
             //else
             //{
-            List<T> idItems;
+            List<BHB.IBase> idItems;
 
             bool isMesh = group is BHB.Group<BHE.FEMesh>;
 
             if (isMesh)
             {
-                idItems = new List<T>();
+                idItems = new List<BHB.IBase>();
                 foreach (BHE.FEMesh mesh in group as BHB.Group<BHE.FEMesh>)
                 {
                     foreach (BHE.FEFace face in mesh.Faces)
                     {
                         if (face.CustomData.ContainsKey(Utils.ID))
-                            idItems.Add(face as T);
+                            idItems.Add(face);
                         else
                             return null;
                     }
@@ -198,12 +198,12 @@ namespace GSA_Adapter.Structural.Loads
             else
             {
 
-                List<T> nonIdItems = group.Where(x => !x.CustomData.ContainsKey(Utils.ID)).ToList();
+                List<BHB.IBase> nonIdItems = group.Where(x => !x.CustomData.ContainsKey(Utils.ID)).Select(x => (BHB.IBase)x).ToList();
 
                 if (nonIdItems.Count > 0)
                     return null;
 
-                idItems = group.Where(x => x.CustomData.ContainsKey(Utils.ID)).ToList();
+                idItems = group.Where(x => x.CustomData.ContainsKey(Utils.ID)).Select(x => (BHB.IBase)x).ToList();
             }
 
             ids = idItems.Select(x => x.CustomData[Utils.ID].ToString()).ToList();

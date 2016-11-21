@@ -65,6 +65,8 @@ namespace GSA_Adapter.Structural.Elements
         {
             //ids = new List<string>();
 
+
+
             List<BHE.Node> idNodes = nodes.Where(x => x.CustomData.ContainsKey(Utils.ID)).ToList();
             List<BHE.Node> nonIdNodes = nodes.Where(x => !x.CustomData.ContainsKey(Utils.ID)).ToList();
             

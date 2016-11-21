@@ -124,8 +124,15 @@ namespace GSA_Adapter.Structural.Interface
         public bool SetNodes(List<BHE.Node> nodes, out List<string> ids)
         {
             //TODO: returning ids
+
+            //Clone nodes
+            List<BHE.Node> clones = nodes.Select(x => (BHE.Node)x.ShallowClone()).ToList();
+            clones.ForEach(x => x.CustomData = new Dictionary<string, object>(x.CustomData));
+
             ids = new List<string>();
             return Structural.Elements.NodeIO.CreateNodes(gsa, nodes);
+
+            nodes = clones;
         }
 
         public bool SetBars(List<BHE.Bar> bars, out List<string> ids)
