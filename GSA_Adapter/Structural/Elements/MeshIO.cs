@@ -50,10 +50,13 @@ namespace GSA_Adapter.Structural.Elements
 
             foreach (BHE.FEMesh mesh in meshes)
             {
+                List<BHE.Node> newNodes = new List<BHoM.Structural.Elements.Node>();
                 for (int i = 0; i < mesh.Nodes.Count; i++)
                 {
-                    mesh.Nodes[i] = clonedNodes[mesh.Nodes[i].BHoM_Guid];
+                    newNodes.Add(clonedNodes[mesh.Nodes[i].BHoM_Guid]);
+                    //mesh.Nodes[i] = clonedNodes[mesh.Nodes[i].BHoM_Guid];
                 }
+                mesh.Nodes = newNodes;
             }
 
             //bars = CloneBars(bars, clonedSecProps, clonedNodes);

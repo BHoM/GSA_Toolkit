@@ -109,7 +109,7 @@ namespace GSA_Adapter.Structural.Elements
                 return str;
 
             }
-            else if (group is BHB.Group<BHE.FEMesh>)
+            else if (group is BHB.Group<BHE.FEMesh> || group is BHB.Group<BHE.IAreaElement>)
             {
                 List<int> idItems = new List<int>();
                 foreach (BHE.FEMesh mesh in group as BHB.Group<BHE.FEMesh>)

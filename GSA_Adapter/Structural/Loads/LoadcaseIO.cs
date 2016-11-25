@@ -30,10 +30,18 @@ namespace GSA_Adapter.Structural.Loads
                 }
                 else if (ca is BHL.LoadCombination)
                 {
-                    string caseNo = higestIndexComb.ToString();
-                    if (AnalysisTaskIO.AddLoadCombination(gsa, ca as BHL.LoadCombination, caseNo))
+                    string caseNo;
+                    if (ca.Number <= 0)
+                    {
+                        caseNo = higestIndexComb.ToString();
                         higestIndexComb++;
-                        
+                    }
+                    else
+                        caseNo = ca.Number.ToString();
+
+
+                    AnalysisTaskIO.AddLoadCombination(gsa, ca as BHL.LoadCombination, caseNo);
+   
                 }
             }
 

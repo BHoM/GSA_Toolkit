@@ -319,7 +319,7 @@ namespace GSA_Adapter.Structural.Properties
                         Tt = double.Parse(desc[5]) * factor;
                         Tb = double.Parse(desc[6]) * factor;
                         t = double.Parse(desc[7]) * factor;
-                        secProp = BHoMP.SectionProperty.CreateISection(/*BHoMP.SectionType.Steel,*/ Wt, Wb, D, Tt, Tb, t, 0, 0);
+                        secProp = BHoMP.SectionProperty.CreateISection(BHoM.Materials.MaterialType.Steel, Wt, Wb, D, Tt, Tb, t, 0, 0);
                         break;
                     case "CHS":
                         D = double.Parse(desc[2]) * factor;
