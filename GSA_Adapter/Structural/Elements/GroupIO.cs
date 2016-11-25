@@ -86,6 +86,10 @@ namespace GSA_Adapter.Structural.Elements
             {
                 return CreateElementGroupString(gsa, group);
             }
+            else if (group.ObjectType == typeof(BHE.IAreaElement))
+            {
+                return CreateElementGroupString(gsa, group);
+            }
 
             return null;
         }
@@ -109,11 +113,44 @@ namespace GSA_Adapter.Structural.Elements
                 return str;
 
             }
-            else if (group is BHB.Group<BHE.FEMesh> || group is BHB.Group<BHE.IAreaElement>)
+            else if (group is BHB.Group<BHE.FEMesh>)
             {
                 List<int> idItems = new List<int>();
                 foreach (BHE.FEMesh mesh in group as BHB.Group<BHE.FEMesh>)
                 {
+                    foreach (BHE.FEFace face in mesh.Faces)
+                    {
+                        string id;
+                        if (Utils.CheckAndGetGsaId(face, out id))
+                            idItems.Add(int.Parse(id));
+                        else
+                        {
+                            Utils.SendErrorMessage("All faces in the mesh needs to have an GSA_id to be able to be assigned to a group");
+                            return null;
+                        }
+                    }
+                }
+
+                str += Utils.GeterateIdString(idItems);
+
+                return str;
+            }
+            else if (group is BHB.Group<BHE.IAreaElement>)
+            {
+                List<int> idItems = new List<int>();
+                foreach (BHE.IAreaElement elem in group as BHB.Group<BHE.IAreaElement>)
+                {
+                    BHE.FEMesh mesh;
+
+                    if (elem is BHE.FEMesh)
+                        mesh = (BHE.FEMesh)elem;
+                    else
+                    {
+                        Utils.SendErrorMessage("IAreaElementgroups currently only works for FEMeshes");
+                        return null;
+                    }
+
+
                     foreach (BHE.FEFace face in mesh.Faces)
                     {
                         string id;
