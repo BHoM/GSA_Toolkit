@@ -45,21 +45,29 @@ namespace GSA_Adapter.Structural.Elements
             //Assign the clones section properties to the abrs
             meshes.ForEach(x => x.PanelProperty = clonedPanProps[x.PanelProperty.BHoM_Guid]);
 
-            //Assign the cloned nodes to the bars
-            //meshes.ForEach(x => x.Nodes.ForEach(y => y = clonedNodes[y.BHoM_Guid]));
-
             foreach (BHE.FEMesh mesh in meshes)
             {
                 List<BHE.Node> newNodes = new List<BHoM.Structural.Elements.Node>();
                 for (int i = 0; i < mesh.Nodes.Count; i++)
                 {
                     newNodes.Add(clonedNodes[mesh.Nodes[i].BHoM_Guid]);
-                    //mesh.Nodes[i] = clonedNodes[mesh.Nodes[i].BHoM_Guid];
                 }
                 mesh.Nodes = newNodes;
             }
 
-            //bars = CloneBars(bars, clonedSecProps, clonedNodes);
+
+            foreach (BHE.FEMesh mesh in meshes)
+            {
+                List<BHE.FEFace> newFaces = new List<BHE.FEFace>();
+                for (int i = 0; i < mesh.Faces.Count; i++)
+                {
+                    BHE.FEFace newFace = mesh.Faces[i].ShallowClone() as BHE.FEFace;
+                    newFace.CustomData = new Dictionary<string, object>(newFace.CustomData);
+                    newFaces.Add(newFace);
+                }
+                mesh.Faces = newFaces;
+            }
+
 
             //Create nodes
             NodeIO.CreateNodes(gsa, clonedNodes.Values.ToList());

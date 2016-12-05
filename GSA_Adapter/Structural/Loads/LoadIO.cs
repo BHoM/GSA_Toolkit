@@ -180,12 +180,33 @@ namespace GSA_Adapter.Structural.Loads
             List<BHB.IBase> idItems;
 
             bool isMesh = group is BHB.Group<BHE.FEMesh>;
+            bool isIareaElement = group is BHB.Group<BHE.IAreaElement>;
 
             if (isMesh)
             {
                 idItems = new List<BHB.IBase>();
                 foreach (BHE.FEMesh mesh in group as BHB.Group<BHE.FEMesh>)
                 {
+                    foreach (BHE.FEFace face in mesh.Faces)
+                    {
+                        if (face.CustomData.ContainsKey(Utils.ID))
+                            idItems.Add(face);
+                        else
+                            return null;
+                    }
+                }
+            }
+            else if (isIareaElement)
+            {
+                idItems = new List<BHB.IBase>();
+                foreach (BHE.IAreaElement elem in group as BHB.Group<BHE.IAreaElement>)
+                {
+                    if (!(elem is BHE.FEMesh))
+                    {
+                        Utility.Utils.SendErrorMessage("Mesh is only IAreaElement implemented in GSA");
+                    }
+                    BHE.FEMesh mesh = elem as BHE.FEMesh;
+
                     foreach (BHE.FEFace face in mesh.Faces)
                     {
                         if (face.CustomData.ContainsKey(Utils.ID))
