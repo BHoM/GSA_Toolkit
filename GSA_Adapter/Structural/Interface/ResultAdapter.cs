@@ -115,5 +115,10 @@ namespace GSA_Adapter.Structural.Interface
             }
             return true;
         }
+
+        public bool GetSlabReinforcement(List<string> panels, List<string> cases, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.IResultSet> results)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

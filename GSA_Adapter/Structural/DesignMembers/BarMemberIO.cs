@@ -134,5 +134,53 @@ namespace GSA_Adapter.Structural.DesignMembers
                     return "MB_UNDEF";
             }
         }
+
+
+        public static bool GetBarMembers(ComAuto gsa, out List<BHE.Bar> barList, List<string> barNumbers = null)
+        {
+
+            string barStr = gsa.GwaCommand("GET_ALL, MEMB");
+
+            Dictionary<string, BHP.SectionProperty> secProps = PropertyIO.GetSections(gsa, false);
+
+            barList = new List<BHE.Bar>();
+
+            foreach (string str in barStr.Split('\n'))
+            {
+                string[] barProps = str.Split(',');
+                if (barProps.Length < 1)
+                    continue;
+
+                
+
+                GsaNode[] gsaNodes;
+
+                int[] topo = new int[] { int.Parse(barProps[10]), int.Parse(barProps[11]) };
+
+                gsa.Nodes(topo, out gsaNodes);
+                BHE.Node n1 = new BHE.Node(gsaNodes[0].Coor[0], gsaNodes[0].Coor[1], gsaNodes[0].Coor[2]);
+                BHE.Node n2 = new BHE.Node(gsaNodes[1].Coor[0], gsaNodes[1].Coor[1], gsaNodes[1].Coor[2]);
+
+
+                BHE.Bar bar = new BHE.Bar(n1, n2, barProps[2]);
+
+
+
+                bar.OrientationAngle = double.Parse(barProps[14]);
+
+
+
+                bar.SectionProperty = secProps[barProps[6]];
+
+                bar.CustomData[Utils.ID] = barProps[1];
+
+                barList.Add(bar);
+
+
+            }
+
+            return true;
+        }
+
     }
 }
