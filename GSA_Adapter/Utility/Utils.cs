@@ -15,7 +15,6 @@ namespace GSA_Adapter.Utility
     /// </summary>
     public static class Utils
     {
-        public const string NUM_KEY = "GSA Number";
         public const string ID = "GSA_id";
 
         static public bool CommandFailed(string command)

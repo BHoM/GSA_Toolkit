@@ -126,6 +126,7 @@ namespace GSA_Adapter.Structural.Interface
             throw new NotImplementedException();
         }
 
+
         public bool GetNodeCoordinates(List<string> nodes, out Dictionary<string, BHoMBR.IResultSet> results)
         {
             BHoMBR.ResultServer<BHoMSR.NodeCoordinates> resultServer = new BHoMBR.ResultServer<BHoMSR.NodeCoordinates>();
@@ -145,5 +146,6 @@ namespace GSA_Adapter.Structural.Interface
 
             return true;
         }
+
     }
 }

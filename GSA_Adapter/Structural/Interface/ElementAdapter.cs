@@ -17,29 +17,22 @@ namespace GSA_Adapter.Structural.Interface
         private ComAuto gsa;
         private string settings;
 
+
         public string Filename { get; }
 
         public ObjectSelection Selection
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get;set;
         }
 
         public GSAAdapter()
         {
             gsa = new ComAuto();
+            Selection = ObjectSelection.All;
         }
 
-        public GSAAdapter(string filePath)
+        public GSAAdapter(string filePath) : this()
         {
-            gsa = new ComAuto();
             short result;
             if (filePath != "")
                  result = gsa.Open(filePath);
@@ -56,7 +49,7 @@ namespace GSA_Adapter.Structural.Interface
         public List<string> GetBars(out List<BHE.Bar> bars, List<string> ids = null)
         {
             Structural.Elements.BarIO.GetBars(gsa, out bars);
-            return null; //TODO: Return list of bar ids
+            return bars.Select(x => x[Utility.Utils.ID].ToString()).ToList();
         }
 
         /// <summary>

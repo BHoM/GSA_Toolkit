@@ -191,30 +191,17 @@ namespace GSA_Adapter.Structural.Results
 
         static public bool GetBarCoordinates(ComAuto GSA, BHoMBR.ResultServer<BHoMSR.BarCoordinates> resultServer, List<string> bars)
         {
+            List<BHE.Bar> barList = new List<BHE.Bar>();
+            if (!GSA_Adapter.Structural.Elements.BarIO.GetBars(GSA, out barList))
+                return false;
 
-            BHB.ObjectManager<int, BHE.Bar> barManager = new BHB.ObjectManager<int, BHE.Bar>(BHG.Project.ActiveProject, GSAUtil.Utils.NUM_KEY, BHB.FilterOption.UserData);
-
-            int maxIndex = GSA.GwaCommand("HIGHEST, EL");
-            int[] potentialBeamRefs = new int[maxIndex];
-            for (int i = 0; i < maxIndex; i++)
-                potentialBeamRefs[i] = i + 1;
-
-            GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
-            GSA.Elements(potentialBeamRefs, out gsaElements);
-
-            for (int i = 0; i < gsaElements.Length; i++)
+            List<BHoMSR.BarCoordinates> barCoords = new List<BHoMSR.BarCoordinates>();
+            foreach (BHE.Bar bar in barList)
             {
-                GsaElement gsaBar = gsaElements[i]; //TODO: filter elements based on topology
-
-                GsaNode[] gsaNodes;
-                GSA.Nodes(gsaBar.Topo, out gsaNodes);
-
-                string id = gsaBar.Ref.ToString();
-                // TODO: store this in the result server
-                new BHoMSR.BarCoordinates(id, gsaNodes[0].Coor[0], gsaNodes[0].Coor[1], gsaNodes[0].Coor[2], gsaNodes[1].Coor[0], gsaNodes[1].Coor[1], gsaNodes[1].Coor[2]);
+                barCoords.Add(new BHoMSR.BarCoordinates(bar.CustomData[GSAUtil.Utils.ID].ToString(), bar.StartPoint.X, bar.StartPoint.Y, bar.StartPoint.Z, bar.EndPoint.X, bar.EndPoint.Y, bar.EndPoint.Z, bar.SectionProperty.Name, bar.OrientationAngle));
             }
 
-            // TODO - anything else ?
+            resultServer.StoreData(barCoords);
 
             return true;
         }

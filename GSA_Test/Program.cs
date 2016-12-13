@@ -15,13 +15,17 @@ namespace GSA_Test
     {
         static void Main(string[] args)
         {
-            //TestNodes();
-            //TestSetBars();
-            //TestGetBars();
-            //TestExtractBarForces();
-            TestExtractBarUtil();
+
+            TestGetMembers();
         }
 
+
+        private static void TestGetMembers()
+        {
+            GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\QF Stadium\161109 -  QF Stadium Roof.gwb");
+            List<BHoM.Structural.Elements.Bar> bars;
+            app.GetBarDesignElement(out bars);
+        }
 
         private static void TestExtractBarUtil()
         {

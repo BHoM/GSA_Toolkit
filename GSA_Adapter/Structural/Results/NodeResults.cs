@@ -71,9 +71,21 @@ namespace GSA_Adapter.Structural.Results
             return true;
         }
 
-        public static void GetNodeCoordinates(IComAuto gsa, BHBR.ResultServer<BHSR.NodeCoordinates> resultServer, List<string> nodes)
+        public static bool GetNodeCoordinates(IComAuto gsa, BHBR.ResultServer<BHSR.NodeCoordinates> resultServer, List<string> nodes)
         {
-            //TODO
+
+
+            List<BHSR.NodeCoordinates> nodeCoords = new List<BHSR.NodeCoordinates>();
+
+            // TODO for Isak
+            /*for ()
+            {
+                nodeCoords.Add(new BHSR.NodeCoordinates(id, x, y, z));
+            }*/
+
+            resultServer.StoreData(nodeCoords);
+
+            return true;
         }
 
         private static Dictionary<int, List<double>> GetNodalResults(IComAuto gsa, string loadCase, ResHeader resultType, List<int> nodeIndecies)
