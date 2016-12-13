@@ -199,6 +199,16 @@ namespace GSA_Adapter.Structural.Interface
         {
             return Structural.Elements.MeshIO.CreateMeshes(gsa, meshes, out ids);
         }
+
+        public bool GetLoads(out List<BHL.ILoad> loads, List<BHL.Loadcase> ids = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Run()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

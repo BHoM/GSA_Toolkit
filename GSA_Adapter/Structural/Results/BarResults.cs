@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Interop.gsa_8_7;
+using BHB = BHoM.Base;
+using BHG = BHoM.Global;
+using BHE = BHoM.Structural.Elements;
 using BHoMBR = BHoM.Base.Results;
 using BHoMSR = BHoM.Structural.Results;
 using GSAUtil = GSA_Adapter.Utility; // not sure if I should do this?
@@ -184,6 +187,39 @@ namespace GSA_Adapter.Structural.Results
 
             return true;
         }
+
+
+        static public bool GetBarCoordinates(ComAuto GSA, BHoMBR.ResultServer<BHoMSR.BarCoordinates> resultServer, List<string> bars)
+        {
+
+            BHB.ObjectManager<int, BHE.Bar> barManager = new BHB.ObjectManager<int, BHE.Bar>(BHG.Project.ActiveProject, GSAUtil.Utils.NUM_KEY, BHB.FilterOption.UserData);
+
+            int maxIndex = GSA.GwaCommand("HIGHEST, EL");
+            int[] potentialBeamRefs = new int[maxIndex];
+            for (int i = 0; i < maxIndex; i++)
+                potentialBeamRefs[i] = i + 1;
+
+            GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
+            GSA.Elements(potentialBeamRefs, out gsaElements);
+
+            for (int i = 0; i < gsaElements.Length; i++)
+            {
+                GsaElement gsaBar = gsaElements[i]; //TODO: filter elements based on topology
+
+                GsaNode[] gsaNodes;
+                GSA.Nodes(gsaBar.Topo, out gsaNodes);
+
+                string id = gsaBar.Ref.ToString();
+                // TODO: store this in the result server
+                new BHoMSR.BarCoordinates(id, gsaNodes[0].Coor[0], gsaNodes[0].Coor[1], gsaNodes[0].Coor[2], gsaNodes[1].Coor[0], gsaNodes[1].Coor[1], gsaNodes[1].Coor[2]);
+            }
+
+            // TODO - anything else ?
+
+            return true;
+        }
+
+
         static private bool ExtractBeamResults(ComAuto GSA, int bId, string caseDescription, out GsaResults[] GSAresults)
         {
             int inputFlags = (int)GSAUtil.GsaEnums.Output_Init_Flags.OP_INIT_1D_AUTO_PTS;

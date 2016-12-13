@@ -110,9 +110,39 @@ namespace GSA_Adapter.Structural.Interface
                     case BHoMBR.ResultType.Utilisation:
                         Utilisation.GetSteelBarUtilisation(gsa, new BHoMBR.ResultServer<BHoMSR.SteelUtilisation<int, string, int>>(filename, append), null, loadcases);
                         break;
-
+                    case BHoMBR.ResultType.NodeCoordinates:
+                        NodeResults.GetNodeCoordinates(gsa, new BHoMBR.ResultServer<BHoMSR.NodeCoordinates>(filename), null);
+                        break;
+                    case BHoMBR.ResultType.BarCoordinates:
+                        BarResults.GetBarCoordinates(gsa, new BHoMBR.ResultServer<BHoMSR.BarCoordinates>(filename), null);
+                        break;
                 }
             }
+            return true;
+        }
+
+        public bool GetSlabReinforcement(List<string> panels, List<string> cases, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.IResultSet> results)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool GetNodeCoordinates(List<string> nodes, out Dictionary<string, BHoMBR.IResultSet> results)
+        {
+            BHoMBR.ResultServer<BHoMSR.NodeCoordinates> resultServer = new BHoMBR.ResultServer<BHoMSR.NodeCoordinates>();
+            resultServer.OrderBy = BHoM.Base.Results.ResultOrder.None;
+            NodeResults.GetNodeCoordinates(gsa, resultServer, nodes);
+            results = resultServer.LoadData();
+
+            return true;
+        }
+
+        public bool GetBarCoordinates(List<string> bars, out Dictionary<string, BHoMBR.IResultSet> results)
+        {
+            BHoMBR.ResultServer<BHoMSR.BarCoordinates> resultServer = new BHoMBR.ResultServer<BHoMSR.BarCoordinates>();
+            resultServer.OrderBy = BHoM.Base.Results.ResultOrder.None;
+            BarResults.GetBarCoordinates(gsa, resultServer, bars);
+            results = resultServer.LoadData();
+
             return true;
         }
     }

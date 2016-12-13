@@ -71,6 +71,11 @@ namespace GSA_Adapter.Structural.Results
             return true;
         }
 
+        public static void GetNodeCoordinates(IComAuto gsa, BHBR.ResultServer<BHSR.NodeCoordinates> resultServer, List<string> nodes)
+        {
+            //TODO
+        }
+
         private static Dictionary<int, List<double>> GetNodalResults(IComAuto gsa, string loadCase, ResHeader resultType, List<int> nodeIndecies)
         {
             int inputFlags = (int)GsaEnums.Output_Init_Flags.OP_INIT_1D_AUTO_PTS;
