@@ -338,6 +338,10 @@ namespace GSA_Adapter.Structural.Properties
                         W = double.Parse(desc[3]) * factor;
                         secProp = new BHoMP.SteelSection(BHoMP.ShapeType.Rectangle, D, W, 0, 0, 0, 0);
                         break;
+                    case "C":
+                        D = double.Parse(desc[2]) * factor;
+                        secProp = BHoMP.SectionProperty.CreateCircularSection(BHoMM.MaterialType.Steel, D);
+                        break;
                     default:
                         break;
                 }

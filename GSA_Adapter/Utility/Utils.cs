@@ -25,7 +25,8 @@ namespace GSA_Adapter.Utility
 
         static public void SendErrorMessage(string message)
         {
-            MessageBox.Show(message, "Error");
+            //Commented out for now. Need to find a proper way of reporting errors instead of message boxes popping up all the time
+            //MessageBox.Show(message, "Error");
         }
 
 

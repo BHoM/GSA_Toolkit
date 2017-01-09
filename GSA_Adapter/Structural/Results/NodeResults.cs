@@ -78,10 +78,18 @@ namespace GSA_Adapter.Structural.Results
             List<BHSR.NodeCoordinates> nodeCoords = new List<BHSR.NodeCoordinates>();
 
             // TODO for Isak
-            /*for ()
+            int highest = gsa.GwaCommand("HIGHEST, NODE");
+
+            int[] possibleIndecies = Utility.Utils.CreateIntSequence(highest);
+
+            GsaNode[] gsaNodes;
+            
+            gsa.Nodes(possibleIndecies, out gsaNodes);
+
+            foreach (GsaNode n in gsaNodes)
             {
-                nodeCoords.Add(new BHSR.NodeCoordinates(id, x, y, z));
-            }*/
+                nodeCoords.Add(new BHSR.NodeCoordinates(n.Ref.ToString(), n.Coor[0], n.Coor[1], n.Coor[2]));
+            }
 
             resultServer.StoreData(nodeCoords);
 
