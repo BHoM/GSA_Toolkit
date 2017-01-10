@@ -69,7 +69,7 @@ namespace GSA_Adapter.Structural.Elements
 
             List<BHE.Node> idNodes = nodes.Where(x => x.CustomData.ContainsKey(Utils.ID)).ToList();
             List<BHE.Node> nonIdNodes = nodes.Where(x => !x.CustomData.ContainsKey(Utils.ID)).ToList();
-            
+
 
             //Replace nodes in gsa with nodes that have a custom data GSA_id
             foreach (BHE.Node n in idNodes)
@@ -128,7 +128,7 @@ namespace GSA_Adapter.Structural.Elements
             }
             gsa.UpdateViews();
             return true;
-            
+
         }
 
         /***************************************/
@@ -140,7 +140,7 @@ namespace GSA_Adapter.Structural.Elements
 
             string restraint = GetRestraintString(n);
 
-            string str = command + ", " + index + ", "+name+" , NO_RGB, " + n.X + " , " + n.Y + " , " + n.Z + ", NO_GRID, " + 0 + ", REST," + restraint + ", STIFF,0,0,0,0,0,0";
+            string str = command + ", " + index + ", " + name + " , NO_RGB, " + n.X + " , " + n.Y + " , " + n.Z + ", NO_GRID, " + 0 + ", REST," + restraint + ", STIFF,0,0,0,0,0,0";
             dynamic commandResult = gsa.GwaCommand(str); //"NODE.2, 1 , , NO_RGB,0 , 2 , 0, NO_GRID,0, REST,0,0,0,0,0,0, STIFF,0,0,0,0,0,0"
 
             if (1 == (int)commandResult)
@@ -152,20 +152,20 @@ namespace GSA_Adapter.Structural.Elements
                 return false;
             }
 
-            
+
             return true;
         }
 
         /***************************************/
 
-         /// <summary>
-         /// Methods used by load setting comands for nodal loads to get the ids.
-         /// TODO: Should the create node methods be used instead?
-         /// </summary>
-         /// <param name="gsa"></param>
-         /// <param name="nodes"></param>
-         /// <param name="ids"></param>
-         /// <returns></returns>
+        /// <summary>
+        /// Methods used by load setting comands for nodal loads to get the ids.
+        /// TODO: Should the create node methods be used instead?
+        /// </summary>
+        /// <param name="gsa"></param>
+        /// <param name="nodes"></param>
+        /// <param name="ids"></param>
+        /// <returns></returns>
         public static bool GetOrCreateNodes(ComAuto gsa, List<BHE.Node> nodes, out List<string> ids)
         {
 
@@ -274,7 +274,7 @@ namespace GSA_Adapter.Structural.Elements
                 node.CustomData.Add(Utils.ID, gn.Ref);
 
                 //Check if the node is restrained in some way
-                if(gn.Restraint != 0 || gn.Stiffness.Sum() != 0)
+                if (gn.Restraint != 0 || gn.Stiffness.Sum() != 0)
                     node.Constraint = GetConstraint(gn.Restraint, gn.Stiffness);
 
                 nodes.AddPoint(node.Point, node);
@@ -284,6 +284,8 @@ namespace GSA_Adapter.Structural.Elements
 
             return nodes;
         }
+
+
 
         private static BHP.NodeConstraint GetConstraint(int gsaConst, double[] stiffnesses)
         {
@@ -295,8 +297,8 @@ namespace GSA_Adapter.Structural.Elements
             {
                 fixities[i] = arr[i];
             }
-            
-            
+
+
             //char[] restr = Convert.ToString(gsaConst, 2).ToCharArray().Reverse().ToArray();
 
             //bool[] fixities = new bool[] { false, false, false, false, false, false };
@@ -307,7 +309,7 @@ namespace GSA_Adapter.Structural.Elements
             //        fixities[i] = true;
             //}
 
-            
+
 
             BHP.NodeConstraint con = new BHoM.Structural.Properties.NodeConstraint("", fixities, stiffnesses);
 
@@ -335,6 +337,60 @@ namespace GSA_Adapter.Structural.Elements
             }
 
             return X + "," + Y + "," + Z + "," + XX + "," + YY + "," + ZZ;
+        }
+
+
+
+        public static List<string> GetNodes(IComAuto gsa, out List<BHE.Node> nodes, List<string> nodeIds = null)
+        {
+
+            nodes = new List<BHE.Node>();
+
+            GsaNode[] gsaNodes;
+
+            gsa.Nodes(NodeIdIndecies(gsa, nodeIds), out gsaNodes);
+
+            List<string> outIds = new List<string>();
+
+            foreach (GsaNode gn in gsaNodes)
+            {
+                BHE.Node node = new BHE.Node(gn.Coor[0], gn.Coor[1], gn.Coor[2], gn.Name);
+
+                outIds.Add(gn.Ref.ToString());
+                node.CustomData.Add(Utils.ID, gn.Ref);
+
+                node.Name = gn.Name;
+                
+                //Check if the node is restrained in some way
+                if (gn.Restraint != 0 || gn.Stiffness.Sum() != 0)
+                    node.Constraint = GetConstraint(gn.Restraint, gn.Stiffness);
+
+                nodes.Add(node);
+
+            }
+
+
+            return outIds;
+        }
+
+        private static int[] NodeIdIndecies(IComAuto gsa, List<string> ids)
+        {
+            if (ids == null || ids.Count < 1)
+            {
+                int highestIndex = gsa.GwaCommand("HIGHEST, NODE");
+                return Utils.CreateIntSequence(highestIndex);
+            }
+            else
+            {
+                int id;
+                int[] idArr = new int[ids.Count];
+
+                for (int i = 0; i < ids.Count; i++)
+                    if (int.TryParse(ids[i], out id))
+                        idArr[i] = id;
+
+                return idArr;
+            }
         }
     }
 }

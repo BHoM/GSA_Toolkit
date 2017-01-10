@@ -76,9 +76,11 @@ namespace GSA_Adapter.Structural.Interface
 
         public List<string> GetNodes(out List<BHE.Node> nodes, List<string> ids = null)
         {
+
+            return Elements.NodeIO.GetNodes(gsa, out nodes, ids);
             //NodeIO.GetNodes(Robot, out nodes, option);
             //return true;
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public List<string> GetPanels(out List<BHE.Panel> panels, List<string> ids = null)
