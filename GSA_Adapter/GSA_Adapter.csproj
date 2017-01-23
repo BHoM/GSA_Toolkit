@@ -54,6 +54,7 @@
     <Compile Include="Structural\Elements\GroupIO.cs" />
     <Compile Include="Structural\Elements\MeshIO.cs" />
     <Compile Include="Structural\Elements\RigidLinkIO.cs" />
+    <Compile Include="Structural\Interface\CommandAdapter.cs" />
     <Compile Include="Structural\Interface\DesignMemberAdapter.cs" />
     <Compile Include="Structural\Interface\ResultAdapter.cs" />
     <Compile Include="Structural\Loads\AnalysisTaskIO.cs" />

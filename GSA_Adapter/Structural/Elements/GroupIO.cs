@@ -179,7 +179,7 @@ namespace GSA_Adapter.Structural.Elements
             BHB.Group<BHE.Node> nodeGroup = group as BHB.Group<BHE.Node>;
             string str = "NODE, ";
 
-            NodeIO.CreateNodes(gsa, nodeGroup);
+            //NodeIO.CreateNodes(gsa, nodeGroup);
 
             IEnumerable<int> ids = nodeGroup.Select(x => int.Parse(x.CustomData[Utils.ID].ToString())).OrderBy(x => x);
 
