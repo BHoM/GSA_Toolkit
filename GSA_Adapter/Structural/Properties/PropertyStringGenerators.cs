@@ -236,6 +236,16 @@ namespace GSA_Adapter.Structural.Properties
         }
 
         /// <summary>Creates a BHoM section from a gsa string</summary>
+        /// <param name="gsaString">
+        /// <summary>
+        /// Comma separated string on the format: [PROP_SEC | num | name | colour | mat | desc | principal | type | cost | 
+        /// is_prop { | area | I11 | I22 | J | K1 | K2} | 
+        /// is_mod { | area_to_by | area_m | I11_to_by | I11_m | I22_to_by | I22_m | J_to_by | J_m | K1_to_by | K1_m | K2_to_by | K2_m | mass | stress} | 
+        /// plate_type | calc_J]
+        /// </summary>
+        /// </param>
+        /// <param name="materials"></param>
+        /// <returns></returns>
         internal static BHoMP.SectionProperty GetSectionFromGsaString(string gsaString, Dictionary<string, BHoMM.Material> materials)
         {
             BHoMP.SectionProperty secProp = null;
@@ -250,7 +260,7 @@ namespace GSA_Adapter.Structural.Properties
             int id;
 
             Int32.TryParse(gsaStrings[1], out id);
-            string name = gsaStrings[3];
+            string name = gsaStrings[2];
             string materialId = gsaStrings[4];
             string description = gsaStrings[5];
 
@@ -261,12 +271,12 @@ namespace GSA_Adapter.Structural.Properties
 
                 BHoMP.ExplicitSectionProperty expSecProp = new BHoMP.ExplicitSectionProperty();
                 double a, iyy, izz, j, avy, avz;
-                double.TryParse(gsaStrings[6], out a);
-                double.TryParse(gsaStrings[7], out iyy);
-                double.TryParse(gsaStrings[8], out izz);
-                double.TryParse(gsaStrings[9], out j);
-                double.TryParse(gsaStrings[10], out avy);
-                double.TryParse(gsaStrings[11], out avz);
+                double.TryParse(gsaStrings[10], out a);
+                double.TryParse(gsaStrings[11], out iyy);
+                double.TryParse(gsaStrings[12], out izz);
+                double.TryParse(gsaStrings[13], out j);
+                double.TryParse(gsaStrings[14], out avy);
+                double.TryParse(gsaStrings[15], out avz);
 
                 expSecProp.GrossArea = a;
                 expSecProp.Ix = iyy;

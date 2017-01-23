@@ -25,7 +25,7 @@ namespace GSA_Adapter.Structural.Properties
             //BHoMB.ObjectManager<BHoMP.SectionProperty> secProps = new BHoMB.ObjectManager<BHoMP.SectionProperty>(BHoMG.Project.ActiveProject);
 
             Dictionary<string, BHP.SectionProperty> secProps = new Dictionary<string, BHP.SectionProperty>();
-            List<string> gsaProps = GetGsaSectionPropertyStrings(gsa);
+            IEnumerable<string> gsaProps = GetGsaSectionPropertyStrings(gsa);
             Dictionary<string, BHM.Material> materials = MaterialIO.GetMaterials(gsa, false, true);
 
             foreach (string gsaProp in gsaProps)
@@ -44,33 +44,44 @@ namespace GSA_Adapter.Structural.Properties
 
         /*******************************************************/
 
+
+
+        // Previously returned: Gets all section properties in a list of the format [SEC_PROP | num | prop | name | mat | desc | area | Iyy | Izz | J | Ky | Kz]
+
         /// <summary>
-        /// Gets all section properties in a list of the format [SEC_PROP | num | prop | name | mat | desc | area | Iyy | Izz | J | Ky | Kz]
+        /// Gets all section properties in a list of the format [PROP_SEC | num | name | colour | mat | desc | principal | type | cost | 
+        /// is_prop { | area | I11 | I22 | J | K1 | K2} | 
+        /// is_mod { | area_to_by | area_m | I11_to_by | I11_m | I22_to_by | I22_m | J_to_by | J_m | K1_to_by | K1_m | K2_to_by | K2_m | mass | stress} | 
+        /// plate_type | calc_J]
         /// </summary>
         /// <param name="gsa"></param>
         /// <returns>A list of strings for all section properties</returns>
-        static public List<string> GetGsaSectionPropertyStrings(IComAuto gsa)
+        static public IEnumerable<string> GetGsaSectionPropertyStrings(IComAuto gsa)
         {
-            List<string> gsaProps = new List<string>();
 
-            int i = 1;
-            int chkCount = 0;
-            int abortNum = 1000; //Amount of "" rows after which to abort
+            //List<string> gsaProps = new List<string>();
 
-            while (chkCount<abortNum)
-            {
-                string gsaProp = gsa.GwaCommand("GET, SEC_PROP," + i).ToString();
-                chkCount++;
-                i++;
+            string allProps = gsa.GwaCommand("GET_ALL, PROP_SEC").ToString();
 
-                if (gsaProp != "") //This check is to count the number of consecutive null rows and later abort at a certain number
-                {
-                    gsaProps.Add(gsaProp);
-                    chkCount = 0;
-                }               
-            }
+            return string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
 
-            return gsaProps;
+
+            //if (!string.IsNullOrWhiteSpace(allProps))
+            //    foreach (string str in allProps.Split('\n'))
+            //        gsaProps.Add(str);
+
+            //int maxIndex = gsa.GwaCommand("HIGHEST, PROP_SEC");
+
+            //for (int j = 1; j <= maxIndex; j++)
+            //{
+            //    string gsaProp = gsa.GwaCommand("GET, SEC_PROP," + j).ToString();
+
+            //    if (gsaProp != "")
+            //        gsaProps.Add(gsaProp);
+            //}
+
+
+            //return gsaProps;
         }
 
         /*******************************************************/

@@ -117,6 +117,9 @@ namespace GSA_Adapter.Structural.Results
             if (bars == null || bars.Count == 0)
             {
                 bars = new List<string>();
+
+
+
                 int maxIndex = gsa.GwaCommand("HIGHEST, MEMB");
 
                 for (int i = 1; i <= maxIndex; i++)
