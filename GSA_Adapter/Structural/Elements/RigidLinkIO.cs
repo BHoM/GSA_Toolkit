@@ -16,67 +16,6 @@ namespace GSA_Adapter.Structural.Elements
 {
     public static class RigidLinkIO
     {
-        //public static bool CreateRigidLinks(ComAuto gsa, List<BHE.RigidLink> links, out List<string> ids)
-        //{
-        //    ids = new List<string>();
-
-        //    List<string> nodeIds = new List<string>();
-        //    List<BHE.Node> nodes = links.Select(x => x.MasterNode).ToList();
-        //    links.ForEach(x => nodes.AddRange(x.SlaveNodes));
-        //    nodes = nodes.Distinct().ToList();
-
-        //    NodeIO.CreateNodes(gsa, nodes);
-
-        //    string propId;
-
-        //    if (!LinkPropertyIO.CreateLinkProperty(gsa, out propId))
-        //        return false;
-
-
-
-        //    int highestIndex = gsa.GwaCommand("HIGHEST, EL") + 1;
-        //    string command = "EL_LINK";
-
-        //    foreach (BHE.RigidLink link in links)
-        //    {
-        //        string name = link.Name;
-        //        int group = 0;
-
-        //        string startIndex = link.MasterNode.CustomData[Utils.ID].ToString();// nodeIds[0];
-
-        //        string dummy = "";
-
-        //        if (link.CustomData.ContainsKey("Dummy") && (bool)link.CustomData["Dummy"])
-        //            dummy = "DUMMY";
-
-        //        foreach (BHE.Node slave in link.SlaveNodes)
-        //        {
-        //            string index = highestIndex.ToString();
-        //            highestIndex++;
-
-        //            string endIndex = slave.CustomData[Utils.ID].ToString();// nodeIds[1];
-
-        //            string str = command + ", " + index + ", " + propId + ", " + group + ", " + startIndex + ", " + endIndex + ", " + dummy;
-
-        //            dynamic commandResult = gsa.GwaCommand(str);
-
-        //            if (1 == (int)commandResult)
-        //            {
-        //                ids.Add(index);
-        //                continue;
-        //            }
-        //            else
-        //            {
-        //                return Utils.CommandFailed(command);
-        //            }
-
-        //        }
-        //    }
-
-        //    gsa.UpdateViews();
-        //    return true;
-        //}
-
         public static bool CreateRigidLinks(ComAuto gsa, List<BHE.RigidLink> links, out List<string> ids)
         {
             ids = new List<string>();
@@ -88,6 +27,7 @@ namespace GSA_Adapter.Structural.Elements
             ids = new List<string>();
 
 
+            //Clone nodes
             List<string> nodeIds = new List<string>();
             List<BHE.Node> nodes = links.Select(x => x.MasterNode).ToList();
             links.ForEach(x => nodes.AddRange(x.SlaveNodes));
@@ -113,7 +53,6 @@ namespace GSA_Adapter.Structural.Elements
 
             if (!LinkPropertyIO.CreateLinkProperty(gsa, out propId))
                 return false;
-
 
 
             int highestElemIndex = gsa.GwaCommand("HIGHEST, EL") + 1;
@@ -178,7 +117,6 @@ namespace GSA_Adapter.Structural.Elements
             string command = "RIGID.2";
 
             string name = link.Name;
-            int group = 0;
 
             string startIndex = link.MasterNode.CustomData[Utils.ID].ToString();// nodeIds[0];
 

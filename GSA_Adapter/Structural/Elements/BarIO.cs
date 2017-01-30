@@ -26,17 +26,6 @@ namespace GSA_Adapter.Structural.Elements
         /// <returns></returns>
         public static bool GetBars(ComAuto gsa, out List<BHE.Bar> barList, string barNumbers = "all")
         {
-            //BHB.ObjectManager<int, BHE.Bar> bars = new BHB.ObjectManager<int, BHE.Bar>(BHG.Project.ActiveProject, Utils.ID, BHB.FilterOption.UserData);
-            //BHB.ObjectManager<BHP.SectionProperty> sections = new BHB.ObjectManager<BHP.SectionProperty>(BHG.Project.ActiveProject);
-            //BHB.ObjectManager<BHP.BarRelease> releases = new BHB.ObjectManager<BHP.BarRelease>(BHG.Project.ActiveProject);
-            //BHB.ObjectManager<BHP.BarConstraint> constraints = new BHB.ObjectManager<BHP.BarConstraint>(BHG.Project.ActiveProject);
-            //BHB.ObjectManager<BHM.Material> materials = new BHB.ObjectManager<BHM.Material>(BHG.Project.ActiveProject);
-            //BHB.ObjectManager<int, BHE.Node> nodes = new BHB.ObjectManager<int, BHE.Node>(BHG.Project.ActiveProject, Utils.NUM_KEY, BHB.FilterOption.UserData);
-
-
-            //sections = PropertyIO.GetSections(gsa); //name as key
-            //need to ref by GSA_id too
-
             barList = new List<BHE.Bar>();
 
             int maxIndex = gsa.GwaCommand("HIGHEST, EL");
@@ -48,6 +37,7 @@ namespace GSA_Adapter.Structural.Elements
             gsa.Elements(potentialBeamRefs, out gsaElements);
 
             Dictionary<string, BHP.SectionProperty> secProps = PropertyIO.GetSections(gsa, false);
+            Dictionary<string, BHE.Node> nodes = NodeIO.GetNodes(gsa);
 
 
             for (int i = 0; i < gsaElements.Length; i++)
@@ -58,33 +48,23 @@ namespace GSA_Adapter.Structural.Elements
                 if (!(gsaBar.eType == 1 || gsaBar.eType == 2 || gsaBar.eType == 3 || gsaBar.eType == 10 || gsaBar.eType == 20 || gsaBar.eType == 21))
                     continue;
 
+                //GsaNode[] gsaNodes;
+                //gsa.Nodes(gsaBar.Topo, out gsaNodes);
+                //BHE.Node n1 = new BHE.Node(gsaNodes[0].Coor[0], gsaNodes[0].Coor[1], gsaNodes[0].Coor[2]);
+                //BHE.Node n2 = new BHE.Node(gsaNodes[1].Coor[0], gsaNodes[1].Coor[1], gsaNodes[1].Coor[2]);
 
-
-                GsaNode[] gsaNodes;
-                gsa.Nodes(gsaBar.Topo, out gsaNodes);
-                BHE.Node n1 = new BHE.Node(gsaNodes[0].Coor[0], gsaNodes[0].Coor[1], gsaNodes[0].Coor[2]);
-                BHE.Node n2 = new BHE.Node(gsaNodes[1].Coor[0], gsaNodes[1].Coor[1], gsaNodes[1].Coor[2]);
-
-                //BHE.Bar bar = bars.Add(gsaBar.Ref, new BHE.Bar(n1, n2, gsaBar.Ref.ToString()));
-
-                BHE.Bar bar = new BHE.Bar(n1, n2, gsaBar.Name);
+                BHE.Bar bar = new BHE.Bar(nodes[gsaBar.Topo[0].ToString()], nodes[gsaBar.Topo[1].ToString()], gsaBar.Name);
 
 
 
                 bar.OrientationAngle = gsaBar.Beta;
-
-                //bar.Release
 
                 bar.SectionProperty = secProps[gsaBar.Property.ToString()];
 
                 bar.CustomData[Utils.ID] = gsaBar.Ref;
 
                 barList.Add(bar);
-                //bar.SectionProperty = sections
 
-                //bar.Material
-
-                //TODO: implement property and material setting
             }
 
             //barList = bars.ToList();
@@ -142,6 +122,8 @@ namespace GSA_Adapter.Structural.Elements
             bars.ForEach(x => x.EndNode = clonedNodes[x.EndNode.BHoM_Guid]);
 
             //bars = CloneBars(bars, clonedSecProps, clonedNodes);
+
+            
 
             //Create nodes
             NodeIO.CreateNodes(gsa, clonedNodes.Values.ToList());
