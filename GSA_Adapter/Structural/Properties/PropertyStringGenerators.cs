@@ -71,10 +71,10 @@ namespace GSA_Adapter.Structural.Properties
             desc = "EXP";
             string area = secProp.GrossArea.ToString();
             string Iyy = secProp.Iy.ToString();
-            string Izz = secProp.Ix.ToString();
+            string Izz = secProp.Iz.ToString();
             string J = secProp.J.ToString();
-            string Avy = secProp.Asx.ToString();
-            string Avz = secProp.Asy.ToString();
+            string Avy = secProp.Asy.ToString();
+            string Avz = secProp.Asz.ToString();
 
             prop = "PROP," + area + "," + Iyy + "," + Izz + "," + J + "," + Avy + "," + Avz;
         }
@@ -279,11 +279,11 @@ namespace GSA_Adapter.Structural.Properties
                 double.TryParse(gsaStrings[15], out avz);
 
                 expSecProp.GrossArea = a;
-                expSecProp.Ix = iyy;
-                expSecProp.Iy = izz;
+                expSecProp.Iy = iyy;
+                expSecProp.Iz = izz;
                 expSecProp.J = j;
-                expSecProp.Asx = avy;
-                expSecProp.Asy = avz;
+                expSecProp.Asy = avy;
+                expSecProp.Asz = avz;
 
                 secProp = expSecProp;
             }
