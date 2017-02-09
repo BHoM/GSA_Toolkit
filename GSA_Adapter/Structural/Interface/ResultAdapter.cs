@@ -7,6 +7,7 @@ using Interop.gsa_8_7;
 using BHoMBR = BHoM.Base.Results;
 using BHoMSR = BHoM.Structural.Results;
 using GSA_Adapter.Structural.Results;
+using BHoM.Databases;
 
 namespace GSA_Adapter.Structural.Interface
 {
@@ -22,9 +23,14 @@ namespace GSA_Adapter.Structural.Interface
             return true;
         }
 
-        public bool GetBarStresses()
+        public bool GetBarStresses(List<string> bars, List<string> cases, int divisions, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.IResultSet> results)
         {
-            throw new NotImplementedException();
+            BHoMBR.ResultServer<BHoM.Structural.Results.BarStress<int, string, int>> resultServer = new BHoM.Base.Results.ResultServer<BHoM.Structural.Results.BarStress<int, string, int>>();
+            resultServer.OrderBy = orderBy;
+            BarResults.GetBarStresses(gsa, resultServer, bars, cases, divisions);
+            results = resultServer.LoadData();
+
+            return true;
         }
 
         public bool GetModalResults()
@@ -146,6 +152,44 @@ namespace GSA_Adapter.Structural.Interface
 
             return true;
         }
+
+        public bool PushToDataBase(IDatabaseAdapter dbAdapter, List<BHoMBR.ResultType> resultTypes, List<string> loadcases, string key, bool append = false)
+        {
+            foreach (BHoMBR.ResultType t in resultTypes)
+            {
+                Dictionary<string, BHoMBR.IResultSet> results = new Dictionary<string, BHoM.Base.Results.IResultSet>(); ;
+                switch (t)
+                {
+                    case BHoM.Base.Results.ResultType.BarForce:
+                        BHoMBR.ResultServer<BHoM.Structural.Results.BarForce<int, string, int>> resultServer = new BHoM.Base.Results.ResultServer<BHoM.Structural.Results.BarForce<int, string, int>>();
+                        BarResults.GetBarForces(gsa, resultServer, null, loadcases, 5);
+                        dbAdapter.Push(resultServer.ToList(), key);
+                        break;
+                    case BHoM.Base.Results.ResultType.BarStress:
+                        BHoMBR.ResultServer<BHoM.Structural.Results.BarStress<int, string, int>> stressServer = new BHoM.Base.Results.ResultServer<BHoM.Structural.Results.BarStress<int, string, int>>();
+                        BarResults.GetBarStresses(gsa, stressServer, null, loadcases, 5);
+                        dbAdapter.Push(stressServer.ToList(), key);
+                        break;
+                    case BHoMBR.ResultType.NodeReaction:
+
+                        break;
+                    case BHoMBR.ResultType.NodeDisplacement:
+                        break;
+                    case BHoMBR.ResultType.PanelForce:
+                        break;
+                    case BHoMBR.ResultType.PanelStress:
+                        break;
+                    case BHoMBR.ResultType.Utilisation:
+                        break;
+                    case BHoMBR.ResultType.NodeCoordinates:
+                        break;
+                    case BHoMBR.ResultType.BarCoordinates:
+                        break;
+                }
+            }
+            return true;
+        }
+
 
     }
 }

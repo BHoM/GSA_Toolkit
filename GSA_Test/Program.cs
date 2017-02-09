@@ -16,9 +16,16 @@ namespace GSA_Test
         static void Main(string[] args)
         {
 
-            TestGetMembers();
+            TestExtractBarStress();
         }
 
+        private static void TestExtractBarStress()
+        {
+            GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\QF Stadium\170127 QF SD Roof Model_for Review.gwb");
+            List<BHoM.Structural.Elements.Bar> bars;
+            Dictionary<string, BHoM.Base.Results.IResultSet> res;
+            app.GetBarForces(null, null, 5, BHoM.Base.Results.ResultOrder.Name, out res);
+        }
 
         private static void TestGetMembers()
         {
