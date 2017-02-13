@@ -24,14 +24,12 @@ namespace GSA_Adapter.Structural.Elements
         /// Get bars method, gets bars from a GSA model and all associated data. 
         /// </summary>
         /// <returns></returns>
-        public static bool GetBars(ComAuto gsa, out List<BHE.Bar> barList, string barNumbers = "all")
+        public static bool GetBars(ComAuto gsa, out List<BHE.Bar> barList, List<string> barNumbers = null)
         {
             barList = new List<BHE.Bar>();
 
-            int maxIndex = gsa.GwaCommand("HIGHEST, EL");
-            int[] potentialBeamRefs = new int[maxIndex];
-            for (int i = 0; i < maxIndex; i++)
-                potentialBeamRefs[i] = i + 1;
+
+            int[] potentialBeamRefs = GeneratePotentialBeamRef(gsa, barNumbers);
 
             GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
             gsa.Elements(potentialBeamRefs, out gsaElements);
@@ -69,6 +67,21 @@ namespace GSA_Adapter.Structural.Elements
 
             //barList = bars.ToList();
             return true;
+        }
+
+        private static int[] GeneratePotentialBeamRef(ComAuto gsa, List<string> barNumbers)
+        {
+            if (barNumbers == null)
+            {
+                int maxIndex = gsa.GwaCommand("HIGHEST, EL");
+                int[] potentialBeamRefs = new int[maxIndex];
+                for (int i = 0; i < maxIndex; i++)
+                    potentialBeamRefs[i] = i + 1;
+
+                return potentialBeamRefs;
+            }
+
+            return barNumbers.Select(x => int.Parse(x)).ToArray();
         }
 
         internal static bool GetOrCreateBars(ComAuto gsa, List<BHE.Bar> bars, out List<string> ids)

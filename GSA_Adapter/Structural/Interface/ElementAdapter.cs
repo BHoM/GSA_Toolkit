@@ -48,7 +48,7 @@ namespace GSA_Adapter.Structural.Interface
         /// <returns>true is successful</returns>
         public List<string> GetBars(out List<BHE.Bar> bars, List<string> ids = null)
         {
-            Structural.Elements.BarIO.GetBars(gsa, out bars);
+            Structural.Elements.BarIO.GetBars(gsa, out bars, ids);
             return bars.Select(x => x[Utility.Utils.ID].ToString()).ToList();
         }
 
