@@ -15,6 +15,12 @@ namespace GSA_Adapter.Structural.Results
 {
     public static class BarResults
     {
+
+        public static bool GetBarDisplacement(ComAuto gsa, BHoMBR.ResultServer<BHoMSR.BarForce<int, string, int>> resultServer, List<string> bars, List<string> cases, int divisions)
+        {
+            throw new NotImplementedException();
+        }
+
         public static bool GetBarForces(ComAuto gsa, BHoMBR.ResultServer<BHoMSR.BarForce<int,string,int>> resultServer, List<string> bars, List<string> cases, int divisions)
         {
             string message = "";
@@ -40,7 +46,7 @@ namespace GSA_Adapter.Structural.Results
                         divisions = beamResults.Count;
                         foreach (double[] br in beamResults)
                         {
-                            barForces.Add(new BHoMSR.BarForce<int, string, int>(idBar, ac, idPos, divisions, 1, br[1], br[2], br[3], br[4], br[5], br[6]));
+                            barForces.Add(new BHoMSR.BarForce<int, string, int>(idBar, ac, idPos, divisions, 1, br[1], br[2], br[3], br[5], br[6], br[7]));
                             idPos++;
                             counter++;
                             if (counter % 1000000 == 0 && resultServer.CanStore)
