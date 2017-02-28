@@ -21,10 +21,10 @@ namespace GSA_Adapter.Structural.Results
             throw new NotImplementedException();
         }
 
-        public static bool GetBarForces(ComAuto gsa, BHoMBR.ResultServer<BHoMSR.BarForce<int,string,int>> resultServer, List<string> bars, List<string> cases, int divisions)
+        public static bool GetBarForces(ComAuto gsa, BHoMBR.ResultServer<BHoMSR.BarForce> resultServer, List<string> bars, List<string> cases, int divisions)
         {
             string message = "";
-            List<BHoMSR.BarForce<int, string, int>> barForces = new List<BHoMSR.BarForce<int, string, int>>();
+            List<BHoMSR.BarForce> barForces = new List<BHoMSR.BarForce>();
             int counter = 0;
 
             bars = CheckAndGetBars(gsa, bars);
@@ -46,7 +46,7 @@ namespace GSA_Adapter.Structural.Results
                         divisions = beamResults.Count;
                         foreach (double[] br in beamResults)
                         {
-                            barForces.Add(new BHoMSR.BarForce<int, string, int>(idBar, ac, idPos, divisions, 1, br[1], br[2], br[3], br[5], br[6], br[7]));
+                            barForces.Add(new BHoMSR.BarForce(b, ac, idPos, divisions, "1", br[1], br[2], br[3], br[5], br[6], br[7]));
                             idPos++;
                             counter++;
                             if (counter % 1000000 == 0 && resultServer.CanStore)
@@ -64,10 +64,10 @@ namespace GSA_Adapter.Structural.Results
             return true;
         }
 
-        public static bool GetBarStresses(ComAuto gsa, BHoMBR.ResultServer<BHoMSR.BarStress<int, string, int>> resultServer, List<string> bars, List<string> cases, int divisions)
+        public static bool GetBarStresses(ComAuto gsa, BHoMBR.ResultServer<BHoMSR.BarStress> resultServer, List<string> bars, List<string> cases, int divisions)
         {
             string message = "";
-            List<BHoMSR.BarStress<int, string, int>> barForces = new List<BHoMSR.BarStress<int, string, int>>();
+            List<BHoMSR.BarStress> barForces = new List<BHoMSR.BarStress>();
             int counter = 0;
 
 
@@ -91,7 +91,7 @@ namespace GSA_Adapter.Structural.Results
                         divisions = beamResults.Count;
                         foreach (double[] br in beamResults)
                         {
-                            barForces.Add(new BHoMSR.BarStress<int, string, int>(idBar, ac, idPos, divisions, 1, br[1], br[2],br[3],br[4],br[5],br[6],br[7],br[8],br[9]));
+                            barForces.Add(new BHoMSR.BarStress(b, ac, idPos, divisions, "1", br[1], br[2],br[3],br[4],br[5],br[6],br[7],br[8],br[9]));
                             idPos++;
                             counter++;
                             if (counter % 1000000 == 0 && resultServer.CanStore)

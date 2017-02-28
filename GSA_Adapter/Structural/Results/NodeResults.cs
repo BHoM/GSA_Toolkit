@@ -12,7 +12,7 @@ namespace GSA_Adapter.Structural.Results
 {
     public static class NodeResults
     {
-        public static bool GetNodeReacions(IComAuto gsa, BHBR.ResultServer<BHSR.NodeReaction<int, string, int>> resultServer, List<string> nodeNumbers, List<string> cases)
+        public static bool GetNodeReacions(IComAuto gsa, BHBR.ResultServer<BHSR.NodeReaction> resultServer, List<string> nodeNumbers, List<string> cases)
         {
 
             ResHeader resHeader = ResHeader.REF_REAC;
@@ -26,12 +26,12 @@ namespace GSA_Adapter.Structural.Results
 
                 if (res != null)
                 {
-                    List<BHSR.NodeReaction<int, string, int>> nodeReactions = new List<BHoM.Structural.Results.NodeReaction<int, string, int>>();
+                    List<BHSR.NodeReaction> nodeReactions = new List<BHoM.Structural.Results.NodeReaction>();
 
                     foreach (KeyValuePair<int, List<double>> kvp in res)
                     {
                         List<double> nodeRes = kvp.Value;
-                        BHSR.NodeReaction<int, string, int> reak = new BHSR.NodeReaction<int, string, int>(kvp.Key, cases[i], 0, nodeRes[0], nodeRes[1], nodeRes[2], nodeRes[4], nodeRes[5], nodeRes[6]);
+                        BHSR.NodeReaction reak = new BHSR.NodeReaction(kvp.Key.ToString(), cases[i], "0", nodeRes[0], nodeRes[1], nodeRes[2], nodeRes[4], nodeRes[5], nodeRes[6]);
                         nodeReactions.Add(reak);
                     }
                     resultServer.StoreData(nodeReactions);
@@ -42,7 +42,7 @@ namespace GSA_Adapter.Structural.Results
             return true;
         }
 
-        public static bool GetNodeDisplacements(IComAuto gsa, BHBR.ResultServer<BHSR.NodeDisplacement<int, string, int>> resultServer, List<string> nodeNumbers, List<string> cases)
+        public static bool GetNodeDisplacements(IComAuto gsa, BHBR.ResultServer<BHSR.NodeDisplacement> resultServer, List<string> nodeNumbers, List<string> cases)
         {
             ResHeader resHeader = ResHeader.REF_DISP;
 
@@ -55,12 +55,12 @@ namespace GSA_Adapter.Structural.Results
 
                 if (res != null)
                 {
-                    List<BHSR.NodeDisplacement<int, string, int>> nodeReactions = new List<BHSR.NodeDisplacement<int, string, int>>();
+                    List<BHSR.NodeDisplacement> nodeReactions = new List<BHSR.NodeDisplacement>();
 
                     foreach (KeyValuePair<int, List<double>> kvp in res)
                     {
                         List<double> nodeRes = kvp.Value;
-                        BHSR.NodeDisplacement<int, string, int> disp = new BHSR.NodeDisplacement<int, string, int>(kvp.Key, cases[i], 0, nodeRes[0], nodeRes[1], nodeRes[2], nodeRes[4], nodeRes[5], nodeRes[6]);
+                        BHSR.NodeDisplacement disp = new BHSR.NodeDisplacement(kvp.Key.ToString(), cases[i], "0", nodeRes[0], nodeRes[1], nodeRes[2], nodeRes[4], nodeRes[5], nodeRes[6]);
                         nodeReactions.Add(disp);
                     }
                     resultServer.StoreData(nodeReactions);
