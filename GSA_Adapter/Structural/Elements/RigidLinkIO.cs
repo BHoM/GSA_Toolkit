@@ -24,8 +24,15 @@ namespace GSA_Adapter.Structural.Elements
             links.ForEach(x => x = (BHE.RigidLink)x.ShallowClone());
             links.ForEach(x => x.CustomData = new Dictionary<string, object>(x.CustomData));
 
-            ids = new List<string>();
+            //Get unique section properties and clone the ones that does not contain a gsa ID
+            Dictionary<Guid, BHP.LinkConstraint> linkConstraints = links.Select(x => x.Constraint).Distinct().ToDictionary(x => x.BHoM_Guid);
+            Dictionary<Guid, BHP.LinkConstraint> clonedConstraints = Utils.CloneObjects(linkConstraints);
 
+            //Create the section properties
+            LinkPropertyIO.CreateLinkProperties(gsa, clonedConstraints.Values.ToList());
+
+            //Assign newly created link properties to links
+            links.ForEach(x => x.Constraint = clonedConstraints[x.Constraint.BHoM_Guid]);
 
             //Clone nodes
             List<string> nodeIds = new List<string>();
@@ -45,14 +52,8 @@ namespace GSA_Adapter.Structural.Elements
                 link.SlaveNodes = newNodes;
             }
 
-
             //Create nodes
             NodeIO.CreateNodes(gsa, clonedNodes.Values.ToList());
-
-            string propId;
-
-            if (!LinkPropertyIO.CreateLinkProperty(gsa, out propId))
-                return false;
 
 
             int highestElemIndex = gsa.GwaCommand("HIGHEST, EL") + 1;
@@ -65,6 +66,7 @@ namespace GSA_Adapter.Structural.Elements
                     continue;
                 else if (link.SlaveNodes.Count == 1)
                 {
+                    string propId = link.Constraint.CustomData[Utils.ID].ToString();
                     if (CreateRigidLink(gsa, link, highestElemIndex.ToString(), propId))
                         highestElemIndex++;
                     else return false;
@@ -122,8 +124,7 @@ namespace GSA_Adapter.Structural.Elements
 
             string slaves = RigidConstSlaveNodes(link.SlaveNodes);
 
-            //Type and stage hardcoded for now. Could be expanded upon if needed
-            string type = "ALL";
+            string type = LinkPropertyIO.GetRestraintString(link.Constraint);
             string stage = "all";
 
             //RIGID.2 | name | master | type | slaves | stage 

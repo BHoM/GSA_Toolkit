@@ -16,9 +16,15 @@ namespace GSA_Test
         static void Main(string[] args)
         {
 
-            TestExtractBarStress();
+            TestLinkProperty();
         }
 
+
+        private static void TestLinkProperty()
+        {
+            BHoM.Structural.Properties.LinkConstraint constr = BHoM.Structural.Properties.LinkConstraint.XYPlanePin;
+            GSA_Adapter.Structural.Properties.LinkPropertyIO.GetRestraintString(constr);
+        }
         private static void TestExtractBarStress()
         {
             GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\QF Stadium\170127 QF SD Roof Model_for Review.gwb");
