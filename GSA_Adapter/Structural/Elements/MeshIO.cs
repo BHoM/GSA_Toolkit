@@ -16,8 +16,66 @@ namespace GSA_Adapter.Structural.Elements
 {
     public static class MeshIO
     {
+
+
+        public static bool GetFEMeshes(ComAuto gsa, out List<BHE.FEMesh> meshList, List<string> faceNumbers = null)
+
+        {
+            meshList = new List<BHE.FEMesh>();
+
+
+            int[] potentialFaceRefs = GeneratePotentialFaceRef(gsa, faceNumbers);
+
+            GsaElement[] gsaElements = new GsaElement[potentialFaceRefs.Length];
+            gsa.Elements(potentialFaceRefs, out gsaElements);
+
+            //Dictionary<string, BHoMP.SectionProperty> secprops = PropertyIO.GetSections(gsa, false);
+            Dictionary<string, BHE.Node> nodes = NodeIO.GetNodes(gsa);
+
+            for (int i = 0; i < gsaElements.Length; i++)
+            {
+                GsaElement gsaMesh = gsaElements[i];
+
+                if (!(gsaMesh.eType == 5))
+                    continue;
+
+
+                BHE.FEMesh mesh = new BHE.FEMesh();
+
+
+
+                mesh.Nodes.Add(nodes[gsaMesh.Topo[0].ToString()]);
+                mesh.Nodes.Add(nodes[gsaMesh.Topo[1].ToString()]);
+                mesh.Nodes.Add(nodes[gsaMesh.Topo[2].ToString()]);
+                mesh.Nodes.Add(nodes[gsaMesh.Topo[3].ToString()]);
+
+                mesh.CustomData[Utils.ID] = gsaMesh.Ref;
+
+                meshList.Add(mesh);
+            }
+
+            return true;
+
+        }
+
+        private static int[] GeneratePotentialFaceRef(ComAuto gsa, List<string> faceNumbers)
+        {
+            if (faceNumbers == null)
+            {
+                int maxindex = gsa.GwaCommand("HIGHEST, EL");
+                int[] potentialFaceRefs = new int[maxindex];
+                for (int i = 0; i < maxindex; i++)
+                    potentialFaceRefs[i] = i + 1;
+
+                return potentialFaceRefs;
+            }
+
+            return faceNumbers.Select(x => int.Parse(x)).ToArray();
+        }
+
+
         /// <summary>
-        /// Create GSA bars
+        /// Create GSA Mesh
         /// </summary>
         /// <returns></returns>
         public static bool CreateMeshes(ComAuto gsa, List<BHE.FEMesh> meshes, out List<string> ids)

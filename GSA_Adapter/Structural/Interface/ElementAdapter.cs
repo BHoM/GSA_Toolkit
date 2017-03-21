@@ -185,9 +185,10 @@ namespace GSA_Adapter.Structural.Interface
             return Structural.Loads.LoadIO.AddLoads(gsa, loads);
         }
 
-        public List<string> GetFEMeshes(out List<BHE.FEMesh> meshes, List<string> ids = null)
+        public List<string> GetFEMeshes(out List<BHE.FEMesh> femeshes, List<string> ids = null)
         {
-            throw new NotImplementedException();
+            Elements.MeshIO.GetFEMeshes(gsa, out femeshes, ids);
+            return femeshes.Select(x => x[Utility.Utils.ID].ToString()).ToList();
         }
 
         public bool SetFEMeshes(List<BHE.FEMesh> meshes, out List<string> ids)
