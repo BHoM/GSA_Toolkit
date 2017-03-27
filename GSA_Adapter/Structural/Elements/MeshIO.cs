@@ -29,7 +29,7 @@ namespace GSA_Adapter.Structural.Elements
             ids = new List<string>();
 
             //Get unique section properties and clone the ones that does not contain a gsa ID
-            Dictionary<Guid, BHP.PanelProperty> panelProperties = meshes.Select(x => x.PanelProperty).Distinct().ToDictionary(x => x.BHoM_Guid);
+            Dictionary<Guid, BHP.PanelProperty> panelProperties = meshes.Select(x => x.PanelProperty).GetDistinctDictionary();
             Dictionary<Guid, BHP.PanelProperty> clonedPanProps = Utils.CloneSectionProperties(panelProperties);
 
 
@@ -37,7 +37,7 @@ namespace GSA_Adapter.Structural.Elements
             PropertyIO.CreatePanelProperties(gsa, clonedPanProps.Values.ToList());
 
             //Get unique nodes and clone the ones that does not contain a gsa ID
-            Dictionary<Guid, BHE.Node> nodes = meshes.SelectMany(x => x.Nodes).Distinct().ToDictionary(x => x.BHoM_Guid);
+            Dictionary<Guid, BHE.Node> nodes = meshes.SelectMany(x => x.Nodes).GetDistinctDictionary();
             //Dictionary<Guid, BHE.Node> clonedNodes = nodes.Select(x => x.Value.CustomData.ContainsKey(Utils.ID) ? x : new KeyValuePair<Guid, BHE.Node>(x.Key, (BHE.Node)x.Value.ShallowClone())).ToDictionary(x => x.Key, x => x.Value);
             Dictionary<Guid, BHE.Node> clonedNodes = Utils.CloneObjects(nodes);
 
@@ -137,7 +137,7 @@ namespace GSA_Adapter.Structural.Elements
                 }
             }
 
-            mesh.CustomData.Add(Utils.ID, meshIds);
+            mesh.CustomData[Utils.ID] = meshIds;
             return true;
         }
 

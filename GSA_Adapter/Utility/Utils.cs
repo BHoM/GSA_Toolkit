@@ -213,5 +213,10 @@ namespace GSA_Adapter.Utility
 
             return str;
         }
+
+        public static Dictionary<Guid, T> GetDistinctDictionary<T>(this IEnumerable<T> list) where T : BHoM.Base.BHoMObject
+        {
+            return list.GroupBy(x => x.BHoM_Guid).Select(x => x.First()).ToDictionary(x => x.BHoM_Guid);
+        }
     }
 }

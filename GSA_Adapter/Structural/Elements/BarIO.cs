@@ -43,17 +43,30 @@ namespace GSA_Adapter.Structural.Elements
                 GsaElement gsaBar = gsaElements[i]; //TODO: filter elements based on topology
 
 
-                if (!(gsaBar.eType == 1 || gsaBar.eType == 2 || gsaBar.eType == 3 || gsaBar.eType == 10 || gsaBar.eType == 20 || gsaBar.eType == 21))
-                    continue;
+                BHE.BarFEAType feType;
 
-                //GsaNode[] gsaNodes;
-                //gsa.Nodes(gsaBar.Topo, out gsaNodes);
-                //BHE.Node n1 = new BHE.Node(gsaNodes[0].Coor[0], gsaNodes[0].Coor[1], gsaNodes[0].Coor[2]);
-                //BHE.Node n2 = new BHE.Node(gsaNodes[1].Coor[0], gsaNodes[1].Coor[1], gsaNodes[1].Coor[2]);
+                switch (gsaBar.eType)
+                {
+                    case 1:
+                        feType = BHE.BarFEAType.Axial;
+                        break;
+                    case 2:
+                        feType = BHE.BarFEAType.Flexural;
+                        break;
+                    case 20:
+                        feType = BHE.BarFEAType.CompressionOnly;
+                        break;
+                    case 21:
+                        feType = BHE.BarFEAType.TensionOnly;
+                        break;
+                    default:
+                        continue;
+                }
+
 
                 BHE.Bar bar = new BHE.Bar(nodes[gsaBar.Topo[0].ToString()], nodes[gsaBar.Topo[1].ToString()], gsaBar.Name);
 
-
+                bar.FEAType = feType;
 
                 bar.OrientationAngle = gsaBar.Beta;
 
@@ -114,7 +127,7 @@ namespace GSA_Adapter.Structural.Elements
             ids = new List<string>();
 
             //Get unique section properties and clone the ones that does not contain a gsa ID
-            Dictionary<Guid, BHP.SectionProperty> sectionProperties = bars.Select(x => x.SectionProperty).Distinct().ToDictionary(x => x.BHoM_Guid);
+            Dictionary<Guid, BHP.SectionProperty> sectionProperties = bars.Select(x => x.SectionProperty).GetDistinctDictionary();
             Dictionary<Guid, BHP.SectionProperty> clonedSecProps = Utils.CloneSectionProperties(sectionProperties);
 
 
@@ -122,7 +135,7 @@ namespace GSA_Adapter.Structural.Elements
             PropertyIO.CreateSectionProperties(gsa, clonedSecProps.Values.ToList());
 
             //Get unique nodes and clone the ones that does not contain a gsa ID
-            Dictionary<Guid, BHE.Node> nodes = bars.SelectMany(x => new List<BHE.Node> { x.StartNode, x.EndNode }).Distinct().ToDictionary(x => x.BHoM_Guid);
+            Dictionary<Guid, BHE.Node> nodes = bars.SelectMany(x => new List<BHE.Node> { x.StartNode, x.EndNode }).GetDistinctDictionary();
             //Dictionary<Guid, BHE.Node> clonedNodes = nodes.Select(x => x.Value.CustomData.ContainsKey(Utils.ID) ? x : new KeyValuePair<Guid, BHE.Node>(x.Key, (BHE.Node)x.Value.ShallowClone())).ToDictionary(x => x.Key, x => x.Value);
             Dictionary<Guid, BHE.Node> clonedNodes = Utils.CloneObjects(nodes);
 
