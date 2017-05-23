@@ -223,27 +223,59 @@ namespace GSA_Adapter.Structural.Elements
 
         }
 
+
         public static string CreateReleaseString(BHP.NodeConstraint nodeConstraint)
         {
-            string UX = "F";
-            string UY = "F";
-            string UZ = "F";
-            string RX = "F";
-            string RY = "F";
-            string RZ = "F";
+            bool[] fixities = nodeConstraint.Fixity();
+            double[] stiffness = nodeConstraint.ElasticValues();
 
-            if (nodeConstraint != null)
+            string relStr = "";
+            string stiffStr = "";
+
+            for (int i = 0; i < fixities.Length; i++)
             {
-                UX = ((nodeConstraint.UX == BHP.DOFType.Fixed) ? "R" : "F").ToString();
-                UY = ((nodeConstraint.UY == BHP.DOFType.Fixed) ? "R" : "F").ToString();
-                UZ = ((nodeConstraint.UZ == BHP.DOFType.Fixed) ? "R" : "F").ToString();
-                RX = ((nodeConstraint.RX == BHP.DOFType.Fixed) ? "R" : "F").ToString();
-                RY = ((nodeConstraint.RY == BHP.DOFType.Fixed) ? "R" : "F").ToString();
-                RZ = ((nodeConstraint.RZ == BHP.DOFType.Fixed) ? "R" : "F").ToString();
+                if (!fixities[i])
+                {
+                    relStr += "F";
+                }
+                else
+                {
+                    if (stiffness[i] > 0)
+                    {
+                        relStr += "K";
+                        stiffStr += "," + stiffness[i];
+                    }
+                    else
+                        relStr += "R";
+                }
+
             }
-            return UX + UY + UZ + RX + RY + RZ;
+
+            return relStr + stiffStr;
+             
         }
 
+
+        //public static string CreateReleaseString(BHP.NodeConstraint nodeConstraint)
+        //{
+        //    string UX = "F";
+        //    string UY = "F";
+        //    string UZ = "F";
+        //    string RX = "F";
+        //    string RY = "F";
+        //    string RZ = "F";
+
+        //    if (nodeConstraint != null)
+        //    {
+        //        UX = ((nodeConstraint.UX == BHP.DOFType.Fixed) ? "R" : "F").ToString();
+        //        UY = ((nodeConstraint.UY == BHP.DOFType.Fixed) ? "R" : "F").ToString();
+        //        UZ = ((nodeConstraint.UZ == BHP.DOFType.Fixed) ? "R" : "F").ToString();
+        //        RX = ((nodeConstraint.RX == BHP.DOFType.Fixed) ? "R" : "F").ToString();
+        //        RY = ((nodeConstraint.RY == BHP.DOFType.Fixed) ? "R" : "F").ToString();
+        //        RZ = ((nodeConstraint.RZ == BHP.DOFType.Fixed) ? "R" : "F").ToString();
+        //    }
+        //    return UX + UY + UZ + RX + RY + RZ;
+        //}
 
     }
 }

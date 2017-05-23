@@ -163,7 +163,7 @@ namespace GSA_Adapter.Structural.Properties
             Dictionary<string, BHP.SectionProperty> gsaSections = GetSections(gsa, true);
 
             //Get all unique materials from imported sectionproperties
-            Dictionary<Guid, BHM.Material> materials = sectionProperties.Select(x => x.Material).Distinct().ToDictionary(x => x.BHoM_Guid);
+            Dictionary<Guid, BHM.Material> materials = sectionProperties.Select(x => x.Material).GetDistinctDictionary();
             //Dictionary<Guid, BHM.Material> clonedMaterials = materials.Select(x => x.Value.CustomData.ContainsKey(Utils.ID) ? x : new KeyValuePair<Guid, BHM.Material>(x.Key, (BHM.Material)x.Value.ShallowClone())).ToDictionary(x => x.Key, x => x.Value);
             Dictionary<Guid, BHM.Material> clonedMaterials = Utils.CloneObjects(materials);
             //Assign cloned materials to section properties
@@ -235,6 +235,22 @@ namespace GSA_Adapter.Structural.Properties
             string calc_J = "NO_J";
             string mods = "NO_MOD_PROP";
 
+            object modifiers = secProp["Modifiers"];
+
+            if (modifiers != null && modifiers is List<double>)
+            {
+                List<double> modList = modifiers as List<double>;
+                if (modList.Count == 6)
+                {
+                    mods = "MOD_PROP";
+                    for (int i = 0; i < 6; i++)
+                    {
+                        mods += ",BY," + modList[i];
+                    }
+                    mods += ",NO,NO_MOD";
+                }
+
+            }
 
             //PROP_SEC    2   Section 2   NO_RGB  1   CAT % UB % UB914x419x388 % 19990407   NO NA  0   NO_PROP NO_MOD_PROP FLAME_CUT NO_J
 

@@ -143,8 +143,19 @@ namespace GSA_Adapter.Structural.Loads
             string command = "LOAD_BEAM_POINT";
 
             //LOAD_BEAM_POINT	name	2	1	GLOBAL	NO	Z	3	60		
+            //LOAD_BEAM_POINT	    	1	1	GLOBAL	NO	Z	1	-50000
 
-            throw new NotImplementedException();
+
+            forceStrings = new List<string>();
+            string name = load.Name;
+
+            string pos = "," + load.DistanceFromA.ToString();
+
+            string str = command + "," + name + "," + list + "," + caseNo + "," + "GLOBAL" + "," + "NO";
+
+            LoadIO.AddVectorDataToStringSingle(str, load.ForceVector, ref forceStrings, loadFactor, true, pos);
+            LoadIO.AddVectorDataToStringSingle(str, load.MomentVector, ref forceStrings, loadFactor, false, pos);
+
         }
 
         static public bool AddPreStressLoad(ComAuto gsa, BHL.BarPrestressLoad psLoad)

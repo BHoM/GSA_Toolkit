@@ -78,10 +78,10 @@ namespace GSA_Adapter.Structural.Loads
             Utils.SendErrorMessage("Load of type " + loadType + " is not implemented yet.");
         }
 
-        public static void AddVectorDataToStringSingle(string startStr, BHG.Vector vec, ref List<string> strings, double factor, bool translational)
+        public static void AddVectorDataToStringSingle(string startStr, BHG.Vector vec, ref List<string> strings, double factor, bool translational, string pos = "")
         {
 
-            foreach (string str in GetForceVectorsStrings(vec,factor,translational))
+            foreach (string str in GetForceVectorsStrings(vec,factor,translational, pos))
             {
                 strings.Add(startStr + "," + str);
             }
@@ -99,7 +99,7 @@ namespace GSA_Adapter.Structural.Loads
             //}
         }
 
-        public static List<string> GetForceVectorsStrings(BHG.Vector vec, double factor, bool translational)
+        public static List<string> GetForceVectorsStrings(BHG.Vector vec, double factor, bool translational, string pos = "")
         {
             List<string> strings = new List<string>();
 
@@ -108,11 +108,11 @@ namespace GSA_Adapter.Structural.Loads
                 string[] dir = LoadIO.Directions(translational);
 
                 if (vec.X != 0)
-                    strings.Add(dir[0] + "," + (factor * vec.X).ToString());
+                    strings.Add(dir[0] + pos + "," + (factor * vec.X).ToString());
                 if (vec.Y != 0)
-                    strings.Add(dir[1] + "," + (factor * vec.Y).ToString());
+                    strings.Add(dir[1] + pos + "," + (factor * vec.Y).ToString());
                 if (vec.Z != 0)
-                    strings.Add(dir[2] + "," + (factor * vec.Z).ToString());
+                    strings.Add(dir[2] + pos + "," + (factor * vec.Z).ToString());
             }
 
             return strings;

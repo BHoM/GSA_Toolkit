@@ -107,7 +107,7 @@ namespace GSA_Adapter.Structural.Elements
 
             string restraint = GetRestraintString(n);
 
-            string str = command + ", " + index + ", " + name + " , NO_RGB, " + n.X + " , " + n.Y + " , " + n.Z + ", NO_GRID, " + 0 + ", REST," + restraint + ", STIFF,0,0,0,0,0,0";
+            string str = command + ", " + index + ", " + name + " , NO_RGB, " + n.X + " , " + n.Y + " , " + n.Z + ", NO_GRID, " + 0 + "," + restraint;// ", REST," + restraint + ", STIFF,0,0,0,0,0,0";
             dynamic commandResult = gsa.GwaCommand(str); //"NODE.2, 1 , , NO_RGB,0 , 2 , 0, NO_GRID,0, REST,0,0,0,0,0,0, STIFF,0,0,0,0,0,0"
 
             if (1 == (int)commandResult)
@@ -123,9 +123,45 @@ namespace GSA_Adapter.Structural.Elements
             return true;
         }
 
-        /***************************************/
+
 
         public static string GetRestraintString(BHE.Node node)
+        {
+
+
+            /***************************************/
+
+            if (node.IsConstrained)
+            {
+                string rest = "REST";
+
+
+                bool[] fixities = node.Constraint.Fixity();
+                for (int i = 0; i < fixities.Length; i++)
+                {
+                    rest += "," + (fixities[i] ? 1 : 0);
+                }
+
+                rest += ",STIFF";
+
+                double[] stiffnesses = node.Constraint.ElasticValues();
+                for (int i = 0; i < stiffnesses.Length; i++)
+                {
+                    rest += "," + ((stiffnesses[i] > 0) ? stiffnesses[i] : 0);
+                }
+
+
+                return rest;
+            }
+            else
+                return "NO_REST,NO_STIFF";
+
+            
+        }
+
+        /***************************************/
+
+        public static string GetRestraintStringOLD(BHE.Node node)
         {
             int X = 0;
             int Y = 0;
