@@ -246,7 +246,7 @@ namespace GSA_Adapter.Structural.Properties
         /// </param>
         /// <param name="materials"></param>
         /// <returns></returns>
-        internal static BHoMP.SectionProperty GetSectionFromGsaString(string gsaString, Dictionary<string, BHoMM.Material> materials)
+        public static BHoMP.SectionProperty GetSectionFromGsaString(string gsaString, Dictionary<string, BHoMM.Material> materials)
         {
             BHoMP.SectionProperty secProp = null;
 
@@ -287,8 +287,7 @@ namespace GSA_Adapter.Structural.Properties
 
                 secProp = expSecProp;
             }
-
-            if (description.StartsWith("STD") /*|| description.StartsWith("CAT") */)
+            else if (description.StartsWith("STD") /*|| description.StartsWith("CAT") */)
             {
                 double D, W, T, t, Wt, Wb, Tt, Tb;
                 string[] desc = description.Split('%');
@@ -364,9 +363,62 @@ namespace GSA_Adapter.Structural.Properties
             return secProp;
         }
 
-        public static BHoMP.PanelProperty GetPanelPropertyFromGsaString(string gsaProp, Dictionary<string, BHoMM.Material> materials)
+        public static BHoMP.PanelProperty GetPanelPropertyFromGsaString(string gsaString, Dictionary<string, BHoMM.Material> materials)
         {
-            throw new NotImplementedException();
+            BHoMP.PanelProperty panProp = null;
+
+            if (gsaString == "")
+            {
+                return null;
+            }
+
+            string[] gsaStrings = gsaString.Split(',');
+
+            int id;
+
+            Int32.TryParse(gsaStrings[1], out id);
+            string name = gsaStrings[2];
+            string materialId = gsaStrings[5];
+            string description = gsaStrings[6];
+
+            if (description == "SHELL")
+            {
+                panProp = new BHoMP.ConstantThickness(name);
+                panProp.Material = materials[materialId];
+                double t = double.Parse(gsaStrings[7]);
+                panProp.Thickness = t;
+            }
+            else if (description== "LOAD")
+            {
+                panProp = new BHoMP.LoadingPanelProperty();
+                ((BHoMP.LoadingPanelProperty)panProp).LoadApplication = GetLoadingConditionFromString(gsaStrings[7]);
+                ((BHoMP.LoadingPanelProperty)panProp).ReferenceEdge = int.Parse(gsaStrings[8]);
+            }
+
+            panProp.CustomData.Add(Utils.ID, id);
+            panProp.Name = name;
+            return panProp;
+        }
+
+        private static BHoMP.LoadPanelSupportConditions GetLoadingConditionFromString(string str)
+        {
+            switch (str)
+            {
+                case "SUP_ALL":
+                    return BHoMP.LoadPanelSupportConditions.AllSides;
+                case "SUP_THREE":
+                    return BHoMP.LoadPanelSupportConditions.ThreeSides;
+                case "SUP_TWO":
+                    return BHoMP.LoadPanelSupportConditions.TwoSides;
+                case "SUP_TWO_ADJ":
+                    return BHoMP.LoadPanelSupportConditions.TwoAdjacentSides;
+                case "SUP_ONE":
+                    return BHoMP.LoadPanelSupportConditions.OneSide;
+                case "SUP_ONE_MOM":
+                    return BHoMP.LoadPanelSupportConditions.Cantilever;
+                default:
+                    return BHoMP.LoadPanelSupportConditions.AllSides;
+            }
         }
     }
 }

@@ -29,7 +29,7 @@ namespace GSA_Adapter.Structural.Elements
             barList = new List<BHE.Bar>();
 
 
-            int[] potentialBeamRefs = GeneratePotentialBeamRef(gsa, barNumbers);
+            int[] potentialBeamRefs = GeneratePotentialElemRef(gsa, barNumbers);
 
             GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
             gsa.Elements(potentialBeamRefs, out gsaElements);
@@ -82,7 +82,7 @@ namespace GSA_Adapter.Structural.Elements
             return true;
         }
 
-        private static int[] GeneratePotentialBeamRef(ComAuto gsa, List<string> barNumbers)
+        public static int[] GeneratePotentialElemRef(ComAuto gsa, List<string> barNumbers)
         {
             if (barNumbers == null)
             {

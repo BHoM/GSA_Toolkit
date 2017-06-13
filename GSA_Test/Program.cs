@@ -16,9 +16,16 @@ namespace GSA_Test
         static void Main(string[] args)
         {
 
-            TestLinkProperty();
+            TestGetFEMeshes();
         }
 
+
+        private static void TestGetFEMeshes()
+        {
+            List<BHoM.Structural.Elements.FEMesh> meshes;
+            GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\2delems 2.gwb");
+            app.GetFEMeshes(out meshes);
+        }
 
         private static void TestLinkProperty()
         {

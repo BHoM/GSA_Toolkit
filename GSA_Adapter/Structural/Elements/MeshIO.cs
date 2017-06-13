@@ -16,8 +16,72 @@ namespace GSA_Adapter.Structural.Elements
 {
     public static class MeshIO
     {
+
         /// <summary>
-        /// Create GSA bars
+        /// Get bars method, gets bars from a GSA model and all associated data. 
+        /// </summary>
+        /// <returns></returns>
+        public static bool GetMeshes(ComAuto gsa, out List<BHE.FEMesh> meshList, List<string> barNumbers = null)
+        {
+            meshList = new List<BHE.FEMesh>();
+
+
+            int[] potentialMeshRefs = BarIO.GeneratePotentialElemRef(gsa, barNumbers);
+
+            GsaElement[] gsaElements = new GsaElement[potentialMeshRefs.Length];
+            gsa.Elements(potentialMeshRefs, out gsaElements);
+
+            Dictionary<string, BHP.PanelProperty> secProps =  PropertyIO.GetPanelProperties(gsa, false);
+            Dictionary<string, BHE.Node> nodes = NodeIO.GetNodes(gsa);
+
+
+            for (int i = 0; i < gsaElements.Length; i++)
+            {
+                GsaElement gsaMesh = gsaElements[i]; //TODO: filter elements based on topology
+
+
+                BHE.FEFace face;
+                switch (gsaMesh.eType)
+                {
+                    case 5://Quad4
+                        face = new BHE.FEFace();
+                        face.NodeIndices = new List<int> { 0, 1, 2, 3 };
+                        break;
+                    case 7://Tri3
+                        face = new BHE.FEFace();
+                        face.NodeIndices = new List<int> { 0, 1, 2 };
+                        break;
+                    default:
+                        continue;
+
+                }
+
+                BHE.FEMesh mesh = new BHE.FEMesh();
+                mesh.Faces.Add(face);
+                face.CustomData[Utils.ID] = gsaMesh.Ref;
+                foreach (int ind in gsaMesh.Topo)
+                {
+                    mesh.Nodes.Add(nodes[ind.ToString()]);
+                }
+
+                BHP.PanelProperty prop;
+                if (secProps.TryGetValue(gsaMesh.Property.ToString(), out prop))
+                {
+                    mesh.PanelProperty = prop;
+                }
+                mesh.CustomData[Utils.ID] = gsaMesh.Ref;
+
+                meshList.Add(mesh);
+
+
+            }
+
+            //barList = bars.ToList();
+            return true;
+        }
+
+        /// <summary>
+        /// Create GSA meshes
         /// </summary>
         /// <returns></returns>
         public static bool CreateMeshes(ComAuto gsa, List<BHE.FEMesh> meshes, out List<string> ids)
