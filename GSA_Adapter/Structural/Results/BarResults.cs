@@ -16,11 +16,6 @@ namespace GSA_Adapter.Structural.Results
     public static class BarResults
     {
 
-        public static bool GetBarDisplacement(ComAuto gsa, BHoMBR.ResultServer<BHoMSR.BarForce<int, string, int>> resultServer, List<string> bars, List<string> cases, int divisions)
-        {
-            throw new NotImplementedException();
-        }
-
         public static bool GetBarForces(ComAuto gsa, BHoMBR.ResultServer<BHoMSR.BarForce> resultServer, List<string> bars, List<string> cases, int divisions)
         {
             string message = "";
@@ -41,7 +36,7 @@ namespace GSA_Adapter.Structural.Results
                     int idBar = Int32.Parse(b);
                     List<double[]> beamResults;
                     int idPos = 0; //not sure how to set position ID?
-                    if (GetBeamResults(gsa, idBar, ac, out beamResults, ResHeader.REF_FORCE_EL1D, unitFactor, out message))
+                    if (GetBeamResults(gsa, idBar, ac, out beamResults, ResHeader.REF_FORCE_EL1D, unitFactor, divisions, GSAUtil.GsaEnums.Output_Axis.Local(), out message))
                     {
                         divisions = beamResults.Count;
                         foreach (double[] br in beamResults)
@@ -71,7 +66,6 @@ namespace GSA_Adapter.Structural.Results
             int counter = 0;
 
 
-
             bars = CheckAndGetBars(gsa, bars);
 
             double unitFactor = Utility.Utils.GetUnitFactor(gsa, GSAUtil.GsaEnums.UnitType.STRESS);
@@ -86,7 +80,7 @@ namespace GSA_Adapter.Structural.Results
                     int idBar = Int32.Parse(b);
                     List<double[]> beamResults;
                     int idPos = 0; //not sure how to set position ID?
-                    if (GetBeamResults(gsa, idBar, ac, out beamResults, ResHeader.REF_STRESS_EL1D, unitFactor, out message))
+                    if (GetBeamResults(gsa, idBar, ac, out beamResults, ResHeader.REF_STRESS_EL1D, unitFactor, divisions, GSAUtil.GsaEnums.Output_Axis.Local(), out message))
                     {
                         divisions = beamResults.Count;
                         foreach (double[] br in beamResults)
@@ -109,11 +103,55 @@ namespace GSA_Adapter.Structural.Results
             return true;
         }
 
-        static public bool GetBeamResults(ComAuto gsa, int bId, string caseDescription, out List<double[]> resultsPos, ResHeader header, double unitFactor, out string message)
+        public static bool GetBarDisplacements(ComAuto gsa, BHoMBR.ResultServer<BHoMSR.BarDisplacement> resultServer, List<string> bars, List<string> cases, int divisions)
+        {
+            string message = "";
+            List<BHoMSR.BarDisplacement> bardisplacements = new List<BHoMSR.BarDisplacement>();
+            int counter = 0;
+
+
+            bars = CheckAndGetBars(gsa, bars);
+
+            double unitFactor = Utility.Utils.GetUnitFactor(gsa, GSAUtil.GsaEnums.UnitType.LENGTH);
+
+            cases = ResultUtilities.CheckAndGetAnalysisCases(gsa, cases);
+
+            foreach (string ac in cases)
+            {
+
+                foreach (string b in bars)
+                {
+                    int idBar = Int32.Parse(b);
+                    List<double[]> beamResults;
+                    int idPos = 0; //not sure how to set position ID?
+                    if (GetBeamResults(gsa, idBar, ac, out beamResults, ResHeader.REF_DISP_EL1D, unitFactor, divisions, GSAUtil.GsaEnums.Output_Axis.Global(), out message))
+                    {
+                        //divisions = beamResults.Count;
+                        foreach (double[] br in beamResults)
+                        {
+                            bardisplacements.Add(new BHoMSR.BarDisplacement(b, ac, idPos, divisions, "1", br[1], br[2], br[3], br[4], br[5], br[6], br[7], br[8]));
+                            idPos++;
+                            counter++;
+                            if (counter % 1000000 == 0 && resultServer.CanStore)
+                            {
+                                resultServer.StoreData(bardisplacements);
+                                bardisplacements.Clear();
+                            }
+                        }
+                    }
+
+                }
+
+            }
+            resultServer.StoreData(bardisplacements);
+            return true;
+        }
+
+        static public bool GetBeamResults(ComAuto gsa, int bId, string caseDescription, out List<double[]> resultsPos, ResHeader header, double unitFactor, int divisions, string sAxis, out string message)
         {
             GsaResults[] GSAresults;
 
-            if (!ExtractBeamResults(gsa, bId, caseDescription, header, unitFactor, out GSAresults))
+            if (!ExtractBeamResults(gsa, bId, caseDescription, header, unitFactor, divisions, sAxis, out GSAresults))
             {
                 resultsPos = new List<double[]>();
                 resultsPos.Add(new double[] { -1 });
@@ -248,16 +286,16 @@ namespace GSA_Adapter.Structural.Results
         //}
 
 
-        static private bool ExtractBeamResults(ComAuto GSA, int bId, string caseDescription, ResHeader header, double unitFactor, out GsaResults[] GSAresults)
+        static private bool ExtractBeamResults(ComAuto GSA, int bId, string caseDescription, ResHeader header, double unitFactor, int divisions, string sAxis, out GsaResults[] GSAresults)
         {
-            int inputFlags = (int)GSAUtil.GsaEnums.Output_Init_Flags.OP_INIT_1D_AUTO_PTS;
-            string sAxis = GSAUtil.GsaEnums.Output_Axis.Local();
+            //int inputFlags = (int)GSAUtil.GsaEnums.Output_Init_Flags.OP_INIT_1D_AUTO_PTS;
+            int inputFlags = 0x40;
             int nComp = 0;
 
             // Get unit factor for extracted results.
 
 
-            if (GSA.Output_Init_Arr(inputFlags, sAxis, caseDescription, header, 0) != 0)
+            if (GSA.Output_Init_Arr(inputFlags, sAxis, caseDescription, header, divisions-2) != 0)
             {
                 GSAUtil.Utils.SendErrorMessage("Initialisation failed");
                 GSAresults = null;
