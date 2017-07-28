@@ -39,6 +39,11 @@ namespace GSA_Adapter.Structural.Interface
 
         }
 
+        public bool ClearModel()
+        {
+            throw new NotImplementedException();
+        }
+
         public bool ClearResults()
         {
             return gsa.Delete("RESULTS") == 0;
@@ -56,5 +61,60 @@ namespace GSA_Adapter.Structural.Interface
             else
                 return gsa.SaveAs(fileName) == 0;
         }
+
+        public bool ScreenCapture(string fileName = null, List<string> cases = null, List<string> viewNames = null)
+        {
+            List<string> OrigImgNames = new List<string>();
+            List<string> NewImgNames = new List<string>();
+            
+            
+            List<int> viewIndecies = new List<int>();
+            
+            int highView = gsa.HighestView("SGV");
+            for (int i = 0; i < highView; i++)
+            {
+                if (gsa.ViewExist("SGV", i + 1) == 1)
+                {
+                    string viewName = gsa.ViewName("SGV", i + 1);
+
+                    if (viewNames.Contains(viewName))
+                    {
+                        viewIndecies.Add(i + 1);
+                    }
+                }
+            }
+
+            foreach (string casename in cases)
+            {
+
+                for (int i = 0; i < viewIndecies.Count; i++)
+                {
+                    gsa.SetViewCaseList("SGV", viewIndecies[i], "A" + casename);
+                }
+                for (int i = 0; i < viewNames.Count; i++)
+                {
+                    gsa.SaveViewToFile(viewNames[i], "PNG");
+                }
+
+                // Change names of the created images to something more sensible
+                
+                foreach (string viewname in viewNames)
+                {
+                    // Get the name of the created image 
+                    string origname = fileName.Split('.')[0] + "_" + viewname + "(0).png";
+
+                    // create the new imgpath and name
+
+                    string newname = fileName.Split('.')[0] + "_" + casename + "_" + viewname + ".png";
+                   
+                    System.IO.File.Move(origname, newname);
+                    
+                }
+            }
+
+            return true;
+
+        }
+    
     }
 }
