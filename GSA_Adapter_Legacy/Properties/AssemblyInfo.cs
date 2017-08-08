@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Buro Happold")]
 [assembly: AssemblyProduct("GSA_Adapter")]
-[assembly: AssemblyCopyright("Copyright © Buro Happold 2017")]
+[assembly: AssemblyCopyright("Copyright © Buro Happold 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("6ef0e0ab-7431-4481-9cad-670673ae1aa1")]
+[assembly: Guid("9740253e-8c50-44fa-ba20-96fcfa7b0520")]
 
 // Version information for an assembly consists of the following four values:
 //
