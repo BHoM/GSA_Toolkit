@@ -14,10 +14,8 @@ namespace BH.Adapter.GSA
 {
     public static partial class Convert
     {
-
-        public static string GetRestraintString(Node node)
+        private static string GetRestraintString(Node node)
         {
-
             if (node.Constraint != null)
             {
                 string rest = "REST";
@@ -45,8 +43,6 @@ namespace BH.Adapter.GSA
 
 
         }
-
-
 
         /***************************************/
 

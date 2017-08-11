@@ -165,8 +165,8 @@ namespace GSA_Adapter.Structural.Results
 
         static private bool SortBeamResultsIntoPositions(GsaResults[] GSAresults, out List<double[]> resultsPos, out string message)
         {
-            List<int> resultIndecies = new List<int>();
-            resultIndecies.Add(0);
+            List<int> resultIndices = new List<int>();
+            resultIndices.Add(0);
 
             double[] resultsSrt = null;
             double[] resultsQtr = null;
@@ -176,17 +176,17 @@ namespace GSA_Adapter.Structural.Results
 
             if (GSAresults.Length == 5)
             {
-                resultIndecies.Add(1);
-                resultIndecies.Add(2);
-                resultIndecies.Add(3);
+                resultIndices.Add(1);
+                resultIndices.Add(2);
+                resultIndices.Add(3);
                 message = "";
             }
             else if (GSAresults.Length < 5)
             {
-                resultIndecies.Add(-1);
+                resultIndices.Add(-1);
                 int indexMid = (GSAresults.Length - 1) / 2;
-                resultIndecies.Add(indexMid);
-                resultIndecies.Add(-1);
+                resultIndices.Add(indexMid);
+                resultIndices.Add(-1);
                 message = "";
             }
             else
@@ -195,22 +195,22 @@ namespace GSA_Adapter.Structural.Results
                 int indexMid = (GSAresults.Length - 1) / 2;
                 int index3Qr = indexQrt * 3;
 
-                resultIndecies.Add(indexQrt);
-                resultIndecies.Add(indexMid);
-                resultIndecies.Add(index3Qr);
+                resultIndices.Add(indexQrt);
+                resultIndices.Add(indexMid);
+                resultIndices.Add(index3Qr);
                 message = "WARNING! A weird number of results was extracted from element. This may indicate a pointload, and Crocodile cannot guarantee that mid load is actually the mid load";
             }
 
-            resultIndecies.Add(GSAresults.Length - 1);
+            resultIndices.Add(GSAresults.Length - 1);
 
 
             resultsPos = new List<double[]>();
             double pos = 0;
-            for (int i = 0; i < resultIndecies.Count; i++)
+            for (int i = 0; i < resultIndices.Count; i++)
             {
-                if (resultIndecies[i] >= 0)
+                if (resultIndices[i] >= 0)
                 {
-                    double[] res = GSAresults[resultIndecies[i]].dynaResults;
+                    double[] res = GSAresults[resultIndices[i]].dynaResults;
                     double[] resPos = new double[res.Length + 1];
                     resPos[0] = pos;
 

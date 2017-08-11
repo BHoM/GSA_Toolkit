@@ -11,15 +11,36 @@ namespace BH.Adapter.GSA
 {
     public static partial class Convert
     {
-        /***************************************/
-        public static string GetGsaString(this object obj, string index)
+        /***************************************************/
+        /**** Public  Methods                           ****/
+        /***************************************************/
+
+        public static string ToGsaString(this Type type)
         {
-            return _GetGsaString(obj as dynamic, index);
+            if (type == typeof(Node))
+                return "NODE";
+            else if (type == typeof(Bar))
+                return "EL";
+            else if (type == typeof(Material))
+                return "MAT";
+            else if (type == typeof(SectionProperty))
+                return "PROP_SEC";
+
+            return null;
         }
 
         /***************************************/
+        public static string ToGsaString(this object obj, string index)
+        {
+            return _ToGsaString(obj as dynamic, index);
+        }
 
-        private static string _GetGsaString(this Material material, string index)
+
+        /***************************************************/
+        /**** Private  Methods                          ****/
+        /***************************************************/
+
+        private static string _ToGsaString(this Material material, string index)
         {
             string command = "MAT";
             string num = index;//(GSA.GwaCommand("HIGHEST, PROP_SEC") + 1).ToString();
@@ -40,7 +61,7 @@ namespace BH.Adapter.GSA
 
         /***************************************/
 
-        private static string _GetGsaString(this Bar bar, string index)
+        private static string _ToGsaString(this Bar bar, string index)
         {
             string command = "EL.2";
             string name = bar.GetNameAndTagString();
@@ -64,7 +85,7 @@ namespace BH.Adapter.GSA
 
         /***************************************/
 
-        private static string _GetGsaString(this Node node, string index)
+        private static string _ToGsaString(this Node node, string index)
         {
             string command = "NODE.2";
             string name = node.GetNameAndTagString();
@@ -77,7 +98,7 @@ namespace BH.Adapter.GSA
 
         /***************************************/
 
-        private static string _GetGsaString(this SectionProperty prop, string index)
+        private static string _ToGsaString(this SectionProperty prop, string index)
         {
             string name = prop.GetNameAndTagString();
 

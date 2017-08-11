@@ -69,6 +69,8 @@ namespace BH.Adapter.GSA
             }
         }
 
+        /***************************************/
+
         private static void CreateCustomDataString(SectionProperty secProp, out string desc, out string prop)
         {
             desc = "EXP";
@@ -82,30 +84,42 @@ namespace BH.Adapter.GSA
             prop = "PROP," + area + "," + Iyy + "," + Izz + "," + J + "," + Avy + "," + Avz;
         }
 
+        /***************************************/
+
         private static void CreateDoubleChannelString(SectionProperty secProp, out string desc, out string prop)
         {
             throw new NotImplementedException();
         }
+
+        /***************************************/
 
         private static void CreateCutIString(SectionProperty secProp, out string desc, out string prop)
         {
             throw new NotImplementedException();
         }
 
+        /***************************************/
+
         private static void CreateDoubleAngleString(SectionProperty secProp, out string desc, out string prop)
         {
             throw new NotImplementedException();
         }
+
+        /***************************************/
 
         private static void CreatePolygonString(SectionProperty secProp, out string desc, out string prop)
         {
             throw new NotImplementedException();
         }
 
+        /***************************************/
+
         private static void CreateZedString(SectionProperty secProp, out string desc, out string prop)
         {
             throw new NotImplementedException();
         }
+
+        /***************************************/
 
         private static void CreateCircleString(SectionProperty secProp, out string desc, out string prop)
         {
@@ -119,6 +133,8 @@ namespace BH.Adapter.GSA
             desc = string.Format("STD%C%{0}", d.ToStringWithDecimalPoint());
 
         }
+
+        /***************************************/
 
         private static void CreateTubeString(SteelSection secProp, out string desc, out string prop)
         {
@@ -134,10 +150,14 @@ namespace BH.Adapter.GSA
             desc = string.Format("STD%CHS%{0}%{1}", d.ToStringWithDecimalPoint(), t.ToStringWithDecimalPoint());
         }
 
+        /***************************************/
+
         private static void CreateChannelString(SectionProperty secProp, out string desc, out string prop)
         {
             throw new NotImplementedException();
         }
+
+        /***************************************/
 
         private static void CreateTeeString(SteelSection secProp, out string desc, out string prop)
         {
@@ -155,6 +175,8 @@ namespace BH.Adapter.GSA
             desc = string.Format("STD%T%{0}%{1}%{2}%{3}", h.ToStringWithDecimalPoint(), w.ToStringWithDecimalPoint(), wt.ToStringWithDecimalPoint(), ft.ToStringWithDecimalPoint());
 
         }
+
+        /***************************************/
 
         private static void CreateIString(SteelSection secProp, out string desc, out string prop)
         {
@@ -185,6 +207,8 @@ namespace BH.Adapter.GSA
             }
         }
 
+        /***************************************/
+
         private static void CreateAngleString(SteelSection secProp, out string desc, out string prop)
         {
             //STD%A%150.%100.%5.%10.
@@ -200,6 +224,8 @@ namespace BH.Adapter.GSA
 
             desc = string.Format("STD%A%{0}%{1}%{2}%{3}", h.ToStringWithDecimalPoint(), w.ToStringWithDecimalPoint(), wt.ToStringWithDecimalPoint(), ft.ToStringWithDecimalPoint());
         }
+
+        /***************************************/
 
         private static void CreateBoxString(SteelSection secProp, out string desc, out string prop)
         {
@@ -218,6 +244,8 @@ namespace BH.Adapter.GSA
 
         }
 
+        /***************************************/
+
         private static void CreateRectString(SectionProperty secProp, out string desc, out string prop)
         {
             prop = "NO_PROP";
@@ -229,9 +257,9 @@ namespace BH.Adapter.GSA
 
             desc = string.Format("STD%R%{0}%{1}", h.ToStringWithDecimalPoint(), w.ToStringWithDecimalPoint());
             //STD%R%50.%20.
-
-
         }
+
+        /***************************************/
 
         private static string ToStringWithDecimalPoint(this double d)
         {

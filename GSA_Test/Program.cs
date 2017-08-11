@@ -48,7 +48,7 @@ namespace GSA_Test
         private static void TestPushBars()
         {
             //
-            string key = "Test Push Bar Key";
+            //string key = "Test Push Bar Key";
             GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\EmptyFile.gwb");
             app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\EmptyFile.gwb");
             Point p1 = new Point(0, 0, 0);
