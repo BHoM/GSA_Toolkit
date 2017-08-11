@@ -12,30 +12,35 @@ namespace BH.Adapter.GSA
     public partial class GSAAdapter
     {
         /***************************************************/
+        /**** IStructuralAdapter Interface              ****/
+        /***************************************************/
+
+        public bool Create(IEnumerable<object> obj)
+        {
+            return _Create(obj as dynamic);
+        }
+
+
+        /***************************************************/
         /**** Public  Methods                           ****/
         /***************************************************/
-        public bool CreateObject(object obj, string index)
+
+        public bool Create(object obj, string index)
         {
-            return ComCall(Convert.GetGsaString(obj, index));
+            return ComCall(Convert.ToGsaString(obj, index));
         }
 
-        /***************************************************/
-
-        public bool CreateObjects(IEnumerable<object> obj)
-        {
-            return _CreateObjects(obj as dynamic);
-        }
 
         /***************************************************/
         /**** Private  Methods                          ****/
         /***************************************************/
 
-        private bool _CreateObjects(IEnumerable<BH.oM.Base.BHoMObject> objects)
+        private bool _Create(IEnumerable<BH.oM.Base.BHoMObject> objects)
         {
             bool success = true;
             foreach (BH.oM.Base.BHoMObject obj in objects)
             {
-                success &= ComCall(Convert.GetGsaString(obj, obj.CustomData[ID].ToString()));
+                success &= ComCall(Convert.ToGsaString(obj, obj.CustomData[AdapterId].ToString()));
             }
             UpdateViews();
             return success;

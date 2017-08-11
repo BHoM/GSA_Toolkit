@@ -17,7 +17,7 @@ namespace GSA_Adapter.Structural.Results
 
             ResHeader resHeader = ResHeader.REF_REAC;
 
-            List<int> nodeIds = CheckAndGetNodeIndecies(gsa, nodeNumbers);
+            List<int> nodeIds = CheckAndGetNodeIndices(gsa, nodeNumbers);
             cases = ResultUtilities.CheckAndGetAnalysisCases(gsa, cases);
 
             for (int i = 0; i < cases.Count; i++)
@@ -46,7 +46,7 @@ namespace GSA_Adapter.Structural.Results
         {
             ResHeader resHeader = ResHeader.REF_DISP;
 
-            List<int> nodeIds = CheckAndGetNodeIndecies(gsa, nodeNumbers);
+            List<int> nodeIds = CheckAndGetNodeIndices(gsa, nodeNumbers);
             cases = ResultUtilities.CheckAndGetAnalysisCases(gsa, cases);
 
             for (int i = 0; i < cases.Count; i++)
@@ -80,11 +80,11 @@ namespace GSA_Adapter.Structural.Results
             // TODO for Isak
             int highest = gsa.GwaCommand("HIGHEST, NODE");
 
-            int[] possibleIndecies = Utility.Utils.CreateIntSequence(highest);
+            int[] possibleIndices = Utility.Utils.CreateIntSequence(highest);
 
             GsaNode[] gsaNodes;
             
-            gsa.Nodes(possibleIndecies, out gsaNodes);
+            gsa.Nodes(possibleIndices, out gsaNodes);
 
             foreach (GsaNode n in gsaNodes)
             {
@@ -96,7 +96,7 @@ namespace GSA_Adapter.Structural.Results
             return true;
         }
 
-        private static Dictionary<int, List<double>> GetNodalResults(IComAuto gsa, string loadCase, ResHeader resultType, List<int> nodeIndecies)
+        private static Dictionary<int, List<double>> GetNodalResults(IComAuto gsa, string loadCase, ResHeader resultType, List<int> nodeIndices)
         {
             int inputFlags = (int)GsaEnums.Output_Init_Flags.OP_INIT_1D_AUTO_PTS;
             string axis = GsaEnums.Output_Axis.Global();
@@ -107,11 +107,11 @@ namespace GSA_Adapter.Structural.Results
 
             Dictionary<int,List<double>> nodalResults = new Dictionary<int, List<double>>();
 
-            for (int i = 0; i < nodeIndecies.Count; i++)
+            for (int i = 0; i < nodeIndices.Count; i++)
             {
-                List<double> nodeRes = GetNodalResult(gsa, nodeIndecies[i]);
+                List<double> nodeRes = GetNodalResult(gsa, nodeIndices[i]);
                 if (nodeRes != null)
-                    nodalResults.Add(nodeIndecies[i],nodeRes);
+                    nodalResults.Add(nodeIndices[i],nodeRes);
             }
 
             return nodalResults;
@@ -140,7 +140,7 @@ namespace GSA_Adapter.Structural.Results
 
         }
 
-        private static List<int> CheckAndGetNodeIndecies(IComAuto gsa, List<string> ids)
+        private static List<int> CheckAndGetNodeIndices(IComAuto gsa, List<string> ids)
         {
             if (ids == null || ids.Count == 0)
             {

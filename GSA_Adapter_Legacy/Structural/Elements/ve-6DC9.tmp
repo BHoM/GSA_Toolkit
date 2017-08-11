@@ -217,7 +217,7 @@ namespace GSA_Adapter.Structural.Elements
 
             GsaNode[] gsaNodes;
 
-            gsa.Nodes(NodeIdIndices(gsa, nodeIds), out gsaNodes);
+            gsa.Nodes(NodeIdIndecies(gsa, nodeIds), out gsaNodes);
 
             List<string> outIds = new List<string>();
 
@@ -241,7 +241,7 @@ namespace GSA_Adapter.Structural.Elements
 
             GsaNode[] gsaNodes;
 
-            gsa.Nodes(NodeIdIndices(gsa), out gsaNodes);
+            gsa.Nodes(NodeIdIndecies(gsa), out gsaNodes);
 
             List<string> outIds = new List<string>();
 
@@ -290,7 +290,7 @@ namespace GSA_Adapter.Structural.Elements
 
         /***************************************/
 
-        private static int[] NodeIdIndices(IComAuto gsa, List<string> ids = null)
+        private static int[] NodeIdIndecies(IComAuto gsa, List<string> ids = null)
         {
             if (ids == null || ids.Count < 1)
             {

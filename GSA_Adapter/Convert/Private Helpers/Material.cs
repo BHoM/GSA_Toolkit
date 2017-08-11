@@ -42,6 +42,7 @@ namespace BH.Adapter.GSA
         }
         
         /***************************************/
+
         private static MaterialType GetTypeFromString(string gsaString)
         {
             switch (gsaString)
@@ -67,26 +68,5 @@ namespace BH.Adapter.GSA
             }
         }
 
-        /***************************************/
-        public static List<Material> GetStandardGsaMaterials()
-        {
-            List<Material> materials = new List<Material>();
-            AddStandardGsaMaterial(ref materials, "STEEL");
-            AddStandardGsaMaterial(ref materials, "CONC_SHORT");
-            AddStandardGsaMaterial(ref materials, "CONC_LONG");
-            AddStandardGsaMaterial(ref materials, "ALUMINIUM");
-            AddStandardGsaMaterial(ref materials, "GLASS");
-            return materials;
-        }
-
-        /***************************************/
-        public static void AddStandardGsaMaterial(ref List<Material> materials, string name)
-        {
-            Material mat = new Material("GSA Standard " + name);
-            mat.CustomData.Add(GSAAdapter.ID, name);
-            materials.Add(mat);
-
-
-        }
     }
 }

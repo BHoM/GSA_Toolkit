@@ -17,12 +17,18 @@ namespace BH.Adapter.GSA
 {
     public partial class GSAAdapter : IAdapter, IStructuralAdapter, INodeAdapter, IBarAdapter
     {
+        /***************************************************/
+        /**** Public  properties                        ****/
+        /***************************************************/
+
+        public const string ID = "GSA_id";
+
+        public string AdapterId { get { return ID; } } //TODO: not too sure about this name
 
         /***************************************************/
-        /**** Private  Fields                           ****/
-        /***************************************************/
 
-        private ComAuto m_gsa;
+        public List<string> ErrorLog { get; set; }
+
 
         /***************************************************/
         /**** Constructors                              ****/
@@ -45,91 +51,53 @@ namespace BH.Adapter.GSA
                 result = m_gsa.NewFile();
         }
 
+
         /***************************************************/
-        /**** Public  properties                        ****/
+        /**** Private  Methods - Com Interop            ****/
         /***************************************************/
 
-        public const string ID = "GSA_id";
-
-        public string AdapterId
+        private bool ComCall(string str)
         {
-            get { return ID; }
+            dynamic commandResult = m_gsa.GwaCommand(str);
+
+            if (1 == (int)commandResult)
+                return true;
+            else
+            {
+                ErrorLog.Add("Failure calling the command: " + str);
+                return false;
+            }
         }
 
         /***************************************************/
 
-        public List<string> ErrorLog
+        private T ReturnComCall<T>(string str)
         {
-            get;
-            set;
-        }
+            dynamic commandResult = m_gsa.GwaCommand(str);
 
+            T returnVar = (T)commandResult;
 
-        /***************************************************/
-        /**** Public  Methods                           ****/
-        /***************************************************/
-
-        public bool Execute(string command, Dictionary<string, object> parameters = null, Dictionary<string, string> config = null)
-        {
-            return ComCall(command);
-        }
-
-        /***************************************************/
-
-        public List<string> GetBars(out List<Bar> bars, List<string> ids = null)
-        {
-            return FromGsa(out bars, ids);
+            if (returnVar != null)
+                return returnVar;
+            else
+            {
+                ErrorLog.Add("Failure calling the command: " + str);
+                return default(T);
+            }
         }
 
         /***************************************************/
 
-        public List<string> GetMaterials(out List<Material> materials, List<string> ids = null)
+        private void UpdateViews()
         {
-            return FromGsa(out materials, ids);
+            m_gsa.UpdateViews();
         }
 
-        /***************************************************/
-
-        public List<string> GetNodes(out List<Node> nodes, List<string> ids = null)
-        {
-            return FromGsa(out nodes, ids);
-        }
 
         /***************************************************/
-
-        public List<string> GetSectionProperties(out List<SectionProperty> sectionProperties, List<string> ids = null)
-        {
-            return FromGsa(out sectionProperties, ids);
-        }
-
+        /**** Private  Fields                           ****/
         /***************************************************/
 
-        public IList Pull(IEnumerable<IQuery> query, Dictionary<string, string> config = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        /***************************************************/
-
-        public bool Push(IEnumerable<object> objects, string key = "", Dictionary<string, string> config = null)
-        {
-            return StructuralPush.PushByType(this, objects, key, config);
-        }
-
-        /***************************************************/
-
-        public int Update(FilterQuery filter, Dictionary<string, object> changes, Dictionary<string, string> config = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        /***************************************************/
-
-        public bool UpdateTags(IEnumerable<object> objects)
-        {
-            return CreateObjects(objects);
-        }
-
-        /***************************************************/
+        private ComAuto m_gsa;
     }
 }

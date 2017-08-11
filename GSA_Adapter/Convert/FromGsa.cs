@@ -14,7 +14,8 @@ namespace BH.Adapter.GSA
     public partial class Convert
     {
         /***************************************/
-        public static List<Bar> GetBHoMBars(IEnumerable<GsaElement> gsaElements, Dictionary<string, SectionProperty> secProps, Dictionary<string, Node> nodes)
+
+        public static List<Bar> FromGsaBars(IEnumerable<GsaElement> gsaElements, Dictionary<string, SectionProperty> secProps, Dictionary<string, Node> nodes)
         {
             List<Bar> barList = new List<Bar>();
 
@@ -70,7 +71,8 @@ namespace BH.Adapter.GSA
         }
 
         /***************************************/
-        public static Material GetMaterialFromGsaString(string gsaString)
+
+        public static Material FromGsaMaterial(string gsaString)
         {
             if (string.IsNullOrWhiteSpace(gsaString))
                 return null;
@@ -107,6 +109,8 @@ namespace BH.Adapter.GSA
             return mat;
         }
 
+        /***************************************/
+
         /// <summary>Creates a BHoM section from a gsa string</summary>
         /// <param name="gsaString">
         /// <summary>
@@ -118,7 +122,7 @@ namespace BH.Adapter.GSA
         /// </param>
         /// <param name="materials"></param>
         /// <returns></returns>
-        public static SectionProperty GetSectionFromGsaString(string gsaString, Dictionary<string, Material> materials)
+        public static SectionProperty FromGsaSectionProperty(string gsaString, Dictionary<string, Material> materials)
         {
             SectionProperty secProp = null;
 
@@ -244,7 +248,7 @@ namespace BH.Adapter.GSA
 
         /***************************************/
 
-        public static Node ToBHoMNode(GsaNode gn)
+        public static Node FromGsaNode(GsaNode gn)
         {
 
             string name;
