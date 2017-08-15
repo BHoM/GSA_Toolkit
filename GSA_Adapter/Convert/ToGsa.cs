@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BH.oM.Structural.Elements;
 using BH.oM.Materials;
 using BH.oM.Structural.Properties;
+using BH.Adapter.Strutural;
 
 namespace BH.Adapter.GSA
 {

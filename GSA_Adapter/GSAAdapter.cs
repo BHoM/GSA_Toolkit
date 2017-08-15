@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BH.Adapter.Interfaces;
+using BH.Adapter.Structural;
 using BH.Adapter.Queries;
 using BH.oM.Materials;
 using BH.oM.Structural.Elements;

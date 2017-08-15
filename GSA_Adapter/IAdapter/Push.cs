@@ -7,6 +7,7 @@ using BH.oM.Structural.Elements;
 using BH.oM.Materials;
 using BH.oM.Structural.Properties;
 using BH.Adapter.Queries;
+using BH.Adapter.Strutural;
 
 namespace BH.Adapter.GSA
 {
@@ -16,9 +17,9 @@ namespace BH.Adapter.GSA
         /**** IAdapter Interface                        ****/
         /***************************************************/
 
-        public bool Push(IEnumerable<object> objects, string key = "", Dictionary<string, string> config = null)
+        public bool Push(IEnumerable<object> objects, string tag = "", Dictionary<string, string> config = null)
         {
-            return StructuralPusher.PushByType(this, objects, key, config);
+            return StructuralPusher.PushByType(this, objects, tag, config);
         }
 
 
