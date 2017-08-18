@@ -9,6 +9,8 @@ using BH.oM.Materials;
 using BH.oM.Structural.Properties;
 using Interop.gsa_8_7;
 using BH.Adapter.Queries;
+using BH.oM.Base;
+using System.Reflection;
 
 namespace BH.Adapter.GSA
 {
@@ -18,24 +20,38 @@ namespace BH.Adapter.GSA
         /**** IAdapter Interface                        ****/
         /***************************************************/
 
-        public IList Pull(IEnumerable<IQuery> query, Dictionary<string, string> config = null) //TODO: Need to handle tags as well
+        public IEnumerable<object> Pull(IEnumerable<IQuery> query, Dictionary<string, string> config = null)
         {
+            // Make sure there is at least one query
             if (query.Count() == 0)
                 return new List<object>();
 
+            // Make sure this is a FilterQuery
             FilterQuery filter = query.First() as FilterQuery;
             if (filter == null)
                 return new List<object>();
 
-            List<string> indices = null;
-            if (filter.Equalities.ContainsKey("Indices"))
-                indices = (List<string>)filter.Equalities["Indices"];
-            else
-            {
-                //indices = getFromTag();
-            }
 
-            //TODO: Need to find a better place for the pullMethodss dictionary
+            MethodInfo method = typeof(Merge).GetMethod("Pull");
+            MethodInfo generic = method.MakeGenericMethod(new Type[] { filter.Type });
+            return (IEnumerable<object>) generic.Invoke(null, new object[] { query, config });
+
+        }
+
+        /***************************************************/
+
+        public IEnumerable<T> Pull<T>(IEnumerable<IQuery> query, Dictionary<string, string> config = null) where T: BHoMObject //TODO: Need to handle tags as well
+        {
+            // Make sure there is at least one query
+            if (query.Count() == 0)
+                return new List<T>();
+
+            // Make sure this is a FilterQuery
+            FilterQuery filter = query.First() as FilterQuery;
+            if (filter == null)
+                return new List<T>();
+
+            // Define the dictionary of Pull methods
             Dictionary<Type, Func<List<string>, IList>> m_PullMethods = new Dictionary<Type, Func<List<string>, IList>>()
             {
                 {typeof(Material), PullMaterials },
@@ -44,15 +60,55 @@ namespace BH.Adapter.GSA
                 {typeof(Bar), PullBars }
             };
 
-            if (m_PullMethods.ContainsKey(filter.Type))
-                return m_PullMethods[filter.Type](indices);
-            else
-                return new List<object>();
-        }
+            // Get the indices if any
+            List<string> indices = null;
+            if (filter.Equalities.ContainsKey("Indices"))
+                indices = (List<string>)filter.Equalities["Indices"];
 
+            // Get the objects based on the indices
+            IEnumerable<T> fromIndices; 
+            if (m_PullMethods.ContainsKey(filter.Type))
+                fromIndices = m_PullMethods[filter.Type](indices).Cast<T>();
+            else
+                fromIndices = new List<T>();
+
+            // Filter by tag if any 
+            IEnumerable<T> fromTag;
+            if (filter.Tag == "")
+                fromTag = fromIndices;
+            else
+                fromTag = fromIndices.Where(x => x.Tags.Contains(filter.Tag));
+
+            return fromTag;
+        }
 
         /***************************************************/
         /**** Public  Methods                           ****/
+        /***************************************************/
+
+        public List<T> Pull<T>(string tag = "", List<string> indices = null) where T : BHoMObject
+        {
+            Dictionary<Type, Func<List<string>, IList>> m_PullMethods = new Dictionary<Type, Func<List<string>, IList>>()
+            {
+                {typeof(Material), PullMaterials },
+                {typeof(SectionProperty), PullSectionProperties },
+                {typeof(Node), PullNodes },
+                {typeof(Bar), PullBars }
+            };
+
+            Type type = typeof(T);
+
+            if (m_PullMethods.ContainsKey(type))
+            {
+                if (tag == "")
+                    return m_PullMethods[type](indices).Cast<T>().ToList();
+                else
+                    return m_PullMethods[type](indices).Cast<T>().Where(x => x.Tags.Contains(tag)).ToList();
+            }  
+            else
+                return new List<T>();
+        }
+
         /***************************************************/
 
         public List<Material> PullMaterials(List<string> ids = null)
@@ -62,7 +118,7 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        public List<Material> PullMaterials(List<string> ids = null, bool includeStandard = false) 
+        public List<Material> PullMaterials(List<string> ids = null, bool includeStandard = false)
         {
             List<Material> materials = new List<Material>();
 
@@ -81,10 +137,10 @@ namespace BH.Adapter.GSA
 
         /***************************************/
 
-        public List<Bar> PullBars(List<string> ids = null) 
+        public List<Bar> PullBars(List<string> ids = null)
         {
 
-            int[] potentialBeamRefs = GeneratePotentialElementIndices(ids);
+            int[] potentialBeamRefs = GenerateIndices(ids, typeof(Bar));
 
             GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
             m_gsa.Elements(potentialBeamRefs, out gsaElements);
@@ -100,18 +156,18 @@ namespace BH.Adapter.GSA
 
         /***************************************/
 
-        public List<Node> PullNodes(List<string> ids = null)  
+        public List<Node> PullNodes(List<string> ids = null)
         {
 
             GsaNode[] gsaNodes;
-            m_gsa.Nodes(GeneratePotentialNodeIdIndices(ids), out gsaNodes);
+            m_gsa.Nodes(GenerateIndices(ids, typeof(Node)), out gsaNodes);
 
             return gsaNodes.Select(x => Convert.FromGsaNode(x)).ToList();
         }
 
         /***************************************/
 
-        public List<SectionProperty> PullSectionProperties( List<string> ids = null)
+        public List<SectionProperty> PullSectionProperties(List<string> ids = null)
         {
             List<Material> matList = PullMaterials(null, true);
             Dictionary<string, Material> materials = matList.ToDictionary(x => x.CustomData[GSAAdapter.ID].ToString());
@@ -130,29 +186,11 @@ namespace BH.Adapter.GSA
         /**** Private  Methods                          ****/
         /***************************************************/
 
-        private int[] GeneratePotentialElementIndices(List<string> barNumbers)
-        {
-            if (barNumbers == null)
-            {
-                int maxIndex = m_gsa.GwaCommand("HIGHEST, EL");
-                maxIndex = maxIndex > 0 ? maxIndex : 1;
-                int[] potentialBeamRefs = new int[maxIndex];
-                for (int i = 0; i < maxIndex; i++)
-                    potentialBeamRefs[i] = i + 1;
-
-                return potentialBeamRefs;
-            }
-
-            return barNumbers.Select(x => int.Parse(x)).ToArray();
-        }
-
-        /********************************************/
-
-        private int[] GeneratePotentialNodeIdIndices(List<string> ids)
+        private int[] GenerateIndices(List<string> ids, Type elementType)
         {
             if (ids == null)
             {
-                int maxIndex = m_gsa.GwaCommand("HIGHEST, NODE");
+                int maxIndex = m_gsa.GwaCommand("HIGHEST, " + elementType.ToGsaString());
                 maxIndex = maxIndex > 0 ? maxIndex : 1;
                 int[] potentialBeamRefs = new int[maxIndex];
                 for (int i = 0; i < maxIndex; i++)
@@ -168,22 +206,19 @@ namespace BH.Adapter.GSA
 
         private static List<Material> GetStandardGsaMaterials()
         {
+            // TODO: What about the other materials in MaterialType enum? Shouldn't they match?
+            List<string> names = new List<string> { "STEEL", "CONC_SHORT", "CONC_LONG", "ALUMINIUM", "GLASS" };
+
             List<Material> materials = new List<Material>();
-            AddStandardGsaMaterial(ref materials, "STEEL");
-            AddStandardGsaMaterial(ref materials, "CONC_SHORT");
-            AddStandardGsaMaterial(ref materials, "CONC_LONG");
-            AddStandardGsaMaterial(ref materials, "ALUMINIUM");
-            AddStandardGsaMaterial(ref materials, "GLASS");
+            foreach (string name in names)
+            {
+                Material mat = new Material("GSA Standard " + name);
+                mat.CustomData.Add(GSAAdapter.ID, name);
+                materials.Add(mat);
+            }
+
             return materials;
         }
 
-        /***************************************/
-
-        private static void AddStandardGsaMaterial(ref List<Material> materials, string name)
-        {
-            Material mat = new Material("GSA Standard " + name);
-            mat.CustomData.Add(GSAAdapter.ID, name);
-            materials.Add(mat);
-        }
     }
 }

@@ -8,6 +8,7 @@ using BH.oM.Materials;
 using BH.oM.Structural.Properties;
 using BH.Adapter.Queries;
 using BH.Adapter.Strutural;
+using System.Collections;
 
 namespace BH.Adapter.GSA
 {
