@@ -7,6 +7,7 @@ using BH.oM.Structural.Elements;
 using BH.oM.Materials;
 using BH.oM.Structural.Properties;
 using BH.Adapter.Queries;
+using BH.oM.Base;
 
 namespace BH.Adapter.GSA
 {
@@ -42,10 +43,10 @@ namespace BH.Adapter.GSA
             else
             {
                 int successful = 0;
-                foreach (string range in GetRanges(type,indices))
+                foreach (Tuple<int, int> range in GetRanges(type,indices))
                 {
-                    if (ComCall("BLANK," + typeString + "," + range))
-                        successful++;
+                    if (ComCall("BLANK," + typeString + "," + range.Item1 + "," + range.Item2))
+                        successful += (range.Item2 - range.Item1 + 1); // TODO: Check that this is correct for Gsa
                 }
 
                 return successful;
@@ -66,7 +67,31 @@ namespace BH.Adapter.GSA
             }
             else
             {
-                throw new NotImplementedException();  // TODO: implement deltion of objects with a specific tag 
+                if (tag == "")
+                {
+                    // Delete them all
+                    int maxIndex = m_gsa.GwaCommand("HIGHEST, " + typeString);
+                    if (ComCall("BLANK," + typeString + "," + 0 + "," + maxIndex))
+                        return (maxIndex + 1); // TODO: Check that this is correct for Gsa
+                    else
+                        return 0;
+                }
+                else
+                {
+                    // Delete all with tag
+                    IEnumerable<BHoMObject> withTag = Pull<BHoMObject>(new List<IQuery> { new FilterQuery(type, tag) });
+
+                    // Delete all with that tag only
+                    List<int> indices = withTag.Where(x => x.Tags.Count == 1).Select(x => (int)x.CustomData[GSAAdapter.ID]).OrderBy(x => x).ToList();
+                    Delete(type, indices);
+
+                    // Remove tag if other tags as well
+                    IEnumerable<BHoMObject> multiTags = withTag.Where(x => x.Tags.Count > 1);
+                    UpdateTags(multiTags);
+
+                    return indices.Count;
+                }    
+                    
             }
         }
 
@@ -74,14 +99,12 @@ namespace BH.Adapter.GSA
         /**** Private  Methods                          ****/
         /***************************************************/
 
-        private List<string> GetRanges(Type type, List<int> indices)
+        private List<Tuple<int, int>> GetRanges(Type type, List<int> indices)
         {
-            List<string> ranges = new List<string>();
+            List<Tuple<int, int>> ranges = new List<Tuple<int, int>>();
             if (indices == null || indices.Count < 1)
             {
-                return new List<string>();
-                //string str = "1," + Indexing.GetHighIndex(type, adapter);
-                //ranges.Add(str);
+                return new List<Tuple<int, int>>();
             }
             else
             {
@@ -94,14 +117,12 @@ namespace BH.Adapter.GSA
                         continue;
                     else
                     {
-                        ranges.Add(first + "," + indices[i]);
+                        ranges.Add(new Tuple<int, int>(first, indices[i]));
                         first = indices[i + 1];
                     }
-
                 }
 
-                ranges.Add(first + "," + indices.Last());
-
+                ranges.Add(new Tuple<int, int>(first, indices.Last()));
             }
 
             return ranges;
