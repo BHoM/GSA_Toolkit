@@ -15,7 +15,7 @@ using Interop.gsa_8_7;
 
 namespace BH.Adapter.GSA
 {
-    public partial class GSAAdapter : IAdapter, IStructuralAdapter, INodeAdapter, IBarAdapter
+    public partial class GSAAdapter : IAdapter, IIndexAdapter//IStructuralAdapter, INodeAdapter, IBarAdapter
     {
         /***************************************************/
         /**** Public  properties                        ****/

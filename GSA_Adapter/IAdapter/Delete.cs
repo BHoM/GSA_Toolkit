@@ -21,7 +21,7 @@ namespace BH.Adapter.GSA
         {
             List<string> indices = (List<string>)filter.Equalities["Indices"];
 
-            if (indices != null && indices.Count > 0)
+            if (indices != null /*&& indices.Count > 0*/)
                 return Delete(filter.Type, indices.Select(x => int.Parse(x)).ToList());
             else
                 return Delete(filter.Type, filter.Tag);

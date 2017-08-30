@@ -47,6 +47,9 @@
     <Reference Include="Structural_Adapter">
       <HintPath>..\..\BHoM_Adapter\Build\Structural_Adapter.dll</HintPath>
     </Reference>
+    <Reference Include="Structure_Engine">
+      <HintPath>..\..\BHoM_Engine\Build\Structure_Engine.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

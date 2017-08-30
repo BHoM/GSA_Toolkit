@@ -20,7 +20,8 @@ namespace BH.Adapter.GSA
 
         public bool Push(IEnumerable<object> objects, string tag = "", Dictionary<string, string> config = null)
         {
-            return StructuralPusher.PushByType(this, objects, tag, config);
+            return this.PushByType(objects, tag, config);
+            //return BH.Adapter.Push.PushByType(this, objects, tag, config);
         }
 
 
