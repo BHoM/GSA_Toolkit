@@ -32,9 +32,18 @@ namespace BH.Adapter.GSA
                 return new List<object>();
 
 
-            MethodInfo method = typeof(Merge).GetMethod("Pull");
+            var method = typeof(GSAAdapter)
+              .GetMethods()
+              .Single(m => m.Name == "Pull" && m.IsGenericMethodDefinition && m.GetParameters().First().ParameterType == typeof(IEnumerable<IQuery>));
+
             MethodInfo generic = method.MakeGenericMethod(new Type[] { filter.Type });
-            return (IEnumerable<object>) generic.Invoke(null, new object[] { query, config });
+
+            return (IEnumerable<object>)generic.Invoke(this, new object[] { query, config });
+
+
+            //MethodInfo method = typeof(GSAAdapter).GetMethod("Pull");
+            //MethodInfo generic = method.MakeGenericMethod(new Type[] { filter.Type });
+            //return (IEnumerable<object>) generic.Invoke(null, new object[] { query, config });
 
         }
 
