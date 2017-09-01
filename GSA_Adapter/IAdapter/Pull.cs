@@ -20,7 +20,7 @@ namespace BH.Adapter.GSA
         /**** IAdapter Interface                        ****/
         /***************************************************/
 
-        public IEnumerable<object> Pull(IEnumerable<IQuery> query, Dictionary<string, string> config = null)
+        public override IEnumerable<object> Pull(IEnumerable<IQuery> query, Dictionary<string, string> config = null)
         {
             // Make sure there is at least one query
             if (query.Count() == 0)
@@ -71,8 +71,8 @@ namespace BH.Adapter.GSA
 
             // Get the indices if any
             List<string> indices = null;
-            if (filter.Equalities.ContainsKey("Indices"))
-                indices = (List<string>)filter.Equalities["Indices"];
+            if (filter.Equalities.ContainsKey(AdapterId))
+                indices = (List<string>)filter.Equalities[AdapterId];
 
             // Get the objects based on the indices
             IEnumerable<T> fromIndices; 
@@ -157,8 +157,8 @@ namespace BH.Adapter.GSA
             List<SectionProperty> secPropList = PullSectionProperties();
             List<Node> nodeList = PullNodes();
 
-            Dictionary<string, SectionProperty> secProps = secPropList.ToDictionary(x => x.CustomData[GSAAdapter.ID].ToString());
-            Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.CustomData[GSAAdapter.ID].ToString());
+            Dictionary<string, SectionProperty> secProps = secPropList.ToDictionary(x => x.CustomData[AdapterId].ToString());
+            Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.CustomData[AdapterId].ToString());
 
             return Convert.FromGsaBars(gsaElements, secProps, nodes);
         }
@@ -179,7 +179,7 @@ namespace BH.Adapter.GSA
         public List<SectionProperty> PullSectionProperties(List<string> ids = null)
         {
             List<Material> matList = PullMaterials(null, true);
-            Dictionary<string, Material> materials = matList.ToDictionary(x => x.CustomData[GSAAdapter.ID].ToString());
+            Dictionary<string, Material> materials = matList.ToDictionary(x => x.CustomData[AdapterId].ToString());
 
             string allProps = m_gsa.GwaCommand("GET_ALL, PROP_SEC").ToString();
             string[] proArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
@@ -213,7 +213,7 @@ namespace BH.Adapter.GSA
 
         /***************************************/
 
-        private static List<Material> GetStandardGsaMaterials()
+        private List<Material> GetStandardGsaMaterials()
         {
             // TODO: What about the other materials in MaterialType enum? Shouldn't they match?
             List<string> names = new List<string> { "STEEL", "CONC_SHORT", "CONC_LONG", "ALUMINIUM", "GLASS" };
@@ -222,7 +222,7 @@ namespace BH.Adapter.GSA
             foreach (string name in names)
             {
                 Material mat = new Material("GSA Standard " + name);
-                mat.CustomData.Add(GSAAdapter.ID, name);
+                mat.CustomData.Add(AdapterId, name);
                 materials.Add(mat);
             }
 

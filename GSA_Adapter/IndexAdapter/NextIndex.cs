@@ -9,10 +9,10 @@ namespace BH.Adapter.GSA
     public partial class GSAAdapter
     {
         /***************************************************/
-        /**** IStructuralAdapter Interface              ****/
+        /**** Index Adapter Interface                   ****/
         /***************************************************/
 
-        public object GetNextIndex(Type type, bool refresh)
+        protected override object GetNextIndex(Type type, bool refresh)
         {
             string typeString = type.ToGsaString();
 

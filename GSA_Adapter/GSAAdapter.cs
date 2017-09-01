@@ -15,19 +15,13 @@ using Interop.gsa_8_7;
 
 namespace BH.Adapter.GSA
 {
-    public partial class GSAAdapter : IAdapter, IIndexAdapter//IStructuralAdapter, INodeAdapter, IBarAdapter
+    public partial class GSAAdapter : IndexAdapter//IStructuralAdapter, INodeAdapter, IBarAdapter
     {
         /***************************************************/
-        /**** Public  properties                        ****/
+        /**** Public static fields                      ****/
         /***************************************************/
 
         public const string ID = "GSA_id";
-
-        public string AdapterId { get { return ID; } } //TODO: not too sure about this name
-
-        /***************************************************/
-
-        public List<string> ErrorLog { get; set; }
 
 
         /***************************************************/
@@ -36,8 +30,9 @@ namespace BH.Adapter.GSA
 
         public GSAAdapter()
         {
+            AdapterId = ID;
+
             m_gsa = new ComAuto();
-            ErrorLog = new List<string>();
         }
 
         /***************************************************/
