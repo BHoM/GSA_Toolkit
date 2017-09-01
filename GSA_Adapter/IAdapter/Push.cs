@@ -14,26 +14,38 @@ namespace BH.Adapter.GSA
 {
     public partial class GSAAdapter
     {
-        /***************************************************/
-        /**** IAdapter Interface                        ****/
-        /***************************************************/
-
-        public bool Push(IEnumerable<object> objects, string tag = "", Dictionary<string, string> config = null)
+        protected bool PushType(List<Bar> objectsToPush, string tag = "", bool applyMerge = true)
         {
-            return this.PushByType(objects, tag, config);
-            //return BH.Adapter.Push.PushByType(this, objects, tag, config);
+            IEqualityComparer<Bar> comparer = EqualityComparer<Bar>.Default;
+            List<Type> dependencyTypes = new List<Type> { typeof(SectionProperty), typeof(Node) };
+            return PushType(objectsToPush, comparer, dependencyTypes, tag, applyMerge);
         }
 
-
-        /***************************************************/
-        /**** Public  Methods                           ****/
         /***************************************************/
 
+        protected bool PushType(List<Node> objectsToPush, string tag = "", bool applyMerge = true)
+        {
+            IEqualityComparer<Node> comparer = new BH.Engine.Structure.NodeDistanceComparer(3);
+            List<Type> dependencyTypes = new List<Type>();
+            return PushType(objectsToPush, comparer, dependencyTypes, tag, applyMerge);
+        }
 
         /***************************************************/
-        /**** Private  Methods                          ****/
+
+        protected bool PushType(List<SectionProperty> objectsToPush, string tag = "", bool applyMerge = true)
+        {
+            IEqualityComparer<SectionProperty> comparer = new BH.Engine.Base.BHoMObjectNameOrToStringComparer();
+            List<Type> dependencyTypes = new List<Type> { typeof(Material) };
+            return PushType(objectsToPush, comparer, dependencyTypes, tag, applyMerge);
+        }
+
         /***************************************************/
 
-        
+        protected bool PushType(List<Material> objectsToPush, string tag = "", bool applyMerge = true)
+        {
+            IEqualityComparer<Material> comparer = new BH.Engine.Base.BHoMObjectNameComparer();
+            List<Type> dependencyTypes = new List<Type>();
+            return PushType(objectsToPush, comparer, dependencyTypes, tag, applyMerge);
+        }
     }
 }
