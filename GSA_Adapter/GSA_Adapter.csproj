@@ -61,9 +61,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IAdapter\Execute.cs" />
-    <Compile Include="BHoMAdapter\PushType.cs" />
-    <Compile Include="BHoMAdapter\Read.cs" />
-    <Compile Include="BHoMAdapter\UpdateTags.cs" />
+    <Compile Include="IndexAdapter\DependencyTypes.cs" />
+    <Compile Include="IndexAdapter\Comparer.cs" />
+    <Compile Include="IndexAdapter\UpdateTags.cs" />
     <Compile Include="IndexAdapter\Delete.cs" />
     <Compile Include="IndexAdapter\NextIndex.cs" />
     <Compile Include="Convert\FromGsa.cs" />
@@ -72,12 +72,10 @@
     <Compile Include="Convert\Private Helpers\Material.cs" />
     <Compile Include="Convert\Private Helpers\Node.cs" />
     <Compile Include="Convert\Private Helpers\SectionProperty.cs" />
-    <Compile Include="BHoMAdapter\Create.cs" />
-    <Compile Include="BHoMAdapter\Delete.cs" />
+    <Compile Include="IndexAdapter\Create.cs" />
     <Compile Include="GSAAdapter.cs" />
     <Compile Include="IndexAdapter\Read.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="IAdapter\Pull.cs" />
     <Compile Include="Utilities\GsaEnums.cs" />
   </ItemGroup>
   <ItemGroup />

@@ -26,6 +26,15 @@ namespace BH.Adapter.GSA
                 ErrorLog.Add("Delete failed due to wrong type");
                 return 0;
             }
+            else if (indices == null)
+            {
+                // Delete them all
+                int maxIndex = m_gsa.GwaCommand("HIGHEST, " + typeString);
+                if (ComCall("BLANK," + typeString + "," + 0 + "," + maxIndex))
+                    return (maxIndex + 1); // TODO: Check that this is correct for Gsa
+                else
+                    return 0;
+            }
             else
             {
                 int successful = 0;
