@@ -17,9 +17,16 @@ namespace BH.Adapter.GSA
         /**** BHoM Adapter Methods                      ****/
         /***************************************************/
 
-        protected override IEnumerable<object> Read(Type type, string tag = "")
+        protected override IEnumerable<BHoMObject> Read(Type type, string tag = "")
         {
-            return new List<object>(); // TODO: Implement this
+            // Get the objects based on the indices
+            IEnumerable<BHoMObject> fromIndices = Read(type, null);
+
+            // Filter by tag if any 
+            if (tag == "")
+                return fromIndices;
+            else
+                return fromIndices.Where(x => x.Tags.Contains(tag));
         }
 
         
