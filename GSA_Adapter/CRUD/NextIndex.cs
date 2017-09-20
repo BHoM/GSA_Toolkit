@@ -12,7 +12,7 @@ namespace BH.Adapter.GSA
         /**** Index Adapter Interface                   ****/
         /***************************************************/
 
-        protected override object GetNextIndex(Type type, bool refresh)
+        protected override object GetNextId(Type type, bool refresh)
         {
             string typeString = type.ToGsaString();
 

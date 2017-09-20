@@ -15,12 +15,16 @@ namespace BH.Adapter.GSA
         /**** Index Adapter Interface                   ****/
         /***************************************************/
 
-        protected override bool Create(IEnumerable<object> objects)
+        protected override bool Create<T>(IEnumerable<T> objects, bool replaceAll = false)
         {
             bool success = true;
-            foreach (BH.oM.Base.BHoMObject obj in objects)
+
+            if (typeof(T).IsAssignableFrom(typeof(BH.oM.Base.BHoMObject)))
             {
-                success &= ComCall(Convert.ToGsaString(obj, obj.CustomData[AdapterId].ToString()));
+                foreach (T obj in objects)
+                {
+                    success &= ComCall(Convert.ToGsaString(obj, (obj as BH.oM.Base.BHoMObject).CustomData[AdapterId].ToString()));
+                }
             }
             UpdateViews();
             return success;
