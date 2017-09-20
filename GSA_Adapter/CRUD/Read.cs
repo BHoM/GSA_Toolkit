@@ -18,7 +18,7 @@ namespace BH.Adapter.GSA
         /**** Index Adapter Methods                     ****/
         /***************************************************/
 
-        protected override IEnumerable<BHoMObject> Read(Type type, List<string> indices)
+        protected override IEnumerable<BHoMObject> Read(Type type, List<object> indices)
         {
             // Define the dictionary of Read methods
             if (m_ReadMethods == null)
@@ -34,7 +34,7 @@ namespace BH.Adapter.GSA
             
             // Get the objects based on the indices
             if (m_ReadMethods.ContainsKey(type))
-                return m_ReadMethods[type](indices).Cast<BHoMObject>();
+                return m_ReadMethods[type](indices as dynamic).Cast<BHoMObject>();
             else
                 return new List<BHoMObject>();
         }

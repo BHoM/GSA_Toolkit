@@ -12,12 +12,12 @@ using BH.oM.Base;
 namespace BH.Adapter.GSA
 {
     public partial class GSAAdapter
-    {
+    { 
         /***************************************************/
         /**** Index Adapter Methods                     ****/
         /***************************************************/
 
-        protected override int Delete(Type type, List<int> indices = null)
+        protected override int Delete(Type type, IEnumerable<object> indices)
         {
             string typeString = type.ToGsaString();
 
@@ -38,7 +38,7 @@ namespace BH.Adapter.GSA
             else
             {
                 int successful = 0;
-                foreach (Tuple<int, int> range in GetRanges(type, indices))
+                foreach (Tuple<int, int> range in GetRanges(type, indices as dynamic))
                 {
                     if (ComCall("BLANK," + typeString + "," + range.Item1 + "," + range.Item2))
                         successful += (range.Item2 - range.Item1 + 1); // TODO: Check that this is correct for Gsa

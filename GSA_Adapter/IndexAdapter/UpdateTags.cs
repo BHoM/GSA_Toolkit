@@ -12,10 +12,10 @@ namespace BH.Adapter.GSA
         /**** IStructuralAdapter Interface              ****/
         /***************************************************/
 
-        protected override bool UpdateTags(IEnumerable<object> objects)
-        {
-            return Create(objects);
-        }
+        //protected override bool UpdateTags(IEnumerable<object> objects)
+        //{
+        //    return Create(objects);
+        //}
 
     }
 }
