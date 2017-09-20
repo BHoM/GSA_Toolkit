@@ -64,8 +64,8 @@
     <Compile Include="IndexAdapter\DependencyTypes.cs" />
     <Compile Include="IndexAdapter\Comparer.cs" />
     <Compile Include="IndexAdapter\UpdateTags.cs" />
-    <Compile Include="IndexAdapter\Delete.cs" />
-    <Compile Include="IndexAdapter\NextIndex.cs" />
+    <Compile Include="CRUD\Delete.cs" />
+    <Compile Include="CRUD\NextIndex.cs" />
     <Compile Include="Convert\FromGsa.cs" />
     <Compile Include="Convert\ToGsa.cs" />
     <Compile Include="Convert\Private Helpers\Bar.cs" />
