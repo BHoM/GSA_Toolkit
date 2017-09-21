@@ -8,7 +8,7 @@ using BH.oM.Materials;
 using BH.oM.Structural.Properties;
 using BH.oM.Geometry;
 using Interop.gsa_8_7;
-using BH.Adapter.Strutural;
+//using BH.Adapter.Strutural;
 
 namespace BH.Adapter.GSA
 {
