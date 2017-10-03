@@ -43,7 +43,7 @@ namespace BH.Adapter.GSA
                 }
 
                 string name;
-                HashSet<string> tags = gsaBar.Name.GetTagsFromString(out name);
+                HashSet<string> tags = gsaBar.Name.ToTagHashSet(out name);
 
                 Node n1, n2;
                 nodes.TryGetValue(gsaBar.Topo[0].ToString(), out n1);
@@ -98,7 +98,7 @@ namespace BH.Adapter.GSA
                 return null;
 
             string name;
-            HashSet<string> tags = gStr[3].GetTagsFromString(out name);
+            HashSet<string> tags = gStr[3].ToTagHashSet(out name);
 
             Material mat = new Material(name, type, E, v, tC, G, rho);
 
@@ -138,7 +138,7 @@ namespace BH.Adapter.GSA
             Int32.TryParse(gsaStrings[1], out id);
 
             string name;
-            HashSet<string> tags = gsaStrings[2].GetTagsFromString(out name);
+            HashSet<string> tags = gsaStrings[2].ToTagHashSet(out name);
 
             string materialId = gsaStrings[4];
             string description = gsaStrings[5];
@@ -252,7 +252,7 @@ namespace BH.Adapter.GSA
         {
 
             string name;
-            HashSet<string> tags = gn.Name.GetTagsFromString(out name);
+            HashSet<string> tags = gn.Name.ToTagHashSet(out name);
 
             Node node = new Node(new Point(gn.Coor[0], gn.Coor[1], gn.Coor[2]), name);
             node.Tags = tags;

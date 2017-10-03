@@ -45,7 +45,7 @@ namespace BH.Adapter.GSA
             string command = "MAT";
             string num = index;//(GSA.GwaCommand("HIGHEST, PROP_SEC") + 1).ToString();
             string mModel = "MAT_ELAS_ISO";
-            string name = material.GetNameAndTagString();
+            string name = material.GetTaggedName();
             string colour = "NO_RGB";
             string type = GetMaterialType(material).ToString();
             string E = material.YoungsModulus.ToString();
@@ -64,7 +64,7 @@ namespace BH.Adapter.GSA
         private static string _ToGsaString(this Bar bar, string index)
         {
             string command = "EL.2";
-            string name = bar.GetNameAndTagString();
+            string name = bar.GetTaggedName();
             string type = GetElementTypeString(bar);
 
             string sectionPropertyIndex = bar.SectionProperty.CustomData[GSAAdapter.ID].ToString();
@@ -88,7 +88,7 @@ namespace BH.Adapter.GSA
         private static string _ToGsaString(this Node node, string index)
         {
             string command = "NODE.2";
-            string name = node.GetNameAndTagString();
+            string name = node.GetTaggedName();
 
             string restraint = GetRestraintString(node);
 
@@ -100,7 +100,7 @@ namespace BH.Adapter.GSA
 
         private static string _ToGsaString(this SectionProperty prop, string index)
         {
-            string name = prop.GetNameAndTagString();
+            string name = prop.GetTaggedName();
 
             string mat = prop.Material.CustomData[GSAAdapter.ID].ToString();// materialId;  //"STEEL";// material.Name;
 
