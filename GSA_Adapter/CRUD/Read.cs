@@ -20,24 +20,6 @@ namespace BH.Adapter.GSA
 
         protected override IEnumerable<BHoMObject> Read(Type type, IList indices)
         {
-            //// Define the dictionary of Read methods
-            //if (m_ReadMethods == null)
-            //{
-            //    m_ReadMethods = new Dictionary<Type, Func<List<string>, IList>>()
-            //    {
-            //        {typeof(Material), ReadMaterials },
-            //        {typeof(SectionProperty), ReadSectionProperties },
-            //        {typeof(Node), ReadNodes },
-            //        {typeof(Bar), ReadBars }
-            //    };
-            //}
-            
-            //// Get the objects based on the indices
-            //if (m_ReadMethods.ContainsKey(type))
-            //    return m_ReadMethods[type](indices as dynamic).Cast<BHoMObject>();
-            //else
-            //    return new List<BHoMObject>();
-
             if(type == typeof(Node))
                 return ReadNodes(indices as dynamic);
             else if (type == typeof(Bar))
@@ -48,7 +30,6 @@ namespace BH.Adapter.GSA
                 return ReadMaterials(indices as dynamic);
 
             return null;
-
         }
 
 
@@ -67,7 +48,7 @@ namespace BH.Adapter.GSA
         {
             List<Material> materials = new List<Material>();
 
-            string allProps = m_gsa.GwaCommand("GET_ALL, MAT").ToString();
+            string allProps = gsaCom.GwaCommand("GET_ALL, MAT").ToString();
             string[] matArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
             if (ids == null)
                 materials = matArr.Select(x => Convert.FromGsaMaterial(x)).ToList();
@@ -88,7 +69,7 @@ namespace BH.Adapter.GSA
             int[] potentialBeamRefs = GenerateIndices(ids, typeof(Bar));
 
             GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
-            m_gsa.Elements(potentialBeamRefs, out gsaElements);
+            gsaCom.Elements(potentialBeamRefs, out gsaElements);
 
             List<SectionProperty> secPropList = ReadSectionProperties();
             List<Node> nodeList = ReadNodes();
@@ -105,7 +86,7 @@ namespace BH.Adapter.GSA
         {
 
             GsaNode[] gsaNodes;
-            m_gsa.Nodes(GenerateIndices(ids, typeof(Node)), out gsaNodes);
+            gsaCom.Nodes(GenerateIndices(ids, typeof(Node)), out gsaNodes);
 
             return gsaNodes.Select(x => Convert.FromGsaNode(x)).ToList();
         }
@@ -117,7 +98,7 @@ namespace BH.Adapter.GSA
             List<Material> matList = ReadMaterials(null, true);
             Dictionary<string, Material> materials = matList.ToDictionary(x => x.CustomData[AdapterId].ToString());
 
-            string allProps = m_gsa.GwaCommand("GET_ALL, PROP_SEC").ToString();
+            string allProps = gsaCom.GwaCommand("GET_ALL, PROP_SEC").ToString();
             string[] proArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
 
             if (ids == null)
@@ -135,7 +116,7 @@ namespace BH.Adapter.GSA
         {
             if (ids == null)
             {
-                int maxIndex = m_gsa.GwaCommand("HIGHEST, " + elementType.ToGsaString());
+                int maxIndex = gsaCom.GwaCommand("HIGHEST, " + elementType.ToGsaString());
                 maxIndex = maxIndex > 0 ? maxIndex : 1;
                 int[] potentialBeamRefs = new int[maxIndex];
                 for (int i = 0; i < maxIndex; i++)

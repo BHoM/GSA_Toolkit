@@ -20,19 +20,13 @@ namespace BH.Adapter.GSA
             Type type = typeof(T);
 
             if (m_DependencyTypes.ContainsKey(type))
-            {
                 return m_DependencyTypes[type];
-            }
+
             else if (m_DependencyTypes.ContainsKey(type.BaseType))
-            {
                 return m_DependencyTypes[type.BaseType];
-            }
-            else
-            {
-                
-               return new List<Type>();
-            }
-            
+
+            else 
+               return new List<Type>();         
         }
 
 

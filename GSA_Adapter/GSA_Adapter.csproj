@@ -58,9 +58,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CRUD\Execute.cs" />
-    <Compile Include="IndexAdapter\DependencyTypes.cs" />
-    <Compile Include="IndexAdapter\Comparer.cs" />
-    <Compile Include="IndexAdapter\UpdateTags.cs" />
+    <Compile Include="Queries\DependencyTypes.cs" />
+    <Compile Include="Queries\Comparer.cs" />
     <Compile Include="CRUD\Delete.cs" />
     <Compile Include="CRUD\NextIndex.cs" />
     <Compile Include="Convert\FromGsa.cs" />
