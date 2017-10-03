@@ -19,7 +19,7 @@ namespace BH.Adapter.GSA
         {
             bool success = true;
 
-            if (typeof(T).IsAssignableFrom(typeof(BH.oM.Base.BHoMObject)))
+            if (typeof(BH.oM.Base.BHoMObject).IsAssignableFrom(typeof(T)))
             {
                 foreach (T obj in objects)
                 {
