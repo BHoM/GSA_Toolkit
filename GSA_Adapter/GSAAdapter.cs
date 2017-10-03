@@ -30,8 +30,10 @@ namespace BH.Adapter.GSA
         public GSAAdapter()
         {
             AdapterId = ID;
-
             m_gsa = new ComAuto();
+            Config.SeparateProperties = true;
+            Config.MergeWithComparer = true;
+            Config.ProcessInMemory = true;
         }
 
         /***************************************************/

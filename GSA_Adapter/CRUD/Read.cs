@@ -18,25 +18,37 @@ namespace BH.Adapter.GSA
         /**** Index Adapter Methods                     ****/
         /***************************************************/
 
-        protected override IEnumerable<BHoMObject> Read(Type type, List<object> indices)
+        protected override IEnumerable<BHoMObject> Read(Type type, IList indices)
         {
-            // Define the dictionary of Read methods
-            if (m_ReadMethods == null)
-            {
-                m_ReadMethods = new Dictionary<Type, Func<List<string>, IList>>()
-                {
-                    {typeof(Material), ReadMaterials },
-                    {typeof(SectionProperty), ReadSectionProperties },
-                    {typeof(Node), ReadNodes },
-                    {typeof(Bar), ReadBars }
-                };
-            }
+            //// Define the dictionary of Read methods
+            //if (m_ReadMethods == null)
+            //{
+            //    m_ReadMethods = new Dictionary<Type, Func<List<string>, IList>>()
+            //    {
+            //        {typeof(Material), ReadMaterials },
+            //        {typeof(SectionProperty), ReadSectionProperties },
+            //        {typeof(Node), ReadNodes },
+            //        {typeof(Bar), ReadBars }
+            //    };
+            //}
             
-            // Get the objects based on the indices
-            if (m_ReadMethods.ContainsKey(type))
-                return m_ReadMethods[type](indices as dynamic).Cast<BHoMObject>();
-            else
-                return new List<BHoMObject>();
+            //// Get the objects based on the indices
+            //if (m_ReadMethods.ContainsKey(type))
+            //    return m_ReadMethods[type](indices as dynamic).Cast<BHoMObject>();
+            //else
+            //    return new List<BHoMObject>();
+
+            if(type == typeof(Node))
+                return ReadNodes(indices as dynamic);
+            else if (type == typeof(Bar))
+                return ReadBars(indices as dynamic);
+            else if (type == typeof(SectionProperty) || type.IsSubclassOf(typeof(SectionProperty)))
+                return ReadSectionProperties(indices as dynamic);
+            else if (type == typeof(Material))
+                return ReadMaterials(indices as dynamic);
+
+            return null;
+
         }
 
 

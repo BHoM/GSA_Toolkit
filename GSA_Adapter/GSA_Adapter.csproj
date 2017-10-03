@@ -73,11 +73,9 @@
     <Compile Include="GSAAdapter.cs" />
     <Compile Include="CRUD\Read.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utilities\GsaEnums.cs" />
+    <Compile Include="Convert\Private Helpers\GsaEnums.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="IAdapter\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

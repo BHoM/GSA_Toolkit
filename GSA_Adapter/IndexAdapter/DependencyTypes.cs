@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BH.Adapter.GSA
 {
-    public partial class GSAAdapter
+    public partial class GSAAdapter 
     {
         /***************************************************/
         /**** BHoM Adapter Interface                    ****/
@@ -23,9 +23,14 @@ namespace BH.Adapter.GSA
             {
                 return m_DependencyTypes[type];
             }
+            else if (m_DependencyTypes.ContainsKey(type.BaseType))
+            {
+                return m_DependencyTypes[type.BaseType];
+            }
             else
             {
-                return new List<Type>();
+                
+               return new List<Type>();
             }
             
         }
