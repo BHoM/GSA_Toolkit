@@ -14,7 +14,7 @@ using Interop.gsa_8_7;
 
 namespace BH.Adapter.GSA
 {
-    public partial class GSAAdapter : BHoMAdapter//IStructuralAdapter, INodeAdapter, IBarAdapter
+    public partial class GSAAdapter : BHoMAdapter
     {
         /***************************************************/
         /**** Public static fields                      ****/
@@ -30,7 +30,8 @@ namespace BH.Adapter.GSA
         public GSAAdapter()
         {
             AdapterId = ID;
-            m_gsa = new ComAuto();
+            gsaCom = new ComAuto();
+
             Config.SeparateProperties = true;
             Config.MergeWithComparer = true;
             Config.ProcessInMemory = true;
@@ -42,9 +43,9 @@ namespace BH.Adapter.GSA
         {
             short result;
             if (!string.IsNullOrWhiteSpace(filePath))
-                result = m_gsa.Open(filePath);
+                result = gsaCom.Open(filePath);
             else
-                result = m_gsa.NewFile();
+                result = gsaCom.NewFile();
         }
 
 
@@ -54,7 +55,7 @@ namespace BH.Adapter.GSA
 
         private bool ComCall(string str)
         {
-            dynamic commandResult = m_gsa.GwaCommand(str);
+            dynamic commandResult = gsaCom.GwaCommand(str);
 
             if (1 == (int)commandResult)
                 return true;
@@ -69,7 +70,7 @@ namespace BH.Adapter.GSA
 
         private T ReturnComCall<T>(string str)
         {
-            dynamic commandResult = m_gsa.GwaCommand(str);
+            dynamic commandResult = gsaCom.GwaCommand(str);
 
             T returnVar = (T)commandResult;
 
@@ -86,7 +87,7 @@ namespace BH.Adapter.GSA
 
         private void UpdateViews()
         {
-            m_gsa.UpdateViews();
+            gsaCom.UpdateViews();
         }
 
 
@@ -94,6 +95,6 @@ namespace BH.Adapter.GSA
         /**** Private  Fields                           ****/
         /***************************************************/
 
-        private ComAuto m_gsa;
+        private ComAuto gsaCom;
     }
 }
