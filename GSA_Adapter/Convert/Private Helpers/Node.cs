@@ -57,7 +57,7 @@ namespace BH.Adapter.GSA
                 fixities[i] = arr[i];
             }
 
-            return BH.Engine.Structure.Create.CreateNodeConstraint("", fixities, stiffnesses);
+            return BH.Engine.Structure.Create.NodeConstraint("", fixities, stiffnesses);
 
         }
     }
