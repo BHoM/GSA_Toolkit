@@ -65,8 +65,8 @@ namespace GSA_Test
             Point p7b = new Point(1, 1, 2);
             Point p8b = new Point(0, 1, 2);
 
-            NodeConstraint pin = BH.Engine.Structure.Create.CreatePinNodeConstraint();
-            NodeConstraint fix = BH.Engine.Structure.Create.CreateFixNodeConstraint();
+            NodeConstraint pin = BH.Engine.Structure.Create.PinNodeConstraint();
+            NodeConstraint fix = BH.Engine.Structure.Create.FixNodeConstraint();
 
             List<Node> nodesA = new List<Node>();
 
@@ -96,7 +96,7 @@ namespace GSA_Test
 
             n1b.Constraint = pin;
             n2b.Constraint = pin;
-            n3b.Constraint = BH.Engine.Structure.Create.CreateFullReleaseNodeConstraint();
+            n3b.Constraint = BH.Engine.Structure.Create.FullReleaseNodeConstraint();
             n4b.Constraint = fix;
 
             nodesB.Add(n1b);
