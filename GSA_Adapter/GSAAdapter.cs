@@ -34,7 +34,7 @@ namespace BH.Adapter.GSA
 
             Config.SeparateProperties = true;
             Config.MergeWithComparer = true;
-            Config.ProcessInMemory = true;
+            Config.ProcessInMemory = false;
         }
 
         /***************************************************/

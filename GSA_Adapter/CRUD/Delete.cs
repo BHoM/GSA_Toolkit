@@ -38,7 +38,7 @@ namespace BH.Adapter.GSA
             else
             {
                 int successful = 0;
-                foreach (Tuple<int, int> range in GetRanges(type, indices as dynamic))
+                foreach (Tuple<int, int> range in GetRanges(type, indices.Cast<int>().ToList()))
                 {
                     if (ComCall("BLANK," + typeString + "," + range.Item1 + "," + range.Item2))
                         successful += (range.Item2 - range.Item1 + 1); // TODO: Check that this is correct for Gsa
