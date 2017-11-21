@@ -13,7 +13,7 @@ namespace BH.Adapter.GSA
         /**** IAdapter Interface                        ****/
         /***************************************************/
 
-        public override bool Execute(string command, Dictionary<string, object> parameters = null, Dictionary<string, string> config = null)
+        public override bool Execute(string command, Dictionary<string, object> parameters = null, Dictionary<string, object> config = null)
         {
             return ComCall(command);
         }
