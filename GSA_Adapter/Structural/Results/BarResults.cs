@@ -16,6 +16,50 @@ namespace GSA_Adapter.Structural.Results
     public static class BarResults
     {
 
+        public static bool GetBarStrains(ComAuto gsa, BHoMBR.ResultServer<BHoMSR.BarStrains> resultServer, List<string> bars, List<string> cases)
+        {
+            string message = "";
+            List<BHoMSR.BarStrains> barForces = new List<BHoMSR.BarStrains>();
+            int counter = 0;
+
+            bars = CheckAndGetBars(gsa, bars);
+
+            cases = ResultUtilities.CheckAndGetAnalysisCases(gsa, cases);
+
+            double unitFactor = Utility.Utils.GetUnitFactor(gsa, GSAUtil.GsaEnums.UnitType.FORCE);
+
+            foreach (string ac in cases)
+            {
+
+                foreach (string b in bars)
+                {
+                    int idBar = Int32.Parse(b);
+                    List<double[]> beamResults;
+                    int idPos = 0; //not sure how to set position ID?
+                    if (GetBeamResults(gsa, idBar, ac, out beamResults, ResHeader.REF_STRAIN_EL1D, unitFactor, 1, GSAUtil.GsaEnums.Output_Axis.Local(), out message))
+                    {
+                        int divisions = beamResults.Count;
+                        foreach (double[] br in beamResults)
+                        {
+                            barForces.Add(new BHoMSR.BarStrains(b, ac, idPos, divisions, "1", br[1]));
+                            idPos++;
+                            counter++;
+                            if (counter % 1000000 == 0 && resultServer.CanStore)
+                            {
+                                resultServer.StoreData(barForces);
+                                barForces.Clear();
+                            }
+                        }
+                    
+                    }
+
+                }
+
+            }
+            resultServer.StoreData(barForces);
+            return true;
+        }
+
         public static bool GetBarForces(ComAuto gsa, BHoMBR.ResultServer<BHoMSR.BarForce> resultServer, List<string> bars, List<string> cases, int divisions)
         {
             string message = "";

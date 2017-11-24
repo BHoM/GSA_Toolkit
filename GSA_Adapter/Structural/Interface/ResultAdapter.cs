@@ -33,6 +33,16 @@ namespace GSA_Adapter.Structural.Interface
             return true;
         }
 
+        public bool GetBarStrains(List<string> bars, List<string> cases, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.IResultSet> results)
+        {
+            BHoMBR.ResultServer<BHoM.Structural.Results.BarStrains> resultServer = new BHoM.Base.Results.ResultServer<BHoM.Structural.Results.BarStrains>();
+            resultServer.OrderBy = orderBy;
+            BarResults.GetBarStrains(gsa, resultServer, bars, cases);
+            results = resultServer.LoadData();
+
+            return true;
+        }
+
         public bool GetBarStresses(List<string> bars, List<string> cases, int divisions, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.IResultSet> results)
         {
             BHoMBR.ResultServer<BHoM.Structural.Results.BarStress> resultServer = new BHoM.Base.Results.ResultServer<BHoM.Structural.Results.BarStress>();

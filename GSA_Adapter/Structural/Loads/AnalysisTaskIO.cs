@@ -24,7 +24,7 @@ namespace GSA_Adapter.Structural.Loads
 
             string type = GetTaskType(comb);
 
-            if (!AddAnalysisTask(gsa, combNo, name, type, "0", combNo))
+            if (!AddAnalysisTask(gsa, combNo, name, type, "0", combNo, comb))
                 return false;
 
             return true;
@@ -46,7 +46,7 @@ namespace GSA_Adapter.Structural.Loads
             return Utils.CommandFailed(command);
         }
 
-        static public bool AddAnalysisTask(ComAuto gsa, string taskNo, string name, string type, string stage, string anal_caseNo)
+        static public bool AddAnalysisTask(ComAuto gsa, string taskNo, string name, string type, string stage, string anal_caseNo, BHL.LoadCombination comb)
         {
             string addTask;
             string command = "TASK";
@@ -110,6 +110,13 @@ namespace GSA_Adapter.Structural.Loads
             }
             else
             {
+                string bemGeoStiff;
+                object outObj;
+                if (comb.CustomData.TryGetValue("BeamGeoStiff", out outObj) && !(bool)outObj)
+                    bemGeoStiff = "BEAM_GEO_NO";
+                else
+                    bemGeoStiff = "BEAM_GEO_YES";
+
                 addTask = command
                     + "," + taskNo
                     + "," + name
@@ -118,7 +125,7 @@ namespace GSA_Adapter.Structural.Loads
                     + "," + solution
                     + "," + scheme
                     + ", 1"                     //num_case 
-                    + ", BEAM_GEO_YES"
+                    + ", " + bemGeoStiff        //Geometric stiffness of beam, lowers the stiffness of beam elements under high compression
                     + ", SHELL_GEO_NO"
                     + ", 0.1"                   //first_inc
                     + ", 0.0001"                //min_inc 

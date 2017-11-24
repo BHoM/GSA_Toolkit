@@ -15,10 +15,17 @@ namespace GSA_Test
     {
         static void Main(string[] args)
         {
-
-            TestGetFEMeshes();
+            TestGetBarStrains();
+            //TestGetFEMeshes();
         }
 
+
+        private static void TestGetBarStrains()
+        {
+            GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\QF Stadium\170901 IFC\Iter 1\Iter 1.gwb");
+            Dictionary<string, BHoMBR.IResultSet> results;
+            app.GetBarStrains(null, new List<string>() { "A4403" }, BHoMBR.ResultOrder.Name, out results);
+        }
 
         private static void TestGetFEMeshes()
         {
