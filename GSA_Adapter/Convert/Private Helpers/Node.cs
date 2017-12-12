@@ -46,7 +46,7 @@ namespace BH.Adapter.GSA
 
         /***************************************/
 
-        private static NodeConstraint GetConstraint(int gsaConst, double[] stiffnesses)
+        private static Constraint6DOF GetConstraint(int gsaConst, double[] stiffnesses)
         {
             //Construct the constraint
             BitArray arr = new BitArray(new int[] { gsaConst });
@@ -57,7 +57,7 @@ namespace BH.Adapter.GSA
                 fixities[i] = arr[i];
             }
 
-            return BH.Engine.Structure.Create.NodeConstraint("", fixities, stiffnesses);
+            return BH.Engine.Structure.Create.Constraint6DOF("", fixities, stiffnesses);
 
         }
     }

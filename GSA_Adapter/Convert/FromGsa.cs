@@ -7,6 +7,7 @@ using BH.oM.Structural.Elements;
 using BH.oM.Materials;
 using BH.oM.Structural.Properties;
 using BH.oM.Geometry;
+using BH.Engine.Structure;
 using Interop.gsa_8_7;
 
 namespace BH.Adapter.GSA
@@ -15,7 +16,7 @@ namespace BH.Adapter.GSA
     {
         /***************************************/
 
-        public static List<Bar> FromGsaBars(IEnumerable<GsaElement> gsaElements, Dictionary<string, SectionProperty> secProps, Dictionary<string, Node> nodes)
+        public static List<Bar> FromGsaBars(IEnumerable<GsaElement> gsaElements, Dictionary<string, ISectionProperty> secProps, Dictionary<string, Node> nodes)
         {
             List<Bar> barList = new List<Bar>();
 
@@ -57,7 +58,7 @@ namespace BH.Adapter.GSA
 
                 bar.OrientationAngle = gsaBar.Beta;
 
-                SectionProperty prop;
+                ISectionProperty prop;
                 secProps.TryGetValue(gsaBar.Property.ToString(), out prop);
 
                 bar.SectionProperty = prop;
@@ -122,9 +123,9 @@ namespace BH.Adapter.GSA
         /// </param>
         /// <param name="materials"></param>
         /// <returns></returns>
-        public static SectionProperty FromGsaSectionProperty(string gsaString, Dictionary<string, Material> materials)
+        public static ISectionProperty FromGsaSectionProperty(string gsaString, Dictionary<string, Material> materials)
         {
-            SectionProperty secProp = null;
+            ISectionProperty secProp = null;
 
             if (gsaString == "")
             {
@@ -148,7 +149,7 @@ namespace BH.Adapter.GSA
                 //prop = "PROP," + area + "," + Iyy + "," + Izz + "," + J + "," + Avy + "," + Avz;
 
 
-                ExplicitSectionProperty expSecProp = new ExplicitSectionProperty();
+                ExplicitSection expSecProp = new ExplicitSection();
                 double a, iyy, izz, j, avy, avz;
                 double.TryParse(gsaStrings[10], out a);
                 double.TryParse(gsaStrings[11], out iyy);
@@ -168,74 +169,116 @@ namespace BH.Adapter.GSA
             }
             else if (description.StartsWith("STD") /*|| description.StartsWith("CAT") */)
             {
-                //Temp to get compiling until secproperty is fixed in BHoM_Engine
-                secProp = new ExplicitSectionProperty();
 
-                //double D, W, T, t, Wt, Wb, Tt, Tb;
-                //string[] desc = description.Split('%');
-                //double factor;
-                //string type;
+                double D, W, T, t, Wt, Wb, Tt, Tb, Tw;
+                string[] desc = description.Split('%');
+                double factor;
+                string type;
 
-                //if (desc[1].Contains("(cm)"))
-                //{
-                //    factor = 0.01;
-                //    type = desc[1].Replace("(cm)", "");
-                //}
-                //else if (desc[1].Contains("(m)"))
-                //{
-                //    factor = 1;
-                //    type = desc[1].Replace("(m)", "");
-                //}
-                //else
-                //{
-                //    factor = 0.001;
-                //    type = desc[1];
-                //}
+                if (desc[1].Contains("(cm)"))
+                {
+                    factor = 0.01;
+                    type = desc[1].Replace("(cm)", "");
+                }
+                else if (desc[1].Contains("(m)"))
+                {
+                    factor = 1;
+                    type = desc[1].Replace("(m)", "");
+                }
+                else
+                {
+                    factor = 0.001;
+                    type = desc[1];
+                }
 
-                //switch (type)
-                //{
-                //    case "UC":
-                //    case "UB":
-                //    case "I":
-                //        D = double.Parse(desc[2]) * factor;
-                //        W = double.Parse(desc[3]) * factor;
-                //        T = double.Parse(desc[4]) * factor;
-                //        t = double.Parse(desc[5]) * factor;
-                //        secProp = new SteelSection(ShapeType.ISection, /*SectionType.Steel,*/ D, W, T, t, 0, 0);
-                //        break;
-                //    case "GI":
-                //        D = double.Parse(desc[2]) * factor;
-                //        Wt = double.Parse(desc[3]) * factor;
-                //        Wb = double.Parse(desc[4]) * factor;
-                //        Tt = double.Parse(desc[5]) * factor;
-                //        Tb = double.Parse(desc[6]) * factor;
-                //        t = double.Parse(desc[7]) * factor;
-                //        secProp = SectionProperty.CreateISection(BHoM.Materials.MaterialType.Steel, Wt, Wb, D, Tt, Tb, t, 0, 0);
-                //        break;
-                //    case "CHS":
-                //        D = double.Parse(desc[2]) * factor;
-                //        t = double.Parse(desc[3]) * factor;
-                //        secProp = new SteelSection(ShapeType.Tube, /*SectionType.Steel,*/ D, D, t, t, 0, 0);
-                //        break;
-                //    case "RHS":
-                //        D = double.Parse(desc[2]) * factor;
-                //        W = double.Parse(desc[3]) * factor;
-                //        T = double.Parse(desc[4]) * factor;
-                //        t = double.Parse(desc[5]) * factor;
-                //        secProp = new SteelSection(ShapeType.Box, /*SectionType.Steel,*/ D, W, T, t, 0, 0);
-                //        break;
-                //    case "R":
-                //        D = double.Parse(desc[2]) * factor;
-                //        W = double.Parse(desc[3]) * factor;
-                //        secProp = new SteelSection(ShapeType.Rectangle, D, W, 0, 0, 0, 0);
-                //        break;
-                //    case "C":
-                //        D = double.Parse(desc[2]) * factor;
-                //        secProp = SectionProperty.CreateCircularSection(MaterialType.Steel, D);
-                //        break;
-                //    default:
-                //        break;
-                //}
+                ISectionDimensions dimensions;
+
+                switch (type)
+                {
+                    case "UC":
+                    case "UB":
+                    case "I":
+                        D = double.Parse(desc[2]) * factor;
+                        W = double.Parse(desc[3]) * factor;
+                        T = double.Parse(desc[4]) * factor;
+                        t = double.Parse(desc[5]) * factor;
+                        dimensions = new StandardISectionDimensions(D, W, T, t, 0, 0);
+                        break;
+                    case "GI":
+                        D = double.Parse(desc[2]) * factor;
+                        Wt = double.Parse(desc[3]) * factor;
+                        Wb = double.Parse(desc[4]) * factor;
+                        Tw = double.Parse(desc[5]) * factor;
+                        Tt = double.Parse(desc[6]) * factor;
+                        Tb = double.Parse(desc[7]) * factor;
+                        dimensions = new FabricatedISectionDimensions(D, Wt, Wb, Tw, Tt, Tb, 0);
+                        break;
+                    case "CHS":
+                        D = double.Parse(desc[2]) * factor;
+                        t = double.Parse(desc[3]) * factor;
+                        dimensions = new TubeDimensions(D, t);
+                        break;
+                    case "RHS":
+                        D = double.Parse(desc[2]) * factor;
+                        W = double.Parse(desc[3]) * factor;
+                        T = double.Parse(desc[4]) * factor;
+                        t = double.Parse(desc[5]) * factor;
+                        if (T == t)
+                            dimensions = new StandardBoxDimensions(D, W, T, 0, 0); //TODO: Additional checks for fabricated/Standard
+                        else
+                            dimensions = new FabricatedBoxDimensions(D, W, T, t, t, 0);
+                        break;
+                    case "R":
+                        D = double.Parse(desc[2]) * factor;
+                        W = double.Parse(desc[3]) * factor;
+                        dimensions = new RectangleSectionDimensions(D, W, 0);
+                        break;
+                    case "C":
+                        D = double.Parse(desc[2]) * factor;
+                        dimensions = new CircleDimensions(D);
+                        break;
+                    case "T":
+                        D = double.Parse(desc[2]) * factor;
+                        W = double.Parse(desc[3]) * factor;
+                        T = double.Parse(desc[4]) * factor;
+                        t = double.Parse(desc[5]) * factor;
+                        dimensions = new StandardTeeSectionDimensions(D, W, T, t, 0, 0);
+                        break;
+                    case "A":
+                        D = double.Parse(desc[2]) * factor;
+                        W = double.Parse(desc[3]) * factor;
+                        T = double.Parse(desc[4]) * factor;
+                        t = double.Parse(desc[5]) * factor;
+                        dimensions = new StandardAngleSectionDimensions(D, W, T, t, 0, 0);
+                        break;
+                    case "CH":
+                        D = double.Parse(desc[2]) * factor;
+                        W = double.Parse(desc[3]) * factor;
+                        T = double.Parse(desc[4]) * factor;
+                        t = double.Parse(desc[5]) * factor;
+                        dimensions = new StandardChannelSectionDimensions(D, W, T, t, 0, 0);
+                        break;
+                    default:
+                        throw new NotImplementedException("Section convertion for the type: " + type + "is not implmented in the GSA adapter");
+                }
+
+                switch (materials[materialId].Type)
+                {
+                    case MaterialType.Steel:
+                        secProp = Create.SteelSectionFromDimensions(dimensions);
+                        break;
+                    case MaterialType.Concrete:
+                        secProp = Create.ConcreteSectionFromDimensions(dimensions);
+                        break;
+                    case MaterialType.Aluminium:
+                    case MaterialType.Timber:
+                    case MaterialType.Rebar:
+                    case MaterialType.Tendon:
+                    case MaterialType.Glass:
+                    case MaterialType.Cable:
+                    default:
+                        throw new NotImplementedException();
+                }
 
             }
 

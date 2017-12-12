@@ -23,7 +23,7 @@ namespace BH.Adapter.GSA
                 return "EL";
             else if (type == typeof(Material))
                 return "MAT";
-            else if (type == typeof(SectionProperty))
+            else if (type == typeof(ISectionProperty))
                 return "PROP_SEC";
 
             return null;
@@ -75,8 +75,8 @@ namespace BH.Adapter.GSA
 
             string orientationAngle = bar.OrientationAngle.ToString();
             // TODO: Make sure that these are doing the correct thing. Release vs restraint corresponding to true vs false
-            string startR = bar.Release != null ? CreateReleaseString(bar.Release.StartConstraint) : "FFFFFF";
-            string endR = bar.Release != null ? CreateReleaseString(bar.Release.EndConstraint) : "FFFFFF";
+            string startR = bar.Release != null ? CreateReleaseString(bar.Release.StartRelease) : "FFFFFF";
+            string endR = bar.Release != null ? CreateReleaseString(bar.Release.EndRelease) : "FFFFFF";
             string dummy = CheckDummy(bar);
 
             string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + sectionPropertyIndex + ", " + group + ", " + startIndex + ", " + endIndex + " , 0 ," + orientationAngle + ", RLS, " + startR + " , " + endR + ", NO_OFFSET," + dummy;
@@ -98,7 +98,7 @@ namespace BH.Adapter.GSA
 
         /***************************************/
 
-        private static string _ToGsaString(this SectionProperty prop, string index)
+        private static string _ToGsaString(this ISectionProperty prop, string index)
         {
             string name = prop.GetTaggedName();
 
@@ -107,7 +107,7 @@ namespace BH.Adapter.GSA
             string desc;
             string props;
 
-            CreateDescAndPropString(prop, out desc, out props);
+            ICreateDescAndPropString(prop, out desc, out props);
 
             string command = "PROP_SEC";
             string colour = "NO_RGB";
