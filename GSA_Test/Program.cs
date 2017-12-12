@@ -65,8 +65,8 @@ namespace GSA_Test
             Point p7b = new Point(1, 1, 2);
             Point p8b = new Point(0, 1, 2);
 
-            NodeConstraint pin = BH.Engine.Structure.Create.PinNodeConstraint();
-            NodeConstraint fix = BH.Engine.Structure.Create.FixNodeConstraint();
+            Constraint6DOF pin = BH.Engine.Structure.Create.PinConstraint6DOF();
+            Constraint6DOF fix = BH.Engine.Structure.Create.FixConstraint6DOF();
 
             List<Node> nodesA = new List<Node>();
 
@@ -96,7 +96,7 @@ namespace GSA_Test
 
             n1b.Constraint = pin;
             n2b.Constraint = pin;
-            n3b.Constraint = BH.Engine.Structure.Create.FullReleaseNodeConstraint();
+            n3b.Constraint = BH.Engine.Structure.Create.FullReleaseConstraint6DOF();
             n4b.Constraint = fix;
 
             nodesB.Add(n1b);
@@ -157,19 +157,19 @@ namespace GSA_Test
             bars2b.Add(bar11b);
             bars2b.Add(bar12b);
 
-            BH.oM.Structural.Properties.SectionProperty sec1a = new BH.oM.Structural.Properties.ExplicitSectionProperty();
+            BH.oM.Structural.Properties.ISectionProperty sec1a = new BH.oM.Structural.Properties.ExplicitSection();
             sec1a.Material = new BH.oM.Materials.Material("Material1", BH.oM.Materials.MaterialType.Concrete, 10, 10, 10, 10, 10);
             sec1a.Name = "Section 1";
 
-            BH.oM.Structural.Properties.SectionProperty sec1b = new BH.oM.Structural.Properties.ExplicitSectionProperty();
+            BH.oM.Structural.Properties.ISectionProperty sec1b = new BH.oM.Structural.Properties.ExplicitSection();
             sec1b.Material = new BH.oM.Materials.Material("Material1", BH.oM.Materials.MaterialType.Concrete, 10, 10, 10, 10, 10);
             sec1b.Name = "Section 1";
 
-            BH.oM.Structural.Properties.SectionProperty sec2 = new BH.oM.Structural.Properties.ExplicitSectionProperty();
+            BH.oM.Structural.Properties.ISectionProperty sec2 = new BH.oM.Structural.Properties.ExplicitSection();
             sec2.Material = new BH.oM.Materials.Material("Material2", BH.oM.Materials.MaterialType.Concrete, 10, 10, 10, 10, 10);
             sec2.Name = "Section 2";
 
-            BH.oM.Structural.Properties.SectionProperty sec3 = new BH.oM.Structural.Properties.ExplicitSectionProperty();
+            BH.oM.Structural.Properties.ISectionProperty sec3 = new BH.oM.Structural.Properties.ExplicitSection();
             sec3.Material = new BH.oM.Materials.Material("Material2", BH.oM.Materials.MaterialType.Concrete, 10, 10, 10, 10, 10);
             sec3.Name = "Section 3";
 

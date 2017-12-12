@@ -37,7 +37,7 @@ namespace BH.Adapter.GSA
 
         /***************************************/
 
-        private static string CreateReleaseString(NodeConstraint nodeConstraint)
+        private static string CreateReleaseString(Constraint6DOF nodeConstraint)
         {
             bool[] fixities = nodeConstraint.GetFixities();
             double[] stiffness = nodeConstraint.GetElasticValues();

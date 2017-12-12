@@ -24,7 +24,7 @@ namespace BH.Adapter.GSA
                 return ReadNodes(indices as dynamic);
             else if (type == typeof(Bar))
                 return ReadBars(indices as dynamic);
-            else if (type == typeof(SectionProperty) || type.IsSubclassOf(typeof(SectionProperty)))
+            else if (type == typeof(ISectionProperty) || type.IsSubclassOf(typeof(ISectionProperty)))
                 return ReadSectionProperties(indices as dynamic);
             else if (type == typeof(Material))
                 return ReadMaterials(indices as dynamic);
@@ -71,10 +71,10 @@ namespace BH.Adapter.GSA
             GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
             gsaCom.Elements(potentialBeamRefs, out gsaElements);
 
-            List<SectionProperty> secPropList = ReadSectionProperties();
+            List<ISectionProperty> secPropList = ReadSectionProperties();
             List<Node> nodeList = ReadNodes();
 
-            Dictionary<string, SectionProperty> secProps = secPropList.ToDictionary(x => x.CustomData[AdapterId].ToString());
+            Dictionary<string, ISectionProperty> secProps = secPropList.ToDictionary(x => x.CustomData[AdapterId].ToString());
             Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.CustomData[AdapterId].ToString());
 
             return Convert.FromGsaBars(gsaElements, secProps, nodes);
@@ -93,7 +93,7 @@ namespace BH.Adapter.GSA
 
         /***************************************/
 
-        public List<SectionProperty> ReadSectionProperties(List<string> ids = null)
+        public List<ISectionProperty> ReadSectionProperties(List<string> ids = null)
         {
             List<Material> matList = ReadMaterials(null, true);
             Dictionary<string, Material> materials = matList.ToDictionary(x => x.CustomData[AdapterId].ToString());
