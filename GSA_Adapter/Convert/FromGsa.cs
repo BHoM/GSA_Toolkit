@@ -105,7 +105,7 @@ namespace BH.Adapter.GSA
 
             mat.Tags = tags;
 
-            mat.CustomData.Add(GSAAdapter.ID, gStr[1].ToString());
+            mat.CustomData.Add(GSAAdapter.ID, int.Parse(gStr[1]));
 
             return mat;
         }

@@ -25,8 +25,17 @@ namespace BH.Adapter.GSA
             else if (m_DependencyTypes.ContainsKey(type.BaseType))
                 return m_DependencyTypes[type.BaseType];
 
-            else 
-               return new List<Type>();         
+            else
+            {
+                foreach (Type interType in type.GetInterfaces())
+                {
+                    if (m_DependencyTypes.ContainsKey(interType))
+                        return m_DependencyTypes[interType];
+                }
+            }
+
+
+            return new List<Type>();         
         }
 
 

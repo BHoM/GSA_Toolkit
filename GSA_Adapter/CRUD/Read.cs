@@ -20,12 +20,12 @@ namespace BH.Adapter.GSA
 
         protected override IEnumerable<BHoMObject> Read(Type type, IList indices)
         {
-            if(type == typeof(Node))
+            if (type == typeof(Node))
                 return ReadNodes(indices as dynamic);
             else if (type == typeof(Bar))
                 return ReadBars(indices as dynamic);
-            else if (type == typeof(ISectionProperty) || type.IsSubclassOf(typeof(ISectionProperty)))
-                return ReadSectionProperties(indices as dynamic);
+            else if (type == typeof(ISectionProperty) || type.GetInterfaces().Contains(typeof(ISectionProperty)))
+                return ((List<ISectionProperty>)ReadSectionProperties(indices as dynamic)).Cast<BHoMObject>();
             else if (type == typeof(Material))
                 return ReadMaterials(indices as dynamic);
 
