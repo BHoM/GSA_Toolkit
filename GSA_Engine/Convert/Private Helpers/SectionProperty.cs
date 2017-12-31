@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BH.oM.Geometry;
 using BH.oM.Structural.Properties;
-using BH.oM.Geometry;
-using BH.oM.Materials;
+using System;
+using System.Collections.Generic;
 
-namespace BH.Adapter.GSA
+namespace BH.Engine.GSA
 {
     public static partial class Convert
     {
@@ -74,8 +70,6 @@ namespace BH.Adapter.GSA
 
         /***************************************/
 
-
-
         private static bool ICreateDescString(ISectionDimensions dimensions, out string desc)
         {
             return CreateDescString(dimensions as dynamic, out desc);
@@ -100,6 +94,8 @@ namespace BH.Adapter.GSA
             return true;
             //STD%RHS%800.%400.%12.%16.
         }
+
+        /***************************************/
 
         private static bool CreateDescString(StandardBoxDimensions dimensions, out string desc)
         {
@@ -259,16 +255,12 @@ namespace BH.Adapter.GSA
             return true;
         }
 
-
-
         /***************************************/
 
         private static bool CreateDescString(IList<ICurve> polygon, out string desc)
         {
             throw new NotImplementedException();
         }
-
-
 
         /***************************************/
 
@@ -277,6 +269,6 @@ namespace BH.Adapter.GSA
             return Math.Abs(d - (int)d) < double.Epsilon ? d.ToString() + "." : d.ToString();
         }
 
-
+        /***************************************/
     }
 }

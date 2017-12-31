@@ -4,27 +4,24 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{34AE04A1-9CAB-415E-903A-EFE285E6B661}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{CA275200-B50F-4B09-BE44-FBB106E3DE42}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GSA_Test</RootNamespace>
-    <AssemblyName>GSA_Test</AssemblyName>
+    <RootNamespace>BH.Engine.GSA</RootNamespace>
+    <AssemblyName>GSA_Engine</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\Build\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -33,11 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BHoM">
+    <Reference Include="BHoM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM\Build\BHoM.dll</HintPath>
-    </Reference>
-    <Reference Include="BHoM_Adapter">
-      <HintPath>..\..\BHoM_Adapter\Build\BHoM_Adapter.dll</HintPath>
     </Reference>
     <Reference Include="BHoM_Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -46,7 +41,15 @@
     <Reference Include="Common_Engine">
       <HintPath>..\..\BHoM_Engine\Build\Common_Engine.dll</HintPath>
     </Reference>
-    <Reference Include="Structure_Engine">
+    <Reference Include="Interop.Gsa_8_7">
+      <HintPath>..\..\..\..\..\..\Program Files\Oasys\GSA 8.7\Interop.Gsa_8_7.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Serialiser_Engine">
+      <HintPath>..\..\BHoM_Engine\Build\Serialiser_Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="Structure_Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM_Engine\Build\Structure_Engine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -59,17 +62,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Convert\AdapterID.cs" />
+    <Compile Include="Convert\FromGsa.cs" />
+    <Compile Include="Convert\Private Helpers\Bar.cs" />
+    <Compile Include="Convert\Private Helpers\GsaEnums.cs" />
+    <Compile Include="Convert\Private Helpers\Material.cs" />
+    <Compile Include="Convert\Private Helpers\Node.cs" />
+    <Compile Include="Convert\Private Helpers\SectionProperty.cs" />
+    <Compile Include="Convert\ToGsa.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GSA_Adapter\GSA_Adapter.csproj">
-      <Project>{6ef0e0ab-7431-4481-9cad-670673ae1aa1}</Project>
-      <Name>GSA_Adapter</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

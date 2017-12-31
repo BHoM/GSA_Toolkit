@@ -1,11 +1,9 @@
-﻿using BH.oM.Materials;
+﻿using BH.Engine.Base.Objects;
+using BH.oM.Common.Materials;
 using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BH.Adapter.GSA
 {
@@ -15,7 +13,7 @@ namespace BH.Adapter.GSA
         /**** BHoM Adapter Interface                    ****/
         /***************************************************/
 
-        protected override IEqualityComparer<T> GetComparer<T>()
+        protected override IEqualityComparer<T> Comparer<T>()
         {
             Type type = typeof(T);
 
@@ -38,9 +36,11 @@ namespace BH.Adapter.GSA
         private static Dictionary<Type, object> m_Comparers = new Dictionary<Type, object>
         {
             {typeof(Node), new BH.Engine.Structure.NodeDistanceComparer(3) },
-            {typeof(ISectionProperty), new BH.Engine.Base.BHoMObjectNameOrToStringComparer() },
-            {typeof(Material), new BH.Engine.Base.BHoMObjectNameComparer() },
+            {typeof(ISectionProperty), new BHoMObjectNameOrToStringComparer() },
+            {typeof(Material), new BHoMObjectNameComparer() },
         };
 
+
+        /***************************************************/
     }
 }

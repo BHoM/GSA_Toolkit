@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BH.Adapter.GSA
+﻿namespace BH.Engine.GSA
 {
-    public static class GsaEnums
+    public static partial class Convert
     {
+        /***************************************/
 
-        public enum Out_0D_Results
+        private enum Out_0D_Results
         {
             REF_DISP = 12001000,
             REF_DISP_DX,
@@ -33,12 +28,12 @@ namespace BH.Adapter.GSA
             REF_REAC_MOM,
         }
 
-
+        /***************************************/
 
         /// <summary>
         /// 
         /// </summary>
-        public enum Out_1D_Results
+        private enum Out_1D_Results
         {
             REF_DISP_EL1D = 14001000,
             REF_DISP_EL1D_DX,
@@ -109,7 +104,9 @@ namespace BH.Adapter.GSA
             REF_STL_UTIL_BCK_FT,
         }
 
-        public enum Out_1D_Properties
+        /***************************************/
+
+        private enum Out_1D_Properties
         {
             REF_ELEM = 1011000,
             REF_ELEM_NAME,
@@ -123,8 +120,9 @@ namespace BH.Adapter.GSA
             REF_ELEM_TOPO,
         }
 
+        /***************************************/
 
-        public enum Output_Init_Flags
+        private enum Output_Init_Flags
         {
             //These are hexadecimals. "0x" represents the hexadecimal representation of a subsequent number.
             OP_INIT_2D_BOTTOM = 0x1,     // output 2D stresses at bottom layer
@@ -135,17 +133,20 @@ namespace BH.Adapter.GSA
             OP_INIT_1D_AUTO_PTS = 0x20,  // calculate 1D results at interesting points
         }
 
+        /***************************************/
 
         //In lack of an "Estring" function we have created a static class which returns
         //the three different options of outputaxis. It's used when extracting info in SIGSA.
-        public static class Output_Axis
+        private static class Output_Axis
         {
             static public string Default() { return "default"; }
             static public string Global() { return "global"; }
             static public string Local() { return "local"; }
         }
 
-        public enum UnitType
+        /***************************************/
+
+        private enum UnitType
         {
             FORCE = 0,
             LENGTH,
@@ -159,7 +160,9 @@ namespace BH.Adapter.GSA
             ENERGY
         }
 
-        public enum LoadType
+        /***************************************/
+
+        private enum LoadType
         {
             DEAD,
             IMPOSED,
@@ -170,7 +173,9 @@ namespace BH.Adapter.GSA
             UNDEF
         }
 
-        public enum MaterialType
+        /***************************************/
+
+        private enum MaterialType
         {
             MT_STEEL,
             MT_CONCRETE,
@@ -180,6 +185,6 @@ namespace BH.Adapter.GSA
             MT_UNDEF
         }
 
-
+        /***************************************/
     }
 }

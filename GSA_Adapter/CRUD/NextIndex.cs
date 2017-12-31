@@ -1,8 +1,6 @@
-﻿using System;
+﻿using BH.Engine.GSA;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BH.Adapter.GSA
 {
@@ -12,7 +10,7 @@ namespace BH.Adapter.GSA
         /**** Index Adapter Interface                   ****/
         /***************************************************/
 
-        protected override object GetNextId(Type type, bool refresh)
+        protected override object NextId(Type type, bool refresh)
         {
             string typeString = type.ToGsaString();
 
@@ -37,5 +35,8 @@ namespace BH.Adapter.GSA
         /***************************************************/
 
         private Dictionary<Type, int> m_indexDict = new Dictionary<Type, int>();
+
+
+        /***************************************************/
     }
 }

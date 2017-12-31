@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BH.Adapter.Queries;
-using BH.oM.Materials;
-using BH.oM.Structural.Elements;
-using BH.oM.Structural.Properties;
-using Interop.gsa_8_7;
+﻿using Interop.gsa_8_7;
 
 
 
@@ -17,19 +7,11 @@ namespace BH.Adapter.GSA
     public partial class GSAAdapter : BHoMAdapter
     {
         /***************************************************/
-        /**** Public static fields                      ****/
-        /***************************************************/
-
-        public const string ID = "GSA_id";
-
-
-        /***************************************************/
         /**** Constructors                              ****/
         /***************************************************/
 
         public GSAAdapter()
         {
-            AdapterId = ID;
             gsaCom = new ComAuto();
 
             Config.SeparateProperties = true;
@@ -96,5 +78,8 @@ namespace BH.Adapter.GSA
         /***************************************************/
 
         private ComAuto gsaCom;
+
+
+        /***************************************************/
     }
 }
