@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BH.Engine.Serialiser;
+using BH.oM.Common.Materials;
 using BH.oM.Structural.Elements;
-using BH.oM.Materials;
 using BH.oM.Structural.Properties;
+using System;
+using System.Collections.Generic;
 
-namespace BH.Adapter.GSA
+namespace BH.Engine.GSA
 {
     public static partial class Convert
     {
@@ -29,23 +27,14 @@ namespace BH.Adapter.GSA
             return null;
         }
 
-        /***************************************/
-        public static string ToGsaString(this object obj, string index)
-        {
-            return _ToGsaString(obj as dynamic, index);
-        }
-
-
-        /***************************************************/
-        /**** Private  Methods                          ****/
         /***************************************************/
 
-        private static string _ToGsaString(this Material material, string index)
+        private static string ToGsaString(this Material material, string index)
         {
             string command = "MAT";
             string num = index;//(GSA.GwaCommand("HIGHEST, PROP_SEC") + 1).ToString();
             string mModel = "MAT_ELAS_ISO";
-            string name = material.GetTaggedName();
+            string name = material.TaggedName();
             string colour = "NO_RGB";
             string type = GetMaterialType(material).ToString();
             string E = material.YoungsModulus.ToString();
@@ -61,17 +50,17 @@ namespace BH.Adapter.GSA
 
         /***************************************/
 
-        private static string _ToGsaString(this Bar bar, string index)
+        private static string ToGsaString(this Bar bar, string index)
         {
             string command = "EL.2";
-            string name = bar.GetTaggedName();
+            string name = bar.TaggedName();
             string type = GetElementTypeString(bar);
 
-            string sectionPropertyIndex = bar.SectionProperty.CustomData[GSAAdapter.ID].ToString();
+            string sectionPropertyIndex = bar.SectionProperty.CustomData[AdapterID].ToString();
             int group = 0;
 
-            string startIndex = bar.StartNode.CustomData[GSAAdapter.ID].ToString();
-            string endIndex = bar.EndNode.CustomData[GSAAdapter.ID].ToString();
+            string startIndex = bar.StartNode.CustomData[AdapterID].ToString();
+            string endIndex = bar.EndNode.CustomData[AdapterID].ToString();
 
             string orientationAngle = bar.OrientationAngle.ToString();
             // TODO: Make sure that these are doing the correct thing. Release vs restraint corresponding to true vs false
@@ -85,24 +74,24 @@ namespace BH.Adapter.GSA
 
         /***************************************/
 
-        private static string _ToGsaString(this Node node, string index)
+        private static string ToGsaString(this Node node, string index)
         {
             string command = "NODE.2";
-            string name = node.GetTaggedName();
+            string name = node.TaggedName();
 
             string restraint = GetRestraintString(node);
 
-            string str = command + ", " + index + ", " + name + " , NO_RGB, " + node.Point.X + " , " + node.Point.Y + " , " + node.Point.Z + ", NO_GRID, " + 0 + "," + restraint;
+            string str = command + ", " + index + ", " + name + " , NO_RGB, " + node.Position.X + " , " + node.Position.Y + " , " + node.Position.Z + ", NO_GRID, " + 0 + "," + restraint;
             return str;
         }
 
         /***************************************/
 
-        private static string _ToGsaString(this ISectionProperty prop, string index)
+        private static string ToGsaString(this ISectionProperty prop, string index)
         {
-            string name = prop.GetTaggedName();
+            string name = prop.TaggedName();
 
-            string mat = prop.Material.CustomData[GSAAdapter.ID].ToString();// materialId;  //"STEEL";// material.Name;
+            string mat = prop.Material.CustomData[AdapterID].ToString();// materialId;  //"STEEL";// material.Name;
 
             string desc;
             string props;
@@ -140,6 +129,17 @@ namespace BH.Adapter.GSA
             string str = command + "," + index + "," + name + "," + colour + "," + mat + "," + desc + "," + principle + "," + type + "," + cost + "," + props + "," + mods + "," + plate_type + "," + calc_J;
             return str;
         }
+
+
+        /***************************************************/
+        /**** Public Interface Methods                  ****/
+        /***************************************************/
+
+        public static string IToGsaString(this object obj, string index)
+        {
+            return ToGsaString(obj as dynamic, index);
+        }
+
 
         /***************************************/
     }

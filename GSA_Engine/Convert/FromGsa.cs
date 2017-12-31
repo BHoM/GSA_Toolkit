@@ -1,20 +1,21 @@
-﻿using System;
+﻿using BH.Engine.Serialiser;
+using BH.Engine.Structure;
+using BHM = BH.oM.Common.Materials;
+using BH.oM.Geometry;
+using BH.oM.Structural.Elements;
+using BH.oM.Structural.Properties;
+using Interop.gsa_8_7;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BH.oM.Structural.Elements;
-using BH.oM.Materials;
-using BH.oM.Structural.Properties;
-using BH.oM.Geometry;
-using BH.Engine.Structure;
-using Interop.gsa_8_7;
 
-namespace BH.Adapter.GSA
+namespace BH.Engine.GSA
 {
     public partial class Convert
     {
-        /***************************************/
+        /***************************************************/
+        /**** Public Methods                            ****/
+        /***************************************************/
 
         public static List<Bar> FromGsaBars(IEnumerable<GsaElement> gsaElements, Dictionary<string, ISectionProperty> secProps, Dictionary<string, Node> nodes)
         {
@@ -43,16 +44,13 @@ namespace BH.Adapter.GSA
                         continue;
                 }
 
-                string name;
-                HashSet<string> tags = gsaBar.Name.ToTagHashSet(out name);
-
                 Node n1, n2;
                 nodes.TryGetValue(gsaBar.Topo[0].ToString(), out n1);
                 nodes.TryGetValue(gsaBar.Topo[1].ToString(), out n2);
 
-                Bar bar = new Bar(n1, n2, name);
+                Bar bar = new Bar { StartNode = n1, EndNode = n2 };
+                bar.ApplyTaggedName(gsaBar.Name);
 
-                bar.Tags = tags;
 
                 bar.FEAType = feType;
 
@@ -63,7 +61,7 @@ namespace BH.Adapter.GSA
 
                 bar.SectionProperty = prop;
 
-                bar.CustomData[GSAAdapter.ID] = gsaBar.Ref;
+                bar.CustomData[AdapterID] = gsaBar.Ref;
 
                 barList.Add(bar);
 
@@ -73,7 +71,7 @@ namespace BH.Adapter.GSA
 
         /***************************************/
 
-        public static Material FromGsaMaterial(string gsaString)
+        public static BHM.Material FromGsaMaterial(string gsaString)
         {
             if (string.IsNullOrWhiteSpace(gsaString))
                 return null;
@@ -83,7 +81,7 @@ namespace BH.Adapter.GSA
             if (gStr.Length < 11)
                 return null;
 
-            MaterialType type = GetTypeFromString(gStr[2]);
+            BHM.MaterialType type = GetTypeFromString(gStr[2]);
 
             double E, v, tC, G, rho;
 
@@ -98,14 +96,10 @@ namespace BH.Adapter.GSA
             if (!double.TryParse(gStr[9], out rho))
                 return null;
 
-            string name;
-            HashSet<string> tags = gStr[3].ToTagHashSet(out name);
+            BHM.Material mat = Engine.Common.Create.Material("", type, E, v, tC, G, rho);
+            mat.ApplyTaggedName(gStr[3]);
 
-            Material mat = new Material(name, type, E, v, tC, G, rho);
-
-            mat.Tags = tags;
-
-            mat.CustomData.Add(GSAAdapter.ID, int.Parse(gStr[1]));
+            mat.CustomData.Add(AdapterID, int.Parse(gStr[1]));
 
             return mat;
         }
@@ -123,7 +117,7 @@ namespace BH.Adapter.GSA
         /// </param>
         /// <param name="materials"></param>
         /// <returns></returns>
-        public static ISectionProperty FromGsaSectionProperty(string gsaString, Dictionary<string, Material> materials)
+        public static ISectionProperty FromGsaSectionProperty(string gsaString, Dictionary<string, BHM.Material> materials)
         {
             ISectionProperty secProp = null;
 
@@ -137,9 +131,6 @@ namespace BH.Adapter.GSA
             int id;
 
             Int32.TryParse(gsaStrings[1], out id);
-
-            string name;
-            HashSet<string> tags = gsaStrings[2].ToTagHashSet(out name);
 
             string materialId = gsaStrings[4];
             string description = gsaStrings[5];
@@ -264,27 +255,26 @@ namespace BH.Adapter.GSA
 
                 switch (materials[materialId].Type)
                 {
-                    case MaterialType.Steel:
+                    case BHM.MaterialType.Steel:
                         secProp = Create.SteelSectionFromDimensions(dimensions);
                         break;
-                    case MaterialType.Concrete:
+                    case BHM.MaterialType.Concrete:
                         secProp = Create.ConcreteSectionFromDimensions(dimensions);
                         break;
-                    case MaterialType.Aluminium:
-                    case MaterialType.Timber:
-                    case MaterialType.Rebar:
-                    case MaterialType.Tendon:
-                    case MaterialType.Glass:
-                    case MaterialType.Cable:
+                    case BHM.MaterialType.Aluminium:
+                    case BHM.MaterialType.Timber:
+                    case BHM.MaterialType.Rebar:
+                    case BHM.MaterialType.Tendon:
+                    case BHM.MaterialType.Glass:
+                    case BHM.MaterialType.Cable:
                     default:
                         throw new NotImplementedException();
                 }
 
             }
 
-            secProp.CustomData.Add(GSAAdapter.ID, id);
-            secProp.Name = name;
-            secProp.Tags = tags;
+            secProp.CustomData.Add(AdapterID, id);
+            secProp.ApplyTaggedName(gsaStrings[2]);
             secProp.Material = materials[materialId];
             return secProp;
         }
@@ -293,13 +283,9 @@ namespace BH.Adapter.GSA
 
         public static Node FromGsaNode(GsaNode gn)
         {
-
-            string name;
-            HashSet<string> tags = gn.Name.ToTagHashSet(out name);
-
-            Node node = new Node(new Point(gn.Coor[0], gn.Coor[1], gn.Coor[2]), name);
-            node.Tags = tags;
-            node.CustomData.Add(GSAAdapter.ID, gn.Ref);
+            Node node = new Node { Position = new Point { X = gn.Coor[0], Y = gn.Coor[1], Z = gn.Coor[2] } };
+            node.ApplyTaggedName(gn.Name);
+            node.CustomData.Add(AdapterID, gn.Ref);
 
             //Check if the node is restrained in some way
             if (gn.Restraint != 0 || gn.Stiffness.Sum() != 0)
@@ -307,5 +293,7 @@ namespace BH.Adapter.GSA
 
             return node;
         }
+
+        /***************************************************/
     }
 }

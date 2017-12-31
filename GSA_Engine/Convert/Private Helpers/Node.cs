@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BH.Engine.Structure;
 using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
-using Interop.gsa_8_7;
-using BH.oM.Geometry;
-using BH.Engine.Structure;
+using System.Collections;
 
-namespace BH.Adapter.GSA
+namespace BH.Engine.GSA
 {
     public static partial class Convert
     {
+        /***************************************/
+
         private static string GetRestraintString(Node node)
         {
             if (node.Constraint != null)
@@ -21,7 +16,7 @@ namespace BH.Adapter.GSA
                 string rest = "REST";
 
 
-                bool[] fixities = node.Constraint.GetFixities();
+                bool[] fixities = node.Constraint.Fixities();
                 for (int i = 0; i < fixities.Length; i++)
                 {
                     rest += "," + (fixities[i] ? 1 : 0);
@@ -29,7 +24,7 @@ namespace BH.Adapter.GSA
 
                 rest += ",STIFF";
 
-                double[] stiffnesses = node.Constraint.GetElasticValues();
+                double[] stiffnesses = node.Constraint.ElasticValues();
                 for (int i = 0; i < stiffnesses.Length; i++)
                 {
                     rest += "," + ((stiffnesses[i] > 0) ? stiffnesses[i] : 0);
@@ -57,8 +52,10 @@ namespace BH.Adapter.GSA
                 fixities[i] = arr[i];
             }
 
-            return BH.Engine.Structure.Create.Constraint6DOF("", fixities, stiffnesses);
+            return Create.Constraint6DOF("", fixities, stiffnesses);
 
         }
+
+        /***************************************/
     }
 }

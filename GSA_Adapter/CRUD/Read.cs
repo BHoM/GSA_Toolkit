@@ -1,5 +1,6 @@
-﻿using BH.oM.Base;
-using BH.oM.Materials;
+﻿using BH.Engine.GSA;
+using BH.oM.Base;
+using BH.oM.Common.Materials;
 using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
 using Interop.gsa_8_7;
@@ -7,8 +8,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BH.Adapter.GSA
 {
@@ -51,9 +50,9 @@ namespace BH.Adapter.GSA
             string allProps = gsaCom.GwaCommand("GET_ALL, MAT").ToString();
             string[] matArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
             if (ids == null)
-                materials = matArr.Select(x => Convert.FromGsaMaterial(x)).ToList();
+                materials = matArr.Select(x => Engine.GSA.Convert.FromGsaMaterial(x)).ToList();
             else
-                materials = matArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Convert.FromGsaMaterial(x)).ToList();
+                materials = matArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.FromGsaMaterial(x)).ToList();
 
             if (includeStandard)
                 materials.AddRange(GetStandardGsaMaterials());
@@ -77,7 +76,7 @@ namespace BH.Adapter.GSA
             Dictionary<string, ISectionProperty> secProps = secPropList.ToDictionary(x => x.CustomData[AdapterId].ToString());
             Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.CustomData[AdapterId].ToString());
 
-            return Convert.FromGsaBars(gsaElements, secProps, nodes);
+            return Engine.GSA.Convert.FromGsaBars(gsaElements, secProps, nodes);
         }
 
         /***************************************/
@@ -88,7 +87,7 @@ namespace BH.Adapter.GSA
             GsaNode[] gsaNodes;
             gsaCom.Nodes(GenerateIndices(ids, typeof(Node)), out gsaNodes);
 
-            return gsaNodes.Select(x => Convert.FromGsaNode(x)).ToList();
+            return gsaNodes.Select(x => Engine.GSA.Convert.FromGsaNode(x)).ToList();
         }
 
         /***************************************/
@@ -102,9 +101,9 @@ namespace BH.Adapter.GSA
             string[] proArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
 
             if (ids == null)
-                return proArr.Select(x => Convert.FromGsaSectionProperty(x, materials)).ToList();
+                return proArr.Select(x => Engine.GSA.Convert.FromGsaSectionProperty(x, materials)).ToList();
             else
-                return proArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Convert.FromGsaSectionProperty(x, materials)).ToList();
+                return proArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.FromGsaSectionProperty(x, materials)).ToList();
         }
 
 
@@ -138,7 +137,7 @@ namespace BH.Adapter.GSA
             List<Material> materials = new List<Material>();
             foreach (string name in names)
             {
-                Material mat = new Material("GSA Standard " + name);
+                Material mat = new Material { Name = "GSA Standard " + name };
                 mat.CustomData.Add(AdapterId, name);
                 materials.Add(mat);
             }
@@ -146,11 +145,6 @@ namespace BH.Adapter.GSA
             return materials;
         }
 
-
         /***************************************************/
-        /**** Private Fields                            ****/
-        /***************************************************/
-
-        private Dictionary<Type, Func<List<string>, IList>> m_ReadMethods = null;
     }
 }

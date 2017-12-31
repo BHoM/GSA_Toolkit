@@ -1,11 +1,8 @@
-﻿using BH.oM.Materials;
+﻿using BH.oM.Common.Materials;
 using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BH.Adapter.GSA
 {
@@ -15,7 +12,7 @@ namespace BH.Adapter.GSA
         /**** BHoM Adapter Interface                    ****/
         /***************************************************/
 
-        protected override List<Type> GetDependencyTypes<T>()
+        protected override List<Type> DependencyTypes<T>()
         {
             Type type = typeof(T);
 
@@ -49,5 +46,7 @@ namespace BH.Adapter.GSA
             {typeof(ISectionProperty), new List<Type> { typeof(Material) } }
         };
 
+
+        /***************************************************/
     }
 }

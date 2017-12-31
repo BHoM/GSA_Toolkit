@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BH.Engine.Structure;
+using BH.oM.Base;
 using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
-using BH.oM.Base;
-using BH.Engine.Structure;
 
-
-namespace BH.Adapter.GSA
+namespace BH.Engine.GSA
 {
     public static partial class Convert
     {
@@ -32,15 +26,14 @@ namespace BH.Adapter.GSA
                     //Returning beam by default as it is the most generic type.
                     //Might be better flagging this as an error
             }
-
         }
 
         /***************************************/
 
         private static string CreateReleaseString(Constraint6DOF nodeConstraint)
         {
-            bool[] fixities = nodeConstraint.GetFixities();
-            double[] stiffness = nodeConstraint.GetElasticValues();
+            bool[] fixities = nodeConstraint.Fixities();
+            double[] stiffness = nodeConstraint.ElasticValues();
 
             string relStr = "";
             string stiffStr = "";
@@ -65,9 +58,7 @@ namespace BH.Adapter.GSA
             }
 
             return relStr + stiffStr;
-
         }
-
 
         /***************************************/
 
@@ -79,7 +70,6 @@ namespace BH.Adapter.GSA
             return "";
         }
 
-        
-
+        /***************************************/
     }
 }

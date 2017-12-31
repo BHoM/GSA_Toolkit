@@ -1,21 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-
 using BH.oM.Structural.Elements;
-using BH.oM.Materials;
 using BH.oM.Geometry;
 using BH.oM.Structural.Properties;
-
 using BH.Engine.Structure;
-
-
-using BHoMBR = BH.oM.Base;
 using BH.Adapter.GSA;
-using BH.Adapter;
+using BH.oM.Common.Materials;
 
 namespace GSA_Test
 {
@@ -51,29 +41,29 @@ namespace GSA_Test
             //string key = "Test Push Bar Key";
             GSAAdapter app = new GSAAdapter(@"C:\Users\afisher\Desktop\Project Shortcuts\_Test\Al_Test.gwb");
             //app = new GSAAdapter(@"‪C:\Users\phesari\Desktop\Gsa2.gwb");
-            Point p1 = new Point(0, 0, 0);
-            Point p2 = new Point(1, 0, 0);
-            Point p3 = new Point(1, 1, 0);
-            Point p4 = new Point(0, 1, 0);
-            Point p5 = new Point(0, 0, 1);
-            Point p6 = new Point(1, 0, 1);
-            Point p7 = new Point(1, 1, 1);
-            Point p8 = new Point(0, 1, 1);
+            Point p1 = new Point { X = 0, Y = 0, Z = 0 };
+            Point p2 = new Point { X = 1, Y = 0, Z = 0 };
+            Point p3 = new Point { X = 1, Y = 1, Z = 0 };
+            Point p4 = new Point { X = 0, Y = 1, Z = 0 };
+            Point p5 = new Point { X = 0, Y = 0, Z = 1 };
+            Point p6 = new Point { X = 1, Y = 0, Z = 1 };
+            Point p7 = new Point { X = 1, Y = 1, Z = 1 };
+            Point p8 = new Point { X = 0, Y = 1, Z = 1 };
 
-            Point p5b = new Point(0, 0, 2);
-            Point p6b = new Point(1, 0, 2);
-            Point p7b = new Point(1, 1, 2);
-            Point p8b = new Point(0, 1, 2);
+            Point p5b = new Point { X = 0, Y = 0, Z = 2 };
+            Point p6b = new Point { X = 1, Y = 0, Z = 2 };
+            Point p7b = new Point { X = 1, Y = 1, Z = 2 };
+            Point p8b = new Point { X = 0, Y = 1, Z = 2 };
 
-            Constraint6DOF pin = BH.Engine.Structure.Create.PinConstraint6DOF();
-            Constraint6DOF fix = BH.Engine.Structure.Create.FixConstraint6DOF();
+            Constraint6DOF pin = Create.PinConstraint6DOF();
+            Constraint6DOF fix = Create.FixConstraint6DOF();
 
             List<Node> nodesA = new List<Node>();
 
-            Node n1a = new Node(p5, "1");
-            Node n2a = new Node(p6, "2");
-            Node n3a = new Node(p7, "3");
-            Node n4a = new Node(p8, "4");
+            Node n1a = new Node { Position = p5, Name = "1" };
+            Node n2a = new Node { Position = p6, Name = "2" };
+            Node n3a = new Node { Position = p7, Name = "3" };
+            Node n4a = new Node { Position = p8, Name = "4" };
         
             n1a.Constraint = pin;
             n2a.Constraint = pin;
@@ -89,14 +79,14 @@ namespace GSA_Test
 
             List<Node> nodesB = new List<Node>();
 
-            Node n1b = new Node(p5b, "1");
-            Node n2b = new Node(p6b, "2");
-            Node n3b = new Node(p7b, "3");
-            Node n4b = new Node(p8b, "4");
+            Node n1b = new Node { Position = p5b, Name = "1" };
+            Node n2b = new Node { Position = p6b, Name = "2" };
+            Node n3b = new Node { Position = p7b, Name = "3" };
+            Node n4b = new Node { Position = p8b, Name = "4" };
 
             n1b.Constraint = pin;
             n2b.Constraint = pin;
-            n3b.Constraint = BH.Engine.Structure.Create.FullReleaseConstraint6DOF();
+            n3b.Constraint = Create.FullReleaseConstraint6DOF();
             n4b.Constraint = fix;
 
             nodesB.Add(n1b);
@@ -104,30 +94,30 @@ namespace GSA_Test
             nodesB.Add(n3b);
             nodesB.Add(n4b);
 
-            Bar bar1 = new Bar(new Node(p1), new Node(p2));
-            Bar bar2 = new Bar(new Node(p2), new Node(p3));
-            Bar bar3 = new Bar(new Node(p3), new Node(p4));
-            Bar bar4 = new Bar(new Node(p4), new Node(p1));
+            Bar bar1 = Create.Bar(new Node { Position = p1 }, new Node { Position = p2 });
+            Bar bar2 = Create.Bar(new Node { Position = p2 }, new Node { Position = p3 });
+            Bar bar3 = Create.Bar(new Node { Position = p3 }, new Node { Position = p4 });
+            Bar bar4 = Create.Bar(new Node { Position = p4 }, new Node { Position = p1 });
 
-            Bar bar5 = new Bar(new Node(p5), new Node(p6));
-            Bar bar6 = new Bar(new Node(p6), new Node(p7));
-            Bar bar7 = new Bar(new Node(p7), new Node(p8));
-            Bar bar8 = new Bar(new Node(p8), new Node(p5));
+            Bar bar5 = Create.Bar(new Node { Position = p5 }, new Node { Position = p6 });
+            Bar bar6 = Create.Bar(new Node { Position = p6 }, new Node { Position = p7 });
+            Bar bar7 = Create.Bar(new Node { Position = p7 }, new Node { Position = p8 });
+            Bar bar8 = Create.Bar(new Node { Position = p8 }, new Node { Position = p5 });
 
-            Bar bar9 = new Bar(new Node(p1), new Node(p5));
-            Bar bar10 = new Bar(new Node(p2), new Node(p6));
-            Bar bar11 = new Bar(new Node(p3), new Node(p7));
-            Bar bar12 = new Bar(new Node(p4), new Node(p8));
+            Bar bar9 = Create.Bar(new Node { Position = p1 }, new Node { Position = p5 });
+            Bar bar10 = Create.Bar(new Node { Position = p2 }, new Node { Position = p6 });
+            Bar bar11 = Create.Bar(new Node { Position = p3 }, new Node { Position = p7 });
+            Bar bar12 = Create.Bar(new Node { Position = p4 }, new Node { Position = p8 });
 
-            Bar bar5b = new Bar(new Node(p5b), new Node(p6b));
-            Bar bar6b = new Bar(new Node(p6b), new Node(p7b));
-            Bar bar7b = new Bar(new Node(p7b), new Node(p8b));
-            Bar bar8b = new Bar(new Node(p8b), new Node(p5b));
+            Bar bar5b = Create.Bar(new Node { Position = p5b }, new Node { Position = p6b });
+            Bar bar6b = Create.Bar(new Node { Position = p6b }, new Node { Position = p7b });
+            Bar bar7b = Create.Bar(new Node { Position = p7b }, new Node { Position = p8b });
+            Bar bar8b = Create.Bar(new Node { Position = p8b }, new Node { Position = p5b });
 
-            Bar bar9b = new Bar(new Node(p1), new Node(p5b));
-            Bar bar10b = new Bar(new Node(p2), new Node(p6b));
-            Bar bar11b = new Bar(new Node(p3), new Node(p7b));
-            Bar bar12b = new Bar(new Node(p4), new Node(p8b));
+            Bar bar9b = Create.Bar(new Node { Position = p1 }, new Node { Position = p5b });
+            Bar bar10b = Create.Bar(new Node { Position = p2 }, new Node { Position = p6b });
+            Bar bar11b = Create.Bar(new Node { Position = p3 }, new Node { Position = p7b });
+            Bar bar12b = Create.Bar(new Node { Position = p4 }, new Node { Position = p8b });
 
             List<Bar> bars1 = new List<Bar>();
             List<Bar> bars2a = new List<Bar>();
@@ -157,20 +147,20 @@ namespace GSA_Test
             bars2b.Add(bar11b);
             bars2b.Add(bar12b);
 
-            BH.oM.Structural.Properties.ISectionProperty sec1a = new BH.oM.Structural.Properties.ExplicitSection();
-            sec1a.Material = new BH.oM.Materials.Material("Material1", BH.oM.Materials.MaterialType.Concrete, 10, 10, 10, 10, 10);
+            ISectionProperty sec1a = new ExplicitSection();
+            sec1a.Material = BH.Engine.Common.Create.Material("Material1", MaterialType.Concrete, 10, 10, 10, 10, 10);
             sec1a.Name = "Section 1";
 
-            BH.oM.Structural.Properties.ISectionProperty sec1b = new BH.oM.Structural.Properties.ExplicitSection();
-            sec1b.Material = new BH.oM.Materials.Material("Material1", BH.oM.Materials.MaterialType.Concrete, 10, 10, 10, 10, 10);
+            ISectionProperty sec1b = new ExplicitSection();
+            sec1b.Material = BH.Engine.Common.Create.Material("Material1", MaterialType.Concrete, 10, 10, 10, 10, 10);
             sec1b.Name = "Section 1";
 
-            BH.oM.Structural.Properties.ISectionProperty sec2 = new BH.oM.Structural.Properties.ExplicitSection();
-            sec2.Material = new BH.oM.Materials.Material("Material2", BH.oM.Materials.MaterialType.Concrete, 10, 10, 10, 10, 10);
+            ISectionProperty sec2 = new ExplicitSection();
+            sec2.Material = BH.Engine.Common.Create.Material("Material2", MaterialType.Concrete, 10, 10, 10, 10, 10);
             sec2.Name = "Section 2";
 
-            BH.oM.Structural.Properties.ISectionProperty sec3 = new BH.oM.Structural.Properties.ExplicitSection();
-            sec3.Material = new BH.oM.Materials.Material("Material2", BH.oM.Materials.MaterialType.Concrete, 10, 10, 10, 10, 10);
+            ISectionProperty sec3 = new ExplicitSection();
+            sec3.Material = BH.Engine.Common.Create.Material("Material2", MaterialType.Concrete, 10, 10, 10, 10, 10);
             sec3.Name = "Section 3";
 
             foreach (Bar b in bars1.Concat(bars2a).Concat(bars2b))
@@ -188,7 +178,7 @@ namespace GSA_Test
 
             app.Push(nodesB, "Nodes");
 
-            app.Delete(new BH.Adapter.Queries.FilterQuery(typeof(BH.oM.Structural.Elements.Node), "Nodes"));
+            app.Delete(new BH.Adapter.Queries.FilterQuery(typeof(Node), "Nodes"));
 
             //List<string> ids;
             //app.PushObjects(nodesA, out ids, "Nodes");
@@ -203,15 +193,15 @@ namespace GSA_Test
 
         //private static void TestPushBar()
         //{
-        //    Point p1 = new Point(0, 0, 0);
-        //    Point p2 = new Point(1, 0, 0);
-        //    Point p3 = new Point(1, 1 , 0);
-        //    Point p4 = new Point(0, 1, 0);
+        //    Point p1 = new Point { X = 0, Y = 0, Z = 0 };
+        //    Point p2 = new Point { X = 1, Y = 0, Z = 0 };
+        //    Point p3 = new Point { X = 1, Y = 1 , Z = 0 };
+        //    Point p4 = new Point { X = 0, Y = 1, Z = 0 };
 
 
-        //    Bar bar1 = new Bar(new Node(p1), new Node(p2));
-        //    Bar bar2 = new Bar(new Node(p1), new Node(p3));
-        //    Bar bar3 = new Bar(new Node(p1), new Node(p4));
+        //    Bar bar1 = Create.Bar(new Node { Position = p1 }, new Node { Position = p2 });
+        //    Bar bar2 = Create.Bar(new Node { Position = p1 }, new Node { Position = p3 });
+        //    Bar bar3 = Create.Bar(new Node { Position = p1 }, new Node { Position = p4 });
 
         //    GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\EmptyFile.gwb");
 
@@ -277,8 +267,8 @@ namespace GSA_Test
         //{
         //    GSAAdapter app = new GSAAdapter(@"C:\Users\afisher\Desktop\Project Shortcuts\_Test\Al_Test.gwb");
 
-        //    Point p1 = new Point(1, 2, 3);
-        //    Node node = new Node(p1);
+        //    Point p1 = new Point { X = 1, Y = 2, Z = 3 };
+        //    Node node = new Node { Position = p1 };
         //    List<Node> nodes = new List<Node>();
         //    nodes.Add(node);
         //    List<string> ids = null;
@@ -306,10 +296,10 @@ namespace GSA_Test
 
 
 
-        ////    Point p1 = new Point(10, 10, 10);
-        ////    Point p2 = new Point(5, 5, 5);
+        ////    Point p1 = new Point { X = 10, Y = 10, Z = 10 };
+        ////    Point p2 = new Point { X = 5, Y = 5, Z = 5 };
 
-        ////    Bar bar = new Bar(p1, p2);
+        ////    Bar bar = Create.Bar(p1, p2);
         ////    List<Bar> bars = new List<Bar>();
         ////    bars.Add(bar);
         ////    BHoM.Structural.Properties.SectionProperty sec = new BHoM.Structural.Properties.SectionProperty(BHoM.Structural.Properties.ShapeType.Rectangle, /*BHoM.Structural.Properties.SectionType.Steel,*/ 100, 50, 5, 5, 5, 5);

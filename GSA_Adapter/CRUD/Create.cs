@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BH.oM.Structural.Elements;
-using BH.oM.Materials;
-using BH.oM.Structural.Properties;
 
 namespace BH.Adapter.GSA
 {
@@ -23,12 +17,13 @@ namespace BH.Adapter.GSA
             {
                 foreach (T obj in objects)
                 {
-                    success &= ComCall(Convert.ToGsaString(obj, (obj as BH.oM.Base.BHoMObject).CustomData[AdapterId].ToString()));
+                    success &= ComCall(Engine.GSA.Convert.IToGsaString(obj, (obj as BH.oM.Base.BHoMObject).CustomData[AdapterId].ToString()));
                 }
             }
             UpdateViews();
             return success;
         }
 
+        /***************************************************/
     }
 }
