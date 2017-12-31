@@ -178,7 +178,7 @@ namespace GSA_Test
 
             app.Push(nodesB, "Nodes");
 
-            app.Delete(new BH.Adapter.Queries.FilterQuery(typeof(Node), "Nodes"));
+            app.Delete(new BH.oM.Queries.FilterQuery(typeof(Node), "Nodes"));
 
             //List<string> ids;
             //app.PushObjects(nodesA, out ids, "Nodes");
