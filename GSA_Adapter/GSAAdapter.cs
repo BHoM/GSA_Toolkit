@@ -14,6 +14,8 @@ namespace BH.Adapter.GSA
         {
             gsaCom = new ComAuto();
 
+            AdapterId = BH.Engine.GSA.Convert.AdapterID;
+
             Config.SeparateProperties = true;
             Config.MergeWithComparer = true;
             Config.ProcessInMemory = false;
