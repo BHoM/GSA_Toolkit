@@ -1,7 +1,5 @@
 ﻿using Interop.gsa_8_7;
 
-
-
 namespace BH.Adapter.GSA
 {
     public partial class GSAAdapter : BHoMAdapter
