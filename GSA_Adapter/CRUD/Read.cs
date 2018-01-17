@@ -17,7 +17,7 @@ namespace BH.Adapter.GSA
         /**** Index Adapter Methods                     ****/
         /***************************************************/
 
-        protected override IEnumerable<BHoMObject> Read(Type type, IList indices)
+        protected override IEnumerable<IObject> Read(Type type, IList indices)
         {
             if (type == typeof(Node))
                 return ReadNodes(indices as dynamic);

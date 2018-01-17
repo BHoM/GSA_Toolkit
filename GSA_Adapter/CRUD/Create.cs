@@ -13,11 +13,11 @@ namespace BH.Adapter.GSA
         {
             bool success = true;
 
-            if (typeof(BH.oM.Base.BHoMObject).IsAssignableFrom(typeof(T)))
+            if (typeof(BH.oM.Base.IObject).IsAssignableFrom(typeof(T)))
             {
                 foreach (T obj in objects)
                 {
-                    success &= ComCall(Engine.GSA.Convert.IToGsaString(obj, (obj as BH.oM.Base.BHoMObject).CustomData[AdapterId].ToString()));
+                    success &= ComCall(Engine.GSA.Convert.IToGsaString(obj, (obj as BH.oM.Base.IObject).CustomData[AdapterId].ToString()));
                 }
             }
             UpdateViews();
