@@ -22,7 +22,7 @@ namespace BH.Adapter.GSA
             }
             else
             {
-                index =  gsaCom.GwaCommand("HIGHEST, " + typeString) + 1;
+                index =  m_gsaCom.GwaCommand("HIGHEST, " + typeString) + 1;
                 m_indexDict[type] = index;
             }
 

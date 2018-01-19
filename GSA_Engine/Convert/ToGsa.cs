@@ -2,8 +2,12 @@
 using BH.oM.Common.Materials;
 using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
+using BH.oM.Structural.Loads;
+using BH.oM.Geometry;
 using System;
 using System.Collections.Generic;
+
+using Interop.gsa_8_7;
 
 namespace BH.Engine.GSA
 {
@@ -25,6 +29,76 @@ namespace BH.Engine.GSA
                 return "PROP_SEC";
 
             return null;
+        }
+
+        /***************************************************/
+
+        public static List<string> ToGsaString(this LoadCombination loadComb, string combNo, string desc)
+        {
+            List<string> gsaStrings = new List<string>();
+            gsaStrings.Add(GetAnalysisCase(combNo, loadComb.Name, combNo, desc));
+            string type = GetTaskType(loadComb);
+            gsaStrings.Add(GetAnalysisTask(combNo, loadComb.Name, type, "0", combNo));
+
+            return gsaStrings;
+        }
+
+        /***************************************************/
+
+        public static string ToGsaString(this Load<Node> nodeLoad, double loadFactor, double lengthFactor)
+        {
+            string command;
+            Vector trans, rot;
+
+            if (nodeLoad is PointDisplacement)
+            {
+                trans = ((PointDisplacement)nodeLoad).Translation;
+                rot = ((PointDisplacement)nodeLoad).Rotation;
+                command = "DISP_NODE";
+                return command;
+            }
+
+            else if (nodeLoad is PointForce)
+            {
+                trans = ((PointForce)nodeLoad).Force;
+                rot = ((PointForce)nodeLoad).Moment;
+                command = "LOAD_NODE";
+                return command;
+            }
+
+            else
+                return null;
+        }
+
+        /***************************************************/
+
+        public static List<string> ToGsaString(this Load<Bar> barLoad, double loadFactor, double lengthFactor)
+        {
+            return null;
+        }
+
+        /***************************************************/
+
+        public static List<string> IToGsaString(this ILoad load, double loadFactor = 1 , double lengthFactor = 1)
+        {
+            return ToGsaString(load as dynamic, loadFactor, lengthFactor);
+        }
+
+        /***************************************************/
+
+        static public string ToGsaString(this Loadcase loadCase)
+        {
+            string title = loadCase.Name; ;
+            string type = GetGsaLoadType(loadCase.Nature);
+
+            string str;
+            string command = "LOAD_TITLE.1";
+            string bridge = "BRIDGE_NO";
+
+            if (type == "SUPERDEAD") type = "DEAD";
+
+            str = command + "," + loadCase.Number + "," + title + "," + type + "," + bridge;
+            return str;
         }
 
         /***************************************************/
@@ -129,7 +203,6 @@ namespace BH.Engine.GSA
             string str = command + "," + index + "," + name + "," + colour + "," + mat + "," + desc + "," + principle + "," + type + "," + cost + "," + props + "," + mods + "," + plate_type + "," + calc_J;
             return str;
         }
-
 
         /***************************************************/
         /**** Public Interface Methods                  ****/

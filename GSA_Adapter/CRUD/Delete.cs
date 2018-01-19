@@ -23,7 +23,7 @@ namespace BH.Adapter.GSA
             else if (indices == null)
             {
                 // Delete them all
-                int maxIndex = gsaCom.GwaCommand("HIGHEST, " + typeString);
+                int maxIndex = m_gsaCom.GwaCommand("HIGHEST, " + typeString);
                 if (ComCall("BLANK," + typeString + "," + 0 + "," + maxIndex))
                     return (maxIndex + 1); // TODO: Check that this is correct for Gsa
                 else
