@@ -35,7 +35,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Interop.Gsa_8_7">
-      <HintPath>..\..\..\..\..\..\Program Files\Oasys\GSA 8.7\Interop.Gsa_8_7.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files\Oasys\GSA 8.7\Interop.Gsa_8_7.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
