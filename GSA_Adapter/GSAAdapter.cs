@@ -10,7 +10,7 @@ namespace BH.Adapter.GSA
 
         public GSAAdapter()
         {
-            gsaCom = new ComAuto();
+            m_gsaCom = new ComAuto();
 
             AdapterId = BH.Engine.GSA.Convert.AdapterID;
 
@@ -25,9 +25,9 @@ namespace BH.Adapter.GSA
         {
             short result;
             if (!string.IsNullOrWhiteSpace(filePath))
-                result = gsaCom.Open(filePath);
+                result = m_gsaCom.Open(filePath);
             else
-                result = gsaCom.NewFile();
+                result = m_gsaCom.NewFile();
         }
 
 
@@ -37,7 +37,7 @@ namespace BH.Adapter.GSA
 
         private bool ComCall(string str)
         {
-            dynamic commandResult = gsaCom.GwaCommand(str);
+            dynamic commandResult = m_gsaCom.GwaCommand(str);
 
             if (1 == (int)commandResult)
                 return true;
@@ -52,7 +52,7 @@ namespace BH.Adapter.GSA
 
         private T ReturnComCall<T>(string str)
         {
-            dynamic commandResult = gsaCom.GwaCommand(str);
+            dynamic commandResult = m_gsaCom.GwaCommand(str);
 
             T returnVar = (T)commandResult;
 
@@ -69,7 +69,7 @@ namespace BH.Adapter.GSA
 
         private void UpdateViews()
         {
-            gsaCom.UpdateViews();
+            m_gsaCom.UpdateViews();
         }
 
 
@@ -77,7 +77,7 @@ namespace BH.Adapter.GSA
         /**** Private  Fields                           ****/
         /***************************************************/
 
-        private ComAuto gsaCom;
+        private ComAuto m_gsaCom;
 
 
         /***************************************************/

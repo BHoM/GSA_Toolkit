@@ -47,7 +47,7 @@ namespace BH.Adapter.GSA
         {
             List<Material> materials = new List<Material>();
 
-            string allProps = gsaCom.GwaCommand("GET_ALL, MAT").ToString();
+            string allProps = m_gsaCom.GwaCommand("GET_ALL, MAT").ToString();
             string[] matArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
             if (ids == null)
                 materials = matArr.Select(x => Engine.GSA.Convert.FromGsaMaterial(x)).ToList();
@@ -68,7 +68,7 @@ namespace BH.Adapter.GSA
             int[] potentialBeamRefs = GenerateIndices(ids, typeof(Bar));
 
             GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
-            gsaCom.Elements(potentialBeamRefs, out gsaElements);
+            m_gsaCom.Elements(potentialBeamRefs, out gsaElements);
 
             List<ISectionProperty> secPropList = ReadSectionProperties();
             List<Node> nodeList = ReadNodes();
@@ -85,7 +85,7 @@ namespace BH.Adapter.GSA
         {
 
             GsaNode[] gsaNodes;
-            gsaCom.Nodes(GenerateIndices(ids, typeof(Node)), out gsaNodes);
+            m_gsaCom.Nodes(GenerateIndices(ids, typeof(Node)), out gsaNodes);
 
             return gsaNodes.Select(x => Engine.GSA.Convert.FromGsaNode(x)).ToList();
         }
@@ -97,7 +97,7 @@ namespace BH.Adapter.GSA
             List<Material> matList = ReadMaterials(null, true);
             Dictionary<string, Material> materials = matList.ToDictionary(x => x.CustomData[AdapterId].ToString());
 
-            string allProps = gsaCom.GwaCommand("GET_ALL, PROP_SEC").ToString();
+            string allProps = m_gsaCom.GwaCommand("GET_ALL, PROP_SEC").ToString();
             string[] proArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
 
             if (ids == null)
@@ -115,7 +115,7 @@ namespace BH.Adapter.GSA
         {
             if (ids == null)
             {
-                int maxIndex = gsaCom.GwaCommand("HIGHEST, " + elementType.ToGsaString());
+                int maxIndex = m_gsaCom.GwaCommand("HIGHEST, " + elementType.ToGsaString());
                 maxIndex = maxIndex > 0 ? maxIndex : 1;
                 int[] potentialBeamRefs = new int[maxIndex];
                 for (int i = 0; i < maxIndex; i++)
