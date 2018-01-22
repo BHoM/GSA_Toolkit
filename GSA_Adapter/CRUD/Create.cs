@@ -20,7 +20,7 @@ namespace BH.Adapter.GSA
             {
                 foreach (T obj in objects)
                 {
-                    success &= ComCall(Engine.GSA.Convert.IToGsaString(obj, (obj as BH.oM.Base.IObject).CustomData[AdapterId].ToString()));
+                    success &= ComCall((obj as dynamic));
 
                 }
             }
@@ -65,7 +65,7 @@ namespace BH.Adapter.GSA
             bool success = true;
             double[] unitFactors = GetUnitFactors();
 
-            foreach (string gsaString in load.IToGsaString())
+            foreach (string gsaString in load.IToGsaString(unitFactors[1], unitFactors[0]))
             {
                 success &= ComCall(gsaString);
             }
