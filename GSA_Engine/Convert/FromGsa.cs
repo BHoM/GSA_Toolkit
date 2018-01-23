@@ -8,6 +8,7 @@ using Interop.gsa_8_7;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BH.oM.Structural.Results;
 
 namespace BH.Engine.GSA
 {
@@ -292,6 +293,67 @@ namespace BH.Engine.GSA
                 node.Constraint = GetConstraint(gn.Restraint, gn.Stiffness);
 
             return node;
+        }
+
+        /***************************************************/
+
+        public static NodeDisplacement FromGsaNodeDisplacement(GsaResults results, string id, string loadCase, int divisions = 0, double timeStep = 0)
+        {
+            NodeDisplacement disp = new NodeDisplacement
+            {
+                ObjectId = id,
+                Case = loadCase,
+                TimeStep = timeStep,
+                UX = results.dynaResults[0],
+                UY = results.dynaResults[1],
+                UZ = results.dynaResults[2],
+                RX = results.dynaResults[4],
+                RY = results.dynaResults[5],
+                RZ = results.dynaResults[6]
+            };
+            return disp;
+        }
+
+        /***************************************************/
+
+        public static NodeReaction FromGsaReaction(GsaResults results, string id, string loadCase, int divisions = 0, double timeStep = 0)
+        {
+
+            NodeReaction reac = new NodeReaction
+            {
+                ObjectId = id,
+                Case = loadCase,
+                TimeStep = timeStep,
+                FX = results.dynaResults[0],
+                FY = results.dynaResults[1],
+                FZ = results.dynaResults[2],
+                MX = results.dynaResults[4],
+                MY = results.dynaResults[5],
+                MZ = results.dynaResults[6]
+            };
+
+            return reac;
+        }
+
+        /***************************************************/
+
+        public static BarForce FromGsaBarForce(GsaResults results, string id, string loadCase, int divisions, double timeStep = 0)
+        {
+            BarForce force = new BarForce
+            {
+                ObjectId = id,
+                Case = loadCase,
+                TimeStep = timeStep,
+                Divisions = divisions,
+                Position = results.Pos,
+                FX = results.dynaResults[0],
+                FY = results.dynaResults[1],
+                FZ = results.dynaResults[2],
+                MX = results.dynaResults[4],
+                MY = results.dynaResults[5],
+                MZ = results.dynaResults[6]
+            };
+            return force;
         }
 
         /***************************************************/
