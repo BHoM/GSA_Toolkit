@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CRUD\Execute.cs" />
+    <Compile Include="CRUD\Extract.cs" />
     <Compile Include="Types\DependencyTypes.cs" />
     <Compile Include="Types\Comparer.cs" />
     <Compile Include="CRUD\Delete.cs" />

@@ -4,7 +4,7 @@
     {
         /***************************************/
 
-        private enum Out_0D_Results
+        public enum Out_0D_Results
         {
             REF_DISP = 12001000,
             REF_DISP_DX,
@@ -33,7 +33,7 @@
         /// <summary>
         /// 
         /// </summary>
-        private enum Out_1D_Results
+        public enum Out_1D_Results
         {
             REF_DISP_EL1D = 14001000,
             REF_DISP_EL1D_DX,
@@ -106,7 +106,7 @@
 
         /***************************************/
 
-        private enum Out_1D_Properties
+        public enum Out_1D_Properties
         {
             REF_ELEM = 1011000,
             REF_ELEM_NAME,
@@ -122,7 +122,7 @@
 
         /***************************************/
 
-        private enum Output_Init_Flags
+        public enum Output_Init_Flags
         {
             //These are hexadecimals. "0x" represents the hexadecimal representation of a subsequent number.
             OP_INIT_2D_BOTTOM = 0x1,     // output 2D stresses at bottom layer
@@ -137,7 +137,7 @@
 
         //In lack of an "Estring" function we have created a static class which returns
         //the three different options of outputaxis. It's used when extracting info in SIGSA.
-        private static class Output_Axis
+        public static class Output_Axis
         {
             static public string Default() { return "default"; }
             static public string Global() { return "global"; }
@@ -146,7 +146,7 @@
 
         /***************************************/
 
-        private enum UnitType
+        public enum UnitType
         {
             FORCE = 0,
             LENGTH,
@@ -162,7 +162,7 @@
 
         /***************************************/
 
-        private enum LoadType
+        public enum LoadType
         {
             DEAD,
             IMPOSED,
@@ -175,7 +175,7 @@
 
         /***************************************/
 
-        private enum MaterialType
+        public enum MaterialType
         {
             MT_STEEL,
             MT_CONCRETE,

@@ -6,6 +6,8 @@ using BH.oM.Structural.Properties;
 using BH.Engine.Structure;
 using BH.Adapter.GSA;
 using BH.oM.Common.Materials;
+using BH.oM.Queries;
+using BH.oM.Structural.Results;
 
 namespace GSA_Test
 {
@@ -13,10 +15,18 @@ namespace GSA_Test
     {
         static void Main(string[] args)
         {
-
-            TestPushBars();
+            TestExtractForces();
+            //TestPushBars();
             //TestDelete();
             //TestPushMaterials();
+        }
+
+        private static void TestExtractForces()
+        {
+            //C: \Users\inaslund\Documents\GSA sandbox\SimpleBeam Pt load.gwb
+            GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\SimpleBeam Pt load.gwb");
+            FilterQuery query = new FilterQuery(typeof(BarForce));
+            app.Pull(query);
         }
 
         //private static void TestPushMaterials()
