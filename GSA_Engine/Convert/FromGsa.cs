@@ -337,6 +337,46 @@ namespace BH.Engine.GSA
 
         /***************************************************/
 
+        public static NodeVelocity FromGsaNodeVelocity(GsaResults results, string id, string loadCase, int divisions = 0, double timeStep = 0)
+        {
+            //TODO: Needs testing
+            NodeVelocity disp = new NodeVelocity
+            {
+                ObjectId = id,
+                Case = loadCase,
+                TimeStep = timeStep,
+                UX = results.dynaResults[0],
+                UY = results.dynaResults[1],
+                UZ = results.dynaResults[2],
+                RX = results.dynaResults[4],
+                RY = results.dynaResults[5],
+                RZ = results.dynaResults[6]
+            };
+            return disp;
+        }
+
+        /***************************************************/
+
+        public static NodeAcceleration FromGsaNodeAcceleration(GsaResults results, string id, string loadCase, int divisions = 0, double timeStep = 0)
+        {
+            //TODO: Needs testing
+            NodeAcceleration disp = new NodeAcceleration
+            {
+                ObjectId = id,
+                Case = loadCase,
+                TimeStep = timeStep,
+                UX = results.dynaResults[0],
+                UY = results.dynaResults[1],
+                UZ = results.dynaResults[2],
+                RX = results.dynaResults[4],
+                RY = results.dynaResults[5],
+                RZ = results.dynaResults[6]
+            };
+            return disp;
+        }
+
+        /***************************************************/
+
         public static BarForce FromGsaBarForce(GsaResults results, string id, string loadCase, int divisions, double timeStep = 0)
         {
             BarForce force = new BarForce
@@ -354,6 +394,67 @@ namespace BH.Engine.GSA
                 MZ = results.dynaResults[6]
             };
             return force;
+        }
+
+        /***************************************************/
+
+        public static BarStress FromGsaBarStress(GsaResults results, string id, string loadCase, int divisions, double timeStep = 0)
+        {
+            BarStress force = new BarStress
+            {
+                ObjectId = id,
+                Case = loadCase,
+                TimeStep = timeStep,
+                Divisions = divisions,
+                Position = results.Pos,
+                Axial = results.dynaResults[0],
+                ShearY = results.dynaResults[1],
+                ShearZ = results.dynaResults[2],
+                BendingY_Bot = results.dynaResults[3],
+                BendingY_Top = results.dynaResults[4],
+                BendingZ_Bot = results.dynaResults[5],
+                BendingZ_Top = results.dynaResults[6],
+                CombAxialBendingPos = results.dynaResults[7],
+                CombAxialBendingNeg = results.dynaResults[8]
+            };
+            return force;
+        }
+
+        /***************************************************/
+
+        public static BarDeformation FromGsaBarDeformation(GsaResults results, string id, string loadCase, int divisions, double timeStep = 0)
+        {
+            BarDeformation def = new BarDeformation
+            {
+                ObjectId = id,
+                Case = loadCase,
+                TimeStep = timeStep,
+                Divisions = divisions,
+                Position = results.Pos,
+                UX = results.dynaResults[0],
+                UY = results.dynaResults[1],
+                UZ = results.dynaResults[2],
+                RX = results.dynaResults[4],
+                RY = results.dynaResults[5],
+                RZ = results.dynaResults[6]
+            };
+            return def;
+        }
+
+        /***************************************************/
+
+        public static BarStrain FromGsaBarStrain(GsaResults results, string id, string loadCase, int divisions, double timeStep = 0)
+        {
+            BarStrain strain = new BarStrain
+            {
+                ObjectId = id,
+                Case = loadCase,
+                TimeStep = timeStep,
+                Divisions = divisions,
+                Position = results.Pos,
+                Axial = results.dynaResults[0]
+            };
+            return strain;
         }
 
         /***************************************************/

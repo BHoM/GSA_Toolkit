@@ -29,7 +29,7 @@ namespace BH.Adapter.GSA
             ResHeader header;// = type.ResultHeader();
             ForceConverter converter;
             string axis;
-            if (!GetConverterAndHeader(type, out header, out converter, out axis, ref divisions))
+            if (!GetExtractionParameters(type, out header, out converter, out axis, ref divisions))
                 return new List<IResult>();
 
 
@@ -60,32 +60,50 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        private bool GetConverterAndHeader(Type type, out ResHeader header, out ForceConverter converter, out string axis, ref int divisions)
+        private bool GetExtractionParameters(Type type, out ResHeader header, out ForceConverter converter, out string axis, ref int divisions)
         {
             if (typeof(NodeReaction).IsAssignableFrom(type))
             {
                 header = ResHeader.REF_REAC;
                 axis = BH.Engine.GSA.Convert.Output_Axis.Global();
-                converter = new ForceConverter(BH.Engine.GSA.Convert.FromGsaReaction);
+                converter = BH.Engine.GSA.Convert.FromGsaReaction;
                 divisions = 1;
             }
             else if (typeof(NodeDisplacement).IsAssignableFrom(type))
             {
                 axis = BH.Engine.GSA.Convert.Output_Axis.Global();
-                converter = new ForceConverter(BH.Engine.GSA.Convert.FromGsaNodeDisplacement);
+                converter = BH.Engine.GSA.Convert.FromGsaNodeDisplacement;
                 header = ResHeader.REF_DISP;
                 divisions = 1;
             }
             else if (typeof(BarForce).IsAssignableFrom(type))
             {
                 axis = BH.Engine.GSA.Convert.Output_Axis.Local();
-                converter = new ForceConverter(BH.Engine.GSA.Convert.FromGsaBarForce);
+                converter = BH.Engine.GSA.Convert.FromGsaBarForce;
                 header = ResHeader.REF_FORCE_EL1D;
+            }
+            else if (typeof(BarDeformation).IsAssignableFrom(type))
+            {
+                axis = BH.Engine.GSA.Convert.Output_Axis.Local();
+                converter = BH.Engine.GSA.Convert.FromGsaBarDeformation;
+                header = ResHeader.REF_DISP_EL1D;
+            }
+            else if (typeof(BarStress).IsAssignableFrom(type))
+            {
+                axis = BH.Engine.GSA.Convert.Output_Axis.Local();
+                converter = BH.Engine.GSA.Convert.FromGsaBarStress;
+                header = ResHeader.REF_STRESS_EL1D;
+            }
+            else if (typeof(BarStrain).IsAssignableFrom(type))
+            {
+                axis = BH.Engine.GSA.Convert.Output_Axis.Local();
+                converter = BH.Engine.GSA.Convert.FromGsaBarStrain;
+                header = ResHeader.REF_STRAIN_EL1D;
             }
             else
             {
                 axis = null;
-                ErrorLog.Add("Force type not suported");
+                ErrorLog.Add("Force type " + type.Name + " not suported");
                 header = ResHeader.REF_ACC;
                 converter = null;
                 return false;
