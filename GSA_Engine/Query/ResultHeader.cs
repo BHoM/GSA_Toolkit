@@ -9,7 +9,7 @@ using Interop.gsa_8_7;
 
 namespace BH.Engine.GSA
 {
-    public static class Query
+    public static partial class Query
     {
         /***************************************************/
         /**** Public Methods                            ****/
