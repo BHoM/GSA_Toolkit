@@ -45,43 +45,60 @@ namespace BH.Engine.GSA
 
         /***************************************************/
 
-        public static string ToGsaString(this Load<Node> nodeLoad, double loadFactor, double lengthFactor)
+        public static List<string> ToGsaString(this Load<Node> nodeLoad, double[] unitFactors)
         {
             string command;
             Vector trans, rot;
+            List<string> forceStrings = new List<string>();
+            double factor;
 
-            if (nodeLoad is PointDisplacement)
-            {
-                trans = ((PointDisplacement)nodeLoad).Translation;
-                rot = ((PointDisplacement)nodeLoad).Rotation;
-                command = "DISP_NODE";
-                return command;
-            }
+            trans = nodeLoad.ITranslationVector();
+            command = nodeLoad.IForceTypeString();
+            rot = nodeLoad.IRotationVector();
+            factor = nodeLoad.IFactor(unitFactors);
 
-            else if (nodeLoad is PointForce)
-            {
-                trans = ((PointForce)nodeLoad).Force;
-                rot = ((PointForce)nodeLoad).Moment;
-                command = "LOAD_NODE";
-                return command;
-            }
+            string name = nodeLoad.Name;
+            string str;
+            string appliedTo = CreateIdListOrGroupName();
+            string caseNo = nodeLoad.Loadcase.Number.ToString();
+            string axis = GetAxis(nodeLoad);
 
-            else
-                return null;
+            str = command + "," + name + "," + appliedTo + "," + caseNo + "," + axis;
+
+            AddVectorDataToStringSingle(str, trans, ref forceStrings, factor, true);
+            AddVectorDataToStringSingle(str, rot, ref forceStrings, factor, false);
+
+            return forceStrings;
         }
 
         /***************************************************/
 
-        public static List<string> ToGsaString(this Load<Bar> barLoad, double loadFactor, double lengthFactor)
+        public static List<string> ToGsaString(this Load<Bar> barLoad, double[] unitFactors)
         {
+            List<string> forceStrings;
+            string appliedTo = CreateIdListOrGroupName();
+
+            if (appliedTo == null)
+                return null;
+
+            string caseNo = barLoad.Loadcase.Number.ToString();
+
+            switch (barLoad.GetType().Name)
+            {
+                case "BarPointLoad":
+                case BHL.LoadType.BarUniformLoad:
+                case BHL.LoadType.BarVaryingLoad:
+                    BarLoadIO.AddBarLoad(gsa, (BHL.Load<BHE.Bar>)load, unitFactors[(int)GsaEnums.UnitType.LENGTH], unitFactors[(int)GsaEnums.UnitType.FORCE]);
+            }
+
             return null;
         }
 
         /***************************************************/
 
-        public static List<string> IToGsaString(this ILoad load, double loadFactor = 1 , double lengthFactor = 1)
+        public static List<string> IToGsaString(this ILoad load, double[] unitFactors)
         {
-            return ToGsaString(load as dynamic, loadFactor, lengthFactor);
+            return ToGsaString(load as dynamic, unitFactors);
         }
 
         /***************************************************/
