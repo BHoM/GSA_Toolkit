@@ -23,33 +23,62 @@ namespace BH.Adapter.GSA
 
         protected override IEnumerable<IResult> Extract(Type type, IList ids = null, IList cases = null, int divisions = 5)
         {
+            if (typeof(StructuralGlobalResult).IsAssignableFrom(type))
+                return ExtractGlobalresults(type, cases);
+            else
+                return ExtractObjectResults(type, ids, cases, divisions);
+
+        }
+
+        /***************************************************/
+        /**** Global Results  Methods                   ****/
+        /***************************************************/
+
+        private IEnumerable<IResult> ExtractGlobalresults(Type type, IList cases)
+        {
+            List<int> caseNumbers = CheckAndGetAnalysisCaseNumbers(cases);
+
+
+            throw new NotImplementedException();
+
+        }
+
+        /***************************************************/
+        /**** Object Results  Methods                   ****/
+        /***************************************************/
+
+        private IEnumerable<IResult> ExtractObjectResults(Type type, IList ids = null, IList cases = null, int divisions = 5)
+        {
             List<int> objectIds = CheckAndGetIds(ids, type);
             List<string> loadCases = CheckAndGetAnalysisCases(cases);
 
             ResHeader header;// = type.ResultHeader();
             ForceConverter converter;
             string axis;
-            if (!GetExtractionParameters(type, out header, out converter, out axis, ref divisions))
+            double unitFactor;
+            if (!GetExtractionParameters(type, out header, out converter, out axis, out unitFactor, ref divisions))
                 return new List<IResult>();
-
 
             List<IResult> results = new List<IResult>();
             int midPoints = divisions == 1 ? divisions : divisions - 2;
             foreach (string loadCase in loadCases)
             {
-                foreach (int id in objectIds)
+                if (InitializeLoadextraction(header, loadCase, midPoints, axis))
                 {
-                    GsaResults[] gsaResults = GetResults(header, loadCase, id, midPoints, axis);
-                    if (gsaResults != null && gsaResults.Length == divisions)
+                    foreach (int id in objectIds)
                     {
-                        foreach (GsaResults gsaRes in gsaResults)
+                        GsaResults[] gsaResults = GetResults(id, unitFactor);
+                        if (gsaResults != null && gsaResults.Length == divisions)
                         {
-                            results.Add(converter.Invoke(gsaRes, id.ToString(), loadCase, divisions));
+                            foreach (GsaResults gsaRes in gsaResults)
+                            {
+                                results.Add(converter.Invoke(gsaRes, id.ToString(), loadCase, divisions));
+                            }
                         }
-                    }
-                    else
-                    {
-                        ErrorLog.Add("Different number of results compared to the expected for object with id " + id + ", for loadcase: " + loadCase);
+                        else
+                        {
+                            ErrorLog.Add("Different number of results compared to the expected for object with id " + id + ", for loadcase: " + loadCase);
+                        }
                     }
                 }
             }
@@ -60,14 +89,16 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        private bool GetExtractionParameters(Type type, out ResHeader header, out ForceConverter converter, out string axis, ref int divisions)
+        private bool GetExtractionParameters(Type type, out ResHeader header, out ForceConverter converter, out string axis, out double unitFactor, ref int divisions)
         {
+            double[] unitFactors = GetUnitFactors();
             if (typeof(NodeReaction).IsAssignableFrom(type))
             {
                 header = ResHeader.REF_REAC;
                 axis = BH.Engine.GSA.Convert.Output_Axis.Global();
                 converter = BH.Engine.GSA.Convert.FromGsaReaction;
                 divisions = 1;
+                unitFactor = unitFactors[(int)BH.Engine.GSA.Convert.UnitType.FORCE];
             }
             else if (typeof(NodeDisplacement).IsAssignableFrom(type))
             {
@@ -75,30 +106,35 @@ namespace BH.Adapter.GSA
                 converter = BH.Engine.GSA.Convert.FromGsaNodeDisplacement;
                 header = ResHeader.REF_DISP;
                 divisions = 1;
+                unitFactor = unitFactors[(int)BH.Engine.GSA.Convert.UnitType.LENGTH];
             }
             else if (typeof(BarForce).IsAssignableFrom(type))
             {
                 axis = BH.Engine.GSA.Convert.Output_Axis.Local();
                 converter = BH.Engine.GSA.Convert.FromGsaBarForce;
                 header = ResHeader.REF_FORCE_EL1D;
+                unitFactor = unitFactors[(int)BH.Engine.GSA.Convert.UnitType.FORCE];
             }
             else if (typeof(BarDeformation).IsAssignableFrom(type))
             {
                 axis = BH.Engine.GSA.Convert.Output_Axis.Local();
                 converter = BH.Engine.GSA.Convert.FromGsaBarDeformation;
                 header = ResHeader.REF_DISP_EL1D;
+                unitFactor = unitFactors[(int)BH.Engine.GSA.Convert.UnitType.LENGTH];
             }
             else if (typeof(BarStress).IsAssignableFrom(type))
             {
                 axis = BH.Engine.GSA.Convert.Output_Axis.Local();
                 converter = BH.Engine.GSA.Convert.FromGsaBarStress;
                 header = ResHeader.REF_STRESS_EL1D;
+                unitFactor = unitFactors[(int)BH.Engine.GSA.Convert.UnitType.STRESS];
             }
             else if (typeof(BarStrain).IsAssignableFrom(type))
             {
                 axis = BH.Engine.GSA.Convert.Output_Axis.Local();
                 converter = BH.Engine.GSA.Convert.FromGsaBarStrain;
                 header = ResHeader.REF_STRAIN_EL1D;
+                unitFactor = 1;
             }
             else
             {
@@ -106,6 +142,7 @@ namespace BH.Adapter.GSA
                 ErrorLog.Add("Force type " + type.Name + " not suported");
                 header = ResHeader.REF_ACC;
                 converter = null;
+                unitFactor = 1;
                 return false;
             }
             return true;
@@ -115,15 +152,19 @@ namespace BH.Adapter.GSA
         /**** Private  Methods - Result extraction      ****/
         /***************************************************/
 
-        private GsaResults[] GetResults(ResHeader header, string loadCase, int objectId, int divisions, string axis, double unitFactor = 1)
+        private bool InitializeLoadextraction(ResHeader header, string loadCase, int divisions, string axis)
         {
             int inputFlags = (int)BH.Engine.GSA.Convert.Output_Init_Flags.OP_INIT_1D_AUTO_PTS;
             if (m_gsaCom.Output_Init_Arr(inputFlags, axis, loadCase, header, divisions) != 0)
             {
-                ErrorLog.Add("Failed to initialize result extraction for object with id: " + objectId + ", for loadcase: " + loadCase);
-                return null;
+                ErrorLog.Add("Failed to initialize result extraction for loadcase: " + loadCase);
+                return false;
             }
+            return true;
+        }
 
+        private GsaResults[] GetResults(int objectId, double unitFactor)
+        {
             GsaResults[] results;
             int numOfComponents;
             try
@@ -137,9 +178,12 @@ namespace BH.Adapter.GSA
             }
 
             // Convert to SI
-            foreach (GsaResults r in results)
-                for (int i = 0; i < r.dynaResults.Length; i++)
-                    r.dynaResults[i] /= unitFactor;
+            if (unitFactor != 1)
+            {
+                foreach (GsaResults r in results)
+                    for (int i = 0; i < r.dynaResults.Length; i++)
+                        r.dynaResults[i] /= unitFactor;
+            }
 
             return results;
         }
@@ -217,7 +261,38 @@ namespace BH.Adapter.GSA
         }
 
         /***************************************************/
+        private List<int> CheckAndGetAnalysisCaseNumbers(IList cases)
+        {
+            List<int> loadCases;
+            if (cases == null || cases.Count == 0)
+            {
+                loadCases = new List<int>();
+                int sResult;
+                int maxIndex = m_gsaCom.GwaCommand("HIGHEST, ANAL");
 
+                for (int i = 1; i <= maxIndex; i++)
+                {
+                    try
+                    {
+                        sResult = (int)m_gsaCom.GwaCommand("GET, ANAL," + i);
+                        loadCases.Add(sResult);
+                    }
+                    catch
+                    {
+                        ErrorLog.Add("Analysis task " + i + "could not be found in the model.");
+                    }
+                }
+
+            }
+            else if (cases is List<int>)
+                loadCases = cases as List<int>;
+            else
+                return new List<int>();
+
+            return loadCases.Where(x => CheckAnalysisCaseExists(x, x.ToString())).ToList();
+        }
+
+        /***************************************************/
         private List<string> CheckAndGetAnalysisCases(IList cases)
         {
             List<string> loadCases;
@@ -299,170 +374,5 @@ namespace BH.Adapter.GSA
         }
 
         /***************************************************/
-        /**** Methods to be deleted                     ****/
-        /***************************************************/
-
-        private Dictionary<int, List<List<double>>> GetResults(string loadCase, ResHeader resultType, List<int> nodeIndices, int divisions)
-        {
-            int inputFlags = (int)BH.Engine.GSA.Convert.Output_Init_Flags.OP_INIT_1D_AUTO_PTS;
-            string axis = BH.Engine.GSA.Convert.Output_Axis.Global();
-
-            if (m_gsaCom.Output_Init_Arr(inputFlags, axis, loadCase, resultType, divisions) != 0)
-                return null;
-
-            Dictionary<int, List<List<double>>> nodalResults = new Dictionary<int, List<List<double>>>();
-
-            for (int i = 0; i < nodeIndices.Count; i++)
-            {
-                List<List<double>> nodeRes = GetResult(nodeIndices[i]);
-                if (nodeRes != null)
-                    nodalResults.Add(nodeIndices[i], nodeRes);
-            }
-
-            return nodalResults;
-        }
-
-        /***************************************************/
-
-        private List<List<double>> GetResult(int objectId, double unitFactor = 1)
-        {
-            GsaResults[] results;
-            int numOfComponents;
-            try
-            {
-                m_gsaCom.Output_Extract_Arr(objectId, out results, out numOfComponents);
-            }
-            catch
-            {
-                ErrorLog.Add("Failed to extract results for item " + objectId);
-                return null;
-            }
-            List<List<double>> resList = new List<List<double>>();
-
-            foreach (GsaResults r in results)
-            {
-                List<double> innerList = new List<double>();
-                for (int i = 0; i < r.dynaResults.Length; i++)
-                    innerList.Add(r.dynaResults[i] / unitFactor);
-
-                resList.Add(innerList);
-            }
-
-            return resList;
-
-        }
-
-        private bool ExtractBeamResults(int bId, string caseDescription, ResHeader header, double unitFactor, int divisions, string sAxis, out GsaResults[] GSAresults)
-        {
-            int inputFlags = (int)BH.Engine.GSA.Convert.Output_Init_Flags.OP_INIT_1D_AUTO_PTS;
-            //int inputFlags = 0x40;
-            int nComp = 0;
-
-            // Get unit factor for extracted results.
-
-            if (m_gsaCom.Output_Init_Arr(inputFlags, sAxis, caseDescription, header, divisions - 2) != 0)
-            {
-                ErrorLog.Add("Initialisation failed");
-                GSAresults = null;
-                return false;
-            }
-
-            try
-            {
-                if (m_gsaCom.Output_Extract_Arr(bId, out GSAresults, out nComp) != 0)
-                {
-                    ErrorLog.Add("Extraction failed");
-                    return false;
-                }
-            }
-
-            catch (Exception e)
-            {
-                ErrorLog.Add(e.Message);
-                ErrorLog.Add("Extraction failed on element " + bId);
-
-                GSAresults = new GsaResults[0];
-
-                return false;
-            }
-
-            // Convert to SI
-            foreach (GsaResults r in GSAresults)
-                for (int i = 0; i < r.dynaResults.Length; i++)
-                    r.dynaResults[i] /= unitFactor;
-
-            return true;
-        }
-
-
-        /***************************************************/
-
-        //public List<NodeReaction> GetNodeReacions(List<int> nodeIds, List<string> cases)
-        //{
-        //    ResHeader resHeader = ResHeader.REF_REAC;
-        //    List<NodeReaction> nodeReactions = new List<NodeReaction>();
-        //    for (int i = 0; i < cases.Count; i++)
-        //    {
-        //        Dictionary<int, List<double>> res = GetResults(cases[i], resHeader, nodeIds, 0);
-
-        //        if (res != null)
-        //        {
-        //            foreach (KeyValuePair<int, List<double>> kvp in res)
-        //            {
-        //                List<double> nodeRes = kvp.Value;
-        //                NodeReaction reac = new NodeReaction
-        //                {
-        //                    ObjectId = kvp.Key.ToString(),
-        //                    Case = cases[i],
-        //                    FX = nodeRes[0],
-        //                    FY = nodeRes[1],
-        //                    FZ = nodeRes[2],
-        //                    MX = nodeRes[4],
-        //                    MY = nodeRes[5],
-        //                    MZ = nodeRes[6]
-        //                };
-        //                nodeReactions.Add(reac);
-        //            }
-        //        }
-
-        //    }
-
-        //    return nodeReactions;
-        //}
-
-        /***************************************************/
-
-        //public List<NodeDisplacement> GetNodeDisplacements(List<int> nodeIds, List<string> cases)
-        //{
-        //    ResHeader resHeader = ResHeader.REF_DISP;
-        //    List<NodeDisplacement> nodeReactions = new List<NodeDisplacement>();
-        //    for (int i = 0; i < cases.Count; i++)
-        //    {
-        //        Dictionary<int, List<double>> res = GetResults(cases[i], resHeader, nodeIds, 0);
-
-        //        if (res != null)
-        //        {
-        //            foreach (KeyValuePair<int, List<double>> kvp in res)
-        //            {
-        //                List<double> nodeRes = kvp.Value;
-        //                NodeDisplacement reac = new NodeDisplacement
-        //                {
-        //                    ObjectId = kvp.Key.ToString(),
-        //                    Case = cases[i],
-        //                    UX = nodeRes[0],
-        //                    UY = nodeRes[1],
-        //                    UZ = nodeRes[2],
-        //                    RX = nodeRes[4],
-        //                    RY = nodeRes[5],
-        //                    RZ = nodeRes[6]
-        //                };
-        //                nodeReactions.Add(reac);
-        //            }
-        //        }
-
-        //    }
-
-        //    return nodeReactions;
-        //}
     }
 }

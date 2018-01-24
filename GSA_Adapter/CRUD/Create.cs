@@ -20,7 +20,7 @@ namespace BH.Adapter.GSA
             {
                 foreach (T obj in objects)
                 {
-                    success &= ComCall((obj as dynamic));
+                    success &= Create((obj as dynamic));
 
                 }
             }
