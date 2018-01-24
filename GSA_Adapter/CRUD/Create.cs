@@ -65,7 +65,7 @@ namespace BH.Adapter.GSA
             bool success = true;
             double[] unitFactors = GetUnitFactors();
 
-            foreach (string gsaString in load.IToGsaString(unitFactors[1], unitFactors[0]))
+            foreach (string gsaString in load.IToGsaString(unitFactors))
             {
                 success &= ComCall(gsaString);
             }
