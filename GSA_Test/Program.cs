@@ -24,7 +24,7 @@ namespace GSA_Test
         private static void TestExtractForces()
         {
             //C: \Users\inaslund\Documents\GSA sandbox\SimpleBeam Pt load.gwb
-            GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\SimpleBeam Pt load.gwb");
+            GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\SimpleBeam Pt load.gwa");
             FilterQuery query = new FilterQuery(typeof(BarDeformation));
             app.Pull(query);
         }
