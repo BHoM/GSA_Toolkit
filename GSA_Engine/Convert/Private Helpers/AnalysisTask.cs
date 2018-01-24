@@ -1,4 +1,6 @@
-﻿using BH.Engine.Structure;
+﻿using System;
+using System.Collections.Generic;
+using BH.Engine.Structure;
 using BH.oM.Base;
 using BH.Engine.GSA;
 using BH.oM.Structural.Elements;
@@ -189,6 +191,105 @@ namespace BH.Engine.GSA
             return "";
         }
 
+        public static string CreateIdListOrGroupName()
+        {
+            //if (!string.IsNullOrWhiteSpace(group.Name))
+            //    return "\"" + group.Name + "\"";
+
+            //List<string> ids;
+
+            ////if (group is BHB.Group<BHE.Node>)
+            ////    Elements.NodeIO.GetOrCreateNodes(gsa, group as List<BHE.Node>, out ids);
+            ////else
+            ////{
+            //List<IObject> idItems;
+
+            //bool isIareaElement = group is BHB.Group<IAreaElement>;
+
+            //else if (isIareaElement)
+            //{
+            //    idItems = new List<BHB.IBase>();
+            //    foreach (BHE.IAreaElement elem in group as BHB.Group<BHE.IAreaElement>)
+            //    {
+            //        if (!(elem is BHE.FEMesh))
+            //        {
+            //            Utility.Utils.SendErrorMessage("Mesh is only IAreaElement implemented in GSA");
+            //        }
+            //        BHE.FEMesh mesh = elem as BHE.FEMesh;
+
+            //        foreach (BHE.FEFace face in mesh.Faces)
+            //        {
+            //            if (face.CustomData.ContainsKey(Utils.ID))
+            //                idItems.Add(face);
+            //            else
+            //                return null;
+            //        }
+            //    }
+            //}
+            //else
+            //{
+
+            //    List<BHB.IBase> nonIdItems = group.Where(x => !x.CustomData.ContainsKey(Utils.ID)).Select(x => (BHB.IBase)x).ToList();
+
+            //    if (nonIdItems.Count > 0)
+            //        return null;
+
+            //    idItems = group.Where(x => x.CustomData.ContainsKey(Utils.ID)).Select(x => (BHB.IBase)x).ToList();
+            //}
+
+            //ids = idItems.Select(x => x.CustomData[Utils.ID].ToString()).ToList();
+
+            //IEnumerable<int> intIds = ids.Select(x => int.Parse(x));
+
+            //return Utils.GeterateIdString(intIds);
+            return 1.ToString();
+        }
+
+        public static string GetAxis(ILoad load)
+        {
+            switch (load.Axis)
+            {
+                case LoadAxis.Local:
+                    return "LOCAL";
+                case LoadAxis.Global:
+                default:
+                    return "GLOBAL";
+            }
+        }
+
+        public static void AddVectorDataToStringSingle(string startStr, BH.oM.Geometry.Vector vec, ref List<string> strings, double factor, bool translational, string pos = "")
+        {
+            foreach (string str in GetForceVectorsStrings(vec, factor, translational, pos))
+            {
+                strings.Add(startStr + "," + str);
+            }
+        }
+
+        public static List<string> GetForceVectorsStrings(BH.oM.Geometry.Vector vec, double factor, bool translational, string pos = "")
+        {
+            List<string> strings = new List<string>();
+
+            if (vec != null)
+            {
+                string[] dir = Directions(translational);
+
+                if (vec.X != 0)
+                    strings.Add(dir[0] + pos + "," + (factor * vec.X).ToString());
+                if (vec.Y != 0)
+                    strings.Add(dir[1] + pos + "," + (factor * vec.Y).ToString());
+                if (vec.Z != 0)
+                    strings.Add(dir[2] + pos + "," + (factor * vec.Z).ToString());
+            }
+            return strings;
+        }
+
+        public static string[] Directions(bool translations)
+        {
+            if (translations)
+                return new string[] { "X", "Y", "Z" };
+            else
+                return new string[] { "XX", "YY", "ZZ" };
+        }
 
     }
 }
