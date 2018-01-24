@@ -48,13 +48,13 @@ namespace BH.Engine.GSA
         public static List<string> ToGsaString(this Load<Node> nodeLoad, double[] unitFactors)
         {
             string command;
-            Vector trans, rot;
+            Vector force, moment;
             List<string> forceStrings = new List<string>();
             double factor;
 
-            trans = nodeLoad.ITranslationVector();
+            force = nodeLoad.ITranslationVector()[0];
             command = nodeLoad.IForceTypeString();
-            rot = nodeLoad.IRotationVector();
+            moment = nodeLoad.IRotationVector()[0];
             factor = nodeLoad.IFactor(unitFactors);
 
             string name = nodeLoad.Name;
@@ -65,8 +65,8 @@ namespace BH.Engine.GSA
 
             str = command + "," + name + "," + appliedTo + "," + caseNo + "," + axis;
 
-            AddVectorDataToStringSingle(str, trans, ref forceStrings, factor, true);
-            AddVectorDataToStringSingle(str, rot, ref forceStrings, factor, false);
+            AddVectorDataToStringSingle(str, force, ref forceStrings, factor, true);
+            AddVectorDataToStringSingle(str, moment, ref forceStrings, factor, false);
 
             return forceStrings;
         }
@@ -75,23 +75,34 @@ namespace BH.Engine.GSA
 
         public static List<string> ToGsaString(this Load<Bar> barLoad, double[] unitFactors)
         {
-            List<string> forceStrings;
+            Vector force1, force2,  moment1, moment2;
+            List<string> forceStrings = new List<string>();
+
+            string name = barLoad.Name;
+            string projection = barLoad.IsProjectedString();
+            string axis = barLoad.IsGlobal();
+            double factor = barLoad.IFactor(unitFactors);
             string appliedTo = CreateIdListOrGroupName();
+            force1 = barLoad.ITranslationVector()[0];
+            moment1 = barLoad.IRotationVector()[0];
+            force2 = barLoad.ITranslationVector()[1];
+            moment2 = barLoad.IRotationVector()[1];
+            string caseNo = barLoad.Loadcase.Number.ToString();
+            string command = barLoad.IForceTypeString();
+            string pos1 = "," + barLoad.ILoadPosition()[0];
+            string pos2 = "," + barLoad.ILoadPosition()[1];
 
             if (appliedTo == null)
                 return null;
 
-            string caseNo = barLoad.Loadcase.Number.ToString();
+            string str = command + "," + name + "," + appliedTo + "," + caseNo + "," + axis + "," + projection;
 
-            switch (barLoad.GetType().Name)
-            {
-                case "BarPointLoad":
-                case BHL.LoadType.BarUniformLoad:
-                case BHL.LoadType.BarVaryingLoad:
-                    BarLoadIO.AddBarLoad(gsa, (BHL.Load<BHE.Bar>)load, unitFactors[(int)GsaEnums.UnitType.LENGTH], unitFactors[(int)GsaEnums.UnitType.FORCE]);
-            }
+            AddVectorDataToStringSingle(str, force1, ref forceStrings, factor, true, pos1);
+            AddVectorDataToStringSingle(str, moment1, ref forceStrings, factor, false, pos1);
+            AddVectorDataToStringSingle(str, force2, ref forceStrings, factor, true, pos2);
+            AddVectorDataToStringSingle(str, moment2, ref forceStrings, factor, false, pos2);
 
-            return null;
+            return forceStrings;
         }
 
         /***************************************************/

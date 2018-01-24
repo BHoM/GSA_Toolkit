@@ -1,6 +1,9 @@
 ﻿using BH.Engine.GSA;
+using BH.oM.Structural.Loads;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BH.Adapter.GSA
 {
@@ -12,6 +15,14 @@ namespace BH.Adapter.GSA
 
         protected override object NextId(Type type, bool refresh)
         {
+
+            if (type == typeof(LoadCombination))
+                return 0; //TODO: Needed?
+            else if (type == typeof(Loadcase))
+                return 0; //TODO: Needed?
+            else if (type == typeof(ILoad) || type.GetInterfaces().Contains(typeof(ILoad)))
+                return 0;
+
             string typeString = type.ToGsaString();
 
             int index;

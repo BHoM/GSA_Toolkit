@@ -20,5 +20,20 @@ namespace BH.Engine.GSA
         {
             return "LOAD_NODE";
         }
+
+        public static string ForceTypeString(this BarPointLoad load)
+        {
+            return "LOAD_BEAM_POINT";
+        }
+
+        public static string ForceTypeString(this BarUniformlyDistributedLoad load)
+        {
+            return "LOAD_BEAM_UDL";
+        }
+
+        public static string ForceTypeString(this BarVaryingDistributedLoad load)
+        {
+            return "LOAD_BEAM_TRILIN";
+        }
     }
 }
