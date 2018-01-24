@@ -41,6 +41,10 @@
     <Reference Include="Common_Engine">
       <HintPath>..\..\BHoM_Engine\Build\Common_Engine.dll</HintPath>
     </Reference>
+    <Reference Include="Geometry_Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BHoM_Engine\Build\Geometry_Engine.dll</HintPath>
+    </Reference>
     <Reference Include="Interop.Gsa_8_7">
       <HintPath>..\..\..\..\..\..\..\..\Program Files\Oasys\GSA 8.7\Interop.Gsa_8_7.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -72,8 +76,11 @@
     <Compile Include="Convert\Private Helpers\SectionProperty.cs" />
     <Compile Include="Convert\ToGsa.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Query\Axis.cs" />
     <Compile Include="Query\Factor.cs" />
     <Compile Include="Query\ForceTypeString.cs" />
+    <Compile Include="Query\Position.cs" />
+    <Compile Include="Query\Projection.cs" />
     <Compile Include="Query\ResultHeader.cs" />
     <Compile Include="Query\RotationVector.cs" />
     <Compile Include="Query\TranslationVector.cs" />

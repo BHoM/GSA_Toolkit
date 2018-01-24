@@ -25,5 +25,15 @@ namespace BH.Engine.GSA
         {
             return unitType[2];
         }
+
+        public static double Factor(this BarPointLoad load, double[] unitType)
+        {
+            return unitType[1];
+        }
+
+        public static double Factor(this BarUniformlyDistributedLoad load, double[] unitType)
+        {
+            return unitType[1];
+        }
     }
 }

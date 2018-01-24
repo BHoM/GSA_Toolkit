@@ -3,6 +3,7 @@ using BH.oM.Base;
 using BH.oM.Common.Materials;
 using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
+using BH.oM.Structural.Loads;
 using Interop.gsa_8_7;
 using System;
 using System.Collections;
@@ -27,6 +28,12 @@ namespace BH.Adapter.GSA
                 return ((List<ISectionProperty>)ReadSectionProperties(indices as dynamic)).Cast<BHoMObject>();
             else if (type == typeof(Material))
                 return ReadMaterials(indices as dynamic);
+            else if (type == typeof(LoadCombination))
+                return new List<LoadCombination>(); //TODO: Implement loadcombination extraction
+            else if (type == typeof(Loadcase))
+                return new List<LoadCombination>(); //TODO: Implement loadcombination extraction
+            else if (type == typeof(ILoad) || type.GetInterfaces().Contains(typeof(ILoad)))
+                return new List<ILoad>();
 
             return null;
         }
