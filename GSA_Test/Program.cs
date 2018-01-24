@@ -16,8 +16,9 @@ namespace GSA_Test
     {
         static void Main(string[] args)
         {
+            TestPushLoads();
             //TestExtractForces();
-            TestPushBars();
+            //TestPushBars();
             //TestDelete();
             //TestPushMaterials();
         }
@@ -28,6 +29,19 @@ namespace GSA_Test
             GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\SimpleBeam Pt load.gwa");
             FilterQuery query = new FilterQuery(typeof(BarDeformation));
             app.Pull(query);
+        }
+
+        private  static void TestPushLoads()
+        {
+            GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\SimpleBeam Pt load.gwa");
+            List<ILoad> loads = new List<ILoad>();
+            Vector force = BH.Engine.Geometry.Create.Vector(0, 0, 1);
+            Vector moment = BH.Engine.Geometry.Create.Vector(0, 1, 0);
+            Loadcase lCase = Create.Loadcase("puria", LoadNature.Dead);
+            BarPointLoad barPointLoad = Create.BarPointLoad(lCase, 3.2, force, moment);
+
+            loads.Add(barPointLoad);
+            app.Push(loads);
         }
 
         //private static void TestPushMaterials()
@@ -50,8 +64,9 @@ namespace GSA_Test
         {
             //
             //string key = "Test Push Bar Key";
-            GSAAdapter app = new GSAAdapter(@"‪C:\Users\phesari\OneDrive\Documents\Gsa1.gwb");
-            List<ILoad> loads = new List<ILoad>(); 
+            GSAAdapter app = new GSAAdapter(@"‪C:\Users\inaslund\Documents\GSA sandbox\EmptyFile.gwb");
+            app = new GSAAdapter(@"‪C:\Users\inaslund\Documents\GSA sandbox\EmptyFile.gwb");
+
             //app = new GSAAdapter(@"‪C:\Users\phesari\Desktop\Gsa2.gwb");
             Point p1 = new Point { X = 0, Y = 0, Z = 0 };
             Point p2 = new Point { X = 1, Y = 0, Z = 0 };
@@ -180,13 +195,7 @@ namespace GSA_Test
                 b.SectionProperty = sec1a;
             }
 
-            Vector force = BH.Engine.Geometry.Create.Vector(0, 0, 1);
-            Vector moment = BH.Engine.Geometry.Create.Vector(0, 1, 0);
-            Loadcase lCase = Create.Loadcase("puria", LoadNature.Dead);
-            BarPointLoad barPointLoad = Create.BarPointLoad(lCase, 3.2, force, moment);
 
-            loads.Add(barPointLoad);
-            app.Push(loads);
 
             app.Push(nodesA, "Nodes");
 
