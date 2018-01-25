@@ -458,5 +458,60 @@ namespace BH.Engine.GSA
         }
 
         /***************************************************/
+
+        public static GlobalReactions FromGsaGlobalReactions(string id, string force, string moment)
+        {
+            string[] fArr = force.Split(',');
+            string[] mArr = moment.Split(',');
+
+            return new GlobalReactions()
+            {
+                Case = "A" + fArr[1],
+                FX = double.Parse(fArr[3]),
+                FY = double.Parse(fArr[4]),
+                FZ = double.Parse(fArr[5]),
+                MX = double.Parse(mArr[3]),
+                MY = double.Parse(mArr[4]),
+                MZ = double.Parse(mArr[5])
+            };
+        }
+
+        /***************************************************/
+
+        public static ModalDynamics FromGsaModalDynamics(string id, string mode, string frequency, string mass, string stiffness, string damping, string effMassTran, string effMassRot)
+        {
+            string[] modeArr = mode.Split(',');
+            string[] frArr = frequency.Split(',');
+            string[] massArr = mass.Split(',');
+            string[] stiArr = stiffness.Split(',');
+            string[] tranArr = effMassTran.Split(',');
+            string[] rotArr = effMassRot.Split(',');
+            double damp;
+            if (String.IsNullOrWhiteSpace(damping))
+                damp = 0;
+            else
+                damp = double.Parse(damping.Split(',')[2]);
+
+            double totMass = double.Parse(massArr[2]);
+            //TODO: Modal damping
+            return new ModalDynamics()
+            {
+                ObjectId = id,
+                Case = "A" + modeArr[1],
+                ModeNumber = int.Parse(modeArr[2]),
+                Frequency = double.Parse(frArr[2]),
+                ModalMass = totMass,
+                ModalStiffness = double.Parse(stiArr[2]),
+                MassRatioX = double.Parse(tranArr[3])/totMass,
+                MassRatioY = double.Parse(tranArr[4]) / totMass,
+                MassRatioZ = double.Parse(tranArr[5]) / totMass,
+                InertiaRatioX = double.Parse(rotArr[3]) / totMass,
+                InertiaRatioY = double.Parse(rotArr[4]) / totMass,
+                InertiaRatioZ = double.Parse(rotArr[5]) / totMass,
+                ModalDamping = damp
+            };
+        }
+
+        /***************************************************/
     }
 }

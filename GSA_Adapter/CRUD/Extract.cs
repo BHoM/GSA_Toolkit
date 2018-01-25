@@ -38,9 +38,60 @@ namespace BH.Adapter.GSA
         {
             List<int> caseNumbers = CheckAndGetAnalysisCaseNumbers(cases);
 
+            if (typeof(GlobalReactions).IsAssignableFrom(type))
+                return ExtractGlobalReaction(caseNumbers);
+            else if (typeof(ModalDynamics).IsAssignableFrom(type))
+                return ExtractGlobalDynamics(caseNumbers);
+            else
+                ErrorLog.Add("Force type " + type.Name + " not suported");
 
-            throw new NotImplementedException();
 
+            return new List<IResult>();
+
+        }
+
+        /***************************************************/
+
+        private IEnumerable<IResult> ExtractGlobalReaction(List<int> cases)
+        {
+            List<GlobalReactions> reactions = new List<GlobalReactions>();
+
+            string id = ""; //TODO: Strategy for ids for full model
+
+            foreach (int loadCase in cases)
+            {
+                string force = m_gsaCom.GwaCommand("GET, TOTAL_FORCE, " + loadCase + ",REACT");
+                string moment = m_gsaCom.GwaCommand("GET, TOTAL_MOMENT, " + loadCase + ",REACT");
+                reactions.Add(BH.Engine.GSA.Convert.FromGsaGlobalReactions(id, force, moment));
+            }
+
+            return reactions;
+        }
+
+        /***************************************************/
+
+        private IEnumerable<IResult> ExtractGlobalDynamics(List<int> cases)
+        {
+            List<ModalDynamics> dynamics = new List<ModalDynamics>();
+
+            string id = ""; //TODO: Strategy for ids for full model
+
+            foreach (int loadCase in cases)
+            {
+                string mode = m_gsaCom.GwaCommand("GET, MODE, " + loadCase);
+
+                if (String.IsNullOrWhiteSpace(mode))
+                    continue;
+                string frequency = m_gsaCom.GwaCommand("GET, FREQ, " + loadCase);
+                string mass = m_gsaCom.GwaCommand("GET, MASS, " + loadCase);
+                string damping = m_gsaCom.GwaCommand("GET, MODAL_DAMP, " + loadCase);
+                string stiffness = m_gsaCom.GwaCommand("GET, MODAL_STIFF, " + loadCase);
+                string effMassTran = m_gsaCom.GwaCommand("GET, EFF_MASS, " + loadCase + ",TRAN");
+                string effMassRot = m_gsaCom.GwaCommand("GET, EFF_MASS, " + loadCase + ",ROT");
+                dynamics.Add(BH.Engine.GSA.Convert.FromGsaModalDynamics(id, mode, frequency, mass, stiffness, damping, effMassTran, effMassRot));
+            }
+
+            return dynamics;
         }
 
         /***************************************************/
@@ -267,15 +318,17 @@ namespace BH.Adapter.GSA
             if (cases == null || cases.Count == 0)
             {
                 loadCases = new List<int>();
-                int sResult;
+                string sResult;
                 int maxIndex = m_gsaCom.GwaCommand("HIGHEST, ANAL");
 
                 for (int i = 1; i <= maxIndex; i++)
                 {
                     try
                     {
-                        sResult = (int)m_gsaCom.GwaCommand("GET, ANAL," + i);
-                        loadCases.Add(sResult);
+                        sResult = m_gsaCom.GwaCommand("GET, ANAL," + i).ToString();
+                        int number;
+                        if (int.TryParse(m_gsaCom.Arg(1, sResult), out number))
+                            loadCases.Add(number);
                     }
                     catch
                     {
@@ -286,10 +339,20 @@ namespace BH.Adapter.GSA
             }
             else if (cases is List<int>)
                 loadCases = cases as List<int>;
+            else if (cases is List<string>)
+            {
+                loadCases = new List<int>();
+                foreach (string ac in cases)
+                {
+                    string descriptionCase = ac;
+                    int idCase = System.Convert.ToInt32(Char.IsLetter(ac[0]) ? ac.Trim().Substring(1) : ac.Trim());
+                    loadCases.Add(idCase);
+                }
+            }
             else
                 return new List<int>();
 
-            return loadCases.Where(x => CheckAnalysisCaseExists(x, x.ToString())).ToList();
+            return loadCases.Where(x => CheckAnalysisCaseExists(x, "A" + x.ToString())).ToList();
         }
 
         /***************************************************/
