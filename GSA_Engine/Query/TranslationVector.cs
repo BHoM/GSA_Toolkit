@@ -18,13 +18,13 @@ namespace BH.Engine.GSA
 
         public static Vector[] TranslationVector(this PointForce load)
         {
-            Vector[] loadVec = { load.Force };
+            Vector[] loadVec = { load.Force, BH.Engine.Geometry.Create.Vector() };
             return loadVec;
         }
 
         public static Vector[] TranslationVector(this PointDisplacement load)
         {
-            Vector[] transVecs = { load.Translation };
+            Vector[] transVecs = { load.Translation, BH.Engine.Geometry.Create.Vector() };
             return transVecs;
         }
 

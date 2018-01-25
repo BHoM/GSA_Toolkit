@@ -33,14 +33,21 @@ namespace GSA_Test
 
         private  static void TestPushLoads()
         {
-            GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\SimpleBeam Pt load.gwa");
+            GSAAdapter app = new GSAAdapter(@"C:\Users\phesari\Desktop\Gsa1.gwb");
             List<ILoad> loads = new List<ILoad>();
-            Vector force = BH.Engine.Geometry.Create.Vector(0, 0, 1);
-            Vector moment = BH.Engine.Geometry.Create.Vector(0, 1, 0);
+            Vector force1 = BH.Engine.Geometry.Create.Vector(0, 0, 1);
+            Vector moment1 = BH.Engine.Geometry.Create.Vector(0, 1, 0);
+            Vector force2 = BH.Engine.Geometry.Create.Vector(0, 3, 0);
+            Vector moment2 = BH.Engine.Geometry.Create.Vector(5, 0, 0);
             Loadcase lCase = Create.Loadcase("puria", LoadNature.Dead);
-            BarPointLoad barPointLoad = Create.BarPointLoad(lCase, 3.2, force, moment);
+            lCase.Number = 1;
+            BarPointLoad barPointLoad = Create.BarPointLoad(lCase, 3.2, force1, moment1);
+            PointForce pForce = Create.PointForce(lCase, force1, moment1);
+            PointDisplacement pDisp = Create.PointDisplacement(lCase, force1, moment1);
+            BarUniformlyDistributedLoad bUniform = Create.BarUniformlyDistributedLoad(lCase, force1, moment1);
+            BarVaryingDistributedLoad bVary = Create.BarVaryingDistributedLoad(lCase, 1.6, force1, moment1, 2.3, force2, moment2);
 
-            loads.Add(barPointLoad);
+            loads.Add(pDisp);
             app.Push(loads);
         }
 
