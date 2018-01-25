@@ -18,13 +18,13 @@ namespace BH.Engine.GSA
 
         public static Vector[] RotationVector(this PointForce load)
         {
-            Vector[] momentVecs = { load.Moment };
+            Vector[] momentVecs = { load.Moment, BH.Engine.Geometry.Create.Vector() };
             return momentVecs;
         }
 
         public static Vector[] RotationVector(this PointDisplacement load)
         {
-            Vector[] rotVecs = { load.Rotation };
+            Vector[] rotVecs = { load.Rotation, BH.Engine.Geometry.Create.Vector() };
             return rotVecs;
         }
 

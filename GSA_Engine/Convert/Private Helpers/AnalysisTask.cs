@@ -257,15 +257,15 @@ namespace BH.Engine.GSA
             }
         }
 
-        public static void AddVectorDataToStringSingle(string startStr, BH.oM.Geometry.Vector vec, ref List<string> strings, double factor, bool translational, string pos = "")
+        public static void AddVectorDataToStringSingle(string startStr, BH.oM.Geometry.Vector[] vec, ref List<string> strings, double factor, bool translational, string[] pos)
         {
-            foreach (string str in GetForceVectorsStrings(vec, factor, translational, pos))
-            {
-                strings.Add(startStr + "," + str);
-            }
+                foreach (string str in GetForceVectorsStrings(vec, factor, translational, pos))
+                {
+                    strings.Add(startStr + "," + str);
+                }
         }
 
-        public static List<string> GetForceVectorsStrings(BH.oM.Geometry.Vector vec, double factor, bool translational, string pos = "")
+        public static List<string> GetForceVectorsStrings(BH.oM.Geometry.Vector[] vec, double factor, bool translational, string[] pos )
         {
             List<string> strings = new List<string>();
 
@@ -273,12 +273,12 @@ namespace BH.Engine.GSA
             {
                 string[] dir = Directions(translational);
 
-                if (vec.X != 0)
-                    strings.Add(dir[0] + pos + "," + (factor * vec.X).ToString());
-                if (vec.Y != 0)
-                    strings.Add(dir[1] + pos + "," + (factor * vec.Y).ToString());
-                if (vec.Z != 0)
-                    strings.Add(dir[2] + pos + "," + (factor * vec.Z).ToString());
+                if (vec[0].X != 0 || vec[1].X != 0)
+                    strings.Add(dir[0] + pos[0] + (factor * vec[0].X).ToString() + pos[1] + (factor * vec[1].X).ToString());
+                if (vec[0].Y != 0 || vec[1].Y != 0)
+                    strings.Add(dir[1] + pos[0] + (factor * vec[0].Y).ToString() + pos[1] + (factor * vec[1].Y).ToString());
+                if (vec[0].Z != 0 || vec[1].Z != 0)
+                    strings.Add(dir[2] + pos[0] + (factor * vec[0].Z).ToString() + pos[1] + (factor * vec[1].Z).ToString());
             }
             return strings;
         }

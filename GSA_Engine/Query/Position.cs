@@ -18,13 +18,31 @@ namespace BH.Engine.GSA
 
         public static string[] LoadPosition(BarPointLoad load)
         {
-            string[] positions = { load.DistanceFromA.ToString(), "" };
+            string[] positions = { load.DistanceFromA.ToString() + ",", "" };
+            return positions;
+        }
+
+        public static string[] LoadPosition(PointForce load)
+        {
+            string[] positions = { "", "" };
+            return positions;
+        }
+
+        public static string[] LoadPosition(PointDisplacement load)
+        {
+            string[] positions = { "", "" };
             return positions;
         }
 
         public static string[] LoadPosition(BarUniformlyDistributedLoad load)
         {
             string[] positions = { "", "" };
+            return positions;
+        }
+
+        public static string[] LoadPosition(BarVaryingDistributedLoad load)
+        {
+            string[] positions = { load.DistanceFromA.ToString() + ",", load.DistanceFromB.ToString() + "," };
             return positions;
         }
 
