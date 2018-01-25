@@ -21,6 +21,11 @@ namespace BH.Engine.GSA
             return "LOAD_NODE";
         }
 
+        public static string ForceTypeString(this PointDisplacement load)
+        {
+            return "DISP_NODE";
+        }
+
         public static string ForceTypeString(this BarPointLoad load)
         {
             return "LOAD_BEAM_POINT";
