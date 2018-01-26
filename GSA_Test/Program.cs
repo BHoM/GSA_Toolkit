@@ -16,7 +16,8 @@ namespace GSA_Test
     {
         static void Main(string[] args)
         {
-            TestReadLinks();
+            TestPushMeshFace();
+            //TestReadLinks();
             //TestExecuteCommand()
             //TestPushLoads();
             //TestExtractForces();
@@ -24,6 +25,27 @@ namespace GSA_Test
             //TestDelete();
             //TestPushMaterials();
             //
+        }
+
+        private static void TestPushMeshFace()
+        {
+            //C: \Users\inaslund\Documents\GSA sandbox\SimpleBeam Pt load.gwb
+            Point p1 = new Point { X = 0, Y = 0, Z = 0 };
+            Point p2 = new Point { X = 1, Y = 0, Z = 0 };
+            Point p3 = new Point { X = 1, Y = 1, Z = 0 };
+            Point p4 = new Point { X = 0, Y = 1, Z = 0 };
+
+            Node n1 = new Node { Position = p1 };
+            Node n2 = new Node { Position = p2 };
+            Node n3 = new Node { Position = p3 };
+            Node n4 = new Node { Position = p4 };
+
+            LoadingPanelProperty prop = new LoadingPanelProperty { LoadApplication = LoadPanelSupportConditions.AllSides, ReferenceEdge = 1 };
+
+            MeshFace face = new MeshFace { Nodes = new List<Node> { n1, n2, n3, n4 }, Property = prop };
+
+            GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\EmptyFile.gwb");
+            app.Push(new List<MeshFace> { face });
         }
 
         private static void TestExecuteCommand()
