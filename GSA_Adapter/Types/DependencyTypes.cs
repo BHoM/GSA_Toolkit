@@ -43,7 +43,10 @@ namespace BH.Adapter.GSA
         private static Dictionary<Type, List<Type>> m_DependencyTypes = new Dictionary<Type, List<Type>>
         {
             {typeof(Bar), new List<Type> { typeof(ISectionProperty), typeof(Node) } },
-            {typeof(ISectionProperty), new List<Type> { typeof(Material) } }
+            {typeof(ISectionProperty), new List<Type> { typeof(Material) } },
+            {typeof(RigidLink), new List<Type> { typeof(LinkConstraint), typeof(Node) } },
+            {typeof(MeshFace), new List<Type> { typeof(Property2D), typeof(Node) } },
+            {typeof(Property2D), new List<Type> { typeof(Material) } }
         };
 
 

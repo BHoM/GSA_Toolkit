@@ -38,6 +38,7 @@ namespace BH.Adapter.GSA
             {typeof(Node), new BH.Engine.Structure.NodeDistanceComparer(3) },
             {typeof(ISectionProperty), new BHoMObjectNameOrToStringComparer() },
             {typeof(Material), new BHoMObjectNameComparer() },
+            {typeof(LinkConstraint), new BHoMObjectNameComparer() },
         };
 
 
