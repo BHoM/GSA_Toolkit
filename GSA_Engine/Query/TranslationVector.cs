@@ -11,10 +11,9 @@ namespace BH.Engine.GSA
 {
     public static partial class Query
     {
-        public static Vector[] ITranslationVector(this ILoad load)
-        {
-            return TranslationVector(load as dynamic);
-        }
+        /***************************************************/
+        /**** Public Methods                            ****/
+        /***************************************************/
 
         public static Vector[] TranslationVector(this PointForce load)
         {
@@ -22,11 +21,15 @@ namespace BH.Engine.GSA
             return loadVec;
         }
 
+        /***************************************************/
+
         public static Vector[] TranslationVector(this PointDisplacement load)
         {
             Vector[] transVecs = { load.Translation, BH.Engine.Geometry.Create.Vector() };
             return transVecs;
         }
+
+        /***************************************************/
 
         public static Vector[] TranslationVector(this BarPointLoad load)
         {
@@ -34,16 +37,29 @@ namespace BH.Engine.GSA
             return forceVecs;
         }
 
+        /***************************************************/
+
         public static Vector[] TranslationVector(this BarUniformlyDistributedLoad load)
         {
             Vector[] forceVecs = { load.Force, BH.Engine.Geometry.Create.Vector() };
             return forceVecs;
         }
 
+        /***************************************************/
+
         public static Vector[] TranslationVector(this BarVaryingDistributedLoad load)
         {
             Vector[] forceVecs = { load.ForceA, load.ForceB };
             return forceVecs;
+        }
+
+        /***************************************************/
+        /**** Public Methods - Interfaces               ****/
+        /***************************************************/
+
+        public static Vector[] ITranslationVector(this ILoad load)
+        {
+            return TranslationVector(load as dynamic);
         }
     }
 }

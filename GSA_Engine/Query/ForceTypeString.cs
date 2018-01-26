@@ -11,49 +11,71 @@ namespace BH.Engine.GSA
 {
     public static partial class Query
     {
-        public static string IForceTypeString(this ILoad load)
-        {
-            return ForceTypeString(load as dynamic);
-        }
+        /***************************************************/
+        /**** Public Methods                            ****/
+        /***************************************************/
 
         public static string ForceTypeString(this PointForce load)
         {
             return "LOAD_NODE";
         }
 
+        /***************************************************/
+
         public static string ForceTypeString(this PointDisplacement load)
         {
             return "DISP_NODE";
         }
+
+        /***************************************************/
 
         public static string ForceTypeString(this BarPointLoad load)
         {
             return "LOAD_BEAM_POINT";
         }
 
+        /***************************************************/
+
         public static string ForceTypeString(this BarUniformlyDistributedLoad load)
         {
             return "LOAD_BEAM_UDL";
         }
+
+        /***************************************************/
 
         public static string ForceTypeString(this BarVaryingDistributedLoad load)
         {
             return "LOAD_BEAM_TRILIN";
         }
 
+        /***************************************************/
+
         public static string ForceTypeString(this GravityLoad load)
         {
             return "LOAD_GRAVITY.2";
         }
+
+        /***************************************************/
 
         public static string ForceTypeString(this BarPrestressLoad  load)
         {
             return "LOAD_BEAM_PRE.2";
         }
 
+        /***************************************************/
+
         public static string ForceTypeString(this BarTemperatureLoad load)
         {
             return "TEMP_BEAM";
+        }
+
+        /***************************************************/
+        /**** Public Methods - Interfaces               ****/
+        /***************************************************/
+
+        public static string IForceTypeString(this ILoad load)
+        {
+            return ForceTypeString(load as dynamic);
         }
     }
 }

@@ -11,6 +11,10 @@ namespace BH.Engine.GSA
 {
     public static partial class Query
     {
+        /***************************************************/
+        /**** Public Methods                            ****/
+        /***************************************************/
+
         public static string IsProjectedString(this ILoad load)
         {
             if (load.Projected)
