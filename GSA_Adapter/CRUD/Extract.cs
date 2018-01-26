@@ -21,7 +21,7 @@ namespace BH.Adapter.GSA
 
         public delegate IResult ForceConverter(GsaResults results, string id, string loadCase, int divisions, double timeStep = 0);
 
-        protected override IEnumerable<IResult> Extract(Type type, IList ids = null, IList cases = null, int divisions = 5)
+        protected override IEnumerable<IResult> ReadResults(Type type, IList ids = null, IList cases = null, int divisions = 5)
         {
             if (typeof(StructuralGlobalResult).IsAssignableFrom(type))
                 return ExtractGlobalresults(type, cases);
