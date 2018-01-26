@@ -99,6 +99,39 @@ namespace BH.Engine.GSA
             return forceStrings;
         }
 
+        public static List<string> ToGsaString(this GravityLoad load, double[] unitFactors)
+        {
+            List<string> forceStrings = new List<string>();
+            string command = load.IForceTypeString();
+            string name = load.Name;
+            string list = CreateIdListOrGroupName();
+
+            string caseNo = load.Loadcase.Number.ToString();
+
+            string x = load.GravityDirection.Y.ToString();
+            string y = load.GravityDirection.Y.ToString();
+            string z = load.GravityDirection.Z.ToString();
+
+            string str = command + ",," + list + "," + caseNo + "," + x + "," + y + "," + z;
+            forceStrings.Add(str);
+            return forceStrings;
+        }
+
+        public static List<string> ToGsaString(this BarPrestressLoad load, double[] unitFactors)
+        {
+            List<string> forceStrings = new List<string>();
+            string command = load.IForceTypeString();
+            string name = load.Name;
+            string list = CreateIdListOrGroupName();
+            string caseNo = load.Loadcase.Number.ToString();
+            double value = load.Prestress;
+
+
+            string str = command + ",," + list + "," + caseNo + "," + value * unitFactors[0];
+            forceStrings.Add(str);
+            return forceStrings;
+        }
+
         /***************************************************/
 
         public static List<string> IToGsaString(this ILoad load, double[] unitFactors)
