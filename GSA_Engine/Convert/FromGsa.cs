@@ -72,6 +72,64 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
+        public static List<MeshFace> FromGsaMeshFace(IEnumerable<GsaElement> gsaElements, Dictionary<string, Property2D> props, Dictionary<string, Node> nodes)
+        {
+            List<MeshFace> faceList = new List<MeshFace>();
+
+            foreach (GsaElement gsaMesh in gsaElements)
+            {
+                switch (gsaMesh.eType)
+                {
+                    case 5://Quad4      //TODO: Quad8 and Tri6
+                    case 7://Tri3
+                        break;
+                    default:
+                        continue;
+
+                }
+
+                MeshFace face = new MeshFace()
+                {
+                    Nodes = gsaMesh.Topo.Select(x => nodes[x.ToString()]).ToList(),
+                    Property = props[gsaMesh.Property.ToString()]
+                };
+
+                face.ApplyTaggedName(gsaMesh.Name);
+                face.CustomData[AdapterID] = gsaMesh.Ref;
+                faceList.Add(face);
+
+            }
+            return faceList;
+        }
+
+        /***************************************/
+
+        public static List<RigidLink> FromGsaRigidLinks(IEnumerable<GsaElement> gsaElements, Dictionary<string, LinkConstraint> constraints, Dictionary<string, Node> nodes)
+        {
+            List<RigidLink> linkList = new List<RigidLink>();
+
+            foreach (GsaElement gsaLink in gsaElements)
+            {
+                if (gsaLink.eType != 9)
+                    continue;
+
+                RigidLink face = new RigidLink()
+                {
+                    MasterNode = nodes[gsaLink.Topo[0].ToString()],
+                    SlaveNodes = new List<Node> { nodes[gsaLink.Topo[0].ToString()] },
+                    Constraint = constraints[gsaLink.Property.ToString()]
+                };
+
+                face.ApplyTaggedName(gsaLink.Name);
+                face.CustomData[AdapterID] = gsaLink.Ref;
+                linkList.Add(face);
+
+            }
+            return linkList;
+        }
+
+        /***************************************/
+
         public static BHM.Material FromGsaMaterial(string gsaString)
         {
             if (string.IsNullOrWhiteSpace(gsaString))
@@ -269,7 +327,7 @@ namespace BH.Engine.GSA
                     case BHM.MaterialType.Glass:
                     case BHM.MaterialType.Cable:
                     default:
-                        throw new NotImplementedException();
+                        throw new NotImplementedException("Material type for cross section not implemented");
                 }
 
             }
@@ -278,6 +336,157 @@ namespace BH.Engine.GSA
             secProp.ApplyTaggedName(gsaStrings[2]);
             secProp.Material = materials[materialId];
             return secProp;
+        }
+
+        /***************************************/
+
+        public static LinkConstraint FromGsaLinkConstraint(string gsaProp)
+        {
+            LinkConstraint constraint;
+            string[] props = gsaProp.Split(',');
+            string name = props[2];
+            string type = props[4];
+            string id = props[1];
+
+            switch (type)
+            {
+                case "ALL":
+                    constraint = Create.LinkConstraintFixed();
+                    break;
+                case "PIN":
+                    constraint = Create.LinkConstraintPinned();
+                    break;
+                case "XY_PLANE":
+                    constraint = Create.LinkConstraintXYPlane();
+                    break;
+                case "ZX_PLANE":
+                    constraint = Create.LinkConstraintZXPlane();
+                    break;
+                case "YZ_PLANE":
+                    constraint = Create.LinkConstraintYZPlane();
+                    break;
+                case "XY_PLANE_PIN":
+                    constraint = Create.LinkConstraintXYPlanePin();
+                    break;
+                case "ZX_PLANE_PIN":
+                    constraint = Create.LinkConstraintZXPlanePin();
+                    break;
+                case "YZ_PLANE_PIN":
+                    constraint = Create.LinkConstraintYZPlanePin();
+                    break;
+                //case "XY_PLATE":
+                //    constraint = BHP.LinkConstraint.ZPlate;
+                //    break;
+                //case "ZX_PLATE":
+                //    constraint = BHP.LinkConstraint.YPlate;
+                //    break;
+                //case "YZ_PLATE":
+                //    constraint = BHP.LinkConstraint.YPlate;
+                //    break;                                            //TODO: CHECK CONSTRUCTOR NAMES IN BHOM_ENGINE
+                //case "XY_PLATE_PIN":
+                //    constraint = BHP.LinkConstraint.ZPlatePin;
+                //    break;
+                //case "ZX_PLATE_PIN":
+                //    constraint = BHP.LinkConstraint.YPlatePin;
+                //    break;
+                //case "YZ_PLATE_PIN":
+                //    constraint = BHP.LinkConstraint.ZPlatePin;
+                //    break;
+                default:
+                    //String in format example: X:XYY-Y:YZZXX-Z:YY-XX:XX-YY:YY-ZZ:ZZ
+                    constraint = new LinkConstraint();
+                    string[] constraintProps = type.Split('-');
+
+                    foreach (string c in constraintProps)
+                    {
+                        string[] fromTo = c.Split(':');
+                        string from = fromTo[0];
+                        string to = fromTo[1];
+                        switch (from)
+                        {
+                            case "X":
+                                if (to.Contains('X'))
+                                    constraint.XtoX = true;
+                                if (to.Contains('Y'))
+                                    constraint.XtoYY = true;
+                                if (to.Contains('Z'))
+                                    constraint.XtoZZ = true;
+                                break;
+                            case "Y":
+                                if (to.Contains('X'))
+                                    constraint.YtoXX = true;
+                                if (to.Contains('Y'))
+                                    constraint.YtoY = true;
+                                if (to.Contains('Z'))
+                                    constraint.YtoZZ = true;
+                                break;
+                            case "Z":
+                                if (to.Contains('X'))
+                                    constraint.ZtoXX = true;
+                                if (to.Contains('Y'))
+                                    constraint.ZtoYY = true;
+                                if (to.Contains('Z'))
+                                    constraint.ZtoZ = true;
+                                break;
+                            case "XX":
+                                if (to.Contains("XX"))
+                                    constraint.XXtoXX = true;
+                                break;
+                            case "YY":
+                                if (to.Contains("YY"))
+                                    constraint.YYtoYY = true;
+                                break;
+                            case "ZZ":
+                                if (to.Contains("ZZ"))
+                                    constraint.ZZtoZZ = true;
+                                break;
+                        }
+                    }
+                    break;
+            }
+
+            constraint.Name = name;
+            constraint.CustomData[AdapterID] = id;
+
+            return constraint;
+        }
+
+        /***************************************/
+        public static Property2D FromGsaProperty2d(string gsaString, Dictionary<string, BHM.Material> materials)
+        {
+            Property2D panProp = null;
+
+            if (gsaString == "")
+            {
+                return null;
+            }
+
+            string[] gsaStrings = gsaString.Split(',');
+
+            int id;
+
+            Int32.TryParse(gsaStrings[1], out id);
+            string name = gsaStrings[2];
+            string materialId = gsaStrings[5];
+            string description = gsaStrings[6];
+
+            if (description == "SHELL")
+            {
+                panProp = new ConstantThickness();
+                panProp.Material = materials[materialId];
+                double t = double.Parse(gsaStrings[7]);
+                panProp.Thickness = t;
+            }
+            else if (description == "LOAD")
+            {
+                panProp = new LoadingPanelProperty();
+                ((LoadingPanelProperty)panProp).LoadApplication = GetLoadingConditionFromString(gsaStrings[7]);
+                ((LoadingPanelProperty)panProp).ReferenceEdge = int.Parse(gsaStrings[8]);
+            }
+
+            panProp.CustomData.Add(AdapterID, id);
+            panProp.Name = name;
+            return panProp;
         }
 
         /***************************************/
