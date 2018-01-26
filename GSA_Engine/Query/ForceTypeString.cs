@@ -40,5 +40,15 @@ namespace BH.Engine.GSA
         {
             return "LOAD_BEAM_TRILIN";
         }
+
+        public static string ForceTypeString(this GravityLoad load)
+        {
+            return "LOAD_GRAVITY.2";
+        }
+
+        public static string ForceTypeString(this BarPrestressLoad  load)
+        {
+            return "LOAD_BEAM_PRE.2";
+        }
     }
 }

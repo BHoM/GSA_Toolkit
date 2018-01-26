@@ -46,8 +46,10 @@ namespace GSA_Test
             PointDisplacement pDisp = Create.PointDisplacement(lCase, force1, moment1);
             BarUniformlyDistributedLoad bUniform = Create.BarUniformlyDistributedLoad(lCase, force1, moment1);
             BarVaryingDistributedLoad bVary = Create.BarVaryingDistributedLoad(lCase, 1.6, force1, moment1, 2.3, force2, moment2);
+            GravityLoad gLoad = Create.GravityLoad(lCase, force1);
+            BarPrestressLoad psLoad = Create.BarPrestressLoad(lCase, 17.8);
 
-            loads.Add(pDisp);
+            loads.Add(psLoad);
             app.Push(loads);
         }
 
