@@ -11,6 +11,10 @@ namespace BH.Engine.GSA
 {
     public static partial class Query
     {
+        /***************************************************/
+        /**** Public Methods                            ****/
+        /***************************************************/
+
         public static string IsGlobal(this ILoad load)
         {
             if (load.Axis == LoadAxis.Global)

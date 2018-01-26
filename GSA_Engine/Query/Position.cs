@@ -11,10 +11,9 @@ namespace BH.Engine.GSA
 {
     public static partial class Query
     {
-        public static string[] ILoadPosition(this ILoad load)
-        {
-            return LoadPosition(load as dynamic);
-        }
+        /***************************************************/
+        /**** Public Methods                            ****/
+        /***************************************************/
 
         public static string[] LoadPosition(BarPointLoad load)
         {
@@ -22,11 +21,15 @@ namespace BH.Engine.GSA
             return positions;
         }
 
+        /***************************************************/
+
         public static string[] LoadPosition(PointForce load)
         {
             string[] positions = { "", "" };
             return positions;
         }
+
+        /***************************************************/
 
         public static string[] LoadPosition(PointDisplacement load)
         {
@@ -34,16 +37,29 @@ namespace BH.Engine.GSA
             return positions;
         }
 
+        /***************************************************/
+
         public static string[] LoadPosition(BarUniformlyDistributedLoad load)
         {
             string[] positions = { "", "" };
             return positions;
         }
 
+        /***************************************************/
+
         public static string[] LoadPosition(BarVaryingDistributedLoad load)
         {
             string[] positions = { load.DistanceFromA.ToString() + ",", load.DistanceFromB.ToString() + "," };
             return positions;
+        }
+
+        /***************************************************/
+        /**** Public Methods - Interfaces               ****/
+        /***************************************************/
+
+        public static string[] ILoadPosition(this ILoad load)
+        {
+            return LoadPosition(load as dynamic);
         }
 
     }
