@@ -17,12 +17,22 @@ namespace GSA_Test
         static void Main(string[] args)
         {
             TestReadLinks();
+            //TestExecuteCommand()
             //TestPushLoads();
             //TestExtractForces();
             //TestPushBars();
             //TestDelete();
             //TestPushMaterials();
             //
+        }
+
+        private static void TestExecuteCommand()
+        {
+            GSAAdapter app = new GSAAdapter(@"C:\Users\phesari\Desktop\Gsa1.gwb");
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param.Add("filename", @"C:\Users\phesari\Desktop\testSave.gwb");
+            app.Execute("SaveAs", param);
+
         }
 
         private static void TestReadLinks()
