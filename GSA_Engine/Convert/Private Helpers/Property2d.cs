@@ -27,5 +27,27 @@ namespace BH.Engine.GSA
                     return LoadPanelSupportConditions.AllSides;
             }
         }
+
+        private static string GetLoadPanelSupportConditions(LoadPanelSupportConditions cond)
+        {
+            switch (cond)
+            {
+                case LoadPanelSupportConditions.AllSides:
+                    return "SUP_ALL";
+                case LoadPanelSupportConditions.ThreeSides:
+                    return "SUP_THREE";
+                case LoadPanelSupportConditions.TwoSides:
+                    return "SUP_TWO";
+                case LoadPanelSupportConditions.TwoAdjacentSides:
+                    return "SUP_TWO_ADJ";
+                case LoadPanelSupportConditions.OneSide:
+                    return "SUP_ONE";
+                case LoadPanelSupportConditions.Cantilever:
+                    return "SUP_ONE_MOM";
+                default:
+                    return "SUP_AUTO";
+            }
+        }
+
     }
 }

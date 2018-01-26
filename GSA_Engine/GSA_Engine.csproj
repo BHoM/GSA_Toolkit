@@ -72,6 +72,7 @@
     <Compile Include="Convert\Private Helpers\Bar.cs" />
     <Compile Include="Convert\Private Helpers\GsaEnums.cs" />
     <Compile Include="Convert\Private Helpers\Material.cs" />
+    <Compile Include="Convert\Private Helpers\MeshFace.cs" />
     <Compile Include="Convert\Private Helpers\Node.cs" />
     <Compile Include="Convert\Private Helpers\Property2d.cs" />
     <Compile Include="Convert\Private Helpers\SectionProperty.cs" />

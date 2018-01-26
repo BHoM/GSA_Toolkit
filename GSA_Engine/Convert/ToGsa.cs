@@ -281,6 +281,103 @@ namespace BH.Engine.GSA
             return str;
         }
 
+        /***************************************/
+
+        private static string ToGsaString(ConstantThickness panProp, string index)
+        {
+
+            string name = panProp.TaggedName();
+            string mat = panProp.Material.CustomData[AdapterID].ToString();
+
+
+            string command = "PROP_2D";
+            string colour = "NO_RGB";
+            string type = "SHELL";
+            string axis = "GLOBAL";
+            string thick = panProp.Thickness.ToString();
+            string mass = "100%";
+            string bending = "100%";
+            string inplane = "100%";
+            string weight = "0";
+
+            return command + "," + index + "," + name + "," + colour + "," + axis + "," + mat + "," + type + "," + thick + "," + weight + "," + mass + "," + bending + "," + inplane;
+
+        }
+
+        /***************************************/
+        private static string ToGsaString(LoadingPanelProperty panProp, string index)
+        {
+            string command = "PROP_2D";
+            string name = panProp.TaggedName();
+            string colour = "NO_RGB";
+            string axis = "0";
+            string mat = "0";
+            string type = "LOAD";
+            string support = GetLoadPanelSupportConditions(panProp.LoadApplication);
+            string edge = panProp.ReferenceEdge.ToString();
+
+            return command + "," + index + "," + name + "," + colour + "," + axis + "," + mat + "," + type + "," + support + "," + edge;
+
+        }
+
+        /***************************************/
+
+        private static string ToGsaString(this RigidLink link, string index)
+        {
+            string command = "EL.2";
+            string name = link.TaggedName();
+            string type = "LINK";
+
+            string constraintIndex = link.Constraint.CustomData[AdapterID].ToString();
+            int group = 0;
+
+            string startIndex = link.MasterNode.CustomData[AdapterID].ToString();
+            string endIndex = link.SlaveNodes[0].CustomData[AdapterID].ToString();  //TODO: currently only implemented for links with one slave node. To be updated once https://github.com/BuroHappoldEngineering/BHoM/issues/145 is resolved
+
+            string dummy = CheckDummy(link);
+            //EL	1	gfdgfdg	NO_RGB	LINK	1	1	1	2	0	0	NO_RLS	NO_OFFSET	DUMMY
+            string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + constraintIndex + ", " + group + ", " + startIndex + ", " + endIndex + " , 0 ," + ",0" + ", NO_RLS" + ", NO_OFFSET," + dummy;
+            return str;
+        }
+
+        /***************************************/
+
+        private static string ToGsaString(this MeshFace face, string index)
+        {
+
+            string command = "EL.2";
+            string type;
+
+            //TODO: Implement QUAD8 and TRI6
+            if (face.Nodes.Count == 3)
+                type = "TRI3";
+            else if (face.Nodes.Count == 3)
+                type = "QUAD4";
+            else
+                return "";
+
+            string name = face.TaggedName();
+
+
+            string propertyIndex = face.Property.CustomData[AdapterID].ToString();
+            int group = 0;
+
+
+            string topology = "";
+
+            foreach (Node n in face.Nodes)
+            {
+                topology += n.CustomData[AdapterID].ToString() + ",";
+            }
+
+            string dummy = CheckDummy(face);
+            //EL	1	gfdgdf	NO_RGB	QUAD4	1	1	1	2	3	4	0	0	NO_RLS	NO_OFFSET	DUMMY
+            //EL  2       NO_RGB TRI3    1   1   1   2   5   0   0   NO_RLS NO_OFFSET   DUMMY
+
+            string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + propertyIndex + ", " + group + ", " +topology + " , 0 ," + ",0" + ", NO_RLS" + ", NO_OFFSET," + dummy;
+            return str;
+        }
+
         /***************************************************/
         /**** Public Interface Methods                  ****/
         /***************************************************/
