@@ -48,8 +48,9 @@ namespace GSA_Test
             BarVaryingDistributedLoad bVary = Create.BarVaryingDistributedLoad(lCase, 1.6, force1, moment1, 2.3, force2, moment2);
             GravityLoad gLoad = Create.GravityLoad(lCase, force1);
             BarPrestressLoad psLoad = Create.BarPrestressLoad(lCase, 17.8);
+            BarTemperatureLoad barTempLoad = Create.BarTemperatureLoad(lCase, moment2);
 
-            loads.Add(psLoad);
+            loads.Add(barTempLoad);
             app.Push(loads);
         }
 

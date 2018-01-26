@@ -126,8 +126,22 @@ namespace BH.Engine.GSA
             string caseNo = load.Loadcase.Number.ToString();
             double value = load.Prestress;
 
-
             string str = command + ",," + list + "," + caseNo + "," + value * unitFactors[0];
+            forceStrings.Add(str);
+            return forceStrings;
+        }
+
+        public static List<string> ToGsaString(this BarTemperatureLoad load, double[] unitFactors)
+        {
+            List<string> forceStrings = new List<string>();
+            string command = load.IForceTypeString();
+            string name = load.Name;
+            string list = CreateIdListOrGroupName();
+            string caseNo = load.Loadcase.Number.ToString();
+            string type = "CONS";
+            string value = load.TemperatureChange.X.ToString();
+
+            string str = command + ",," + list + "," + caseNo + "," + type + "," + value;
             forceStrings.Add(str);
             return forceStrings;
         }
