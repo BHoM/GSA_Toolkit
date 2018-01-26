@@ -27,6 +27,14 @@ namespace BH.Engine.GSA
                 return "MAT";
             else if (type == typeof(ISectionProperty))
                 return "PROP_SEC";
+            else if (type == typeof(Property2D))
+                return "PROP_2D";
+            else if (type == typeof(MeshFace))
+                return "EL";
+            else if (type == typeof(RigidLink))
+                return "EL";
+            else if (type == typeof(LinkConstraint))
+                return "PROP_LINK";
 
             return null;
         }

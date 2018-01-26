@@ -28,12 +28,22 @@ namespace BH.Adapter.GSA
                 return ((List<ISectionProperty>)ReadSectionProperties(indices as dynamic)).Cast<BHoMObject>();
             else if (type == typeof(Material))
                 return ReadMaterials(indices as dynamic);
+            else if (type == typeof(Material))
+                return ReadMaterials(indices as dynamic);
             else if (type == typeof(LoadCombination))
                 return new List<LoadCombination>(); //TODO: Implement loadcombination extraction
             else if (type == typeof(Loadcase))
-                return new List<LoadCombination>(); //TODO: Implement loadcombination extraction
+                return new List<Loadcase>(); //TODO: Implement loadcase extraction
             else if (type == typeof(ILoad) || type.GetInterfaces().Contains(typeof(ILoad)))
-                return new List<ILoad>();
+                return new List<ILoad>(); //TODO: Implement load extraction
+            if (type == typeof(RigidLink))
+                return ReadRigidLink(indices as dynamic);
+            if (type == typeof(LinkConstraint))
+                return ReadLinkConstraint(indices as dynamic);
+            if (type == typeof(MeshFace))
+                return ReadMeshFace(indices as dynamic);
+            if (type == typeof(Property2D))
+                return ReadProperty2d(indices as dynamic);
 
             return null;
         }
@@ -113,6 +123,74 @@ namespace BH.Adapter.GSA
                 return proArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.FromGsaSectionProperty(x, materials)).ToList();
         }
 
+        /***************************************/
+
+        public List<Property2D> ReadProperty2d(List<string> ids = null)
+        {
+            List<Material> matList = ReadMaterials(null, true);
+            Dictionary<string, Material> materials = matList.ToDictionary(x => x.CustomData[AdapterId].ToString());
+
+            string allProps = m_gsaCom.GwaCommand("GET_ALL, PROP_2D").ToString();
+            string[] proArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
+
+            if (ids == null)
+                return proArr.Select(x => Engine.GSA.Convert.FromGsaProperty2d(x, materials)).ToList();
+            else
+                return proArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.FromGsaProperty2d(x, materials)).ToList();
+        }
+
+        /***************************************/
+
+        public List<MeshFace> ReadMeshFace(List<string> ids = null)
+        {
+            int[] potentialMeshRefs = GenerateIndices(ids, typeof(MeshFace));
+
+            GsaElement[] gsaElements = new GsaElement[potentialMeshRefs.Length];
+            m_gsaCom.Elements(potentialMeshRefs, out gsaElements);
+
+            List<Property2D> secPropList = ReadProperty2d();
+            List<Node> nodeList = ReadNodes();
+
+            Dictionary<string, Property2D> props = secPropList.ToDictionary(x => x.CustomData[AdapterId].ToString());
+            Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.CustomData[AdapterId].ToString());
+
+            return Engine.GSA.Convert.FromGsaMeshFace(gsaElements, props, nodes);
+        }
+
+        /***************************************/
+
+        public List<LinkConstraint> ReadLinkConstraint(List<string> ids = null)
+        {
+            string allProps = m_gsaCom.GwaCommand("GET_ALL, PROP_LINK").ToString();
+            string[] proArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
+
+            if (ids == null)
+                return proArr.Select(x => Engine.GSA.Convert.FromGsaLinkConstraint(x)).ToList();
+            else
+                return proArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.FromGsaLinkConstraint(x)).ToList();
+        }
+
+        /***************************************/
+
+        public List<RigidLink> ReadRigidLink(List<string> ids = null)
+        {
+            List<LinkConstraint> constraintList = ReadLinkConstraint(null);
+            List<Node> nodeList = ReadNodes();
+
+            Dictionary<string, LinkConstraint> constraints = constraintList.ToDictionary(x => x.CustomData[AdapterId].ToString());
+            Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.CustomData[AdapterId].ToString());
+
+            int[] potentialBeamRefs = GenerateIndices(ids, typeof(RigidLink));
+            GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
+            m_gsaCom.Elements(potentialBeamRefs, out gsaElements);
+
+            return Engine.GSA.Convert.FromGsaRigidLinks(gsaElements, constraints, nodes);
+
+            //if (ids == null)
+            //    return proArr.Select(x => Engine.GSA.Convert.FromGsaSectionProperty(x, materials)).ToList();
+            //else
+            //    return proArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.FromGsaSectionProperty(x, materials)).ToList();
+        }
 
         /***************************************************/
         /**** Private  Methods                          ****/

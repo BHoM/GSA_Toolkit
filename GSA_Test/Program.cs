@@ -16,11 +16,21 @@ namespace GSA_Test
     {
         static void Main(string[] args)
         {
-            TestPushLoads();
+            TestReadLinks();
+            //TestPushLoads();
             //TestExtractForces();
             //TestPushBars();
             //TestDelete();
             //TestPushMaterials();
+            //
+        }
+
+        private static void TestReadLinks()
+        {
+            //C: \Users\inaslund\Documents\GSA sandbox\SimpleBeam Pt load.gwb
+            GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\Link].gwb");
+            FilterQuery query = new FilterQuery(typeof(RigidLink));
+            app.Pull(query);
         }
 
         private static void TestExtractForces()
