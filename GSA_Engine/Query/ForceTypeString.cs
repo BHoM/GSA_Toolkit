@@ -50,5 +50,10 @@ namespace BH.Engine.GSA
         {
             return "LOAD_BEAM_PRE.2";
         }
+
+        public static string ForceTypeString(this BarTemperatureLoad load)
+        {
+            return "TEMP_BEAM";
+        }
     }
 }
