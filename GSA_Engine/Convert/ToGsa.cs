@@ -305,6 +305,18 @@ namespace BH.Engine.GSA
         }
 
         /***************************************/
+
+        private static string ToGsaString(LinkConstraint constraint, string index)
+        {
+
+            string command = "PROP_LINK";
+            string name = constraint.Name;
+            string restraint = GetRestraintString(constraint);
+            return command + ", " + index + ", " + name + ", NO_RGB, " + restraint;
+        }
+
+        /***************************************/
+
         private static string ToGsaString(LoadingPanelProperty panProp, string index)
         {
             string command = "PROP_2D";
@@ -322,21 +334,24 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        private static string ToGsaString(this RigidLink link, string index)
+        public static string ToGsaString(this RigidLink link, string index, int slaveIndex = 0)
         {
             string command = "EL.2";
             string name = link.TaggedName();
             string type = "LINK";
 
             string constraintIndex = link.Constraint.CustomData[AdapterID].ToString();
-            int group = 0;
+            string group = "0";
 
             string startIndex = link.MasterNode.CustomData[AdapterID].ToString();
-            string endIndex = link.SlaveNodes[0].CustomData[AdapterID].ToString();  //TODO: currently only implemented for links with one slave node. To be updated once https://github.com/BuroHappoldEngineering/BHoM/issues/145 is resolved
+
+            string endIndex = link.SlaveNodes[slaveIndex].CustomData[AdapterID].ToString();  
 
             string dummy = CheckDummy(link);
+
+
             //EL	1	gfdgfdg	NO_RGB	LINK	1	1	1	2	0	0	NO_RLS	NO_OFFSET	DUMMY
-            string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + constraintIndex + ", " + group + ", " + startIndex + ", " + endIndex + " , 0 ," + ",0" + ", NO_RLS" + ", NO_OFFSET," + dummy;
+            string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + constraintIndex + ", " + group + ", " + startIndex + ", " + endIndex + " , 0" + ",0" + ", NO_RLS" + ", NO_OFFSET," + dummy;
             return str;
         }
 
@@ -351,7 +366,7 @@ namespace BH.Engine.GSA
             //TODO: Implement QUAD8 and TRI6
             if (face.Nodes.Count == 3)
                 type = "TRI3";
-            else if (face.Nodes.Count == 3)
+            else if (face.Nodes.Count == 4)
                 type = "QUAD4";
             else
                 return "";
@@ -374,7 +389,7 @@ namespace BH.Engine.GSA
             //EL	1	gfdgdf	NO_RGB	QUAD4	1	1	1	2	3	4	0	0	NO_RLS	NO_OFFSET	DUMMY
             //EL  2       NO_RGB TRI3    1   1   1   2   5   0   0   NO_RLS NO_OFFSET   DUMMY
 
-            string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + propertyIndex + ", " + group + ", " +topology + " , 0 ," + ",0" + ", NO_RLS" + ", NO_OFFSET," + dummy;
+            string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + propertyIndex + ", " + group + ", " +topology + " 0 , 0" + ", NO_RLS" + ", NO_OFFSET," + dummy;
             return str;
         }
 

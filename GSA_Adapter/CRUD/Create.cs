@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BH.oM.Structural.Loads;
+using BH.oM.Structural.Elements;
 using BH.oM.Base;
 using BH.Engine.GSA;
 
@@ -16,14 +17,16 @@ namespace BH.Adapter.GSA
         {
             bool success = true;
 
-            if (typeof(BH.oM.Base.IObject).IsAssignableFrom(typeof(T)))
+            if (typeof(T).IsAssignableFrom(typeof(RigidLink)))
+                success = CreateLinks(objects as List<RigidLink>);
+            else
             {
                 foreach (T obj in objects)
                 {
                     success &= Create((obj as dynamic));
-
                 }
             }
+
             UpdateViews();
             return success;
         }
@@ -36,7 +39,37 @@ namespace BH.Adapter.GSA
         }
 
         /***************************************************/
-    
+
+        //Semi hacky method until one to many realationship is bottomed out in the BHoM_Adaptor Replace() method
+        private bool CreateLinks(List<RigidLink> links)
+        {
+            
+            bool success = true;
+            foreach (RigidLink link in links)
+            {
+                success &= ComCall(Engine.GSA.Convert.ToGsaString(link, link.CustomData[AdapterId].ToString(), 0));
+            }
+
+            foreach (RigidLink link in links)
+            {
+                List<string> allIds = new List<string>();
+                for (int i = 1; i < link.SlaveNodes.Count; i++)
+                {
+                    string id =  NextId(link.GetType(), i == 1).ToString();
+                    success &= ComCall(Engine.GSA.Convert.ToGsaString(link, id, i));
+                    allIds.Add(id);
+                }
+                if (link.SlaveNodes.Count > 1)
+                {
+                    allIds.Add(link.CustomData[AdapterId].ToString());
+                    link.CustomData[AdapterId + "-AllIds"] = allIds;
+                }
+            }
+            return success;
+        }
+
+        /***************************************************/
+
         private bool Create(LoadCombination loadComb)
         {
             bool success = true;

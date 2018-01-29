@@ -71,6 +71,7 @@
     <Compile Include="Convert\Private Helpers\AnalysisTask.cs" />
     <Compile Include="Convert\Private Helpers\Bar.cs" />
     <Compile Include="Convert\Private Helpers\GsaEnums.cs" />
+    <Compile Include="Convert\Private Helpers\LinkConstraint.cs" />
     <Compile Include="Convert\Private Helpers\Material.cs" />
     <Compile Include="Convert\Private Helpers\MeshFace.cs" />
     <Compile Include="Convert\Private Helpers\Node.cs" />
