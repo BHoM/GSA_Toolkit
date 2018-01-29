@@ -10,6 +10,7 @@ using BH.oM.Common.Materials;
 using BH.oM.Queries;
 using BH.oM.Structural.Results;
 
+
 namespace GSA_Test
 {
     class Program
@@ -17,6 +18,7 @@ namespace GSA_Test
         static void Main(string[] args)
         {
             TestPushMeshFace();
+            TestPushRigidLinks();
             //TestReadLinks();
             //TestExecuteCommand()
             //TestPushLoads();
@@ -35,17 +37,58 @@ namespace GSA_Test
             Point p3 = new Point { X = 1, Y = 1, Z = 0 };
             Point p4 = new Point { X = 0, Y = 1, Z = 0 };
 
+            Point p5 = new Point { X = 2, Y = 1, Z = 0 };
+            Point p6 = new Point { X = 2, Y = 0, Z = 0 };
+
             Node n1 = new Node { Position = p1 };
             Node n2 = new Node { Position = p2 };
             Node n3 = new Node { Position = p3 };
             Node n4 = new Node { Position = p4 };
+            Node n5 = new Node { Position = p5 };
+            Node n6 = new Node { Position = p6 };
 
-            LoadingPanelProperty prop = new LoadingPanelProperty { LoadApplication = LoadPanelSupportConditions.AllSides, ReferenceEdge = 1 };
+            LoadingPanelProperty prop = new LoadingPanelProperty { LoadApplication = LoadPanelSupportConditions.AllSides, ReferenceEdge = 1, Material = new Material() };
 
             MeshFace face = new MeshFace { Nodes = new List<Node> { n1, n2, n3, n4 }, Property = prop };
+            MeshFace face2 = new MeshFace { Nodes = new List<Node> { n2, n3, n5 }, Property = prop };
+
+            List<MeshFace> faces = new List<MeshFace> { face, face2 };
+            //BH.Engine.Reflection.Query.DistinctProperties(faces, typeof(Node));
+
 
             GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\EmptyFile.gwb");
-            app.Push(new List<MeshFace> { face });
+            app.Push(faces);
+        }
+
+        private static void TestPushRigidLinks()
+        {
+            //C: \Users\inaslund\Documents\GSA sandbox\SimpleBeam Pt load.gwb
+            Point p1 = new Point { X = 0, Y = 0, Z = 0 };
+            Point p2 = new Point { X = 1, Y = 0, Z = 0 };
+            Point p3 = new Point { X = 1, Y = 1, Z = 0 };
+            Point p4 = new Point { X = 0, Y = 1, Z = 0 };
+
+            Point p5 = new Point { X = 2, Y = 1, Z = 0 };
+            Point p6 = new Point { X = 2, Y = 0, Z = 0 };
+
+            Node n1 = new Node { Position = p1 };
+            Node n2 = new Node { Position = p2 };
+            Node n3 = new Node { Position = p3 };
+            Node n4 = new Node { Position = p4 };
+            Node n5 = new Node { Position = p5 };
+            Node n6 = new Node { Position = p6 };
+
+            LinkConstraint con = BH.Engine.Structure.Create.LinkConstraintFixed();
+
+            RigidLink rl1 = new RigidLink { MasterNode = n1, SlaveNodes = new List<Node> { n2, n3, n4 }, Constraint = con };
+            RigidLink rl2 = new RigidLink { MasterNode = n1, SlaveNodes = new List<Node> { n5 }, Constraint = con };
+
+            List<RigidLink> links = new List<RigidLink> { rl1, rl2 };
+            //BH.Engine.Reflection.Query.DistinctProperties(faces, typeof(Node));
+
+
+            GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\EmptyFile.gwb");
+            app.Push(links);
         }
 
         private static void TestExecuteCommand()
