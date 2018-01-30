@@ -75,7 +75,7 @@ namespace BH.Adapter.GSA
             bool success = true;
             int higestIndexComb = m_gsaCom.GwaCommand("HIGHEST, ANAL") + 1;
             string combNo = higestIndexComb.ToString();
-            string desc = BH.Engine.GSA.Convert.GetCombinationString(loadComb);
+            string desc = BH.Engine.GSA.Query.CombinationString(loadComb);
 
             foreach (string gsaString in loadComb.ToGsaString(combNo, desc))
             {

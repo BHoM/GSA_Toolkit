@@ -192,35 +192,34 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        public static BHL.LoadCombination FromGsaAnalTask(string gsaString, Dictionary<int, BHL.Loadcase> lCases)
+        public static BHL.LoadCombination FromGsaAnalTask(string gsaString, Dictionary<string, BHL.Loadcase> lCases)
         {
 
             if (string.IsNullOrWhiteSpace(gsaString))
                 return null;
 
+            List<Tuple<double, BHL.ICase>> lCasesForTask = new List<Tuple<double, BHL.ICase>>(); 
             string[] gStr = gsaString.Split(',');
             string[] lCaseArr = gStr[4].Split('+');
-
-            foreach (string str in lCaseArr)
-            {
-                //string cleanStr = str.Replace(" ", "");
-                //cleanStr = cleanStr.Replace("L", ",");
-                //string[] lcaseParam = cleanStr.Split(',');
-                //loadCase templCase = lCases[lcaseParam[1]];
-                //Tuple<double, BHL.ICase> loadCase = new Tuple<double, BHL.ICase> (lcaseParam[0], )
-            }
-
-
 
             if (gStr.Length < 5)
                 return null;
 
+            foreach (string str in lCaseArr)
+            {
+                string cleanStr = str.Replace(" ", "");
+                cleanStr = cleanStr.Replace("L", ",");
+                string[] lcaseParam = cleanStr.Split(',');
 
+                if (lcaseParam.Length == 2)
+                {
+                    BHL.Loadcase templCase = lCases[lcaseParam[1]];
+                    Tuple<double, BHL.ICase> loadCase = new Tuple<double, BHL.ICase>(double.Parse(lcaseParam[0]), templCase);
+                    lCasesForTask.Add(loadCase);
+                }
+            }
 
-            //BHL.LoadCombination lCombination = Engine.Structure.Create.LoadCombination(gStr[2],)
-
-
-            return null;
+            return Engine.Structure.Create.LoadCombination(gStr[2], lCasesForTask);
         }
 
         /***************************************/

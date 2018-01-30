@@ -129,24 +129,14 @@ namespace BH.Adapter.GSA
             }
 
             List<Loadcase> lCaseList = ReadLoadCases();
-            Dictionary<int, Loadcase> lCases = lCaseList.ToDictionary(x => x.Number);
+            Dictionary<string, Loadcase> lCases = lCaseList.ToDictionary(x => x.Number.ToString());
 
             if (ids == null)
                 lComabinations = analArr.Select(x => Engine.GSA.Convert.FromGsaAnalTask(x, lCases)).ToList();
             else
                 lComabinations = analArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.FromGsaAnalTask(x, lCases)).ToList();
 
-            //GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
-            //m_gsaCom.Elements(potentialBeamRefs, out gsaElements);
-
-            //List<ISectionProperty> secPropList = ReadSectionProperties();
-            //List<Node> nodeList = ReadNodes();
-
-            //Dictionary<string, ISectionProperty> secProps = secPropList.ToDictionary(x => x.CustomData[AdapterId].ToString());
-            //Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.CustomData[AdapterId].ToString());
-
-            //return Engine.GSA.Convert.FromGsaBars(gsaElements, secProps, nodes);
-            return null;
+            return lComabinations;
         }
 
         /***************************************/

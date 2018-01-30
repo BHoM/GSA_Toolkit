@@ -47,9 +47,9 @@ namespace BH.Engine.GSA
         public static List<string> ToGsaString(this LoadCombination loadComb, string combNo, string desc)
         {
             List<string> gsaStrings = new List<string>();
-            gsaStrings.Add(GetAnalysisCase(combNo, loadComb.Name, combNo, desc));
-            string type = GetTaskType(loadComb);
-            gsaStrings.Add(GetAnalysisTask(combNo, loadComb.Name, type, "0", combNo));
+            gsaStrings.Add(Query.AnalysisCase(combNo, loadComb.Name, combNo, desc));
+            string type = Query.TaskType(loadComb);
+            gsaStrings.Add(Query.AnalysisTask(combNo, loadComb.Name, type, "0", combNo));
 
             return gsaStrings;
         }
@@ -71,13 +71,13 @@ namespace BH.Engine.GSA
             string str;
             string appliedTo = nodeLoad.CreateIdListOrGroupName();
             string caseNo = nodeLoad.Loadcase.Number.ToString();
-            string axis = GetAxis(nodeLoad);
+            string axis = Query.IsGlobal(nodeLoad);
             string[] pos = { ("," + nodeLoad.ILoadPosition()[0]), ("," + nodeLoad.ILoadPosition()[1]) };
 
             str = command + "," + name + "," + appliedTo + "," + caseNo + "," + axis;
 
-            AddVectorDataToStringSingle(str, force, ref forceStrings, factor, true, pos);
-            AddVectorDataToStringSingle(str, moment, ref forceStrings, factor, false, pos);
+            Query.VectorDataToString(str, force, ref forceStrings, factor, true, pos);
+            Query.VectorDataToString(str, moment, ref forceStrings, factor, false, pos);
 
             return forceStrings;
         }
@@ -104,8 +104,8 @@ namespace BH.Engine.GSA
 
             string str = command + "," + name + "," + appliedTo + "," + caseNo + "," + axis + "," + projection;
 
-            AddVectorDataToStringSingle(str, force, ref forceStrings, factor, true, pos);
-            AddVectorDataToStringSingle(str, moment, ref forceStrings, factor, false, pos);
+            Query.VectorDataToString(str, force, ref forceStrings, factor, true, pos);
+            Query.VectorDataToString(str, moment, ref forceStrings, factor, false, pos);
 
             return forceStrings;
         }
@@ -169,13 +169,11 @@ namespace BH.Engine.GSA
         static public string ToGsaString(this Loadcase loadCase)
         {
             string title = loadCase.Name; ;
-            string type = GetGsaLoadType(loadCase.Nature);
+            string type = Query.LoadNatureString(loadCase.Nature);
 
             string str;
             string command = "LOAD_TITLE.1";
             string bridge = "BRIDGE_NO";
-
-            if (type == "SUPERDEAD") type = "DEAD";
 
             str = command + "," + loadCase.Number + "," + title + "," + type + "," + bridge;
             return str;

@@ -18,9 +18,9 @@ namespace GSA_Test
     {
         static void Main(string[] args)
         {
-            TestPushMeshFace();
+            //TestPushMeshFace();
             //TestPushRigidLinks();
-            //TestReadLinks();
+            TestReadLinks();
             //TestExecuteCommand()
             //TestPushLoads();
             //TestExtractForces();
@@ -105,8 +105,8 @@ namespace GSA_Test
         private static void TestReadLinks()
         {
             //C: \Users\inaslund\Documents\GSA sandbox\SimpleBeam Pt load.gwb
-            GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\Link].gwb");
-            FilterQuery query = new FilterQuery(typeof(RigidLink));
+            GSAAdapter app = new GSAAdapter(@"C:\Users\phesari\Desktop\Gsa1.gwb");
+            FilterQuery query = new FilterQuery(typeof(LoadCombination));
             app.Pull(query);
         }
 
