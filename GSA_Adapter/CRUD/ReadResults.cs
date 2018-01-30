@@ -401,14 +401,14 @@ namespace BH.Adapter.GSA
         }
 
         /***************************************************/
-        private List<string> CheckAnalysisCasesExist(List<string> cases)
+        private List<string> CheckAnalysisCasesExist(List<string> cases, bool checkResults = true)
         {
             List<string> checkedCases = new List<string>();
             foreach (string ac in cases)
             {
                 string descriptionCase = ac;
                 int idCase = System.Convert.ToInt32(Char.IsLetter(ac[0]) ? ac.Trim().Substring(1) : ac.Trim());
-                if (CheckAnalysisCaseExists(idCase, ac))
+                if (CheckAnalysisCaseExists(idCase, ac) && (!checkResults || CheckAnalysisCaseResultsExists(idCase, ac)))
                 {
                     checkedCases.Add(ac);
                 }
@@ -425,6 +425,15 @@ namespace BH.Adapter.GSA
                 ErrorLog.Add("Error, analysis case " + caseDescription + " does not exist.");
                 return false;
             }
+
+            return true;
+
+        }
+
+        /***************************************************/
+
+        private bool CheckAnalysisCaseResultsExists(int caseId, string caseDescription)
+        {
 
             if (m_gsaCom.CaseResultsExist(caseDescription[0].ToString(), caseId, 0) != 1)
             {

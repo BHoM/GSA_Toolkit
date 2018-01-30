@@ -48,7 +48,35 @@ namespace BH.Adapter.GSA
 
             else if (commandUpper == "ANALYSE" || commandUpper == "RUN")
             {
-                return Analyse();
+                IList cases = null;
+                string[] caseStringAlt = 
+                {
+                    "Cases",
+                    "CASES",
+                    "cases",
+                    "LoadCases",
+                    "LOADCASES",
+                    "loadcases",
+                    "Loadcases",
+                    "Load Cases",
+                    "LOAD CASES",
+                    "load cases",
+                    "Load cases",
+                    "Load_Cases",
+                    "LOAD_CASES",
+                    "load_cases",
+                    "Load_cases"
+                };
+                foreach (string str in caseStringAlt)
+                {
+                    object obj;
+                    if (parameters.TryGetValue(str, out obj))
+                    {
+                        cases = obj as IList;
+                        break;
+                    }
+                }
+                return Analyse(cases);
             }
 
             else
