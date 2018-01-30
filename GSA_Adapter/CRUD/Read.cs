@@ -31,9 +31,7 @@ namespace BH.Adapter.GSA
             else if (type == typeof(Material))
                 return ReadMaterials(indices as dynamic);
             else if (type == typeof(LoadCombination))
-                return new List<LoadCombination>(); //TODO: Implement loadcombination extraction
-            else if (type == typeof(Loadcase))
-                return new List<Loadcase>(); //TODO: Implement loadcase extraction
+                return ReadLoadCombinations(indices as dynamic);
             else if (type == typeof(ILoad) || type.GetInterfaces().Contains(typeof(ILoad)))
                 return new List<ILoad>(); //TODO: Implement load extraction
             if (type == typeof(RigidLink))
@@ -44,6 +42,8 @@ namespace BH.Adapter.GSA
                 return ReadMeshFace(indices as dynamic);
             if (type == typeof(Property2D))
                 return ReadProperty2d(indices as dynamic);
+            if (type == typeof(Loadcase))
+                return ReadLoadCases(indices as dynamic);
 
             return null;
         }
@@ -77,6 +77,23 @@ namespace BH.Adapter.GSA
             return materials;
         }
 
+        /***************************************************/
+
+        public List<Loadcase> ReadLoadCases(List<string> ids = null)
+        {
+            List<Loadcase> lCases = new List<Loadcase>();
+
+            string allLoadCases = m_gsaCom.GwaCommand("GET_ALL, LOAD_TITLE.1").ToString();
+            string[] lCaseArr = string.IsNullOrWhiteSpace(allLoadCases) ? new string[0] : allLoadCases.Split('\n');
+
+            if (ids == null)
+                lCases = lCaseArr.Select(x => Engine.GSA.Convert.FromGsaLoadcase(x)).ToList();
+            else
+                lCases = lCaseArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.FromGsaLoadcase(x)).ToList();
+
+            return lCases;
+        }
+
         /***************************************/
 
         public List<Bar> ReadBars(List<string> ids = null)
@@ -94,6 +111,40 @@ namespace BH.Adapter.GSA
             Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.CustomData[AdapterId].ToString());
 
             return Engine.GSA.Convert.FromGsaBars(gsaElements, secProps, nodes);
+        }
+
+        /***************************************/
+
+        public List<LoadCombination> ReadLoadCombinations(List<string> ids = null)
+        {
+
+            List<LoadCombination> lComabinations = new List<LoadCombination>();
+            int loadCasesCount = m_gsaCom.GwaCommand("HIGHEST, ANAL");
+            string[] analArr = new string[loadCasesCount];
+            for (int i = 0; i < loadCasesCount; i++)
+            {
+                analArr[i] = m_gsaCom.GwaCommand("GET, ANAL," + (i+1)).ToString();
+            }
+
+            List<Loadcase> lCaseList = ReadLoadCases();
+            Dictionary<int, Loadcase> lCases = lCaseList.ToDictionary(x => x.Number);
+
+            if (ids == null)
+                lComabinations = analArr.Select(x => Engine.GSA.Convert.FromGsaAnalTask(x, lCases)).ToList();
+            else
+                lComabinations = analArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.FromGsaAnalTask(x, lCases)).ToList();
+
+            //GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
+            //m_gsaCom.Elements(potentialBeamRefs, out gsaElements);
+
+            //List<ISectionProperty> secPropList = ReadSectionProperties();
+            //List<Node> nodeList = ReadNodes();
+
+            //Dictionary<string, ISectionProperty> secProps = secPropList.ToDictionary(x => x.CustomData[AdapterId].ToString());
+            //Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.CustomData[AdapterId].ToString());
+
+            //return Engine.GSA.Convert.FromGsaBars(gsaElements, secProps, nodes);
+            return null;
         }
 
         /***************************************/
