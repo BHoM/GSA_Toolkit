@@ -28,7 +28,10 @@ namespace BH.Adapter.GSA
                     "file_name",
                     "FileName",
                     "File Name",
-                    "File_Name"
+                    "File_Name",
+                    "FILENAME",
+                    "FILE NAME",
+                    "FILE_NAME"
                 };
                 foreach (string str in fileNameStringAlt)
                 {
