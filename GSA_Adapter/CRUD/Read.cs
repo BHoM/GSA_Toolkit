@@ -144,10 +144,17 @@ namespace BH.Adapter.GSA
         public List<Node> ReadNodes(List<string> ids = null)
         {
 
-            GsaNode[] gsaNodes;
-            m_gsaCom.Nodes(GenerateIndices(ids, typeof(Node)), out gsaNodes);
+            //GsaNode[] gsaNodes;
+            //m_gsaCom.Nodes(GenerateIndices(ids, typeof(Node)), out gsaNodes);
 
-            return gsaNodes.Select(x => Engine.GSA.Convert.FromGsaNode(x)).ToList();
+            //return gsaNodes.Select(x => Engine.GSA.Convert.FromGsaNode(x)).ToList();
+            string allNodes = m_gsaCom.GwaCommand("GET_ALL, NODE").ToString();
+            string[] nodeArr = string.IsNullOrWhiteSpace(allNodes) ? new string[0] : allNodes.Split('\n');
+
+            if (ids == null)
+                return nodeArr.Select(x => Engine.GSA.Convert.FromGsaNode(x)).ToList();
+            else
+                return nodeArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.FromGsaNode(x)).ToList();
         }
 
         /***************************************/
