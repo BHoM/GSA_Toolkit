@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BH.oM.Common;
-using BH.oM.Structural.Loads;
-using Interop.gsa_8_7;
 
 namespace BH.Engine.GSA
 {
-    public static partial class Query
+    public static partial class Convert
     {
         /***************************************************/
         /**** Public Methods                            ****/
@@ -32,5 +29,27 @@ namespace BH.Engine.GSA
             }
             return strings;
         }
+
+        /***************************************************/
+
+        public static string[] Directions(bool translations)
+        {
+            if (translations)
+                return new string[] { "X", "Y", "Z" };
+            else
+                return new string[] { "XX", "YY", "ZZ" };
+        }
+
+        /***************************************************/
+
+        public static void VectorDataToString(string startStr, BH.oM.Geometry.Vector[] vec, ref List<string> strings, double factor, bool translational, string[] pos)
+        {
+            foreach (string str in ForceVectorsStrings(vec, factor, translational, pos))
+            {
+                strings.Add(startStr + "," + str);
+            }
+        }
+
+        /***************************************************/
     }
 }

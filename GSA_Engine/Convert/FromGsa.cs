@@ -117,7 +117,7 @@ namespace BH.Engine.GSA
                 RigidLink face = new RigidLink()
                 {
                     MasterNode = nodes[gsaLink.Topo[0].ToString()],
-                    SlaveNodes = new List<Node> { nodes[gsaLink.Topo[0].ToString()] },
+                    SlaveNodes = new List<Node> { nodes[gsaLink.Topo[1].ToString()] },
                     Constraint = constraints[gsaLink.Property.ToString()]
                 };
 
