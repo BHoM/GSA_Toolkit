@@ -1,70 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using BH.Engine.Structure;
-using BH.oM.Base;
-using BH.Engine.GSA;
-using BH.oM.Structural.Elements;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using BH.oM.Common;
 using BH.oM.Structural.Loads;
-using BH.oM.Structural.Properties;
 using Interop.gsa_8_7;
 
 namespace BH.Engine.GSA
 {
-    public static partial class Convert
+    public static partial class Query
     {
-        public static string GetLoadCase(ComAuto gsa, Loadcase loadCase)
-        {
-            string title = loadCase.Name; ;
-            string type = GetGsaLoadType(loadCase.Nature);
+        /***************************************************/
+        /**** Public Methods                            ****/
+        /***************************************************/
 
-            string str;
-            string command = "LOAD_TITLE.1";
-            string bridge = "BRIDGE_NO";
-
-            if (type == "SUPERDEAD") type = "DEAD";
-
-            str = command + "," + loadCase.Number + "," + title + "," + type + "," + bridge;
-            return str;
-        }
-
-
-        private static string GetTaskType(LoadCombination comb)
-        {
-            if (comb.CustomData.ContainsKey("Task Type"))
-                return comb.CustomData["Task Type"].ToString();
-
-            return "STATIC";
-        }
-
-        public static string GetCombinationString(LoadCombination comb)
-        {
-            string str = "";
-            for (int i = 0; i < comb.LoadCases.Count; i++)
-            {
-                str += comb.LoadCases[i].Item1.ToString() + "L" + ((Loadcase)comb.LoadCases[i].Item2).Number;
-
-                if (i != comb.LoadCases.Count - 1)
-                    str += " + ";
-            }
-
-            return str;
-        }
-
-        private static string GetAnalysisCase(string anal_caseNo, string name, string taskNo, string desc)
-        {
-            string addCase;
-            string command = "ANAL";
-
-            addCase = command
-                + "," + anal_caseNo
-                + "," + name
-                + "," + taskNo
-                + "," + desc;
-
-            return addCase;
-        }
-
-        private static string GetAnalysisTask(string taskNo, string name, string type, string stage, string anal_caseNo)
+        public static string AnalysisTask(string taskNo, string name, string type, string stage, string anal_caseNo)
         {
             string addTask;
             string command = "TASK";
@@ -171,73 +122,5 @@ namespace BH.Engine.GSA
                 return addTask;
             }
         }
-
-        private static string GetGsaLoadType(LoadNature loadNature)
-        {
-            if (loadNature == LoadNature.Dead)
-                return LoadType.DEAD.ToString();
-            if (loadNature == LoadNature.Live)
-                return LoadType.IMPOSED.ToString();
-            if (loadNature == LoadNature.Other)
-                return LoadType.UNDEF.ToString();
-            if (loadNature == LoadNature.Seismic)
-                return LoadType.SEISMIC.ToString();
-            if (loadNature == LoadNature.Snow)
-                return LoadType.SNOW.ToString();
-            if (loadNature == LoadNature.Temperature)
-                return LoadType.IMPOSED.ToString();
-            if (loadNature == LoadNature.Wind)
-                return LoadType.WIND.ToString();
-            return "";
-        }
-
-        
-
-        public static string GetAxis(ILoad load)
-        {
-            switch (load.Axis)
-            {
-                case LoadAxis.Local:
-                    return "LOCAL";
-                case LoadAxis.Global:
-                default:
-                    return "GLOBAL";
-            }
-        }
-
-        public static void AddVectorDataToStringSingle(string startStr, BH.oM.Geometry.Vector[] vec, ref List<string> strings, double factor, bool translational, string[] pos)
-        {
-                foreach (string str in GetForceVectorsStrings(vec, factor, translational, pos))
-                {
-                    strings.Add(startStr + "," + str);
-                }
-        }
-
-        public static List<string> GetForceVectorsStrings(BH.oM.Geometry.Vector[] vec, double factor, bool translational, string[] pos )
-        {
-            List<string> strings = new List<string>();
-
-            if (vec != null)
-            {
-                string[] dir = Directions(translational);
-
-                if (vec[0].X != 0 || vec[1].X != 0)
-                    strings.Add(dir[0] + pos[0] + (factor * vec[0].X).ToString() + pos[1] + (factor * vec[1].X).ToString());
-                if (vec[0].Y != 0 || vec[1].Y != 0)
-                    strings.Add(dir[1] + pos[0] + (factor * vec[0].Y).ToString() + pos[1] + (factor * vec[1].Y).ToString());
-                if (vec[0].Z != 0 || vec[1].Z != 0)
-                    strings.Add(dir[2] + pos[0] + (factor * vec[0].Z).ToString() + pos[1] + (factor * vec[1].Z).ToString());
-            }
-            return strings;
-        }
-
-        public static string[] Directions(bool translations)
-        {
-            if (translations)
-                return new string[] { "X", "Y", "Z" };
-            else
-                return new string[] { "XX", "YY", "ZZ" };
-        }
-
     }
 }
