@@ -47,9 +47,9 @@ namespace BH.Engine.GSA
         public static List<string> ToGsaString(this LoadCombination loadComb, string combNo, string desc)
         {
             List<string> gsaStrings = new List<string>();
-            gsaStrings.Add(Query.AnalysisCase(combNo, loadComb.Name, combNo, desc));
+            gsaStrings.Add(AnalysisCase(combNo, loadComb.Name, combNo, desc));
             string type = Query.TaskType(loadComb);
-            gsaStrings.Add(Query.AnalysisTask(combNo, loadComb.Name, type, "0", combNo));
+            gsaStrings.Add(AnalysisTask(combNo, loadComb.Name, type, "0", combNo));
 
             return gsaStrings;
         }
@@ -76,8 +76,8 @@ namespace BH.Engine.GSA
 
             str = command + "," + name + "," + appliedTo + "," + caseNo + "," + axis;
 
-            Query.VectorDataToString(str, force, ref forceStrings, factor, true, pos);
-            Query.VectorDataToString(str, moment, ref forceStrings, factor, false, pos);
+            VectorDataToString(str, force, ref forceStrings, factor, true, pos);
+            VectorDataToString(str, moment, ref forceStrings, factor, false, pos);
 
             return forceStrings;
         }
@@ -104,8 +104,8 @@ namespace BH.Engine.GSA
 
             string str = command + "," + name + "," + appliedTo + "," + caseNo + "," + axis + "," + projection;
 
-            Query.VectorDataToString(str, force, ref forceStrings, factor, true, pos);
-            Query.VectorDataToString(str, moment, ref forceStrings, factor, false, pos);
+            VectorDataToString(str, force, ref forceStrings, factor, true, pos);
+            VectorDataToString(str, moment, ref forceStrings, factor, false, pos);
 
             return forceStrings;
         }

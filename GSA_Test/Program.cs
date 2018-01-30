@@ -18,9 +18,9 @@ namespace GSA_Test
     {
         static void Main(string[] args)
         {
-            //TestPushMeshFace();
+            TestPushMeshFace();
             //TestPushRigidLinks();
-            TestReadLinks();
+            //TestReadLinks();
             //TestExecuteCommand()
             //TestPushLoads();
             //TestExtractForces();
@@ -41,7 +41,9 @@ namespace GSA_Test
             Point p5 = new Point { X = 2, Y = 1, Z = 0 };
             Point p6 = new Point { X = 2, Y = 0, Z = 0 };
 
-            Node n1 = new Node { Position = p1 };
+            Constraint6DOF con = BH.Engine.Structure.Create.Constraint6DOF("hi", new bool[] { true, true, false, false, false, false }, new double[] { 0, 0, 100, 0, 0, 0 });
+
+            Node n1 = new Node { Position = p1, Constraint = con };
             Node n2 = new Node { Position = p2 };
             Node n3 = new Node { Position = p3 };
             Node n4 = new Node { Position = p4 };

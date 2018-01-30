@@ -72,6 +72,8 @@
     <Compile Include="Convert\Private Helpers\BHoMGroup.cs" />
     <Compile Include="Convert\Private Helpers\GsaEnums.cs" />
     <Compile Include="Convert\Private Helpers\LinkConstraint.cs" />
+    <Compile Include="Convert\Private Helpers\Load.cs" />
+    <Compile Include="Convert\Private Helpers\LoadCombination.cs" />
     <Compile Include="Convert\Private Helpers\Material.cs" />
     <Compile Include="Convert\Private Helpers\MeshFace.cs" />
     <Compile Include="Convert\Private Helpers\Node.cs" />
@@ -79,15 +81,11 @@
     <Compile Include="Convert\Private Helpers\SectionProperty.cs" />
     <Compile Include="Convert\ToGsa.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Query\AnalysisTask.cs" />
-    <Compile Include="Query\AnalysisCase.cs" />
     <Compile Include="Query\Axis.cs" />
     <Compile Include="Query\CombinationString.cs" />
-    <Compile Include="Query\Direction.cs" />
     <Compile Include="Query\ElementType.cs" />
     <Compile Include="Query\Factor.cs" />
     <Compile Include="Query\ForceTypeString.cs" />
-    <Compile Include="Query\ForceVectorString.cs" />
     <Compile Include="Query\LoadNature.cs" />
     <Compile Include="Query\Position.cs" />
     <Compile Include="Query\Projection.cs" />
@@ -95,7 +93,6 @@
     <Compile Include="Query\RotationVector.cs" />
     <Compile Include="Query\TaskType.cs" />
     <Compile Include="Query\TranslationVector.cs" />
-    <Compile Include="Query\VectorDataString.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
