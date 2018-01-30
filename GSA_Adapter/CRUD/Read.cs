@@ -44,6 +44,8 @@ namespace BH.Adapter.GSA
                 return ReadProperty2d(indices as dynamic);
             if (type == typeof(Loadcase))
                 return ReadLoadCases(indices as dynamic);
+            if (type.IsGenericType && type.Name == typeof(BHoMGroup<IObject>).Name)
+                return new List<BHoMGroup<IObject>>();
 
             return null;
         }
