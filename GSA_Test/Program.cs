@@ -18,7 +18,8 @@ namespace GSA_Test
     {
         static void Main(string[] args)
         {
-            TestPushMeshFace();
+            TestPullNodes();
+            //TestPushMeshFace();
             //TestPushRigidLinks();
             //TestReadLinks();
             //TestExecuteCommand()
@@ -28,6 +29,13 @@ namespace GSA_Test
             //TestDelete();
             //TestPushMaterials();
             //
+        }
+
+        private static void TestPullNodes()
+        {
+            GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\Spring Suport.gwb");
+
+            List<object> test = app.Pull(new FilterQuery() { Type = typeof(Node) }).ToList();
         }
 
         private static void TestPushMeshFace()

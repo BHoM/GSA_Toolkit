@@ -550,17 +550,88 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        public static Node FromGsaNode(GsaNode gn)
+        public static Node FromGsaNode(string gsaString)
         {
-            Node node = new Node { Position = new Point { X = gn.Coor[0], Y = gn.Coor[1], Z = gn.Coor[2] } };
-            node.ApplyTaggedName(gn.Name);
-            node.CustomData.Add(AdapterID, gn.Ref);
+            if (gsaString == "")
+            {
+                return null;
+            }
 
-            //Check if the node is restrained in some way
-            if (gn.Restraint != 0 || gn.Stiffness.Sum() != 0)
-                node.Constraint = GetConstraint(gn.Restraint, gn.Stiffness);
+            string[] arr = gsaString.Split(',');
 
+            int id = Int32.Parse(arr[1]);
+            string name = arr[2];
+
+            Point pos = new Point() { X = double.Parse(arr[4]), Y = double.Parse(arr[5]), Z = double.Parse(arr[6]) };
+
+            Constraint6DOF con;
+            if (arr.Length > 7)
+            {
+                bool[] fixities;
+                double[] stiff;
+                if (arr[9] == "REST")
+                {
+                    fixities = new bool[]
+                    {
+                        arr[10] == "1",
+                        arr[11] == "1",
+                        arr[12] == "1",
+                        arr[13] == "1",
+                        arr[14] == "1",
+                        arr[15] == "1",
+                    };
+                    if (arr.Length > 16 && arr[16] == "STIFF")
+                    {
+                        stiff = new double[]
+                            {
+                                double.Parse(arr[17]),
+                                double.Parse(arr[18]),
+                                double.Parse(arr[19]),
+                                double.Parse(arr[20]),
+                                double.Parse(arr[21]),
+                                double.Parse(arr[22])
+                            };
+                    }
+                    else
+                        stiff = new double[] { 0, 0, 0, 0, 0, 0 };
+                }
+                else
+                {
+                    fixities = new bool[] { false, false, false, false, false, false };
+                    if (arr[10] == "STIFF")
+                    {
+                        stiff = new double[]
+                            {
+                                double.Parse(arr[11]),
+                                double.Parse(arr[12]),
+                                double.Parse(arr[13]),
+                                double.Parse(arr[14]),
+                                double.Parse(arr[15]),
+                                double.Parse(arr[16])
+                            };
+                    }
+                    else
+                        stiff = new double[] { 0, 0, 0, 0, 0, 0 };
+                }
+
+                con = Create.Constraint6DOF("", fixities, stiff);
+            }
+            else
+                con = null;
+
+            Node node = new Node { Position = pos, Constraint = con };
+            node.ApplyTaggedName(name);
+            node.CustomData.Add(AdapterID, id);
             return node;
+            //Node node = new Node { Position = new Point { X = gn.Coor[0], Y = gn.Coor[1], Z = gn.Coor[2] } };
+            //node.ApplyTaggedName(gn.Name);
+            //node.CustomData.Add(AdapterID, gn.Ref);
+
+            ////Check if the node is restrained in some way
+            //if (gn.Restraint != 0 || gn.Stiffness.Sum() != 0)
+            //    node.Constraint = GetConstraint(gn.Restraint, gn.Stiffness);
+
+            //return node;
         }
 
         /***************************************************/
