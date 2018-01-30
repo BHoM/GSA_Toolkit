@@ -191,59 +191,7 @@ namespace BH.Engine.GSA
             return "";
         }
 
-        public static string CreateIdListOrGroupName()
-        {
-            //if (!string.IsNullOrWhiteSpace(group.Name))
-            //    return "\"" + group.Name + "\"";
-
-            //List<string> ids;
-
-            ////if (group is BHB.Group<BHE.Node>)
-            ////    Elements.NodeIO.GetOrCreateNodes(gsa, group as List<BHE.Node>, out ids);
-            ////else
-            ////{
-            //List<IObject> idItems;
-
-            //bool isIareaElement = group is BHB.Group<IAreaElement>;
-
-            //else if (isIareaElement)
-            //{
-            //    idItems = new List<BHB.IBase>();
-            //    foreach (BHE.IAreaElement elem in group as BHB.Group<BHE.IAreaElement>)
-            //    {
-            //        if (!(elem is BHE.FEMesh))
-            //        {
-            //            Utility.Utils.SendErrorMessage("Mesh is only IAreaElement implemented in GSA");
-            //        }
-            //        BHE.FEMesh mesh = elem as BHE.FEMesh;
-
-            //        foreach (BHE.FEFace face in mesh.Faces)
-            //        {
-            //            if (face.CustomData.ContainsKey(Utils.ID))
-            //                idItems.Add(face);
-            //            else
-            //                return null;
-            //        }
-            //    }
-            //}
-            //else
-            //{
-
-            //    List<BHB.IBase> nonIdItems = group.Where(x => !x.CustomData.ContainsKey(Utils.ID)).Select(x => (BHB.IBase)x).ToList();
-
-            //    if (nonIdItems.Count > 0)
-            //        return null;
-
-            //    idItems = group.Where(x => x.CustomData.ContainsKey(Utils.ID)).Select(x => (BHB.IBase)x).ToList();
-            //}
-
-            //ids = idItems.Select(x => x.CustomData[Utils.ID].ToString()).ToList();
-
-            //IEnumerable<int> intIds = ids.Select(x => int.Parse(x));
-
-            //return Utils.GeterateIdString(intIds);
-            return 1.ToString();
-        }
+        
 
         public static string GetAxis(ILoad load)
         {

@@ -9,6 +9,7 @@ using BH.Adapter.GSA;
 using BH.oM.Common.Materials;
 using BH.oM.Queries;
 using BH.oM.Structural.Results;
+using BH.oM.Base;
 
 
 namespace GSA_Test
@@ -18,7 +19,7 @@ namespace GSA_Test
         static void Main(string[] args)
         {
             TestPushMeshFace();
-            TestPushRigidLinks();
+            //TestPushRigidLinks();
             //TestReadLinks();
             //TestExecuteCommand()
             //TestPushLoads();
@@ -54,10 +55,11 @@ namespace GSA_Test
 
             List<MeshFace> faces = new List<MeshFace> { face, face2 };
             //BH.Engine.Reflection.Query.DistinctProperties(faces, typeof(Node));
-
+            BHoMGroup<MeshFace> faceGroup = new BHoMGroup<MeshFace> { Elements = new List<MeshFace> { face, face2 } };
 
             GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\EmptyFile.gwb");
             app.Push(faces);
+            app.Push(new List<BHoMGroup<MeshFace>> { faceGroup });
         }
 
         private static void TestPushRigidLinks()
@@ -85,7 +87,7 @@ namespace GSA_Test
 
             List<RigidLink> links = new List<RigidLink> { rl1, rl2 };
             //BH.Engine.Reflection.Query.DistinctProperties(faces, typeof(Node));
-
+            
 
             GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\EmptyFile.gwb");
             app.Push(links);

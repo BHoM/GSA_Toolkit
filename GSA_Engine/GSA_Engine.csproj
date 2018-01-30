@@ -70,6 +70,7 @@
     <Compile Include="Convert\FromGsa.cs" />
     <Compile Include="Convert\Private Helpers\AnalysisTask.cs" />
     <Compile Include="Convert\Private Helpers\Bar.cs" />
+    <Compile Include="Convert\Private Helpers\BHoMGroup.cs" />
     <Compile Include="Convert\Private Helpers\GsaEnums.cs" />
     <Compile Include="Convert\Private Helpers\LinkConstraint.cs" />
     <Compile Include="Convert\Private Helpers\Material.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Convert\ToGsa.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query\Axis.cs" />
+    <Compile Include="Query\ElementType.cs" />
     <Compile Include="Query\Factor.cs" />
     <Compile Include="Query\ForceTypeString.cs" />
     <Compile Include="Query\Position.cs" />

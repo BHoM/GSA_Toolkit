@@ -4,8 +4,10 @@ using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
 using BH.oM.Structural.Loads;
 using BH.oM.Geometry;
+using BH.oM.Base;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Interop.gsa_8_7;
 
@@ -35,7 +37,8 @@ namespace BH.Engine.GSA
                 return "EL";
             else if (type == typeof(LinkConstraint))
                 return "PROP_LINK";
-
+            else if (type.IsGenericType && type.Name == typeof(BHoMGroup<IObject>).Name)
+                return "List";
             return null;
         }
 
@@ -66,7 +69,7 @@ namespace BH.Engine.GSA
 
             string name = nodeLoad.Name;
             string str;
-            string appliedTo = CreateIdListOrGroupName();
+            string appliedTo = nodeLoad.CreateIdListOrGroupName();
             string caseNo = nodeLoad.Loadcase.Number.ToString();
             string axis = GetAxis(nodeLoad);
             string[] pos = { ("," + nodeLoad.ILoadPosition()[0]), ("," + nodeLoad.ILoadPosition()[1]) };
@@ -89,7 +92,7 @@ namespace BH.Engine.GSA
             string projection = barLoad.IsProjectedString();
             string axis = barLoad.IsGlobal();
             double factor = barLoad.IFactor(unitFactors);
-            string appliedTo = CreateIdListOrGroupName();
+            string appliedTo = barLoad.CreateIdListOrGroupName();
             Vector[] force = { barLoad.ITranslationVector()[0], barLoad.ITranslationVector()[1]};
             Vector[] moment = { barLoad.IRotationVector()[0], barLoad.IRotationVector()[1] };
             string caseNo = barLoad.Loadcase.Number.ToString();
@@ -112,7 +115,7 @@ namespace BH.Engine.GSA
             List<string> forceStrings = new List<string>();
             string command = load.IForceTypeString();
             string name = load.Name;
-            string list = CreateIdListOrGroupName();
+            string list = load.CreateIdListOrGroupName();
 
             string caseNo = load.Loadcase.Number.ToString();
 
@@ -130,7 +133,7 @@ namespace BH.Engine.GSA
             List<string> forceStrings = new List<string>();
             string command = load.IForceTypeString();
             string name = load.Name;
-            string list = CreateIdListOrGroupName();
+            string list = load.CreateIdListOrGroupName();
             string caseNo = load.Loadcase.Number.ToString();
             double value = load.Prestress;
 
@@ -144,7 +147,7 @@ namespace BH.Engine.GSA
             List<string> forceStrings = new List<string>();
             string command = load.IForceTypeString();
             string name = load.Name;
-            string list = CreateIdListOrGroupName();
+            string list = load.CreateIdListOrGroupName();
             string caseNo = load.Loadcase.Number.ToString();
             string type = "CONS";
             string value = load.TemperatureChange.X.ToString();
@@ -391,6 +394,18 @@ namespace BH.Engine.GSA
 
             string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + propertyIndex + ", " + group + ", " +topology + " 0 , 0" + ", NO_RLS" + ", NO_OFFSET," + dummy;
             return str;
+        }
+
+        /***************************************/
+
+        private static string ToGsaString<T>(this BH.oM.Base.BHoMGroup<T> group, string index) where T: BH.oM.Base.IObject
+        {
+            string command = "LIST";
+            string name = group.Name;
+            string type = group.IElementType();
+            string desc = group.Elements.Select(x => int.Parse(x.CustomData[AdapterID].ToString())).GeterateIdString();
+
+            return command + ", " + index + ", " + name + ", " + type +", " + desc;
         }
 
         /***************************************************/
