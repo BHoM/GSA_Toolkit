@@ -84,6 +84,7 @@
     <Compile Include="Query\ElementType.cs" />
     <Compile Include="Query\Factor.cs" />
     <Compile Include="Query\ForceTypeString.cs" />
+    <Compile Include="Query\LoadNature.cs" />
     <Compile Include="Query\Position.cs" />
     <Compile Include="Query\Projection.cs" />
     <Compile Include="Query\ResultHeader.cs" />

@@ -152,8 +152,7 @@ namespace GSA_Adapter.Structural.Loads
                     break;
             }
 
-            
-
+      
         }
 
         public static List<string> GetLoadcases(ComAuto gsa, out List<BHL.ICase> cases)

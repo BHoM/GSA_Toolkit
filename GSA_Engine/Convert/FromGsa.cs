@@ -1,6 +1,7 @@
 ﻿using BH.Engine.Serialiser;
 using BH.Engine.Structure;
 using BHM = BH.oM.Common.Materials;
+using BHL = BH.oM.Structural.Loads;
 using BH.oM.Geometry;
 using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
@@ -161,6 +162,65 @@ namespace BH.Engine.GSA
             mat.CustomData.Add(AdapterID, int.Parse(gStr[1]));
 
             return mat;
+        }
+
+        /***************************************/
+
+        public static BHL.Loadcase FromGsaLoadcase(string gsaString)
+        {
+
+            if (string.IsNullOrWhiteSpace(gsaString))
+                return null;
+
+            string[] gStr = gsaString.Split(',');
+
+            if (gStr.Length < 5)
+                return null;
+
+            BHL.LoadNature loadNature = Query.BHoMLoadNature(gStr[3]);
+            BHL.Loadcase lCase = Engine.Structure.Create.Loadcase(gStr[2], loadNature);
+
+            int lCasenum = 0;
+
+            if (Int32.TryParse(gStr[1], out lCasenum))
+            {
+                lCase.Number = lCasenum;
+            }
+
+            return lCase;            
+        }
+
+        /***************************************/
+
+        public static BHL.LoadCombination FromGsaAnalTask(string gsaString, Dictionary<int, BHL.Loadcase> lCases)
+        {
+
+            if (string.IsNullOrWhiteSpace(gsaString))
+                return null;
+
+            string[] gStr = gsaString.Split(',');
+            string[] lCaseArr = gStr[4].Split('+');
+
+            foreach (string str in lCaseArr)
+            {
+                //string cleanStr = str.Replace(" ", "");
+                //cleanStr = cleanStr.Replace("L", ",");
+                //string[] lcaseParam = cleanStr.Split(',');
+                //loadCase templCase = lCases[lcaseParam[1]];
+                //Tuple<double, BHL.ICase> loadCase = new Tuple<double, BHL.ICase> (lcaseParam[0], )
+            }
+
+
+
+            if (gStr.Length < 5)
+                return null;
+
+
+
+            //BHL.LoadCombination lCombination = Engine.Structure.Create.LoadCombination(gStr[2],)
+
+
+            return null;
         }
 
         /***************************************/
