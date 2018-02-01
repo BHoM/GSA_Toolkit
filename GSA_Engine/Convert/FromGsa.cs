@@ -209,12 +209,15 @@ namespace BH.Engine.GSA
             {
                 string cleanStr = str.Replace(" ", "");
                 cleanStr = cleanStr.Replace("L", ",");
-                string[] lcaseParam = cleanStr.Split(',');
+                string[] lCaseParam = cleanStr.Split(',');
 
-                if (lcaseParam.Length == 2)
+                if (lCaseParam.Length == 2)
                 {
-                    BHL.Loadcase templCase = lCases[lcaseParam[1]];
-                    Tuple<double, BHL.ICase> loadCase = new Tuple<double, BHL.ICase>(double.Parse(lcaseParam[0]), templCase);
+                    if (string.IsNullOrEmpty(lCaseParam[0]))
+                        lCaseParam[0] = "1.0";
+
+                    BHL.Loadcase templCase = lCases[lCaseParam[1]];
+                    Tuple<double, BHL.ICase> loadCase = new Tuple<double, BHL.ICase>(double.Parse(lCaseParam[0]), templCase);
                     lCasesForTask.Add(loadCase);
                 }
             }
