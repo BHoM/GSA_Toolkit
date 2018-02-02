@@ -44,8 +44,10 @@ namespace BH.Engine.GSA
 
         /***************************************************/
 
-        public static List<string> ToGsaString(this LoadCombination loadComb, string combNo, string desc)
+        public static List<string> ToGsaString(this LoadCombination loadComb)
         {
+            string desc = loadComb.CombinationString();
+            string combNo = loadComb.Number.ToString();
             List<string> gsaStrings = new List<string>();
             gsaStrings.Add(AnalysisCase(combNo, loadComb.Name, combNo, desc));
             string type = Query.TaskType(loadComb);

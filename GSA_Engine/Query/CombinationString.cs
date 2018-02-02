@@ -16,7 +16,7 @@ namespace BH.Engine.GSA
         /***************************************************/
 
 
-        public static string CombinationString(LoadCombination comb)
+        public static string CombinationString(this LoadCombination comb)
         {
             string str = "";
             for (int i = 0; i < comb.LoadCases.Count; i++)
