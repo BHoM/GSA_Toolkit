@@ -1,7 +1,6 @@
 ﻿namespace BH.Engine.GSA
 {
-    public static partial class Convert
-    {
+
         /***************************************/
 
         public enum Out_0D_Results
@@ -186,5 +185,5 @@
         }
 
         /***************************************/
-    }
+    
 }

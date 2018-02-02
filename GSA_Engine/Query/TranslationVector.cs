@@ -54,6 +54,14 @@ namespace BH.Engine.GSA
         }
 
         /***************************************************/
+
+        public static Vector[] TranslationVector(this AreaUniformalyDistributedLoad load)
+        {
+            Vector[] forceVecs = { load.Pressure, BH.Engine.Geometry.Create.Vector() };
+            return forceVecs;
+        }
+
+        /***************************************************/
         /**** Public Methods - Interfaces               ****/
         /***************************************************/
 

@@ -17,35 +17,47 @@ namespace BH.Engine.GSA
 
         public static double Factor(this PointForce load, double[] unitType)
         {
-            return unitType[0];
+            return unitType[(int)UnitType.FORCE];
         }
 
         /***************************************************/
 
         public static double Factor(this PointDisplacement load, double[] unitType)
         {
-            return unitType[2];
+            return unitType[(int)UnitType.LENGTH];
         }
 
         /***************************************************/
 
         public static double Factor(this BarPointLoad load, double[] unitType)
         {
-            return unitType[1];
+            return unitType[(int)UnitType.FORCE];
         }
 
         /***************************************************/
 
         public static double Factor(this BarUniformlyDistributedLoad load, double[] unitType)
         {
-            return unitType[1];
+            return unitType[(int)UnitType.FORCE];
         }
 
         /***************************************************/
 
         public static double Factor(this BarVaryingDistributedLoad load, double[] unitType)
         {
-            return unitType[1];
+            return unitType[(int)UnitType.FORCE];
+        }
+
+        /***************************************************/
+        public static double Factor(this AreaUniformalyDistributedLoad load, double[] unitType)
+        {
+            return unitType[(int)UnitType.FORCE];
+        }
+
+        /***************************************************/
+        public static double Factor(this AreaVaryingDistributedLoad load, double[] unitType)
+        {
+            return unitType[(int)UnitType.FORCE];
         }
 
         /***************************************************/

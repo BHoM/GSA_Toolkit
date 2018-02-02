@@ -156,7 +156,7 @@ namespace BH.Engine.GSA
             if (!double.TryParse(gStr[9], out rho))
                 return null;
 
-            BHM.Material mat = Engine.Common.Create.Material("", type, E, v, tC, G, rho);
+            BHM.Material mat = Engine.Common.Create.Material("", type, E, v, tC, rho);
             mat.ApplyTaggedName(gStr[3]);
 
             mat.CustomData.Add(AdapterID, int.Parse(gStr[1]));
@@ -178,7 +178,7 @@ namespace BH.Engine.GSA
                 return null;
 
             BHL.LoadNature loadNature = Query.BHoMLoadNature(gStr[3]);
-            BHL.Loadcase lCase = Engine.Structure.Create.Loadcase(gStr[2], loadNature);
+            BHL.Loadcase lCase = Engine.Structure.Create.Loadcase(gStr[2], int.Parse(gStr[1]), loadNature);
 
             int lCasenum = 0;
 
@@ -187,7 +187,7 @@ namespace BH.Engine.GSA
                 lCase.Number = lCasenum;
             }
 
-            return lCase;            
+            return lCase;
         }
 
         /***************************************/
@@ -198,7 +198,7 @@ namespace BH.Engine.GSA
             if (string.IsNullOrWhiteSpace(gsaString))
                 return null;
 
-            List<Tuple<double, BHL.ICase>> lCasesForTask = new List<Tuple<double, BHL.ICase>>(); 
+            List<Tuple<double, BHL.ICase>> lCasesForTask = new List<Tuple<double, BHL.ICase>>();
             string[] gStr = gsaString.Split(',');
             string[] lCaseArr = gStr[4].Split('+');
 
@@ -222,7 +222,7 @@ namespace BH.Engine.GSA
                 }
             }
 
-            return Engine.Structure.Create.LoadCombination(gStr[2], lCasesForTask);
+            return Engine.Structure.Create.LoadCombination(gStr[2], int.Parse(gStr[1]), lCasesForTask);
         }
 
         /***************************************/
@@ -508,7 +508,7 @@ namespace BH.Engine.GSA
             }
 
             constraint.Name = name;
-            constraint.CustomData[AdapterID] = id;
+            constraint.CustomData[AdapterID] = int.Parse(id);
 
             return constraint;
         }
@@ -570,11 +570,11 @@ namespace BH.Engine.GSA
             Constraint6DOF con;
             if (arr.Length > 7)
             {
-                bool[] fixities;
-                double[] stiff;
+                List<bool> fixities;
+                List<double> stiff;
                 if (arr[9] == "REST")
                 {
-                    fixities = new bool[]
+                    fixities = new List<bool>()
                     {
                         arr[10] == "1",
                         arr[11] == "1",
@@ -585,7 +585,7 @@ namespace BH.Engine.GSA
                     };
                     if (arr.Length > 16 && arr[16] == "STIFF")
                     {
-                        stiff = new double[]
+                        stiff = new List<double>()
                             {
                                 double.Parse(arr[17]),
                                 double.Parse(arr[18]),
@@ -596,14 +596,14 @@ namespace BH.Engine.GSA
                             };
                     }
                     else
-                        stiff = new double[] { 0, 0, 0, 0, 0, 0 };
+                        stiff = new List<double>() { 0, 0, 0, 0, 0, 0 };
                 }
                 else
                 {
-                    fixities = new bool[] { false, false, false, false, false, false };
+                    fixities = new List<bool>() { false, false, false, false, false, false };
                     if (arr[10] == "STIFF")
                     {
-                        stiff = new double[]
+                        stiff = new List<double>()
                             {
                                 double.Parse(arr[11]),
                                 double.Parse(arr[12]),
@@ -614,7 +614,7 @@ namespace BH.Engine.GSA
                             };
                     }
                     else
-                        stiff = new double[] { 0, 0, 0, 0, 0, 0 };
+                        stiff = new List<double>() { 0, 0, 0, 0, 0, 0 };
                 }
 
                 con = Create.Constraint6DOF("", fixities, stiff);
@@ -844,7 +844,7 @@ namespace BH.Engine.GSA
                 Frequency = double.Parse(frArr[2]),
                 ModalMass = totMass,
                 ModalStiffness = double.Parse(stiArr[2]),
-                MassRatioX = double.Parse(tranArr[3])/totMass,
+                MassRatioX = double.Parse(tranArr[3]) / totMass,
                 MassRatioY = double.Parse(tranArr[4]) / totMass,
                 MassRatioZ = double.Parse(tranArr[5]) / totMass,
                 InertiaRatioX = double.Parse(rotArr[3]) / totMass,

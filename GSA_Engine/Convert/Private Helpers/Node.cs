@@ -41,20 +41,20 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        private static Constraint6DOF GetConstraint(int gsaConst, double[] stiffnesses)
-        {
-            //Construct the constraint
-            BitArray arr = new BitArray(new int[] { gsaConst });
-            bool[] fixities = new bool[6];
+        //private static Constraint6DOF GetConstraint(int gsaConst, double[] stiffnesses)
+        //{
+        //    //Construct the constraint
+        //    BitArray arr = new BitArray(new int[] { gsaConst });
+        //    bool[] fixities = new bool[6];
 
-            for (int i = 0; i < 6; i++)
-            {
-                fixities[i] = arr[i];
-            }
+        //    for (int i = 0; i < 6; i++)
+        //    {
+        //        fixities[i] = arr[i];
+        //    }
 
-            return Create.Constraint6DOF("", fixities, stiffnesses);
+        //    return Create.Constraint6DOF("", fixities, stiffnesses);
 
-        }
+        //}
 
         /***************************************/
     }
