@@ -17,6 +17,7 @@ namespace BH.Adapter.GSA
             Config.SeparateProperties = true;
             Config.MergeWithComparer = true;
             Config.ProcessInMemory = false;
+            Config.CloneBeforePush = true;
         }
 
         /***************************************************/

@@ -81,6 +81,7 @@
     <Compile Include="Convert\Private Helpers\SectionProperty.cs" />
     <Compile Include="Convert\ToGsa.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Query\AreaLoadType.cs" />
     <Compile Include="Query\Axis.cs" />
     <Compile Include="Query\CombinationString.cs" />
     <Compile Include="Query\ElementType.cs" />

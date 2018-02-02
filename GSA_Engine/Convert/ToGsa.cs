@@ -110,6 +110,33 @@ namespace BH.Engine.GSA
             return forceStrings;
         }
 
+        /***************************************************/
+
+        public static List<string> ToGsaString(this Load<IAreaElement> areaLoad, double[] unitFactors)
+        {
+            List<string> forceStrings = new List<string>();
+
+            string name = areaLoad.Name;
+            string projection = areaLoad.IsProjectedString();
+            string axis = areaLoad.IsGlobal();
+            double factor = areaLoad.IFactor(unitFactors);
+            string appliedTo = areaLoad.CreateIdListOrGroupName();
+            Vector[] force = { areaLoad.ITranslationVector()[0], areaLoad.ITranslationVector()[1] };
+            string caseNo = areaLoad.Loadcase.Number.ToString();
+            string command = areaLoad.IForceTypeString();
+            string[] pos = { ("," + areaLoad.ILoadPosition()[0]), ("," + areaLoad.ILoadPosition()[1]) };
+            string type = areaLoad.IAreaLoadTypeString();
+            if (appliedTo == null)
+                return null;
+
+            string str = command + "," + name + "," + appliedTo + "," + caseNo + "," + axis + ","  + type + "," + projection;
+
+            VectorDataToString(str, force, ref forceStrings, factor, true, pos);
+
+            return forceStrings;
+        }
+
+        /***************************************************/
         public static List<string> ToGsaString(this GravityLoad load, double[] unitFactors)
         {
             List<string> forceStrings = new List<string>();
@@ -128,6 +155,7 @@ namespace BH.Engine.GSA
             return forceStrings;
         }
 
+        /***************************************************/
         public static List<string> ToGsaString(this BarPrestressLoad load, double[] unitFactors)
         {
             List<string> forceStrings = new List<string>();
@@ -137,11 +165,12 @@ namespace BH.Engine.GSA
             string caseNo = load.Loadcase.Number.ToString();
             double value = load.Prestress;
 
-            string str = command + ",," + list + "," + caseNo + "," + value * unitFactors[0];
+            string str = command + ",," + list + "," + caseNo + "," + value * unitFactors[(int)UnitType.FORCE];
             forceStrings.Add(str);
             return forceStrings;
         }
 
+        /***************************************************/
         public static List<string> ToGsaString(this BarTemperatureLoad load, double[] unitFactors)
         {
             List<string> forceStrings = new List<string>();

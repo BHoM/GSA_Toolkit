@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using BH.oM.Common;
 using BH.oM.Structural.Loads;
-using Interop.gsa_8_7;
 
 namespace BH.Engine.GSA
 {
@@ -67,6 +66,20 @@ namespace BH.Engine.GSA
         public static string ForceTypeString(this BarTemperatureLoad load)
         {
             return "TEMP_BEAM";
+        }
+
+        /***************************************************/
+
+        public static string ForceTypeString(this AreaUniformalyDistributedLoad load)
+        {
+            return "LOAD_2D_FACE";
+        }
+
+        /***************************************************/
+
+        public static string ForceTypeString(this AreaVaryingDistributedLoad load)
+        {
+            return "LOAD_2D_FACE";
         }
 
         /***************************************************/

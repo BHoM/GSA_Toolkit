@@ -13,6 +13,10 @@ namespace BH.Adapter.GSA
 
         protected override int Delete(Type type, IEnumerable<object> indices)
         {
+            //object source;
+            //if (config != null && config.TryGetValue("Source", out source) && source.ToString() == "Replace")
+                //return 0;
+
             string typeString = type.ToGsaString();
 
             if (typeString == null)

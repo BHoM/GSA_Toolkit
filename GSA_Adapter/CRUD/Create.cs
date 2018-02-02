@@ -17,7 +17,7 @@ namespace BH.Adapter.GSA
         {
             bool success = true;
 
-            if (typeof(T).IsAssignableFrom(typeof(RigidLink)))
+            if (typeof(RigidLink).IsAssignableFrom(typeof(T)))
                 success = CreateLinks(objects as List<RigidLink>);
             else
             {
@@ -40,7 +40,7 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        //Semi hacky method until one to many realationship is bottomed out in the BHoM_Adaptor Replace() method
+         //
         private bool CreateLinks(List<RigidLink> links)
         {
             
