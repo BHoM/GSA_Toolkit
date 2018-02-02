@@ -46,6 +46,7 @@ namespace BH.Engine.GSA
 
         public static List<string> ToGsaString(this LoadCombination loadComb)
         {
+            //TODO: Implement pushing of combinations of combinations
             string desc = loadComb.CombinationString();
             string combNo = loadComb.Number.ToString();
             List<string> gsaStrings = new List<string>();
