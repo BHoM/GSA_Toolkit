@@ -49,7 +49,7 @@ namespace GSA_Test
             Point p5 = new Point { X = 2, Y = 1, Z = 0 };
             Point p6 = new Point { X = 2, Y = 0, Z = 0 };
 
-            Constraint6DOF con = BH.Engine.Structure.Create.Constraint6DOF("hi", new bool[] { true, true, false, false, false, false }, new double[] { 0, 0, 100, 0, 0, 0 });
+            Constraint6DOF con = BH.Engine.Structure.Create.Constraint6DOF("hi", new List<bool>() { true, true, false, false, false, false }, new List<double>() { 0, 0, 100, 0, 0, 0 });
 
             Node n1 = new Node { Position = p1, Constraint = con };
             Node n2 = new Node { Position = p2 };
@@ -136,16 +136,19 @@ namespace GSA_Test
             Vector moment1 = BH.Engine.Geometry.Create.Vector(0, 1, 0);
             Vector force2 = BH.Engine.Geometry.Create.Vector(0, 3, 0);
             Vector moment2 = BH.Engine.Geometry.Create.Vector(5, 0, 0);
-            Loadcase lCase = Create.Loadcase("puria", LoadNature.Dead);
-            lCase.Number = 1;
-            BarPointLoad barPointLoad = Create.BarPointLoad(lCase, 3.2, force1, moment1);
-            PointForce pForce = Create.PointForce(lCase, force1, moment1);
-            PointDisplacement pDisp = Create.PointDisplacement(lCase, force1, moment1);
-            BarUniformlyDistributedLoad bUniform = Create.BarUniformlyDistributedLoad(lCase, force1, moment1);
-            BarVaryingDistributedLoad bVary = Create.BarVaryingDistributedLoad(lCase, 1.6, force1, moment1, 2.3, force2, moment2);
-            GravityLoad gLoad = Create.GravityLoad(lCase, force1);
-            BarPrestressLoad psLoad = Create.BarPrestressLoad(lCase, 17.8);
-            BarTemperatureLoad barTempLoad = Create.BarTemperatureLoad(lCase, moment2);
+            Loadcase lCase = Create.Loadcase("puria", 1, LoadNature.Dead);
+            BHoMGroup<Bar> bGr = new BHoMGroup<Bar>() { Name = "Test" };
+            BHoMGroup<Node> nGr = new BHoMGroup<Node>() { Name = "Test" };
+            BHoMGroup<BHoMObject> bhGr = new BHoMGroup<BHoMObject>() { Name = "Test" };
+
+            BarPointLoad barPointLoad = Create.BarPointLoad(lCase, bGr, 3.2, force1, moment1);
+            PointForce pForce = Create.PointForce(lCase,nGr, force1, moment1);
+            PointDisplacement pDisp = Create.PointDisplacement(lCase,nGr, force1, moment1);
+            BarUniformlyDistributedLoad bUniform = Create.BarUniformlyDistributedLoad(lCase,bGr, force1, moment1);
+            BarVaryingDistributedLoad bVary = Create.BarVaryingDistributedLoad(lCase,bGr, 1.6, force1, moment1, 2.3, force2, moment2);
+            GravityLoad gLoad = Create.GravityLoad(lCase, force1, bhGr);
+            BarPrestressLoad psLoad = Create.BarPrestressLoad(lCase, 17.8, bGr);
+            BarTemperatureLoad barTempLoad = Create.BarTemperatureLoad(lCase, moment2, bGr);
 
             loads.Add(barTempLoad);
             app.Push(loads);
@@ -282,19 +285,19 @@ namespace GSA_Test
             bars2b.Add(bar12b);
 
             ISectionProperty sec1a = new ExplicitSection();
-            sec1a.Material = BH.Engine.Common.Create.Material("Material1", MaterialType.Concrete, 10, 10, 10, 10, 10);
+            sec1a.Material = BH.Engine.Common.Create.Material("Material1", MaterialType.Concrete, 10, 10, 10, 10);
             sec1a.Name = "Section 1";
 
             ISectionProperty sec1b = new ExplicitSection();
-            sec1b.Material = BH.Engine.Common.Create.Material("Material1", MaterialType.Concrete, 10, 10, 10, 10, 10);
+            sec1b.Material = BH.Engine.Common.Create.Material("Material1", MaterialType.Concrete, 10, 10, 10, 10);
             sec1b.Name = "Section 1";
 
             ISectionProperty sec2 = new ExplicitSection();
-            sec2.Material = BH.Engine.Common.Create.Material("Material2", MaterialType.Concrete, 10, 10, 10, 10, 10);
+            sec2.Material = BH.Engine.Common.Create.Material("Material2", MaterialType.Concrete, 10, 10, 10, 10);
             sec2.Name = "Section 2";
 
             ISectionProperty sec3 = new ExplicitSection();
-            sec3.Material = BH.Engine.Common.Create.Material("Material2", MaterialType.Concrete, 10, 10, 10, 10, 10);
+            sec3.Material = BH.Engine.Common.Create.Material("Material2", MaterialType.Concrete, 10, 10, 10, 10);
             sec3.Name = "Section 3";
 
             foreach (Bar b in bars1.Concat(bars2a).Concat(bars2b))
