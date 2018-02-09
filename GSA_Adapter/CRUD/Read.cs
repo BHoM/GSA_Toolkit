@@ -122,19 +122,21 @@ namespace BH.Adapter.GSA
 
             List<LoadCombination> lComabinations = new List<LoadCombination>();
             int loadCasesCount = m_gsaCom.GwaCommand("HIGHEST, ANAL");
-            string[] analArr = new string[loadCasesCount];
+            List<string> analList = new List<string>();
             for (int i = 0; i < loadCasesCount; i++)
             {
-                analArr[i] = m_gsaCom.GwaCommand("GET, ANAL," + (i+1)).ToString();
+                string anal = m_gsaCom.GwaCommand("GET, ANAL," + (i + 1)).ToString();
+                if (!string.IsNullOrWhiteSpace(anal))
+                    analList.Add(anal);
             }
 
             List<Loadcase> lCaseList = ReadLoadCases();
             Dictionary<string, Loadcase> lCases = lCaseList.ToDictionary(x => x.Number.ToString());
 
             if (ids == null)
-                lComabinations = analArr.Select(x => Engine.GSA.Convert.FromGsaAnalTask(x, lCases)).ToList();
+                lComabinations = analList.Select(x => Engine.GSA.Convert.FromGsaAnalTask(x, lCases)).ToList();
             else
-                lComabinations = analArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.FromGsaAnalTask(x, lCases)).ToList();
+                lComabinations = analList.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.FromGsaAnalTask(x, lCases)).ToList();
 
             return lComabinations;
         }
