@@ -41,7 +41,7 @@ namespace BH.Engine.GSA
 
         /***************************************************/
 
-        public static string ElementType(this BHoMGroup<IObject> group)
+        public static string ElementType(this BHoMGroup<IBHoMObject> group)
         {
             if (group.Elements.Where(x => x.GetType() == typeof(Node)).Count() == group.Elements.Count)
                 return "NODE";
@@ -69,7 +69,7 @@ namespace BH.Engine.GSA
         /***************************************************/
         /**** Public Methods - Interfaces               ****/
         /***************************************************/
-        public static string IElementType<T>(this BHoMGroup<T> group) where T : IObject
+        public static string IElementType<T>(this BHoMGroup<T> group) where T : IBHoMObject
         {
             return ElementType(group as dynamic);
         }

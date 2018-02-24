@@ -33,7 +33,7 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        private bool Create(BH.oM.Base.IObject obj)
+        private bool Create(BH.oM.Base.IBHoMObject obj)
         {
             return ComCall(Engine.GSA.Convert.IToGsaString(obj, obj.CustomData[AdapterId].ToString()));
         }

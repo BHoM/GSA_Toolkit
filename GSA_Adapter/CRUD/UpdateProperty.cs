@@ -30,7 +30,7 @@ namespace BH.Adapter.GSA
         private int UpdateDateTags(Type t, List<string> indecies, List<HashSet<string>> tags)
         {
             
-            List<IObject> objects = Read(t, indecies.ToList()).ToList();
+            List<IBHoMObject> objects = Read(t, indecies.ToList()).ToList();
 
             for (int i = 0; i < objects.Count; i++)
             {

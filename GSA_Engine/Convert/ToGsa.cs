@@ -37,7 +37,7 @@ namespace BH.Engine.GSA
                 return "EL";
             else if (type == typeof(LinkConstraint))
                 return "PROP_LINK";
-            else if (type.IsGenericType && type.Name == typeof(BHoMGroup<IObject>).Name)
+            else if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)
                 return "List";
             return null;
         }
@@ -428,7 +428,7 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        private static string ToGsaString<T>(this BH.oM.Base.BHoMGroup<T> group, string index) where T: BH.oM.Base.IObject
+        private static string ToGsaString<T>(this BH.oM.Base.BHoMGroup<T> group, string index) where T: BH.oM.Base.IBHoMObject
         {
             string command = "LIST";
             string name = group.Name;

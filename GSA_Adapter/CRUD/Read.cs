@@ -18,7 +18,7 @@ namespace BH.Adapter.GSA
         /**** Index Adapter Methods                     ****/
         /***************************************************/
 
-        protected override IEnumerable<IObject> Read(Type type, IList indices)
+        protected override IEnumerable<IBHoMObject> Read(Type type, IList indices)
         {
             if (type == typeof(Node))
                 return ReadNodes(indices as dynamic);
@@ -44,8 +44,8 @@ namespace BH.Adapter.GSA
                 return ReadProperty2d(indices as dynamic);
             if (type == typeof(Loadcase))
                 return ReadLoadCases(indices as dynamic);
-            if (type.IsGenericType && type.Name == typeof(BHoMGroup<IObject>).Name)
-                return new List<BHoMGroup<IObject>>();
+            if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)
+                return new List<BHoMGroup<IBHoMObject>>();
 
             return null;
         }
