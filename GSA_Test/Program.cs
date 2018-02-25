@@ -7,7 +7,7 @@ using BH.oM.Structural.Properties;
 using BH.Engine.Structure;
 using BH.Adapter.GSA;
 using BH.oM.Common.Materials;
-using BH.oM.Queries;
+using BH.oM.DataManipulation.Queries;
 using BH.oM.Structural.Results;
 using BH.oM.Base;
 
@@ -116,7 +116,7 @@ namespace GSA_Test
         {
             //C: \Users\inaslund\Documents\GSA sandbox\SimpleBeam Pt load.gwb
             GSAAdapter app = new GSAAdapter(@"C:\Users\phesari\Desktop\Gsa1.gwb");
-            FilterQuery query = new FilterQuery(typeof(LoadCombination));
+            FilterQuery query = new FilterQuery { Type = typeof(LoadCombination) };
             app.Pull(query);
         }
 
@@ -124,7 +124,7 @@ namespace GSA_Test
         {
             //C: \Users\inaslund\Documents\GSA sandbox\SimpleBeam Pt load.gwb
             GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\SimpleBeam Pt load.gwa");
-            FilterQuery query = new FilterQuery(typeof(BarDeformation));
+            FilterQuery query = new FilterQuery { Type = typeof(BarDeformation) };
             app.Pull(query);
         }
 
@@ -316,7 +316,7 @@ namespace GSA_Test
 
             app.Push(nodesB, "Nodes");
 
-            app.Delete(new BH.oM.Queries.FilterQuery(typeof(Node), "Nodes"));
+            app.Delete(new FilterQuery { Type = typeof(Node), Tag = "Nodes" });
 
             //List<string> ids;
             //app.PushObjects(nodesA, out ids, "Nodes");

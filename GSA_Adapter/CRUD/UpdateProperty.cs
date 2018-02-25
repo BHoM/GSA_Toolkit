@@ -5,7 +5,7 @@ using BH.oM.Structural.Loads;
 using BH.oM.Structural.Elements;
 using BH.oM.Base;
 using BH.Engine.GSA;
-using BH.oM.Queries;
+using BH.oM.DataManipulation.Queries;
 
 namespace BH.Adapter.GSA
 {
