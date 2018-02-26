@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6EF0E0AB-7431-4481-9CAD-670673AE1AA1}</ProjectGuid>
+    <ProjectGuid>{CA275200-B50F-4B09-BE44-FBB106E3DE42}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BH.Adapter.GSA</RootNamespace>
-    <AssemblyName>GSA_Adapter</AssemblyName>
+    <RootNamespace>BH.Engine.GSA</RootNamespace>
+    <AssemblyName>GSA_Engine</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,12 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BHoM">
-      <HintPath>..\..\BHoM\Build\BHoM.dll</HintPath>
-    </Reference>
-    <Reference Include="BHoM_Adapter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="BHoM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\BHoM_Adapter\Build\BHoM_Adapter.dll</HintPath>
+      <HintPath>..\..\BHoM\Build\BHoM.dll</HintPath>
     </Reference>
     <Reference Include="BHoM_Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -44,11 +41,19 @@
     <Reference Include="Common_Engine">
       <HintPath>..\..\BHoM_Engine\Build\Common_Engine.dll</HintPath>
     </Reference>
+    <Reference Include="Geometry_Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BHoM_Engine\Build\Geometry_Engine.dll</HintPath>
+    </Reference>
     <Reference Include="Interop.Gsa_8_7">
       <HintPath>..\..\..\..\..\..\..\..\Program Files\Oasys\GSA 8.7\Interop.Gsa_8_7.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="Structure_Engine">
+    <Reference Include="Serialiser_Engine">
+      <HintPath>..\..\BHoM_Engine\Build\Serialiser_Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="Structure_Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM_Engine\Build\Structure_Engine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -61,23 +66,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CRUD\Execute.cs" />
-    <Compile Include="CRUD\ReadResults.cs" />
-    <Compile Include="CRUD\UpdateProperty.cs" />
-    <Compile Include="Types\DependencyTypes.cs" />
-    <Compile Include="Types\Comparer.cs" />
-    <Compile Include="CRUD\Delete.cs" />
-    <Compile Include="CRUD\NextIndex.cs" />
-    <Compile Include="CRUD\Create.cs" />
-    <Compile Include="GSAAdapter.cs" />
-    <Compile Include="CRUD\Read.cs" />
+    <Compile Include="Convert\AdapterID.cs" />
+    <Compile Include="Convert\FromGsa.cs" />
+    <Compile Include="Convert\Private Helpers\Bar.cs" />
+    <Compile Include="Convert\Private Helpers\BHoMGroup.cs" />
+    <Compile Include="Convert\Private Helpers\GsaEnums.cs" />
+    <Compile Include="Convert\Private Helpers\LinkConstraint.cs" />
+    <Compile Include="Convert\Private Helpers\Load.cs" />
+    <Compile Include="Convert\Private Helpers\LoadCombination.cs" />
+    <Compile Include="Convert\Private Helpers\Material.cs" />
+    <Compile Include="Convert\Private Helpers\MeshFace.cs" />
+    <Compile Include="Convert\Private Helpers\Node.cs" />
+    <Compile Include="Convert\Private Helpers\Property2d.cs" />
+    <Compile Include="Convert\Private Helpers\SectionProperty.cs" />
+    <Compile Include="Convert\ToGsa.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GSA_Engine\GSA_Engine.csproj">
-      <Project>{ca275200-b50f-4b09-be44-fbb106e3de42}</Project>
-      <Name>GSA_Engine</Name>
-    </ProjectReference>
+    <Compile Include="Query\AreaLoadType.cs" />
+    <Compile Include="Query\Axis.cs" />
+    <Compile Include="Query\CombinationString.cs" />
+    <Compile Include="Query\ElementType.cs" />
+    <Compile Include="Query\Factor.cs" />
+    <Compile Include="Query\ForceTypeString.cs" />
+    <Compile Include="Query\LoadNature.cs" />
+    <Compile Include="Query\Position.cs" />
+    <Compile Include="Query\Projection.cs" />
+    <Compile Include="Query\ResultHeader.cs" />
+    <Compile Include="Query\RotationVector.cs" />
+    <Compile Include="Query\TaskType.cs" />
+    <Compile Include="Query\TranslationVector.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

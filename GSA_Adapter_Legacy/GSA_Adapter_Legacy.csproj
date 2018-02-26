@@ -4,12 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6EF0E0AB-7431-4481-9CAD-670673AE1AA1}</ProjectGuid>
+    <ProjectGuid>{9740253E-8C50-44FA-BA20-96FCFA7B0520}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BH.Adapter.GSA</RootNamespace>
-    <AssemblyName>GSA_Adapter</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <RootNamespace>GSA_Adapter</RootNamespace>
+    <AssemblyName>GSA_Adapter_Legacy</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -32,27 +32,15 @@
   <ItemGroup>
     <Reference Include="BHoM">
       <HintPath>..\..\BHoM\Build\BHoM.dll</HintPath>
-    </Reference>
-    <Reference Include="BHoM_Adapter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\BHoM_Adapter\Build\BHoM_Adapter.dll</HintPath>
-    </Reference>
-    <Reference Include="BHoM_Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\BHoM_Engine\Build\BHoM_Engine.dll</HintPath>
-    </Reference>
-    <Reference Include="Common_Engine">
-      <HintPath>..\..\BHoM_Engine\Build\Common_Engine.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Interop.Gsa_8_7">
       <HintPath>..\..\..\..\..\..\..\..\Program Files\Oasys\GSA 8.7\Interop.Gsa_8_7.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="Structure_Engine">
-      <HintPath>..\..\BHoM_Engine\Build\Structure_Engine.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -61,25 +49,43 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CRUD\Execute.cs" />
-    <Compile Include="CRUD\ReadResults.cs" />
-    <Compile Include="CRUD\UpdateProperty.cs" />
-    <Compile Include="Types\DependencyTypes.cs" />
-    <Compile Include="Types\Comparer.cs" />
-    <Compile Include="CRUD\Delete.cs" />
-    <Compile Include="CRUD\NextIndex.cs" />
-    <Compile Include="CRUD\Create.cs" />
-    <Compile Include="GSAAdapter.cs" />
-    <Compile Include="CRUD\Read.cs" />
+    <Compile Include="Structural\DesignMembers\BarMemberIO.cs" />
+    <Compile Include="Structural\DesignMembers\DesignPropertyIO.cs" />
+    <Compile Include="Structural\DesignMembers\DesignRestraintIO.cs" />
+    <Compile Include="Structural\Elements\GroupIO.cs" />
+    <Compile Include="Structural\Elements\MeshIO.cs" />
+    <Compile Include="Structural\Elements\RigidLinkIO.cs" />
+    <Compile Include="Structural\Interface\CommandAdapter.cs" />
+    <Compile Include="Structural\Interface\DesignMemberAdapter.cs" />
+    <Compile Include="Structural\Interface\ResultAdapter.cs" />
+    <Compile Include="Structural\Loads\AnalysisTaskIO.cs" />
+    <Compile Include="Structural\Interface\App.cs" />
+    <Compile Include="Structural\Elements\BarIO.cs" />
+    <Compile Include="Structural\Loads\AreaLoadIO.cs" />
+    <Compile Include="Structural\Loads\BarLoadIO.cs" />
+    <Compile Include="Structural\Loads\LoadcaseIO.cs" />
+    <Compile Include="Structural\Loads\LoadIO.cs" />
+    <Compile Include="Structural\Loads\NodeLodeIO.cs" />
+    <Compile Include="Structural\Properties\LinkPropertyIO.cs" />
+    <Compile Include="Structural\Properties\MaterialIO.cs" />
+    <Compile Include="Structural\Elements\NodeIO.cs" />
+    <Compile Include="Structural\Interface\ElementAdapter.cs" />
+    <Compile Include="Structural\Elements\FaceIO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Structural\Properties\PropertyIO.cs" />
+    <Compile Include="Structural\Properties\PropertyStringGenerators.cs" />
+    <Compile Include="Structural\Results\BarResults.cs" />
+    <Compile Include="Structural\Results\NodeResults.cs" />
+    <Compile Include="Structural\Results\ResultUtilities.cs" />
+    <Compile Include="Structural\Results\Utilisation.cs" />
+    <Compile Include="Utility\GsaEnums.cs" />
+    <Compile Include="Utility\Utils.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GSA_Engine\GSA_Engine.csproj">
-      <Project>{ca275200-b50f-4b09-be44-fbb106e3de42}</Project>
-      <Name>GSA_Engine</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>Copy "$(TargetPath)" "C:\Users\$(Username)\AppData\Roaming\Grasshopper\Libraries\$(ProjectName).dll"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
