@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="CRUD\Execute.cs" />
     <Compile Include="CRUD\ReadResults.cs" />
+    <Compile Include="CRUD\UpdateObjects.cs" />
     <Compile Include="CRUD\UpdateProperty.cs" />
     <Compile Include="Types\DependencyTypes.cs" />
     <Compile Include="Types\Comparer.cs" />
