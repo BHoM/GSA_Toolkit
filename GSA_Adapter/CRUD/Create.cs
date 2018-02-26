@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using BH.oM.Structural.Loads;
 using BH.oM.Structural.Elements;
@@ -18,7 +19,7 @@ namespace BH.Adapter.GSA
             bool success = true;
 
             if (typeof(RigidLink).IsAssignableFrom(typeof(T)))
-                success = CreateLinks(objects as List<RigidLink>);
+                success = CreateLinks((objects as IEnumerable<RigidLink>).ToList());
             else
             {
                 foreach (T obj in objects)
