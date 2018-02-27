@@ -19,7 +19,7 @@ namespace BH.Adapter.GSA
             bool success = true;
 
             if (typeof(RigidLink).IsAssignableFrom(typeof(T)))
-                success = CreateLinks((objects as IEnumerable<RigidLink>).ToList());
+                success = CreateLinks(objects as IEnumerable<RigidLink>);
             else
             {
                 foreach (T obj in objects)
@@ -42,7 +42,7 @@ namespace BH.Adapter.GSA
         /***************************************************/
 
          //
-        private bool CreateLinks(List<RigidLink> links)
+        private bool CreateLinks(IEnumerable<RigidLink> links)
         {
             
             bool success = true;
