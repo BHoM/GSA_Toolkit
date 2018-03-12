@@ -8,7 +8,7 @@ namespace BH.Adapter.GSA
         /**** Constructors                              ****/
         /***************************************************/
 
-        public GSAAdapter()
+        public GSAAdapter(string filePath = "")
         {
             m_gsaCom = new ComAuto();
 
@@ -18,12 +18,7 @@ namespace BH.Adapter.GSA
             Config.MergeWithComparer = true;
             Config.ProcessInMemory = false;
             Config.CloneBeforePush = true;
-        }
 
-        /***************************************************/
-
-        public GSAAdapter(string filePath) : this()
-        {
             short result;
             if (!string.IsNullOrWhiteSpace(filePath))
                 result = m_gsaCom.Open(filePath);
