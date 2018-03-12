@@ -69,9 +69,9 @@ namespace BH.Adapter.GSA
             string allProps = m_gsaCom.GwaCommand("GET_ALL, MAT").ToString();
             string[] matArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
             if (ids == null)
-                materials = matArr.Select(x => Engine.GSA.Convert.FromGsaMaterial(x)).ToList();
+                materials = matArr.Select(x => Engine.GSA.Convert.ToBHoMMaterial(x)).ToList();
             else
-                materials = matArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.FromGsaMaterial(x)).ToList();
+                materials = matArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.ToBHoMMaterial(x)).ToList();
 
             if (includeStandard)
                 materials.AddRange(GetStandardGsaMaterials());
@@ -89,9 +89,9 @@ namespace BH.Adapter.GSA
             string[] lCaseArr = string.IsNullOrWhiteSpace(allLoadCases) ? new string[0] : allLoadCases.Split('\n');
 
             if (ids == null)
-                lCases = lCaseArr.Select(x => Engine.GSA.Convert.FromGsaLoadcase(x)).ToList();
+                lCases = lCaseArr.Select(x => Engine.GSA.Convert.ToBHoMLoadcase(x)).ToList();
             else
-                lCases = lCaseArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.FromGsaLoadcase(x)).ToList();
+                lCases = lCaseArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.ToBHoMLoadcase(x)).ToList();
 
             return lCases;
         }
@@ -112,7 +112,7 @@ namespace BH.Adapter.GSA
             Dictionary<string, ISectionProperty> secProps = secPropList.ToDictionary(x => x.CustomData[AdapterId].ToString());
             Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.CustomData[AdapterId].ToString());
 
-            return Engine.GSA.Convert.FromGsaBars(gsaElements, secProps, nodes);
+            return Engine.GSA.Convert.ToBHoMBars(gsaElements, secProps, nodes);
         }
 
         /***************************************/
@@ -134,9 +134,9 @@ namespace BH.Adapter.GSA
             Dictionary<string, Loadcase> lCases = lCaseList.ToDictionary(x => x.Number.ToString());
 
             if (ids == null)
-                lComabinations = analList.Select(x => Engine.GSA.Convert.FromGsaAnalTask(x, lCases)).ToList();
+                lComabinations = analList.Select(x => Engine.GSA.Convert.ToBHoMAnalTask(x, lCases)).ToList();
             else
-                lComabinations = analList.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.FromGsaAnalTask(x, lCases)).ToList();
+                lComabinations = analList.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.ToBHoMAnalTask(x, lCases)).ToList();
 
             return lComabinations;
         }
@@ -149,14 +149,14 @@ namespace BH.Adapter.GSA
             //GsaNode[] gsaNodes;
             //m_gsaCom.Nodes(GenerateIndices(ids, typeof(Node)), out gsaNodes);
 
-            //return gsaNodes.Select(x => Engine.GSA.Convert.FromGsaNode(x)).ToList();
+            //return gsaNodes.Select(x => Engine.GSA.Convert.ToBHoMNode(x)).ToList();
             string allNodes = m_gsaCom.GwaCommand("GET_ALL, NODE").ToString();
             string[] nodeArr = string.IsNullOrWhiteSpace(allNodes) ? new string[0] : allNodes.Split('\n');
 
             if (ids == null)
-                return nodeArr.Select(x => Engine.GSA.Convert.FromGsaNode(x)).ToList();
+                return nodeArr.Select(x => Engine.GSA.Convert.ToBHoMNode(x)).ToList();
             else
-                return nodeArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.FromGsaNode(x)).ToList();
+                return nodeArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.ToBHoMNode(x)).ToList();
         }
 
         /***************************************/
@@ -170,9 +170,9 @@ namespace BH.Adapter.GSA
             string[] proArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
 
             if (ids == null)
-                return proArr.Select(x => Engine.GSA.Convert.FromGsaSectionProperty(x, materials)).ToList();
+                return proArr.Select(x => Engine.GSA.Convert.ToBHoMSectionProperty(x, materials)).ToList();
             else
-                return proArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.FromGsaSectionProperty(x, materials)).ToList();
+                return proArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.ToBHoMSectionProperty(x, materials)).ToList();
         }
 
         /***************************************/
@@ -186,9 +186,9 @@ namespace BH.Adapter.GSA
             string[] proArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
 
             if (ids == null)
-                return proArr.Select(x => Engine.GSA.Convert.FromGsaProperty2d(x, materials)).ToList();
+                return proArr.Select(x => Engine.GSA.Convert.ToBHoMProperty2d(x, materials)).ToList();
             else
-                return proArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.FromGsaProperty2d(x, materials)).ToList();
+                return proArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.ToBHoMProperty2d(x, materials)).ToList();
         }
 
         /***************************************/
@@ -206,7 +206,7 @@ namespace BH.Adapter.GSA
             Dictionary<string, Property2D> props = secPropList.ToDictionary(x => x.CustomData[AdapterId].ToString());
             Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.CustomData[AdapterId].ToString());
 
-            return Engine.GSA.Convert.FromGsaMeshFace(gsaElements, props, nodes);
+            return Engine.GSA.Convert.ToBHoMMeshFace(gsaElements, props, nodes);
         }
 
         /***************************************/
@@ -217,9 +217,9 @@ namespace BH.Adapter.GSA
             string[] proArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
 
             if (ids == null)
-                return proArr.Select(x => Engine.GSA.Convert.FromGsaLinkConstraint(x)).ToList();
+                return proArr.Select(x => Engine.GSA.Convert.ToBHoMLinkConstraint(x)).ToList();
             else
-                return proArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.FromGsaLinkConstraint(x)).ToList();
+                return proArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.ToBHoMLinkConstraint(x)).ToList();
         }
 
         /***************************************/
@@ -236,12 +236,12 @@ namespace BH.Adapter.GSA
             GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
             m_gsaCom.Elements(potentialBeamRefs, out gsaElements);
 
-            return Engine.GSA.Convert.FromGsaRigidLinks(gsaElements, constraints, nodes);
+            return Engine.GSA.Convert.ToBHoMRigidLinks(gsaElements, constraints, nodes);
 
             //if (ids == null)
-            //    return proArr.Select(x => Engine.GSA.Convert.FromGsaSectionProperty(x, materials)).ToList();
+            //    return proArr.Select(x => Engine.GSA.Convert.ToBHoMSectionProperty(x, materials)).ToList();
             //else
-            //    return proArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.FromGsaSectionProperty(x, materials)).ToList();
+            //    return proArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.ToBHoMSectionProperty(x, materials)).ToList();
         }
 
         /***************************************************/

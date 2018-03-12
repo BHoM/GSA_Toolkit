@@ -19,7 +19,7 @@ namespace BH.Engine.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
-        public static List<Bar> FromGsaBars(IEnumerable<GsaElement> gsaElements, Dictionary<string, ISectionProperty> secProps, Dictionary<string, Node> nodes)
+        public static List<Bar> ToBHoMBars(IEnumerable<GsaElement> gsaElements, Dictionary<string, ISectionProperty> secProps, Dictionary<string, Node> nodes)
         {
             List<Bar> barList = new List<Bar>();
 
@@ -73,7 +73,7 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        public static List<MeshFace> FromGsaMeshFace(IEnumerable<GsaElement> gsaElements, Dictionary<string, Property2D> props, Dictionary<string, Node> nodes)
+        public static List<MeshFace> ToBHoMMeshFace(IEnumerable<GsaElement> gsaElements, Dictionary<string, Property2D> props, Dictionary<string, Node> nodes)
         {
             List<MeshFace> faceList = new List<MeshFace>();
 
@@ -105,7 +105,7 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        public static List<RigidLink> FromGsaRigidLinks(IEnumerable<GsaElement> gsaElements, Dictionary<string, LinkConstraint> constraints, Dictionary<string, Node> nodes)
+        public static List<RigidLink> ToBHoMRigidLinks(IEnumerable<GsaElement> gsaElements, Dictionary<string, LinkConstraint> constraints, Dictionary<string, Node> nodes)
         {
             List<RigidLink> linkList = new List<RigidLink>();
 
@@ -131,7 +131,7 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        public static BHM.Material FromGsaMaterial(string gsaString)
+        public static BHM.Material ToBHoMMaterial(string gsaString)
         {
             if (string.IsNullOrWhiteSpace(gsaString))
                 return null;
@@ -166,7 +166,7 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        public static BHL.Loadcase FromGsaLoadcase(string gsaString)
+        public static BHL.Loadcase ToBHoMLoadcase(string gsaString)
         {
 
             if (string.IsNullOrWhiteSpace(gsaString))
@@ -192,7 +192,7 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        public static BHL.LoadCombination FromGsaAnalTask(string gsaString, Dictionary<string, BHL.Loadcase> lCases)
+        public static BHL.LoadCombination ToBHoMAnalTask(string gsaString, Dictionary<string, BHL.Loadcase> lCases)
         {
 
             if (string.IsNullOrWhiteSpace(gsaString))
@@ -238,7 +238,7 @@ namespace BH.Engine.GSA
         /// </param>
         /// <param name="materials"></param>
         /// <returns></returns>
-        public static ISectionProperty FromGsaSectionProperty(string gsaString, Dictionary<string, BHM.Material> materials)
+        public static ISectionProperty ToBHoMSectionProperty(string gsaString, Dictionary<string, BHM.Material> materials)
         {
             ISectionProperty secProp = null;
 
@@ -402,7 +402,7 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        public static LinkConstraint FromGsaLinkConstraint(string gsaProp)
+        public static LinkConstraint ToBHoMLinkConstraint(string gsaProp)
         {
             LinkConstraint constraint;
             string[] props = gsaProp.Split(',');
@@ -514,7 +514,7 @@ namespace BH.Engine.GSA
         }
 
         /***************************************/
-        public static Property2D FromGsaProperty2d(string gsaString, Dictionary<string, BHM.Material> materials)
+        public static Property2D ToBHoMProperty2d(string gsaString, Dictionary<string, BHM.Material> materials)
         {
             Property2D panProp = null;
 
@@ -553,7 +553,7 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        public static Node FromGsaNode(string gsaString)
+        public static Node ToBHoMNode(string gsaString)
         {
             if (gsaString == "")
             {
@@ -639,7 +639,7 @@ namespace BH.Engine.GSA
 
         /***************************************************/
 
-        public static NodeDisplacement FromGsaNodeDisplacement(GsaResults results, string id, string loadCase, int divisions = 0, double timeStep = 0)
+        public static NodeDisplacement ToBHoMNodeDisplacement(GsaResults results, string id, string loadCase, int divisions = 0, double timeStep = 0)
         {
             NodeDisplacement disp = new NodeDisplacement
             {
@@ -658,7 +658,7 @@ namespace BH.Engine.GSA
 
         /***************************************************/
 
-        public static NodeReaction FromGsaReaction(GsaResults results, string id, string loadCase, int divisions = 0, double timeStep = 0)
+        public static NodeReaction ToBHoMReaction(GsaResults results, string id, string loadCase, int divisions = 0, double timeStep = 0)
         {
 
             NodeReaction reac = new NodeReaction
@@ -679,7 +679,7 @@ namespace BH.Engine.GSA
 
         /***************************************************/
 
-        public static NodeVelocity FromGsaNodeVelocity(GsaResults results, string id, string loadCase, int divisions = 0, double timeStep = 0)
+        public static NodeVelocity ToBHoMNodeVelocity(GsaResults results, string id, string loadCase, int divisions = 0, double timeStep = 0)
         {
             //TODO: Needs testing
             NodeVelocity disp = new NodeVelocity
@@ -699,7 +699,7 @@ namespace BH.Engine.GSA
 
         /***************************************************/
 
-        public static NodeAcceleration FromGsaNodeAcceleration(GsaResults results, string id, string loadCase, int divisions = 0, double timeStep = 0)
+        public static NodeAcceleration ToBHoMNodeAcceleration(GsaResults results, string id, string loadCase, int divisions = 0, double timeStep = 0)
         {
             //TODO: Needs testing
             NodeAcceleration disp = new NodeAcceleration
@@ -719,7 +719,7 @@ namespace BH.Engine.GSA
 
         /***************************************************/
 
-        public static BarForce FromGsaBarForce(GsaResults results, string id, string loadCase, int divisions, double timeStep = 0)
+        public static BarForce ToBHoMBarForce(GsaResults results, string id, string loadCase, int divisions, double timeStep = 0)
         {
             BarForce force = new BarForce
             {
@@ -740,7 +740,7 @@ namespace BH.Engine.GSA
 
         /***************************************************/
 
-        public static BarStress FromGsaBarStress(GsaResults results, string id, string loadCase, int divisions, double timeStep = 0)
+        public static BarStress ToBHoMBarStress(GsaResults results, string id, string loadCase, int divisions, double timeStep = 0)
         {
             BarStress force = new BarStress
             {
@@ -764,7 +764,7 @@ namespace BH.Engine.GSA
 
         /***************************************************/
 
-        public static BarDeformation FromGsaBarDeformation(GsaResults results, string id, string loadCase, int divisions, double timeStep = 0)
+        public static BarDeformation ToBHoMBarDeformation(GsaResults results, string id, string loadCase, int divisions, double timeStep = 0)
         {
             BarDeformation def = new BarDeformation
             {
@@ -785,7 +785,7 @@ namespace BH.Engine.GSA
 
         /***************************************************/
 
-        public static BarStrain FromGsaBarStrain(GsaResults results, string id, string loadCase, int divisions, double timeStep = 0)
+        public static BarStrain ToBHoMBarStrain(GsaResults results, string id, string loadCase, int divisions, double timeStep = 0)
         {
             BarStrain strain = new BarStrain
             {
@@ -801,7 +801,7 @@ namespace BH.Engine.GSA
 
         /***************************************************/
 
-        public static GlobalReactions FromGsaGlobalReactions(string id, string force, string moment)
+        public static GlobalReactions ToBHoMGlobalReactions(string id, string force, string moment)
         {
             string[] fArr = force.Split(',');
             string[] mArr = moment.Split(',');
@@ -820,7 +820,7 @@ namespace BH.Engine.GSA
 
         /***************************************************/
 
-        public static ModalDynamics FromGsaModalDynamics(string id, string mode, string frequency, string mass, string stiffness, string damping, string effMassTran, string effMassRot)
+        public static ModalDynamics ToBHoMModalDynamics(string id, string mode, string frequency, string mass, string stiffness, string damping, string effMassTran, string effMassRot)
         {
             string[] modeArr = mode.Split(',');
             string[] frArr = frequency.Split(',');
