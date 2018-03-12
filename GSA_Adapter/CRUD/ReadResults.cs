@@ -62,7 +62,7 @@ namespace BH.Adapter.GSA
             {
                 string force = m_gsaCom.GwaCommand("GET, TOTAL_FORCE, " + loadCase + ",REACT");
                 string moment = m_gsaCom.GwaCommand("GET, TOTAL_MOMENT, " + loadCase + ",REACT");
-                reactions.Add(BH.Engine.GSA.Convert.FromGsaGlobalReactions(id, force, moment));
+                reactions.Add(BH.Engine.GSA.Convert.ToBHoMGlobalReactions(id, force, moment));
             }
 
             return reactions;
@@ -88,7 +88,7 @@ namespace BH.Adapter.GSA
                 string stiffness = m_gsaCom.GwaCommand("GET, MODAL_STIFF, " + loadCase);
                 string effMassTran = m_gsaCom.GwaCommand("GET, EFF_MASS, " + loadCase + ",TRAN");
                 string effMassRot = m_gsaCom.GwaCommand("GET, EFF_MASS, " + loadCase + ",ROT");
-                dynamics.Add(BH.Engine.GSA.Convert.FromGsaModalDynamics(id, mode, frequency, mass, stiffness, damping, effMassTran, effMassRot));
+                dynamics.Add(BH.Engine.GSA.Convert.ToBHoMModalDynamics(id, mode, frequency, mass, stiffness, damping, effMassTran, effMassRot));
             }
 
             return dynamics;
@@ -147,14 +147,14 @@ namespace BH.Adapter.GSA
             {
                 header = ResHeader.REF_REAC;
                 axis = BH.Engine.GSA.Output_Axis.Global();
-                converter = BH.Engine.GSA.Convert.FromGsaReaction;
+                converter = BH.Engine.GSA.Convert.ToBHoMReaction;
                 divisions = 1;
                 unitFactor = unitFactors[(int)BH.Engine.GSA.UnitType.FORCE];
             }
             else if (typeof(NodeDisplacement).IsAssignableFrom(type))
             {
                 axis = BH.Engine.GSA.Output_Axis.Global();
-                converter = BH.Engine.GSA.Convert.FromGsaNodeDisplacement;
+                converter = BH.Engine.GSA.Convert.ToBHoMNodeDisplacement;
                 header = ResHeader.REF_DISP;
                 divisions = 1;
                 unitFactor = unitFactors[(int)BH.Engine.GSA.UnitType.LENGTH];
@@ -162,28 +162,28 @@ namespace BH.Adapter.GSA
             else if (typeof(BarForce).IsAssignableFrom(type))
             {
                 axis = BH.Engine.GSA.Output_Axis.Local();
-                converter = BH.Engine.GSA.Convert.FromGsaBarForce;
+                converter = BH.Engine.GSA.Convert.ToBHoMBarForce;
                 header = ResHeader.REF_FORCE_EL1D;
                 unitFactor = unitFactors[(int)BH.Engine.GSA.UnitType.FORCE];
             }
             else if (typeof(BarDeformation).IsAssignableFrom(type))
             {
                 axis = BH.Engine.GSA.Output_Axis.Local();
-                converter = BH.Engine.GSA.Convert.FromGsaBarDeformation;
+                converter = BH.Engine.GSA.Convert.ToBHoMBarDeformation;
                 header = ResHeader.REF_DISP_EL1D;
                 unitFactor = unitFactors[(int)BH.Engine.GSA.UnitType.LENGTH];
             }
             else if (typeof(BarStress).IsAssignableFrom(type))
             {
                 axis = BH.Engine.GSA.Output_Axis.Local();
-                converter = BH.Engine.GSA.Convert.FromGsaBarStress;
+                converter = BH.Engine.GSA.Convert.ToBHoMBarStress;
                 header = ResHeader.REF_STRESS_EL1D;
                 unitFactor = unitFactors[(int)BH.Engine.GSA.UnitType.STRESS];
             }
             else if (typeof(BarStrain).IsAssignableFrom(type))
             {
                 axis = BH.Engine.GSA.Output_Axis.Local();
-                converter = BH.Engine.GSA.Convert.FromGsaBarStrain;
+                converter = BH.Engine.GSA.Convert.ToBHoMBarStrain;
                 header = ResHeader.REF_STRAIN_EL1D;
                 unitFactor = 1;
             }

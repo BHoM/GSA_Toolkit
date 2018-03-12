@@ -67,7 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Convert\AdapterID.cs" />
-    <Compile Include="Convert\FromGsa.cs" />
+    <Compile Include="Convert\ToBHoM.cs" />
     <Compile Include="Convert\Private Helpers\Bar.cs" />
     <Compile Include="Convert\Private Helpers\BHoMGroup.cs" />
     <Compile Include="Convert\Private Helpers\GsaEnums.cs" />
