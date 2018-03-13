@@ -55,10 +55,10 @@ namespace BH.Engine.GSA
         }
 
         /***************************************************/
-        public static double Factor(this AreaVaryingDistributedLoad load, double[] unitType)
-        {
-            return unitType[(int)UnitType.FORCE];
-        }
+        //public static double Factor(this AreaVaryingDistributedLoad load, double[] unitType)
+        //{
+        //    return unitType[(int)UnitType.FORCE];
+        //}
 
         /***************************************************/
         /**** Public Methods - Interfaces               ****/

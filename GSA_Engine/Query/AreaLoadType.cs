@@ -16,10 +16,10 @@ namespace BH.Engine.GSA
 
         /***************************************************/
 
-        public static string AreaLoadTypeString(this AreaVaryingDistributedLoad load)
-        {
-            return "GEN";
-        }
+        //public static string AreaLoadTypeString(this AreaVaryingDistributedLoad load)
+        //{
+        //    return "GEN";
+        //}
 
         /***************************************************/
         /**** Public Methods - Interfaces               ****/
