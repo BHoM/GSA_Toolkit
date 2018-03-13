@@ -62,10 +62,10 @@ namespace BH.Engine.GSA
         {
             //TODO: Reinforcement???
             prop = "NO_PROP";
-            if (secProp.SectionDimension.Shape == ShapeType.Polygon)
+            if (secProp.SectionDimensions.Shape == ShapeType.Polygon)
                 return CreateDescString(secProp.Edges, out desc);
             else
-                return ICreateDescString(secProp.SectionDimension, out desc);
+                return ICreateDescString(secProp.SectionDimensions, out desc);
         }
 
         /***************************************/

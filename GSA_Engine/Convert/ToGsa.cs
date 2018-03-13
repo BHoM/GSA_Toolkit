@@ -8,6 +8,7 @@ using BH.oM.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BH.Engine.Common;
 
 using Interop.gsa_8_7;
 
@@ -182,7 +183,7 @@ namespace BH.Engine.GSA
             string list = load.CreateIdListOrGroupName();
             string caseNo = load.Loadcase.Number.ToString();
             string type = "CONS";
-            string value = load.TemperatureChange.X.ToString();
+            string value = load.TemperatureChange.ToString();
 
             string str = command + ",," + list + "," + caseNo + "," + type + "," + value;
             forceStrings.Add(str);
@@ -225,7 +226,7 @@ namespace BH.Engine.GSA
             string nu = material.PoissonsRatio.ToString();
             string rho = material.Density.ToString();
             string alpha = material.CoeffThermalExpansion.ToString();
-            string G = material.ShearModulus.ToString();
+            string G = material.ShearModulus().ToString();
             string damp = material.DampingRatio.ToString();
 
             string str = command + "," + num + "," + mModel + "," + name + "," + colour + "," + type + ",6," + E + "," + nu + "," + rho + "," + alpha + "," + G + "," + damp + ",0,0,NO_ENV";

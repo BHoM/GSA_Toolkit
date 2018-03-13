@@ -77,10 +77,10 @@ namespace BH.Engine.GSA
 
         /***************************************************/
 
-        public static string ForceTypeString(this AreaVaryingDistributedLoad load)
-        {
-            return "LOAD_2D_FACE";
-        }
+        //public static string ForceTypeString(this AreaVaryingDistributedLoad load)
+        //{
+        //    return "LOAD_2D_FACE";
+        //}
 
         /***************************************************/
         /**** Public Methods - Interfaces               ****/
