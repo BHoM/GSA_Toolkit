@@ -377,10 +377,10 @@ namespace BH.Engine.GSA
                 switch (materials[materialId].Type)
                 {
                     case BHM.MaterialType.Steel:
-                        secProp = Create.SteelSectionFromDimensions(dimensions);
+                        secProp = Create.SteelSectionFromProfile(dimensions);
                         break;
                     case BHM.MaterialType.Concrete:
-                        secProp = Create.ConcreteSectionFromDimensions(dimensions);
+                        secProp = Create.ConcreteSectionFromProfile(dimensions);
                         break;
                     case BHM.MaterialType.Aluminium:
                     case BHM.MaterialType.Timber:
