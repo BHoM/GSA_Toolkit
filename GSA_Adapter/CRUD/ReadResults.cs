@@ -258,7 +258,9 @@ namespace BH.Adapter.GSA
             else if (ids is List<string>)
                 return (ids as List<string>).Select(x => int.Parse(x)).ToList();
             else if (ids is List<int>)
-                return ids as List<int>;        
+                return ids as List<int>;
+            else if (ids is List<double>)
+                return (ids as List<double>).Select(x => (int)Math.Round(x)).ToList();       
 
             return new List<int>();
         }
