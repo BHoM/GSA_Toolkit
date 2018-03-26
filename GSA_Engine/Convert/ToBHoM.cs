@@ -73,7 +73,7 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        public static List<MeshFace> ToBHoMMeshFace(IEnumerable<GsaElement> gsaElements, Dictionary<string, Property2D> props, Dictionary<string, Node> nodes)
+        public static List<MeshFace> ToBHoMMeshFace(IEnumerable<GsaElement> gsaElements, Dictionary<string, IProperty2D> props, Dictionary<string, Node> nodes)
         {
             List<MeshFace> faceList = new List<MeshFace>();
 
@@ -303,7 +303,7 @@ namespace BH.Engine.GSA
                     type = desc[1];
                 }
 
-                ISectionDimensions dimensions;
+                IProfile dimensions;
 
                 switch (type)
                 {
@@ -314,7 +314,7 @@ namespace BH.Engine.GSA
                         W = double.Parse(desc[3]) * factor;
                         T = double.Parse(desc[4]) * factor;
                         t = double.Parse(desc[5]) * factor;
-                        dimensions = new StandardISectionDimensions(D, W, T, t, 0, 0);
+                        dimensions = Create.ISectionProfile(D, W, T, t, 0, 0);
                         break;
                     case "GI":
                         D = double.Parse(desc[2]) * factor;
@@ -323,12 +323,12 @@ namespace BH.Engine.GSA
                         Tw = double.Parse(desc[5]) * factor;
                         Tt = double.Parse(desc[6]) * factor;
                         Tb = double.Parse(desc[7]) * factor;
-                        dimensions = new FabricatedISectionDimensions(D, Wt, Wb, Tw, Tt, Tb, 0);
+                        dimensions = Create.FabricatedISectionProfile(D, Wt, Wb, Tw, Tt, Tb, 0);
                         break;
                     case "CHS":
                         D = double.Parse(desc[2]) * factor;
                         t = double.Parse(desc[3]) * factor;
-                        dimensions = new TubeDimensions(D, t);
+                        dimensions = Create.TubeProfile(D, t);
                         break;
                     case "RHS":
                         D = double.Parse(desc[2]) * factor;
@@ -336,39 +336,39 @@ namespace BH.Engine.GSA
                         T = double.Parse(desc[4]) * factor;
                         t = double.Parse(desc[5]) * factor;
                         if (T == t)
-                            dimensions = new StandardBoxDimensions(D, W, T, 0, 0); //TODO: Additional checks for fabricated/Standard
+                            dimensions =Create.BoxProfile(D, W, T, 0, 0); //TODO: Additional checks for fabricated/Standard
                         else
-                            dimensions = new FabricatedBoxDimensions(D, W, T, t, t, 0);
+                            dimensions = Create.FabricatedBoxProfile(D, W, T, t, t, 0);
                         break;
                     case "R":
                         D = double.Parse(desc[2]) * factor;
                         W = double.Parse(desc[3]) * factor;
-                        dimensions = new RectangleSectionDimensions(D, W, 0);
+                        dimensions = Create.RectangleProfile(D, W, 0);
                         break;
                     case "C":
                         D = double.Parse(desc[2]) * factor;
-                        dimensions = new CircleDimensions(D);
+                        dimensions = Create.CircleProfile(D);
                         break;
                     case "T":
                         D = double.Parse(desc[2]) * factor;
                         W = double.Parse(desc[3]) * factor;
                         T = double.Parse(desc[4]) * factor;
                         t = double.Parse(desc[5]) * factor;
-                        dimensions = new StandardTeeSectionDimensions(D, W, T, t, 0, 0);
+                        dimensions = Create.TSectionProfile(D, W, T, t, 0, 0);
                         break;
                     case "A":
                         D = double.Parse(desc[2]) * factor;
                         W = double.Parse(desc[3]) * factor;
                         T = double.Parse(desc[4]) * factor;
                         t = double.Parse(desc[5]) * factor;
-                        dimensions = new StandardAngleSectionDimensions(D, W, T, t, 0, 0);
+                        dimensions = Create.AngleProfile(D, W, T, t, 0, 0);
                         break;
                     case "CH":
                         D = double.Parse(desc[2]) * factor;
                         W = double.Parse(desc[3]) * factor;
                         T = double.Parse(desc[4]) * factor;
                         t = double.Parse(desc[5]) * factor;
-                        dimensions = new StandardChannelSectionDimensions(D, W, T, t, 0, 0);
+                        dimensions = Create.ChannelProfile(D, W, T, t, 0, 0);
                         break;
                     default:
                         throw new NotImplementedException("Section convertion for the type: " + type + "is not implmented in the GSA adapter");
@@ -514,9 +514,9 @@ namespace BH.Engine.GSA
         }
 
         /***************************************/
-        public static Property2D ToBHoMProperty2d(string gsaString, Dictionary<string, BHM.Material> materials)
+        public static IProperty2D ToBHoMProperty2d(string gsaString, Dictionary<string, BHM.Material> materials)
         {
-            Property2D panProp = null;
+            IProperty2D panProp = null;
 
             if (gsaString == "")
             {
@@ -537,7 +537,7 @@ namespace BH.Engine.GSA
                 panProp = new ConstantThickness();
                 panProp.Material = materials[materialId];
                 double t = double.Parse(gsaStrings[7]);
-                panProp.Thickness = t;
+                ((ConstantThickness)panProp).Thickness = t;
             }
             else if (description == "LOAD")
             {

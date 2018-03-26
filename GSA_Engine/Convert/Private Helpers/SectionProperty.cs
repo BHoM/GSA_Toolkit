@@ -51,10 +51,7 @@ namespace BH.Engine.GSA
         private static bool CreateDescAndPropString(SteelSection secProp, out string desc, out string prop)
         {
             prop = "NO_PROP";
-            if (secProp.SectionDimensions.Shape == ShapeType.Polygon)
-                return CreateDescString(secProp.Edges, out desc);
-            else
-                return ICreateDescString(secProp.SectionDimensions, out desc);
+            return ICreateDescString(secProp.SectionProfile, out desc);
         }
 
         /***************************************/
@@ -62,22 +59,19 @@ namespace BH.Engine.GSA
         {
             //TODO: Reinforcement???
             prop = "NO_PROP";
-            if (secProp.SectionDimensions.Shape == ShapeType.Polygon)
-                return CreateDescString(secProp.Edges, out desc);
-            else
-                return ICreateDescString(secProp.SectionDimensions, out desc);
+            return ICreateDescString(secProp.SectionProfile, out desc);
         }
 
         /***************************************/
 
-        private static bool ICreateDescString(ISectionDimensions dimensions, out string desc)
+        private static bool ICreateDescString(IProfile dimensions, out string desc)
         {
             return CreateDescString(dimensions as dynamic, out desc);
         }
 
         /***************************************/
 
-        private static bool CreateDescString(FabricatedBoxDimensions dimensions, out string desc)
+        private static bool CreateDescString(FabricatedBoxProfile dimensions, out string desc)
         {
             if(dimensions.TopFlangeThickness != dimensions.BotFlangeThickness)
                 throw new NotSupportedException("Box sections with varying flange thickness between top and bottom are currently not suported in the GSA adapter");
@@ -97,7 +91,7 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        private static bool CreateDescString(StandardBoxDimensions dimensions, out string desc)
+        private static bool CreateDescString(BoxProfile dimensions, out string desc)
         {
             double h, w, t;
             //TODO: Any way of accessing the catalogue sections?
@@ -113,7 +107,7 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        private static bool CreateDescString(StandardChannelSectionDimensions dimensions, out string desc)
+        private static bool CreateDescString(ChannelProfile dimensions, out string desc)
         {
             double h, w, tw, tf;
             //TODO: Any way of accessing the catalogue sections?
@@ -130,7 +124,7 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        private static bool CreateDescString(StandardAngleSectionDimensions dimensions, out string desc)
+        private static bool CreateDescString(AngleProfile dimensions, out string desc)
         {
             double h, w, tw, tf;
             //TODO: Any way of accessing the catalogue sections?
@@ -147,7 +141,7 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        private static bool CreateDescString(StandardTeeSectionDimensions dimensions, out string desc)
+        private static bool CreateDescString(TSectionProfile dimensions, out string desc)
         {
             double h, w, tw, tf;
             //TODO: Any way of accessing the catalogue sections?
@@ -164,14 +158,14 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        private static bool CreateDescString(StandardZedSectionDimensions dimensions, out string desc)
+        private static bool CreateDescString(ZSectionProfile dimensions, out string desc)
         {
             throw new NotSupportedException("Zed sections are currently not suported in the GSA adapter");
         }
 
         /***************************************/
 
-        private static bool CreateDescString(StandardISectionDimensions dimensions, out string desc)
+        private static bool CreateDescString(ISectionProfile dimensions, out string desc)
         {
             double h, w, tw, tf;
             //TODO: Any way of accessing the catalogue sections?
@@ -188,7 +182,7 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        private static bool CreateDescString(FabricatedISectionDimensions dimensions, out string desc)
+        private static bool CreateDescString(FabricatedISectionProfile dimensions, out string desc)
         {
             if (dimensions.BotFlangeThickness == dimensions.TopFlangeThickness && dimensions.TopFlangeWidth == dimensions.BotFlangeWidth)
             {
@@ -217,7 +211,7 @@ namespace BH.Engine.GSA
         }
         /***************************************/
 
-        private static bool CreateDescString(CircleDimensions dimensions, out string desc)
+        private static bool CreateDescString(CircleProfile dimensions, out string desc)
         {
             double d;
 
@@ -230,7 +224,7 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        private static bool CreateDescString(TubeDimensions dimensions, out string desc)
+        private static bool CreateDescString(TubeProfile dimensions, out string desc)
         {
             double d, t;
 
@@ -243,7 +237,7 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        private static bool CreateDescString(RectangleSectionDimensions dimensions, out string desc)
+        private static bool CreateDescString(RectangleProfile dimensions, out string desc)
         {
             double h, w;
 
@@ -257,7 +251,7 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        private static bool CreateDescString(IList<ICurve> polygon, out string desc)
+        private static bool CreateDescString(FreeFormProfile profile, out string desc)
         {
             throw new NotImplementedException();
         }

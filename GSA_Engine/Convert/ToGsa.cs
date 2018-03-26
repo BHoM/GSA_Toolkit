@@ -30,7 +30,7 @@ namespace BH.Engine.GSA
                 return "MAT";
             else if (type == typeof(ISectionProperty))
                 return "PROP_SEC";
-            else if (type == typeof(Property2D))
+            else if (type == typeof(IProperty2D))
                 return "PROP_2D";
             else if (type == typeof(MeshFace))
                 return "EL";
@@ -228,7 +228,7 @@ namespace BH.Engine.GSA
             string alpha = material.CoeffThermalExpansion.ToString();
             string G = material.ShearModulus().ToString();
             string damp = material.DampingRatio.ToString();
-
+            
             string str = command + "," + num + "," + mModel + "," + name + "," + colour + "," + type + ",6," + E + "," + nu + "," + rho + "," + alpha + "," + G + "," + damp + ",0,0,NO_ENV";
             return str;
         }
@@ -292,17 +292,16 @@ namespace BH.Engine.GSA
             string calc_J = "NO_J";
             string mods = "NO_MOD_PROP";
 
-            object modifiers;
+            double[] modifiers = Structure.Query.Modifiers(prop);
 
-            if (prop.CustomData.TryGetValue("Modifiers", out modifiers) && modifiers is List<double>)
+            if (modifiers != null)
             {
-                List<double> modList = modifiers as List<double>;
-                if (modList.Count == 6)
+                if (modifiers.Length == 6)
                 {
                     mods = "MOD_PROP";
                     for (int i = 0; i < 6; i++)
                     {
-                        mods += ",BY," + modList[i];
+                        mods += ",BY," + modifiers[i];
                     }
                     mods += ",NO,NO_MOD";
                 }

@@ -32,7 +32,7 @@ namespace BH.Engine.GSA
 
         private static string CreateReleaseString(Constraint6DOF nodeConstraint)
         {
-            bool[] fixities = nodeConstraint.Fixities();
+            bool[] fixities = nodeConstraint.Fixities();    //IsConstrained
             double[] stiffness = nodeConstraint.ElasticValues();
 
             string relStr = "";
@@ -40,7 +40,7 @@ namespace BH.Engine.GSA
 
             for (int i = 0; i < fixities.Length; i++)
             {
-                if (!fixities[i])
+                if (fixities[i])
                 {
                     relStr += "F";
                 }
