@@ -241,7 +241,7 @@ namespace BH.Engine.GSA
             string name = bar.TaggedName();
             string type = GetElementTypeString(bar);
 
-            string sectionPropertyIndex = bar.SectionProperty.CustomData[AdapterID].ToString();
+            string sectionPropertyIndex = bar.SectionProperty != null ? bar.SectionProperty.CustomData[AdapterID].ToString() : "1";
             int group = 0;
 
             string startIndex = bar.StartNode.CustomData[AdapterID].ToString();
