@@ -60,9 +60,24 @@ namespace BH.Adapter.GSA
 
             foreach (int loadCase in cases)
             {
-                string force = m_gsaCom.GwaCommand("GET, TOTAL_FORCE, " + loadCase + ",REACT");
-                string moment = m_gsaCom.GwaCommand("GET, TOTAL_MOMENT, " + loadCase + ",REACT");
-                reactions.Add(BH.Engine.GSA.Convert.ToBHoMGlobalReactions(id, force, moment));
+                List<string> forceStrings = new List<string>();
+                List<string> momentStrings = new List<string>();
+
+                forceStrings.Add(m_gsaCom.GwaCommand("GET, TOTAL_FORCE, " + loadCase + ",REACT"));
+                forceStrings.Add(m_gsaCom.GwaCommand("GET, TOTAL_FORCE, " + loadCase + ",SUPPORT"));
+                forceStrings.Add(m_gsaCom.GwaCommand("GET, TOTAL_FORCE, " + loadCase + ",SPRING"));
+                forceStrings.Add(m_gsaCom.GwaCommand("GET, TOTAL_FORCE, " + loadCase + ",SOIL"));
+
+                momentStrings.Add(m_gsaCom.GwaCommand("GET, TOTAL_MOMENT, " + loadCase + ",REACT"));
+                momentStrings.Add(m_gsaCom.GwaCommand("GET, TOTAL_MOMENT, " + loadCase + ",SUPPORT"));
+                momentStrings.Add(m_gsaCom.GwaCommand("GET, TOTAL_MOMENT, " + loadCase + ",SPRING"));
+                momentStrings.Add(m_gsaCom.GwaCommand("GET, TOTAL_MOMENT, " + loadCase + ",SOIL"));
+
+                //string force = m_gsaCom.GwaCommand("GET, TOTAL_FORCE, " + loadCase + ",REACT");
+                //string moment = m_gsaCom.GwaCommand("GET, TOTAL_MOMENT, " + loadCase + ",REACT");
+                //reactions.Add(BH.Engine.GSA.Convert.ToBHoMGlobalReactions(id, force, moment));
+
+                reactions.Add(BH.Engine.GSA.Convert.ToBHoMGlobalReactions(id, forceStrings, momentStrings));
             }
 
             return reactions;
@@ -260,7 +275,23 @@ namespace BH.Adapter.GSA
             else if (ids is List<int>)
                 return ids as List<int>;
             else if (ids is List<double>)
-                return (ids as List<double>).Select(x => (int)Math.Round(x)).ToList();       
+                return (ids as List<double>).Select(x => (int)Math.Round(x)).ToList();
+            else
+            {
+                List<int> idsOut = new List<int>();
+                foreach (object o in ids)
+                {
+                    int id;
+                    object idObj;
+                    if (int.TryParse(o.ToString(), out id))
+                    {
+                        idsOut.Add(id);
+                    }
+                    else if (o is IBHoMObject && (o as IBHoMObject).CustomData.TryGetValue(AdapterId, out idObj) && int.TryParse(idObj.ToString(), out id))
+                        idsOut.Add(id);
+                }
+                return idsOut;
+            }
 
             return new List<int>();
         }
@@ -329,7 +360,7 @@ namespace BH.Adapter.GSA
                     {
                         sResult = m_gsaCom.GwaCommand("GET, ANAL," + i).ToString();
                         int number;
-                        if (int.TryParse(m_gsaCom.Arg(1, sResult), out number))
+                        if (!string.IsNullOrWhiteSpace(sResult) && int.TryParse(m_gsaCom.Arg(1, sResult), out number))
                             loadCases.Add(number);
                     }
                     catch
@@ -352,7 +383,28 @@ namespace BH.Adapter.GSA
                 }
             }
             else
-                return new List<int>();
+            {
+                loadCases = new List<int>();
+
+                foreach (object o in cases)
+                {
+                    int id;
+                    if (int.TryParse(o.ToString(), out id))
+                    {
+                        loadCases.Add(id);
+                    }
+                    else if (o is string)
+                    {
+                        string s = o as string;
+                        if (s.StartsWith("A") && int.TryParse(s.TrimStart('A'), out id))
+                            loadCases.Add(id);
+                    }
+                    else if (o is BH.oM.Structural.Loads.LoadCombination)
+                    {
+                        loadCases.Add((o as oM.Structural.Loads.LoadCombination).Number);
+                    }
+                }
+            }
 
             return loadCases.Where(x => CheckAnalysisCaseExists(x, "A" + x.ToString()) && CheckAnalysisCaseResultsExists(x, "A"+x)).ToList();
         }
@@ -373,7 +425,8 @@ namespace BH.Adapter.GSA
                     try
                     {
                         sResult = m_gsaCom.GwaCommand("GET, ANAL," + i).ToString();
-                        loadCases.Add("A" + m_gsaCom.Arg(1, sResult));
+                        if(!string.IsNullOrWhiteSpace(sResult))
+                            loadCases.Add("A" + m_gsaCom.Arg(1, sResult));
                     }
                     catch
                     {
@@ -386,7 +439,8 @@ namespace BH.Adapter.GSA
                     try
                     {
                         sResult = m_gsaCom.GwaCommand("GET, COMBINATION," + i).ToString();
-                        loadCases.Add("C" + m_gsaCom.Arg(1, sResult));
+                        if (!string.IsNullOrWhiteSpace(sResult))
+                            loadCases.Add("C" + m_gsaCom.Arg(1, sResult));
                     }
                     catch
                     {
@@ -397,7 +451,29 @@ namespace BH.Adapter.GSA
             else if (cases is List<string>)
                 loadCases = cases as List<string>;
             else
-                return new List<string>();
+            {
+                loadCases = new List<string>();
+                foreach (object o in cases)
+                {
+                    int idInt;
+                    if (int.TryParse(o.ToString(), out idInt))
+                    {
+                        loadCases.Add("A" + idInt);
+                    }
+                    else if (o is string)
+                    {
+                        string s = o as string;
+                        if (s.StartsWith("A") || s.StartsWith("C"))
+                            loadCases.Add(s);
+                    }
+                    else if (o is BH.oM.Structural.Loads.LoadCombination)
+                    {
+                        loadCases.Add("A" + (o as oM.Structural.Loads.LoadCombination).Number);
+                    }
+
+                }
+                return loadCases;
+            }
 
             return CheckAnalysisCasesExist(loadCases);
         }

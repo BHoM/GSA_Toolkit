@@ -247,7 +247,7 @@ namespace BH.Engine.GSA
             string startIndex = bar.StartNode.CustomData[AdapterID].ToString();
             string endIndex = bar.EndNode.CustomData[AdapterID].ToString();
 
-            string orientationAngle = bar.OrientationAngle.ToString();
+            string orientationAngle = (bar.OrientationAngle * 180 / Math.PI).ToString();
             // TODO: Make sure that these are doing the correct thing. Release vs restraint corresponding to true vs false
             string startR = bar.Release != null ? CreateReleaseString(bar.Release.StartRelease) : "FFFFFF";
             string endR = bar.Release != null ? CreateReleaseString(bar.Release.EndRelease) : "FFFFFF";

@@ -53,7 +53,7 @@ namespace BH.Engine.GSA
                 Bar bar = new Bar { StartNode = n1, EndNode = n2 };
                 bar.ApplyTaggedName(gsaBar.Name);
 
-
+                
                 bar.FEAType = feType;
 
                 bar.OrientationAngle = gsaBar.Beta;
@@ -67,6 +67,135 @@ namespace BH.Engine.GSA
 
                 barList.Add(bar);
 
+            }
+            return barList;
+        }
+
+        /***************************************************/
+
+        public static List<Bar> ToBHoMBars(IEnumerable<string> gsaStrings, Dictionary<string, ISectionProperty> secProps, Dictionary<string, Node> nodes, List<string> ids)
+        {
+            List<Bar> barList = new List<Bar>();
+
+            bool checkId = ids != null;
+
+            foreach (string gsaBar in gsaStrings)
+            {
+
+                string[] arr = gsaBar.Split(',');
+
+                string id = arr[1];
+
+                if (checkId && !ids.Contains(id))
+                    continue;
+
+                BarFEAType feType;
+
+                switch (arr[4])
+                {
+                    case "BEAM":
+                        feType = BarFEAType.Flexural;
+                        break;
+                    case "BAR":
+                        feType = BarFEAType.Axial;
+                        break;
+                    case "TIE":
+                        feType = BarFEAType.TensionOnly;
+                        break;
+                    case "STRUT":
+                        feType = BarFEAType.CompressionOnly;
+                        break;
+                    default:
+                        continue;
+                }
+
+
+                Bar bar = new Bar()
+                {
+                    StartNode = nodes[arr[7]],
+                    EndNode = nodes[arr[8]],
+                    FEAType = feType,
+                };
+
+                bar.ApplyTaggedName(arr[2]);
+
+                ISectionProperty prop;
+                if (secProps.TryGetValue(arr[5], out prop))
+                    bar.SectionProperty = prop;
+
+                if (arr.Length > 10)
+                    bar.OrientationAngle = double.Parse(arr[10]) / 180 * Math.PI; //From degrees to radians
+                else
+                    bar.OrientationAngle = 0;
+
+                Constraint6DOF startConst, endConst;
+
+                if (arr.Length > 13 && arr[11] == "RLS")
+                {
+                    List<bool> fixities = new List<bool>();
+                    List<double> values = new List<double>();
+
+                    int nbSprings = 0;
+
+                    foreach (char c in arr[12])
+                    {
+                        if (c == 'F')
+                        {
+                            fixities.Add(true);
+                            values.Add(0);
+                        }
+                        else if (c == 'R')
+                        {
+                            fixities.Add(false);
+                            values.Add(0);
+                        }
+                        else if (c == 'K')
+                        {
+                            fixities.Add(false);
+                            nbSprings++;
+                            values.Add(double.Parse(arr[12+nbSprings]));
+                        }
+                    }
+
+                    startConst = Create.Constraint6DOF("", fixities, values);
+
+                    fixities = new List<bool>();
+                    values = new List<double>();
+
+                    foreach (char c in arr[13+nbSprings])
+                    {
+                        if (c == 'F')
+                        {
+                            fixities.Add(true);
+                            values.Add(0);
+                        }
+                        else if (c == 'R')
+                        {
+                            fixities.Add(false);
+                            values.Add(0);
+                        }
+                        else if (c == 'K')
+                        {
+                            fixities.Add(false);
+                            nbSprings++;
+                            values.Add(double.Parse(arr[13 + nbSprings]));
+                        }
+                    }
+
+                    endConst = Create.Constraint6DOF("", fixities, values);
+                }
+                else
+                {
+                    startConst = Create.FixConstraint6DOF();
+                    endConst = Create.FixConstraint6DOF();
+                }
+
+                bar.Release = new BarRelease() { StartRelease = startConst, EndRelease = endConst };
+
+
+                bar.CustomData[AdapterID] = int.Parse(arr[1]);
+
+                barList.Add(bar);
             }
             return barList;
         }
@@ -815,6 +944,63 @@ namespace BH.Engine.GSA
                 MX = double.Parse(mArr[3]),
                 MY = double.Parse(mArr[4]),
                 MZ = double.Parse(mArr[5])
+            };
+        }
+
+        /***************************************************/
+
+        public static GlobalReactions ToBHoMGlobalReactions(string id, List<string> force, List<string> moment)
+        {
+            double fx = 0;
+            double fy = 0;
+            double fz = 0;
+            double mx = 0;
+            double my = 0;
+            double mz = 0;
+            string lCase = "";
+
+            foreach (string str in force)
+            {
+                if (string.IsNullOrWhiteSpace(str))
+                    continue;
+
+                string[] arr = str.Split(',');
+
+                if (arr.Length < 6)
+                    continue;
+
+                lCase = "A" + arr[1];
+
+                fx += double.Parse(arr[3]);
+                fy += double.Parse(arr[4]);
+                fz += double.Parse(arr[5]);
+            }
+
+            foreach (string str in moment)
+            {
+                if (string.IsNullOrWhiteSpace(str))
+                    continue;
+
+                string[] arr = str.Split(',');
+
+                if (arr.Length < 6)
+                    continue;
+
+                mx += double.Parse(arr[3]);
+                my += double.Parse(arr[4]);
+                mz += double.Parse(arr[5]);
+            }
+
+
+            return new GlobalReactions()
+            {
+                Case = lCase,
+                FX = fx,
+                FY = fy,
+                FZ = fz,
+                MX = mx,
+                MY = my,
+                MZ = mz,
             };
         }
 
