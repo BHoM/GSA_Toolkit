@@ -101,10 +101,14 @@ namespace BH.Adapter.GSA
         public List<Bar> ReadBars(List<string> ids = null)
         {
 
-            int[] potentialBeamRefs = GenerateIndices(ids, typeof(Bar));
+            //int[] potentialBeamRefs = GenerateIndices(ids, typeof(Bar));
 
-            GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
-            m_gsaCom.Elements(potentialBeamRefs, out gsaElements);
+            //GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
+            //m_gsaCom.Elements(potentialBeamRefs, out gsaElements);
+
+
+            string allNodes = m_gsaCom.GwaCommand("GET_ALL, EL.2").ToString();
+            string[] barArr = string.IsNullOrWhiteSpace(allNodes) ? new string[0] : allNodes.Split('\n');
 
             List<ISectionProperty> secPropList = ReadSectionProperties();
             List<Node> nodeList = ReadNodes();
@@ -112,7 +116,7 @@ namespace BH.Adapter.GSA
             Dictionary<string, ISectionProperty> secProps = secPropList.ToDictionary(x => x.CustomData[AdapterId].ToString());
             Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.CustomData[AdapterId].ToString());
 
-            return Engine.GSA.Convert.ToBHoMBars(gsaElements, secProps, nodes);
+            return Engine.GSA.Convert.ToBHoMBars(barArr, secProps, nodes, ids);
         }
 
         /***************************************/
