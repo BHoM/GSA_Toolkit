@@ -862,7 +862,7 @@ namespace BH.Engine.GSA
                 FZ = results.dynaResults[2],
                 MX = results.dynaResults[4],
                 MY = results.dynaResults[5],
-                MZ = results.dynaResults[6]
+                MZ = -results.dynaResults[6]
             };
             return force;
         }
