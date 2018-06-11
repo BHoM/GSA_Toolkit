@@ -157,7 +157,7 @@ namespace BH.Engine.GSA
                         }
                     }
 
-                    startConst = Create.Constraint6DOF("", fixities, values);
+                    startConst = Structure.Create.Constraint6DOF("", fixities, values);
 
                     fixities = new List<bool>();
                     values = new List<double>();
@@ -182,12 +182,12 @@ namespace BH.Engine.GSA
                         }
                     }
 
-                    endConst = Create.Constraint6DOF("", fixities, values);
+                    endConst = Structure.Create.Constraint6DOF("", fixities, values);
                 }
                 else
                 {
-                    startConst = Create.FixConstraint6DOF();
-                    endConst = Create.FixConstraint6DOF();
+                    startConst = Structure.Create.FixConstraint6DOF();
+                    endConst = Structure.Create.FixConstraint6DOF();
                 }
 
                 bar.Release = new BarRelease() { StartRelease = startConst, EndRelease = endConst };
@@ -307,7 +307,7 @@ namespace BH.Engine.GSA
                 return null;
 
             BHL.LoadNature loadNature = Query.BHoMLoadNature(gStr[3]);
-            BHL.Loadcase lCase = Engine.Structure.Create.Loadcase(gStr[2], int.Parse(gStr[1]), loadNature);
+            BHL.Loadcase lCase = Structure.Create.Loadcase(gStr[2], int.Parse(gStr[1]), loadNature);
 
             int lCasenum = 0;
 
@@ -351,12 +351,12 @@ namespace BH.Engine.GSA
                 }
             }
 
-            return Engine.Structure.Create.LoadCombination(gStr[2], int.Parse(gStr[1]), lCasesForTask);
+            return Structure.Create.LoadCombination(gStr[2], int.Parse(gStr[1]), lCasesForTask);
         }
 
         /***************************************/
 
-        /// <summary>Creates a BHoM section from a gsa string</summary>
+        /// <summary>Structure.Creates a BHoM section from a gsa string</summary>
         /// <param name="gsaString">
         /// <summary>
         /// Comma separated string on the format: [PROP_SEC | num | name | colour | mat | desc | principal | type | cost | 
@@ -408,108 +408,154 @@ namespace BH.Engine.GSA
 
                 secProp = expSecProp;
             }
-            else if (description.StartsWith("STD") /*|| description.StartsWith("CAT") */)
+            else
             {
+                IProfile dimensions = null;
 
-                double D, W, T, t, Wt, Wb, Tt, Tb, Tw;
-                string[] desc = description.Split('%');
-                double factor;
-                string type;
+                if (description.StartsWith("CAT"))
+                {
+                    string[] desc = description.Split('%');
 
-                if (desc[1].Contains("(cm)"))
-                {
-                    factor = 0.01;
-                    type = desc[1].Replace("(cm)", "");
-                }
-                else if (desc[1].Contains("(m)"))
-                {
-                    factor = 1;
-                    type = desc[1].Replace("(m)", "");
-                }
-                else
-                {
-                    factor = 0.001;
-                    type = desc[1];
-                }
+                    if (desc.Length < 3)
+                    {
+                        Reflection.Compute.RecordError("Failed to parse the GSASection :" + description);
+                        return null;
+                    }
 
-                IProfile dimensions;
+                    //Change from EA and UA to L for angles
+                    if (desc[2].StartsWith("UA"))
+                        desc[2] = desc[2].Replace("UA", "L");
+                    else if (desc[2].StartsWith("EA"))
+                        desc[2] = desc[2].Replace("EA", "L");
+                    else if (desc[2].StartsWith("BP"))
+                        desc[2] = desc[2].Replace("BP", "UBP");
 
-                switch (type)
-                {
-                    case "UC":
-                    case "UB":
-                    case "I":
-                        D = double.Parse(desc[2]) * factor;
-                        W = double.Parse(desc[3]) * factor;
-                        T = double.Parse(desc[4]) * factor;
-                        t = double.Parse(desc[5]) * factor;
-                        dimensions = Create.ISectionProfile(D, W, T, t, 0, 0);
-                        break;
-                    case "GI":
-                        D = double.Parse(desc[2]) * factor;
-                        Wt = double.Parse(desc[3]) * factor;
-                        Wb = double.Parse(desc[4]) * factor;
-                        Tw = double.Parse(desc[5]) * factor;
-                        Tt = double.Parse(desc[6]) * factor;
-                        Tb = double.Parse(desc[7]) * factor;
-                        dimensions = Create.FabricatedISectionProfile(D, Wt, Wb, Tw, Tt, Tb, 0);
-                        break;
-                    case "CHS":
-                        D = double.Parse(desc[2]) * factor;
-                        t = double.Parse(desc[3]) * factor;
-                        dimensions = Create.TubeProfile(D, t);
-                        break;
-                    case "RHS":
-                        D = double.Parse(desc[2]) * factor;
-                        W = double.Parse(desc[3]) * factor;
-                        T = double.Parse(desc[4]) * factor;
-                        t = double.Parse(desc[5]) * factor;
-                        if (T == t)
-                            dimensions =Create.BoxProfile(D, W, T, 0, 0); //TODO: Additional checks for fabricated/Standard
+                    dimensions = Library.Query.Match("SectionProfiles", desc[2]) as IProfile;
+
+                    if (dimensions == null)
+                    {
+                        if (desc[1] == "RHS" || desc[1] == "CHS")
+                        {
+                            description = "STD%" + desc[1] + "%";
+                            string trim = desc[2].TrimStart(desc[1].ToCharArray());
+                            string[] arr = trim.Split('x');
+
+                            description += arr[0] + "%" + arr[1] + "%" + arr[2] + "%" + arr[2];
+
+                            Reflection.Compute.RecordWarning("Section of type: " + desc[2] + " not found in the library. Custom section will be used");
+                        }
                         else
-                            dimensions = Create.FabricatedBoxProfile(D, W, T, t, t, 0);
-                        break;
-                    case "R":
-                        D = double.Parse(desc[2]) * factor;
-                        W = double.Parse(desc[3]) * factor;
-                        dimensions = Create.RectangleProfile(D, W, 0);
-                        break;
-                    case "C":
-                        D = double.Parse(desc[2]) * factor;
-                        dimensions = Create.CircleProfile(D);
-                        break;
-                    case "T":
-                        D = double.Parse(desc[2]) * factor;
-                        W = double.Parse(desc[3]) * factor;
-                        T = double.Parse(desc[4]) * factor;
-                        t = double.Parse(desc[5]) * factor;
-                        dimensions = Create.TSectionProfile(D, W, T, t, 0, 0);
-                        break;
-                    case "A":
-                        D = double.Parse(desc[2]) * factor;
-                        W = double.Parse(desc[3]) * factor;
-                        T = double.Parse(desc[4]) * factor;
-                        t = double.Parse(desc[5]) * factor;
-                        dimensions = Create.AngleProfile(D, W, T, t, 0, 0);
-                        break;
-                    case "CH":
-                        D = double.Parse(desc[2]) * factor;
-                        W = double.Parse(desc[3]) * factor;
-                        T = double.Parse(desc[4]) * factor;
-                        t = double.Parse(desc[5]) * factor;
-                        dimensions = Create.ChannelProfile(D, W, T, t, 0, 0);
-                        break;
-                    default:
-                        throw new NotImplementedException("Section convertion for the type: " + type + "is not implmented in the GSA adapter");
+                        {
+                            Reflection.Compute.RecordError("Catalogue section of type " + desc[2] + " not found in library");
+                            return null;
+                        }
+                    }
                 }
+
+                if (dimensions == null && description.StartsWith("STD"))
+                {
+                    double D, W, T, t, Wt, Wb, Tt, Tb, Tw;
+                    string type;
+                    string[] desc = description.Split('%');
+                    double factor;
+
+
+                    if (desc[1].Contains("(cm)"))
+                    {
+                        factor = 0.01;
+                        type = desc[1].Replace("(cm)", "");
+                    }
+                    else if (desc[1].Contains("(m)"))
+                    {
+                        factor = 1;
+                        type = desc[1].Replace("(m)", "");
+                    }
+                    else
+                    {
+                        factor = 0.001;
+                        type = desc[1];
+                    }
+
+                    switch (type)
+                    {
+                        case "UC":
+                        case "UB":
+                        case "I":
+                            D = double.Parse(desc[2]) * factor;
+                            W = double.Parse(desc[3]) * factor;
+                            T = double.Parse(desc[4]) * factor;
+                            t = double.Parse(desc[5]) * factor;
+                            dimensions = Structure.Create.ISectionProfile(D, W, T, t, 0, 0);
+                            break;
+                        case "GI":
+                            D = double.Parse(desc[2]) * factor;
+                            Wt = double.Parse(desc[3]) * factor;
+                            Wb = double.Parse(desc[4]) * factor;
+                            Tw = double.Parse(desc[5]) * factor;
+                            Tt = double.Parse(desc[6]) * factor;
+                            Tb = double.Parse(desc[7]) * factor;
+                            dimensions = Structure.Create.FabricatedISectionProfile(D, Wt, Wb, Tw, Tt, Tb, 0);
+                            break;
+                        case "CHS":
+                            D = double.Parse(desc[2]) * factor;
+                            t = double.Parse(desc[3]) * factor;
+                            dimensions = Structure.Create.TubeProfile(D, t);
+                            break;
+                        case "RHS":
+                            D = double.Parse(desc[2]) * factor;
+                            W = double.Parse(desc[3]) * factor;
+                            T = double.Parse(desc[4]) * factor;
+                            t = double.Parse(desc[5]) * factor;
+                            if (T == t)
+                                dimensions = Structure.Create.BoxProfile(D, W, T, 0, 0); //TODO: Additional checks for fabricated/Standard
+                            else
+                                dimensions = Structure.Create.FabricatedBoxProfile(D, W, T, t, t, 0);
+                            break;
+                        case "R":
+                            D = double.Parse(desc[2]) * factor;
+                            W = double.Parse(desc[3]) * factor;
+                            dimensions = Structure.Create.RectangleProfile(D, W, 0);
+                            break;
+                        case "C":
+                            D = double.Parse(desc[2]) * factor;
+                            dimensions = Structure.Create.CircleProfile(D);
+                            break;
+                        case "T":
+                            D = double.Parse(desc[2]) * factor;
+                            W = double.Parse(desc[3]) * factor;
+                            T = double.Parse(desc[4]) * factor;
+                            t = double.Parse(desc[5]) * factor;
+                            dimensions = Structure.Create.TSectionProfile(D, W, T, t, 0, 0);
+                            break;
+                        case "A":
+                            D = double.Parse(desc[2]) * factor;
+                            W = double.Parse(desc[3]) * factor;
+                            T = double.Parse(desc[4]) * factor;
+                            t = double.Parse(desc[5]) * factor;
+                            dimensions = Structure.Create.AngleProfile(D, W, T, t, 0, 0);
+                            break;
+                        case "CH":
+                            D = double.Parse(desc[2]) * factor;
+                            W = double.Parse(desc[3]) * factor;
+                            T = double.Parse(desc[4]) * factor;
+                            t = double.Parse(desc[5]) * factor;
+                            dimensions = Structure.Create.ChannelProfile(D, W, T, t, 0, 0);
+                            break;
+                        default:
+                            Reflection.Compute.RecordError("Section convertion for the type: " + type + " is not implmented in the GSA adapter");
+                            return null;
+                    }
+                }
+
+                
 
                 switch (materials[materialId].Type)
                 {
                     case BHM.MaterialType.Steel:
-                        secProp = Create.SteelSectionFromProfile(dimensions);
+                        secProp = Structure.Create.SteelSectionFromProfile(dimensions);
                         break;
                     case BHM.MaterialType.Concrete:
-                        secProp = Create.ConcreteSectionFromProfile(dimensions);
+                        secProp = Structure.Create.ConcreteSectionFromProfile(dimensions);
                         break;
                     case BHM.MaterialType.Aluminium:
                     case BHM.MaterialType.Timber:
@@ -518,9 +564,9 @@ namespace BH.Engine.GSA
                     case BHM.MaterialType.Glass:
                     case BHM.MaterialType.Cable:
                     default:
-                        throw new NotImplementedException("Material type for cross section not implemented");
+                        Reflection.Compute.RecordError("Material type " + materials[materialId].Type.ToString() + " for cross section not implemented");
+                        return null;
                 }
-
             }
 
             secProp.CustomData.Add(AdapterID, id);
@@ -542,28 +588,28 @@ namespace BH.Engine.GSA
             switch (type)
             {
                 case "ALL":
-                    constraint = Create.LinkConstraintFixed();
+                    constraint = Structure.Create.LinkConstraintFixed();
                     break;
                 case "PIN":
-                    constraint = Create.LinkConstraintPinned();
+                    constraint = Structure.Create.LinkConstraintPinned();
                     break;
                 case "XY_PLANE":
-                    constraint = Create.LinkConstraintXYPlane();
+                    constraint = Structure.Create.LinkConstraintXYPlane();
                     break;
                 case "ZX_PLANE":
-                    constraint = Create.LinkConstraintZXPlane();
+                    constraint = Structure.Create.LinkConstraintZXPlane();
                     break;
                 case "YZ_PLANE":
-                    constraint = Create.LinkConstraintYZPlane();
+                    constraint = Structure.Create.LinkConstraintYZPlane();
                     break;
                 case "XY_PLANE_PIN":
-                    constraint = Create.LinkConstraintXYPlanePin();
+                    constraint = Structure.Create.LinkConstraintXYPlanePin();
                     break;
                 case "ZX_PLANE_PIN":
-                    constraint = Create.LinkConstraintZXPlanePin();
+                    constraint = Structure.Create.LinkConstraintZXPlanePin();
                     break;
                 case "YZ_PLANE_PIN":
-                    constraint = Create.LinkConstraintYZPlanePin();
+                    constraint = Structure.Create.LinkConstraintYZPlanePin();
                     break;
                 //case "XY_PLATE":
                 //    constraint = BHP.LinkConstraint.ZPlate;
@@ -746,7 +792,7 @@ namespace BH.Engine.GSA
                         stiff = new List<double>() { 0, 0, 0, 0, 0, 0 };
                 }
 
-                con = Create.Constraint6DOF("", fixities, stiff);
+                con = Structure.Create.Constraint6DOF("", fixities, stiff);
             }
             else
                 con = null;
