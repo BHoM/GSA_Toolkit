@@ -10,6 +10,8 @@ using BH.oM.Common.Materials;
 using BH.oM.DataManipulation.Queries;
 using BH.oM.Structural.Results;
 using BH.oM.Base;
+using Interop.gsa_8_7;
+using BH.Engine.Library;
 
 
 namespace GSA_Test
@@ -18,7 +20,8 @@ namespace GSA_Test
     {
         static void Main(string[] args)
         {
-            TestPullNodes();
+            TestDesignCode();
+            //TestPullNodes();
             //TestPushMeshFace();
             //TestPushRigidLinks();
             //TestReadLinks();
@@ -31,9 +34,34 @@ namespace GSA_Test
             //
         }
 
+        private static void TestDesignCode()
+        {
+
+            //ComAuto gsaCom = new ComAuto();
+            //gsaCom.Open(@"C:\Users\iNaslund\OneDrive\Documents\GSA Sandbox\Empty.gwb");
+
+            //var test = gsaCom.GwaCommand("PROP_SEC, 5, Section 1, NO_RGB, STEEL, CAT RHS RHS40x20x2, NO, NA, 0, NO_PROP, NO_MOD_PROP, FLAME_CUT, NO_J");
+
+            //gsaCom.UpdateViews();
+            GSAAdapter app = new GSAAdapter(@"C:\Users\iNaslund\OneDrive\Documents\GSA Sandbox\Empty.gwb", null, true);
+
+            List<IBHoMObject> objs = BH.Engine.Library.Query.Library("SectionProfiles");
+
+            List<SteelSection> sections = new List<SteelSection>();
+
+            foreach (object prof in objs)
+            {
+                SteelSection sec = BH.Engine.Structure.Create.SteelSectionFromProfile(prof as IProfile);
+                sec.Material.CustomData[app.AdapterId] = 1;
+                sec.Name = (prof as IBHoMObject).Name;
+                sections.Add(sec);
+            }
+            app.Push(sections);
+        }
+
         private static void TestPullNodes()
         {
-            GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\Spring Suport.gwb");
+            GSAAdapter app = new GSAAdapter(@"C:\Users\iNaslund\OneDrive\Documents\GSA Sandbox\Empty.gwb");
 
             List<object> test = app.Pull(new FilterQuery() { Type = typeof(Node) }).ToList();
         }

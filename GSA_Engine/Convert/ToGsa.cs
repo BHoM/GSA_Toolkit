@@ -286,27 +286,11 @@ namespace BH.Engine.GSA
             string command = "PROP_SEC";
             string colour = "NO_RGB";
             string principle = "NO";
-            string type = "NA";
+            string type = prop.SectionType();
             string cost = "0";
             string plate_type = "FLAME_CUT";
             string calc_J = "NO_J";
-            string mods = "NO_MOD_PROP";
-
-            double[] modifiers = Structure.Query.Modifiers(prop);
-
-            if (modifiers != null)
-            {
-                if (modifiers.Length == 6)
-                {
-                    mods = "MOD_PROP";
-                    for (int i = 0; i < 6; i++)
-                    {
-                        mods += ",BY," + modifiers[i];
-                    }
-                    mods += ",NO,NO_MOD";
-                }
-
-            }
+            string mods = prop.ModifiersString();
 
             //PROP_SEC    2   Section 2   NO_RGB  1   CAT % UB % UB914x419x388 % 19990407   NO NA  0   NO_PROP NO_MOD_PROP FLAME_CUT NO_J
 

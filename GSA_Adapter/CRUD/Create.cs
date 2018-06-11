@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using BH.oM.Structural.Loads;
 using BH.oM.Structural.Elements;
+using BH.oM.Structural.Properties;
 using BH.oM.Base;
 using BH.Engine.GSA;
 
@@ -41,7 +42,23 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-         //
+        private bool Create(ISectionProperty prop)
+        {
+            //Try creating a catalogue section
+            string catString = prop.CreateCatalogueString();
+            if (catString != null)
+            {
+                bool success = ComCall(catString);
+                if (success)
+                    return true;
+            }
+
+            return ComCall(Engine.GSA.Convert.IToGsaString(prop, prop.CustomData[AdapterId].ToString()));
+        }
+
+        /***************************************************/
+
+        //
         private bool CreateLinks(IEnumerable<RigidLink> links)
         {
             

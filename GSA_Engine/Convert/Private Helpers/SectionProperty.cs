@@ -9,6 +9,64 @@ namespace BH.Engine.GSA
     {
         /***************************************/
 
+        public static string CreateCatalogueString(this ISectionProperty secProp)
+        {
+            if (secProp is SteelSection)
+            {
+                SteelSection steel = secProp as SteelSection;
+                string name = secProp.Name;
+
+                //Try to push the section as a catalogue profile
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    string[] arr = name.Split(' ');
+
+                    if (arr.Length >= 2)
+                    {
+                        if (steel.SectionProfile.Shape == ShapeType.Angle)
+                        {
+                            AngleProfile prof = steel.SectionProfile as AngleProfile;
+
+                            if (prof.Height == prof.Width)
+                                arr[0] = "EA";
+                            else
+                                arr[0] = "UA";
+                        }
+                        else if (steel.SectionProfile.Shape == ShapeType.Box || steel.SectionProfile.Shape == ShapeType.Tube)
+                        {
+                            //Add tailing .0 for closed sections
+                            if (arr[1].ToCharArray()[arr[1].Length - 2] != '.')
+                            {
+                                arr[1] += ".0";
+                            }
+                        }
+                        else if (steel.SectionProfile.Shape == ShapeType.ISection)
+                        {
+                            if (arr[0] == "UBP")
+                                arr[0] = "BP";
+                        }
+
+                        string catProp = "CAT " + arr[0] + " ";
+                        for (int i = 0; i < arr.Length; i++)
+                        {
+                            catProp += arr[i];
+                        }
+
+                        
+
+                        return "PROP_SEC," + secProp.CustomData[AdapterID].ToString() + ", " + name + ", NO_RGB," + secProp.Material.CustomData[AdapterID] + "," + catProp + ", NO," + secProp.SectionType() + ", 0, NO_PROP," + secProp.ModifiersString() + ", FLAME_CUT, NO_J";
+
+
+                    }
+                }
+            }
+
+            //Return null for any non-steel sections
+            return null;
+        }
+
+        /***************************************/
+
         private static bool ICreateDescAndPropString(ISectionProperty secProp, out string desc, out string prop)
         {
             return CreateDescAndPropString(secProp as dynamic, out desc, out prop);
