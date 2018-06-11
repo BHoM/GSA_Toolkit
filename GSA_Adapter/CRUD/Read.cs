@@ -113,7 +113,7 @@ namespace BH.Adapter.GSA
             List<ISectionProperty> secPropList = ReadSectionProperties();
             List<Node> nodeList = ReadNodes();
 
-            Dictionary<string, ISectionProperty> secProps = secPropList.ToDictionary(x => x.CustomData[AdapterId].ToString());
+            Dictionary<string, ISectionProperty> secProps = secPropList.Where(x => x != null).ToDictionary(x => x.CustomData[AdapterId].ToString());
             Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.CustomData[AdapterId].ToString());
 
             return Engine.GSA.Convert.ToBHoMBars(barArr, secProps, nodes, ids);

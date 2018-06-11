@@ -48,6 +48,11 @@
       <HintPath>..\..\..\..\..\..\..\..\Program Files\Oasys\GSA 8.7\Interop.Gsa_8_7.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Reflection_Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BHoM_Engine\Build\Reflection_Engine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Structure_Engine">
       <HintPath>..\..\BHoM_Engine\Build\Structure_Engine.dll</HintPath>
     </Reference>
@@ -78,6 +83,10 @@
     <ProjectReference Include="..\GSA_Engine\GSA_Engine.csproj">
       <Project>{ca275200-b50f-4b09-be44-fbb106e3de42}</Project>
       <Name>GSA_Engine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GSA_oM\GSA_oM.csproj">
+      <Project>{3634ff67-b327-4c2f-bf45-e13e8fff69a6}</Project>
+      <Name>GSA_oM</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -50,6 +50,15 @@
       <HintPath>..\..\..\..\..\..\..\..\Program Files\Oasys\GSA 8.7\Interop.Gsa_8_7.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Library_Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BHoM_Engine\Build\Library_Engine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Reflection_Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BHoM_Engine\Build\Reflection_Engine.dll</HintPath>
+    </Reference>
     <Reference Include="Serialiser_Engine">
       <HintPath>..\..\BHoM_Engine\Build\Serialiser_Engine.dll</HintPath>
     </Reference>
@@ -82,6 +91,7 @@
     <Compile Include="Convert\Private Helpers\Property2d.cs" />
     <Compile Include="Convert\Private Helpers\SectionProperty.cs" />
     <Compile Include="Convert\ToGsa.cs" />
+    <Compile Include="Create\GSAConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query\AreaLoadType.cs" />
     <Compile Include="Query\Axis.cs" />
@@ -90,12 +100,20 @@
     <Compile Include="Query\Factor.cs" />
     <Compile Include="Query\ForceTypeString.cs" />
     <Compile Include="Query\LoadNature.cs" />
+    <Compile Include="Query\ModifiersString.cs" />
     <Compile Include="Query\Position.cs" />
     <Compile Include="Query\Projection.cs" />
     <Compile Include="Query\ResultHeader.cs" />
     <Compile Include="Query\RotationVector.cs" />
+    <Compile Include="Query\SectionType.cs" />
     <Compile Include="Query\TaskType.cs" />
     <Compile Include="Query\TranslationVector.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GSA_oM\GSA_oM.csproj">
+      <Project>{3634ff67-b327-4c2f-bf45-e13e8fff69a6}</Project>
+      <Name>GSA_oM</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

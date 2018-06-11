@@ -31,7 +31,6 @@ namespace BH.Adapter.GSA
                 }
             }
 
-
             return new List<Type>();         
         }
 

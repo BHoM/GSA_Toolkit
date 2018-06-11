@@ -35,6 +35,7 @@
   <ItemGroup>
     <Reference Include="BHoM">
       <HintPath>..\..\BHoM\Build\BHoM.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="BHoM_Adapter">
       <HintPath>..\..\BHoM_Adapter\Build\BHoM_Adapter.dll</HintPath>
@@ -48,6 +49,15 @@
     </Reference>
     <Reference Include="Geometry_Engine">
       <HintPath>..\..\BHoM_Engine\Build\Geometry_Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.Gsa_8_7">
+      <HintPath>..\..\..\..\..\..\..\Program Files\Oasys\GSA 8.7\Interop.Gsa_8_7.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Library_Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BHoM_Engine\Build\Library_Engine.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Reflection_Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -76,6 +86,10 @@
     <ProjectReference Include="..\GSA_Adapter\GSA_Adapter.csproj">
       <Project>{6ef0e0ab-7431-4481-9cad-670673ae1aa1}</Project>
       <Name>GSA_Adapter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GSA_oM\GSA_oM.csproj">
+      <Project>{3634ff67-b327-4c2f-bf45-e13e8fff69a6}</Project>
+      <Name>GSA_oM</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
