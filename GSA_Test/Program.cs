@@ -45,17 +45,20 @@ namespace GSA_Test
             //gsaCom.UpdateViews();
             GSAAdapter app = new GSAAdapter(@"C:\Users\iNaslund\OneDrive\Documents\GSA Sandbox\Empty.gwb", null, true);
 
-            List<IBHoMObject> objs = BH.Engine.Library.Query.Library("SectionProfiles");
+            //List<IBHoMObject> objs = BH.Engine.Library.Query.Library("SectionProfiles");
 
-            List<SteelSection> sections = new List<SteelSection>();
+            //List<SteelSection> sections = new List<SteelSection>();
 
-            foreach (object prof in objs)
-            {
-                SteelSection sec = BH.Engine.Structure.Create.SteelSectionFromProfile(prof as IProfile);
-                sec.Material.CustomData[app.AdapterId] = 1;
-                sec.Name = (prof as IBHoMObject).Name;
-                sections.Add(sec);
-            }
+            //foreach (object prof in objs)
+            //{
+            //    SteelSection sec = BH.Engine.Structure.Create.SteelSectionFromProfile(prof as IProfile);
+            //    sec.Material.CustomData[app.AdapterId] = 1;
+            //    sec.Name = (prof as IBHoMObject).Name;
+            //    sections.Add(sec);
+            //}
+
+            List<SteelSection> sections = BH.Engine.Library.Query.Library("SectionProperties").Cast<SteelSection>().ToList();
+
             app.Push(sections);
         }
 
