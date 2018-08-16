@@ -430,9 +430,9 @@ namespace BH.Engine.GSA
                     else if (desc[2].StartsWith("BP"))
                         desc[2] = desc[2].Replace("BP", "UBP");
 
-                    dimensions = Library.Query.Match("SectionProfiles", desc[2]) as IProfile;
+                    secProp = Library.Query.Match("SectionProperties", desc[2]).GetShallowClone() as ISectionProperty;
 
-                    if (dimensions == null)
+                    if (secProp == null)
                     {
                         if (desc[1] == "RHS" || desc[1] == "CHS")
                         {
@@ -452,7 +452,7 @@ namespace BH.Engine.GSA
                     }
                 }
 
-                if (dimensions == null && description.StartsWith("STD"))
+                if (secProp == null && description.StartsWith("STD"))
                 {
                     double D, W, T, t, Wt, Wb, Tt, Tb, Tw;
                     string type;
@@ -545,31 +545,32 @@ namespace BH.Engine.GSA
                             Reflection.Compute.RecordError("Section convertion for the type: " + type + " is not implmented in the GSA adapter");
                             return null;
                     }
-                }
 
-                
 
-                switch (materials[materialId].Type)
-                {
-                    case BHM.MaterialType.Steel:
-                        secProp = Structure.Create.SteelSectionFromProfile(dimensions);
-                        break;
-                    case BHM.MaterialType.Concrete:
-                        secProp = Structure.Create.ConcreteSectionFromProfile(dimensions);
-                        break;
-                    case BHM.MaterialType.Aluminium:
-                    case BHM.MaterialType.Timber:
-                    case BHM.MaterialType.Rebar:
-                    case BHM.MaterialType.Tendon:
-                    case BHM.MaterialType.Glass:
-                    case BHM.MaterialType.Cable:
-                    default:
-                        Reflection.Compute.RecordError("Material type " + materials[materialId].Type.ToString() + " for cross section not implemented");
-                        return null;
+
+
+                    switch (materials[materialId].Type)
+                    {
+                        case BHM.MaterialType.Steel:
+                            secProp = Structure.Create.SteelSectionFromProfile(dimensions);
+                            break;
+                        case BHM.MaterialType.Concrete:
+                            secProp = Structure.Create.ConcreteSectionFromProfile(dimensions);
+                            break;
+                        case BHM.MaterialType.Aluminium:
+                        case BHM.MaterialType.Timber:
+                        case BHM.MaterialType.Rebar:
+                        case BHM.MaterialType.Tendon:
+                        case BHM.MaterialType.Glass:
+                        case BHM.MaterialType.Cable:
+                        default:
+                            Reflection.Compute.RecordError("Material type " + materials[materialId].Type.ToString() + " for cross section not implemented");
+                            return null;
+                    }
                 }
             }
 
-            secProp.CustomData.Add(AdapterID, id);
+            secProp.CustomData[AdapterID] = id;
             secProp.ApplyTaggedName(gsaStrings[2]);
             secProp.Material = materials[materialId];
             return secProp;
