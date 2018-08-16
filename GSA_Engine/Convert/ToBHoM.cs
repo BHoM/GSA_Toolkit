@@ -430,9 +430,13 @@ namespace BH.Engine.GSA
                     else if (desc[2].StartsWith("BP"))
                         desc[2] = desc[2].Replace("BP", "UBP");
 
-                    secProp = Library.Query.Match("SectionProperties", desc[2]).GetShallowClone() as ISectionProperty;
+                    secProp = Library.Query.Match("SectionProperties", desc[2]) as ISectionProperty;
 
-                    if (secProp == null)
+                    if (secProp != null)
+                    {
+                        secProp = secProp.GetShallowClone() as ISectionProperty;
+                    }
+                    else
                     {
                         if (desc[1] == "RHS" || desc[1] == "CHS")
                         {
