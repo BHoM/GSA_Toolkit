@@ -1,15 +1,15 @@
 ﻿using BH.Engine.Serialiser;
 using BH.Engine.Structure;
 using BHM = BH.oM.Common.Materials;
-using BHL = BH.oM.Structural.Loads;
+using BHL = BH.oM.Structure.Loads;
 using BH.oM.Geometry;
-using BH.oM.Structural.Elements;
-using BH.oM.Structural.Properties;
+using BH.oM.Structure.Elements;
+using BH.oM.Structure.Properties;
 using Interop.gsa_8_7;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using BH.oM.Structural.Results;
+using BH.oM.Structure.Results;
 
 namespace BH.Engine.GSA
 {

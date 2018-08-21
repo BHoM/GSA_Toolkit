@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BH.oM.Geometry;
-using BH.oM.Structural.Loads;
+using BH.oM.Structure.Loads;
 using Interop.gsa_8_7;
 
 namespace BH.Engine.GSA

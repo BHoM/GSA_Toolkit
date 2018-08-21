@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using BH.oM.Structural.Elements;
+using BH.oM.Structure.Elements;
 using BH.oM.Geometry;
-using BH.oM.Structural.Loads;
-using BH.oM.Structural.Properties;
+using BH.oM.Structure.Loads;
+using BH.oM.Structure.Properties;
 using BH.Engine.Structure;
 using BH.Adapter.GSA;
 using BH.oM.Common.Materials;
 using BH.oM.DataManipulation.Queries;
-using BH.oM.Structural.Results;
+using BH.oM.Structure.Results;
 using BH.oM.Base;
 using Interop.gsa_8_7;
 using BH.Engine.Library;
@@ -374,7 +374,7 @@ namespace GSA_Test
 
         //    GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\EmptyFile.gwb");
 
-        //    BH.oM.Structural.Properties.SectionProperty sec1a = new BH.oM.Structural.Properties.ExplicitSectionProperty();
+        //    BH.oM.Structure.Properties.SectionProperty sec1a = new BH.oM.Structure.Properties.ExplicitSectionProperty();
         //    sec1a.Material = new BH.oM.Materials.Material("Material1", BH.oM.Materials.MaterialType.Concrete, 10, 10, 10, 10, 10);
         //    sec1a.Name = "Section 1";
 

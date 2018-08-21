@@ -1,5 +1,5 @@
 ﻿using BH.Engine.GSA;
-using BH.oM.Structural.Loads;
+using BH.oM.Structure.Loads;
 using System;
 using System.Collections;
 using System.Collections.Generic;

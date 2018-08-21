@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BH.oM.Structural.Loads;
-using BH.oM.Structural.Elements;
+using BH.oM.Structure.Loads;
+using BH.oM.Structure.Elements;
 using BH.oM.Base;
 using BH.Engine.GSA;
 using BH.oM.DataManipulation.Queries;

@@ -1,9 +1,9 @@
 ﻿using BH.Engine.GSA;
 using BH.oM.Base;
 using BH.oM.Common;
-using BH.oM.Structural.Elements;
-using BH.oM.Structural.Properties;
-using BH.oM.Structural.Results;
+using BH.oM.Structure.Elements;
+using BH.oM.Structure.Properties;
+using BH.oM.Structure.Results;
 using Interop.gsa_8_7;
 using System;
 using System.Collections;
@@ -399,9 +399,9 @@ namespace BH.Adapter.GSA
                         if (s.StartsWith("A") && int.TryParse(s.TrimStart('A'), out id))
                             loadCases.Add(id);
                     }
-                    else if (o is BH.oM.Structural.Loads.LoadCombination)
+                    else if (o is BH.oM.Structure.Loads.LoadCombination)
                     {
-                        loadCases.Add((o as oM.Structural.Loads.LoadCombination).Number);
+                        loadCases.Add((o as oM.Structure.Loads.LoadCombination).Number);
                     }
                 }
             }
@@ -466,9 +466,9 @@ namespace BH.Adapter.GSA
                         if (s.StartsWith("A") || s.StartsWith("C"))
                             loadCases.Add(s);
                     }
-                    else if (o is BH.oM.Structural.Loads.LoadCombination)
+                    else if (o is BH.oM.Structure.Loads.LoadCombination)
                     {
-                        loadCases.Add("A" + (o as oM.Structural.Loads.LoadCombination).Number);
+                        loadCases.Add("A" + (o as oM.Structure.Loads.LoadCombination).Number);
                     }
 
                 }
