@@ -1,6 +1,6 @@
 ﻿using BH.Engine.Structure;
-using BH.oM.Structural.Elements;
-using BH.oM.Structural.Properties;
+using BH.oM.Structure.Elements;
+using BH.oM.Structure.Properties;
 using System.Collections;
 
 namespace BH.Engine.GSA

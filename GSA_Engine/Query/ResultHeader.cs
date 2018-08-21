@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BH.oM.Common;
-using BH.oM.Structural.Results;
+using BH.oM.Structure.Results;
 using Interop.gsa_8_7;
 
 namespace BH.Engine.GSA
