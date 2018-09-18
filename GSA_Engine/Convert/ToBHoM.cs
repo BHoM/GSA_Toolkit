@@ -824,7 +824,7 @@ namespace BH.Engine.GSA
             NodeDisplacement disp = new NodeDisplacement
             {
                 ObjectId = id,
-                Case = loadCase,
+                ResultCase = loadCase,
                 TimeStep = timeStep,
                 UX = results.dynaResults[0],
                 UY = results.dynaResults[1],
@@ -844,7 +844,7 @@ namespace BH.Engine.GSA
             NodeReaction reac = new NodeReaction
             {
                 ObjectId = id,
-                Case = loadCase,
+                ResultCase = loadCase,
                 TimeStep = timeStep,
                 FX = results.dynaResults[0],
                 FY = results.dynaResults[1],
@@ -865,7 +865,7 @@ namespace BH.Engine.GSA
             NodeVelocity disp = new NodeVelocity
             {
                 ObjectId = id,
-                Case = loadCase,
+                ResultCase = loadCase,
                 TimeStep = timeStep,
                 UX = results.dynaResults[0],
                 UY = results.dynaResults[1],
@@ -885,7 +885,7 @@ namespace BH.Engine.GSA
             NodeAcceleration disp = new NodeAcceleration
             {
                 ObjectId = id,
-                Case = loadCase,
+                ResultCase = loadCase,
                 TimeStep = timeStep,
                 UX = results.dynaResults[0],
                 UY = results.dynaResults[1],
@@ -904,7 +904,7 @@ namespace BH.Engine.GSA
             BarForce force = new BarForce
             {
                 ObjectId = id,
-                Case = loadCase,
+                ResultCase = loadCase,
                 TimeStep = timeStep,
                 Divisions = divisions,
                 Position = results.Pos,
@@ -925,7 +925,7 @@ namespace BH.Engine.GSA
             BarStress force = new BarStress
             {
                 ObjectId = id,
-                Case = loadCase,
+                ResultCase = loadCase,
                 TimeStep = timeStep,
                 Divisions = divisions,
                 Position = results.Pos,
@@ -949,7 +949,7 @@ namespace BH.Engine.GSA
             BarDeformation def = new BarDeformation
             {
                 ObjectId = id,
-                Case = loadCase,
+                ResultCase = loadCase,
                 TimeStep = timeStep,
                 Divisions = divisions,
                 Position = results.Pos,
@@ -970,7 +970,7 @@ namespace BH.Engine.GSA
             BarStrain strain = new BarStrain
             {
                 ObjectId = id,
-                Case = loadCase,
+                ResultCase = loadCase,
                 TimeStep = timeStep,
                 Divisions = divisions,
                 Position = results.Pos,
@@ -988,7 +988,7 @@ namespace BH.Engine.GSA
 
             return new GlobalReactions()
             {
-                Case = "A" + fArr[1],
+                ResultCase = "A" + fArr[1],
                 FX = double.Parse(fArr[3]),
                 FY = double.Parse(fArr[4]),
                 FZ = double.Parse(fArr[5]),
@@ -1045,7 +1045,7 @@ namespace BH.Engine.GSA
 
             return new GlobalReactions()
             {
-                Case = lCase,
+                ResultCase = lCase,
                 FX = fx,
                 FY = fy,
                 FZ = fz,
@@ -1076,7 +1076,7 @@ namespace BH.Engine.GSA
             return new ModalDynamics()
             {
                 ObjectId = id,
-                Case = "A" + modeArr[1],
+                ResultCase = "A" + modeArr[1],
                 ModeNumber = int.Parse(modeArr[2]),
                 Frequency = double.Parse(frArr[2]),
                 ModalMass = totMass,
