@@ -150,7 +150,7 @@ namespace BH.Engine.GSA
 
             string caseNo = load.Loadcase.Number.ToString();
 
-            string x = load.GravityDirection.Y.ToString();
+            string x = load.GravityDirection.X.ToString();
             string y = load.GravityDirection.Y.ToString();
             string z = load.GravityDirection.Z.ToString();
 
