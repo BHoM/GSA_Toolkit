@@ -270,7 +270,7 @@ namespace BH.Engine.GSA
             if (gStr.Length < 11)
                 return null;
 
-            BHM.MaterialType type = GetTypeFromString(gStr[2]);
+            BHM.MaterialType type = GetTypeFromString(gStr[5]);
 
             double E, v, tC, G, rho;
 
