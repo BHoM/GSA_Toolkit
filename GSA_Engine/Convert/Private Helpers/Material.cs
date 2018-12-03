@@ -7,6 +7,7 @@ namespace BH.Engine.GSA
         /***************************************/
         private static MaterialType GetMaterialType(BHM.Material material)
         {
+
             switch (material.Type)
             {
                 case BHM.MaterialType.Aluminium:
@@ -19,7 +20,7 @@ namespace BH.Engine.GSA
                     return MaterialType.MT_GLASS;
 
                 case BHM.MaterialType.Rebar:
-                    return MaterialType.MT_UNDEF;
+                    return MaterialType.MT_REBAR;
 
                 case BHM.MaterialType.Steel:
                     return MaterialType.MT_STEEL;
@@ -55,6 +56,9 @@ namespace BH.Engine.GSA
 
                 case "MT_TIMBER":
                     return BHM.MaterialType.Timber;
+
+                case "MT_REBAR":
+                    return BHM.MaterialType.Rebar;
                 //Undef set to steel for now. Need to implement an undef material enum.
                 case "MT_UNDEF":
                 default:

@@ -181,7 +181,8 @@
             MT_ALUMINIUM,
             MT_GLASS,
             MT_TIMBER,
-            MT_UNDEF
+            MT_UNDEF,
+            MT_REBAR
         }
 
         /***************************************/
