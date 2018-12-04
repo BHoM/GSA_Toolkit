@@ -234,6 +234,37 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
+        public static List<FEMesh> ToBHoMFEMesh(IEnumerable<GsaElement> gsaElements, Dictionary<string, IProperty2D> props, Dictionary<string, Node> nodes)
+        {
+            List<FEMesh> meshList = new List<FEMesh>();
+
+            foreach (GsaElement gsaMesh in gsaElements)
+            {
+                switch (gsaMesh.eType)
+                {
+                    case 5://Quad4      //TODO: Quad8 and Tri6
+                    case 7://Tri3
+                        break;
+                    default:
+                        continue;
+                }
+
+                FEMesh mesh = new FEMesh()
+                {
+                    MeshFaces = new List<FEMeshFace>() { new FEMeshFace() { NodeListIndices = Enumerable.Range(0, gsaMesh.NumTopo).ToList() } },
+                    Nodes = gsaMesh.Topo.Select(x => nodes[x.ToString()]).ToList(),
+                    Property = props[gsaMesh.Property.ToString()]
+                };
+
+                mesh.ApplyTaggedName(gsaMesh.Name);
+                mesh.CustomData[AdapterID] = gsaMesh.Ref;
+                meshList.Add(mesh);
+            }
+            return meshList;
+        }
+
+        /***************************************/
+
         public static List<RigidLink> ToBHoMRigidLinks(IEnumerable<GsaElement> gsaElements, Dictionary<string, LinkConstraint> constraints, Dictionary<string, Node> nodes)
         {
             List<RigidLink> linkList = new List<RigidLink>();

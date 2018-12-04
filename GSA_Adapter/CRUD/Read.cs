@@ -40,6 +40,8 @@ namespace BH.Adapter.GSA
                 return ReadLinkConstraint(indices as dynamic);
             if (type == typeof(MeshFace))
                 return ReadMeshFace(indices as dynamic);
+            if (type == typeof(FEMesh))
+                return ReadFEMesh(indices as dynamic);
             if (type == typeof(IProperty2D))
                 return ReadProperty2d(indices as dynamic);
             if (type == typeof(Loadcase))
@@ -211,6 +213,24 @@ namespace BH.Adapter.GSA
             Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.CustomData[AdapterId].ToString());
 
             return Engine.GSA.Convert.ToBHoMMeshFace(gsaElements, props, nodes);
+        }
+
+        /***************************************/
+
+        public List<FEMesh> ReadFEMesh(List<string> ids = null)
+        {
+            int[] potentialMeshRefs = GenerateIndices(ids, typeof(FEMesh));
+
+            GsaElement[] gsaElements = new GsaElement[potentialMeshRefs.Length];
+            m_gsaCom.Elements(potentialMeshRefs, out gsaElements);
+
+            List<IProperty2D> secPropList = ReadProperty2d();
+            List<Node> nodeList = ReadNodes();
+
+            Dictionary<string, IProperty2D> props = secPropList.ToDictionary(x => x.CustomData[AdapterId].ToString());
+            Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.CustomData[AdapterId].ToString());
+
+            return Engine.GSA.Convert.ToBHoMFEMesh(gsaElements, props, nodes);
         }
 
         /***************************************/

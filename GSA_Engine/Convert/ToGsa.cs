@@ -34,6 +34,8 @@ namespace BH.Engine.GSA
                 return "PROP_2D";
             else if (type == typeof(MeshFace))
                 return "EL";
+            else if (type == typeof(FEMesh))
+                return "EL";
             else if (type == typeof(RigidLink))
                 return "EL";
             else if (type == typeof(LinkConstraint))
@@ -407,6 +409,44 @@ namespace BH.Engine.GSA
             //EL  2       NO_RGB TRI3    1   1   1   2   5   0   0   NO_RLS NO_OFFSET   DUMMY
 
             string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + propertyIndex + ", " + group + ", " +topology + " 0 , 0" + ", NO_RLS" + ", NO_OFFSET," + dummy;
+            return str;
+        }
+
+        /***************************************/
+
+        public static string ToGsaString(this FEMesh mesh, string index, int faceID)
+        {
+
+            string command = "EL.2";
+            string type;
+
+            FEMeshFace face = mesh.MeshFaces[faceID];
+
+            //TODO: Implement QUAD8 and TRI6
+            if (face.NodeListIndices.Count == 3)
+                type = "TRI3";
+            else if (face.NodeListIndices.Count == 4)
+                type = "QUAD4";
+            else
+                return "";
+
+            string name = mesh.TaggedName();
+
+            string propertyIndex = mesh.Property.CustomData[AdapterID].ToString();
+            int group = 0;
+
+            string topology = "";
+
+            foreach (int nodeIndex in face.NodeListIndices)
+            {
+                topology += mesh.Nodes[nodeIndex].CustomData[AdapterID].ToString() + ",";
+            }
+
+            string dummy = CheckDummy(face);
+            //EL	1	gfdgdf	NO_RGB	QUAD4	1	1	1	2	3	4	0	0	NO_RLS	NO_OFFSET	DUMMY
+            //EL  2       NO_RGB TRI3    1   1   1   2   5   0   0   NO_RLS NO_OFFSET   DUMMY
+
+            string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + propertyIndex + ", " + group + ", " + topology + " 0 , 0" + ", NO_RLS" + ", NO_OFFSET," + dummy;
             return str;
         }
 
