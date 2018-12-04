@@ -25,7 +25,10 @@ namespace BH.Adapter.GSA
             {
                 foreach (T obj in objects)
                 {
-                    success &= Create((obj as dynamic));
+                    if (typeof(FEMesh).IsAssignableFrom(typeof(T)))
+                        success &= CreateFEMesh(obj as FEMesh);
+                    else
+                        success &= Create((obj as dynamic));
                 }
             }
 
@@ -83,6 +86,25 @@ namespace BH.Adapter.GSA
                     link.CustomData[AdapterId + "-AllIds"] = allIds;
                 }
             }
+            return success;
+        }
+
+        /***************************************************/
+
+        private bool CreateFEMesh(FEMesh mesh)
+        {
+            bool success = true;
+            string id = NextId(mesh.GetType(), true).ToString();
+            List<string> allIds = new List<string>();
+
+            for (int i = 0; i < mesh.MeshFaces.Count; i++)
+            {
+                success &= ComCall(Engine.GSA.Convert.ToGsaString(mesh,id,i));
+                allIds.Add(id);
+                id = (int.Parse(id) + 1).ToString();
+                mesh.CustomData[AdapterId + "-AllIds"] = allIds;
+            }
+
             return success;
         }
 

@@ -45,6 +45,7 @@ namespace BH.Adapter.GSA
             {typeof(ISectionProperty), new List<Type> { typeof(Material) } },
             {typeof(RigidLink), new List<Type> { typeof(LinkConstraint), typeof(Node) } },
             {typeof(MeshFace), new List<Type> { typeof(IProperty2D), typeof(Node) } },
+            {typeof(FEMesh), new List<Type> { typeof(IProperty2D), typeof(Node) } },
             {typeof(IProperty2D), new List<Type> { typeof(Material) } }
         };
 
