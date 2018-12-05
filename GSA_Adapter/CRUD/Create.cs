@@ -94,15 +94,15 @@ namespace BH.Adapter.GSA
         private bool CreateFEMesh(FEMesh mesh)
         {
             bool success = true;
-            string id = NextId(mesh.GetType(), true).ToString();
-            List<string> allIds = new List<string>();
+            int id = (int)NextId(mesh.GetType(), true);
+            List<int> allIds = new List<int>();
 
             for (int i = 0; i < mesh.MeshFaces.Count; i++)
             {
                 success &= ComCall(Engine.GSA.Convert.ToGsaString(mesh,id,i));
                 allIds.Add(id);
-                id = (int.Parse(id) + 1).ToString();
-                mesh.CustomData[AdapterId + "-AllIds"] = allIds;
+                id++;
+                mesh.CustomData[AdapterId] = allIds;
             }
 
             return success;
