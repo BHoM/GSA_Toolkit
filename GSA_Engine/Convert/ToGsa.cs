@@ -414,13 +414,14 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        public static string ToGsaString(this FEMesh mesh, string index, int faceID)
+        public static string ToGsaString(this FEMesh mesh, int index, int faceID)
         {
 
             string command = "EL.2";
             string type;
 
             FEMeshFace face = mesh.MeshFaces[faceID];
+            face.CustomData[AdapterID] = index;
 
             //TODO: Implement QUAD8 and TRI6
             if (face.NodeListIndices.Count == 3)
