@@ -1,6 +1,8 @@
 ﻿using BH.oM.Common.Materials;
 using BH.oM.Structure.Elements;
-using BH.oM.Structure.Properties;
+using BH.oM.Structure.Properties.Section;
+using BH.oM.Structure.Properties.Surface;
+using BH.oM.Structure.Properties.Constraint;
 using System;
 using System.Collections.Generic;
 
@@ -44,9 +46,9 @@ namespace BH.Adapter.GSA
             {typeof(Bar), new List<Type> { typeof(ISectionProperty), typeof(Node) } },
             {typeof(ISectionProperty), new List<Type> { typeof(Material) } },
             {typeof(RigidLink), new List<Type> { typeof(LinkConstraint), typeof(Node) } },
-            {typeof(MeshFace), new List<Type> { typeof(IProperty2D), typeof(Node) } },
-            {typeof(FEMesh), new List<Type> { typeof(IProperty2D), typeof(Node) } },
-            {typeof(IProperty2D), new List<Type> { typeof(Material) } }
+            {typeof(MeshFace), new List<Type> { typeof(ISurfaceProperty), typeof(Node) } },
+            {typeof(FEMesh), new List<Type> { typeof(ISurfaceProperty), typeof(Node) } },
+            {typeof(ISurfaceProperty), new List<Type> { typeof(Material) } }
         };
 
 

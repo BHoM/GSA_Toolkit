@@ -1,7 +1,9 @@
 ﻿using BH.Engine.Serialiser;
 using BH.oM.Common.Materials;
 using BH.oM.Structure.Elements;
-using BH.oM.Structure.Properties;
+using BH.oM.Structure.Properties.Section;
+using BH.oM.Structure.Properties.Surface;
+using BH.oM.Structure.Properties.Constraint;
 using BH.oM.Structure.Loads;
 using BH.oM.Geometry;
 using BH.oM.Base;
@@ -30,7 +32,7 @@ namespace BH.Engine.GSA
                 return "MAT";
             else if (type == typeof(ISectionProperty))
                 return "PROP_SEC";
-            else if (type == typeof(IProperty2D))
+            else if (type == typeof(ISurfaceProperty))
                 return "PROP_2D";
             else if (type == typeof(MeshFace))
                 return "EL";
