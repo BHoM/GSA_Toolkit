@@ -5,6 +5,10 @@ using BHL = BH.oM.Structure.Loads;
 using BH.oM.Geometry;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.Properties;
+using BH.oM.Structure.Properties.Section;
+using BH.oM.Structure.Properties.Section.ShapeProfiles;
+using BH.oM.Structure.Properties.Surface;
+using BH.oM.Structure.Properties.Constraint;
 using Interop.gsa_8_7;
 using System;
 using System.Collections.Generic;
@@ -202,7 +206,7 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        public static List<MeshFace> ToBHoMMeshFace(IEnumerable<GsaElement> gsaElements, Dictionary<string, IProperty2D> props, Dictionary<string, Node> nodes)
+        public static List<MeshFace> ToBHoMMeshFace(IEnumerable<GsaElement> gsaElements, Dictionary<string, ISurfaceProperty> props, Dictionary<string, Node> nodes)
         {
             List<MeshFace> faceList = new List<MeshFace>();
 
@@ -234,7 +238,7 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        public static List<FEMesh> ToBHoMFEMesh(IEnumerable<GsaElement> gsaElements, Dictionary<string, IProperty2D> props, Dictionary<string, Node> nodes)
+        public static List<FEMesh> ToBHoMFEMesh(IEnumerable<GsaElement> gsaElements, Dictionary<string, ISurfaceProperty> props, Dictionary<string, Node> nodes)
         {
             List<FEMesh> meshList = new List<FEMesh>();
 
@@ -725,9 +729,9 @@ namespace BH.Engine.GSA
         }
 
         /***************************************/
-        public static IProperty2D ToBHoMProperty2d(string gsaString, Dictionary<string, BHM.Material> materials)
+        public static ISurfaceProperty ToBHoMProperty2d(string gsaString, Dictionary<string, BHM.Material> materials)
         {
-            IProperty2D panProp = null;
+            ISurfaceProperty panProp = null;
 
             if (gsaString == "")
             {

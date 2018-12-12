@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using BH.oM.Structure.Loads;
 using BH.oM.Structure.Elements;
-using BH.oM.Structure.Properties;
+using BH.oM.Structure.Properties.Section;
 using BH.oM.Base;
 using BH.Engine.GSA;
 

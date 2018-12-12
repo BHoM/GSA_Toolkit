@@ -2,7 +2,9 @@
 using BH.oM.Base;
 using BH.oM.Common.Materials;
 using BH.oM.Structure.Elements;
-using BH.oM.Structure.Properties;
+using BH.oM.Structure.Properties.Section;
+using BH.oM.Structure.Properties.Surface;
+using BH.oM.Structure.Properties.Constraint;
 using BH.oM.Structure.Loads;
 using Interop.gsa_8_7;
 using System;
@@ -42,7 +44,7 @@ namespace BH.Adapter.GSA
                 return ReadMeshFace(indices as dynamic);
             if (type == typeof(FEMesh))
                 return ReadFEMesh(indices as dynamic);
-            if (type == typeof(IProperty2D))
+            if (type == typeof(ISurfaceProperty))
                 return ReadProperty2d(indices as dynamic);
             if (type == typeof(Loadcase))
                 return ReadLoadCases(indices as dynamic);
@@ -183,7 +185,7 @@ namespace BH.Adapter.GSA
 
         /***************************************/
 
-        public List<IProperty2D> ReadProperty2d(List<string> ids = null)
+        public List<ISurfaceProperty> ReadProperty2d(List<string> ids = null)
         {
             List<Material> matList = ReadMaterials(null, true);
             Dictionary<string, Material> materials = matList.ToDictionary(x => x.CustomData[AdapterId].ToString());
@@ -206,10 +208,10 @@ namespace BH.Adapter.GSA
             GsaElement[] gsaElements = new GsaElement[potentialMeshRefs.Length];
             m_gsaCom.Elements(potentialMeshRefs, out gsaElements);
 
-            List<IProperty2D> secPropList = ReadProperty2d();
+            List<ISurfaceProperty> secPropList = ReadProperty2d();
             List<Node> nodeList = ReadNodes();
 
-            Dictionary<string, IProperty2D> props = secPropList.ToDictionary(x => x.CustomData[AdapterId].ToString());
+            Dictionary<string, ISurfaceProperty> props = secPropList.ToDictionary(x => x.CustomData[AdapterId].ToString());
             Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.CustomData[AdapterId].ToString());
 
             return Engine.GSA.Convert.ToBHoMMeshFace(gsaElements, props, nodes);
@@ -224,10 +226,10 @@ namespace BH.Adapter.GSA
             GsaElement[] gsaElements = new GsaElement[potentialMeshRefs.Length];
             m_gsaCom.Elements(potentialMeshRefs, out gsaElements);
 
-            List<IProperty2D> secPropList = ReadProperty2d();
+            List<ISurfaceProperty> secPropList = ReadProperty2d();
             List<Node> nodeList = ReadNodes();
 
-            Dictionary<string, IProperty2D> props = secPropList.ToDictionary(x => x.CustomData[AdapterId].ToString());
+            Dictionary<string, ISurfaceProperty> props = secPropList.ToDictionary(x => x.CustomData[AdapterId].ToString());
             Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.CustomData[AdapterId].ToString());
 
             return Engine.GSA.Convert.ToBHoMFEMesh(gsaElements, props, nodes);
