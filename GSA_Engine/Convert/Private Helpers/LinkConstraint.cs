@@ -27,7 +27,7 @@ namespace BH.Engine.GSA
                 str += "-";
             }
 
-            if (constr.YtoY || constr.YtoZZ || constr.YtoZZ)
+            if (constr.YtoY || constr.YtoXX || constr.YtoZZ)
             {
                 str += "Y:";
 
