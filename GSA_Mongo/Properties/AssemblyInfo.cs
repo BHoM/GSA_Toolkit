@@ -30,7 +30,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("GSA_Mongo")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Buro Happold")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("GSA_Mongo")]
 [assembly: AssemblyCopyright("Copyright © https://github.com/BHoM")]
 [assembly: AssemblyTrademark("")]

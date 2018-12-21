@@ -29,7 +29,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("GSA_Adapter")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Buro Happold")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("GSA_Adapter")]
 [assembly: AssemblyCopyright("Copyright © https://github.com/BHoM")]
 [assembly: AssemblyTrademark("")]
