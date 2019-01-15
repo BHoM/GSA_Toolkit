@@ -859,7 +859,7 @@ namespace BH.Engine.GSA
             else
                 con = null;
 
-            Node node = new Node { Position = pos, Constraint = con };
+            Node node = Structure.Create.Node( pos,"", con );
             node.ApplyTaggedName(name);
             node.CustomData.Add(AdapterID, id);
             return node;
