@@ -21,6 +21,7 @@
  */
 
 using BH.Engine.Serialiser;
+using BH.Engine.Structure;
 using BH.oM.Common.Materials;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.Properties.Section;
@@ -291,8 +292,8 @@ namespace BH.Engine.GSA
             string name = node.TaggedName();
 
             string restraint = GetRestraintString(node);
-
-            string str = command + ", " + index + ", " + name + " , NO_RGB, " + node.Position.X + " , " + node.Position.Y + " , " + node.Position.Z + ", NO_GRID, " + 0 + "," + restraint;
+            Point position = node.Position();
+            string str = command + ", " + index + ", " + name + " , NO_RGB, " + position.X + " , " + position.Y + " , " + position.Z + ", NO_GRID, " + 0 + "," + restraint;
             return str;
         }
 
