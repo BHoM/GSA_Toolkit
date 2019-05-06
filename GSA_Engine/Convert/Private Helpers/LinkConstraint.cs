@@ -21,7 +21,7 @@
  */
 
 using BH.oM.Geometry;
-using BH.oM.Structure.Properties.Constraint;
+using BH.oM.Structure.Constraints;
 using BH.Engine.Structure;
 using System;
 using System.Collections.Generic;

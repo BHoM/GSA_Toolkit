@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BH.oM.Common;
 using BH.oM.Structure.Loads;
 using Interop.gsa_8_7;
 
@@ -37,7 +36,7 @@ namespace BH.Engine.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
-        public static double Factor(this PointForce load, double[] unitType)
+        public static double Factor(this PointLoad load, double[] unitType)
         {
             return unitType[(int)UnitType.FORCE];
         }
@@ -71,7 +70,7 @@ namespace BH.Engine.GSA
         }
 
         /***************************************************/
-        public static double Factor(this AreaUniformalyDistributedLoad load, double[] unitType)
+        public static double Factor(this AreaUniformlyDistributedLoad load, double[] unitType)
         {
             return unitType[(int)UnitType.FORCE];
         }

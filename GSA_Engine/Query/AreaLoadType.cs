@@ -31,7 +31,7 @@ namespace BH.Engine.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
-        public static string AreaLoadTypeString(this AreaUniformalyDistributedLoad load)
+        public static string AreaLoadTypeString(this AreaUniformlyDistributedLoad load)
         {
             return "CONS";
         }

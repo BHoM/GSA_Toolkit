@@ -22,15 +22,15 @@
 
 using BH.Engine.Serialiser;
 using BH.Engine.Structure;
-using BHM = BH.oM.Common.Materials;
+using BHM = BH.oM.Physical.Materials;
 using BHL = BH.oM.Structure.Loads;
+using BHMF = BH.oM.Structure.MaterialFragments;
 using BH.oM.Geometry;
 using BH.oM.Structure.Elements;
-using BH.oM.Structure.Properties;
-using BH.oM.Structure.Properties.Section;
-using BH.oM.Structure.Properties.Section.ShapeProfiles;
-using BH.oM.Structure.Properties.Surface;
-using BH.oM.Structure.Properties.Constraint;
+using BH.oM.Structure.SectionProperties;
+using BH.oM.Geometry.ShapeProfiles;
+using BH.oM.Structure.SurfaceProperties;
+using BH.oM.Structure.Constraints;
 using Interop.gsa_8_7;
 using System;
 using System.Collections.Generic;
@@ -228,35 +228,35 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        public static List<MeshFace> ToBHoMMeshFace(IEnumerable<GsaElement> gsaElements, Dictionary<string, ISurfaceProperty> props, Dictionary<string, Node> nodes)
-        {
-            List<MeshFace> faceList = new List<MeshFace>();
+        //public static List<MeshFace> ToBHoMMeshFace(IEnumerable<GsaElement> gsaElements, Dictionary<string, ISurfaceProperty> props, Dictionary<string, Node> nodes)
+        //{
+        //    List<MeshFace> faceList = new List<MeshFace>();
 
-            foreach (GsaElement gsaMesh in gsaElements)
-            {
-                switch (gsaMesh.eType)
-                {
-                    case 5://Quad4      //TODO: Quad8 and Tri6
-                    case 7://Tri3
-                        break;
-                    default:
-                        continue;
+        //    foreach (GsaElement gsaMesh in gsaElements)
+        //    {
+        //        switch (gsaMesh.eType)
+        //        {
+        //            case 5://Quad4      //TODO: Quad8 and Tri6
+        //            case 7://Tri3
+        //                break;
+        //            default:
+        //                continue;
 
-                }
+        //        }
 
-                MeshFace face = new MeshFace()
-                {
-                    Nodes = gsaMesh.Topo.Select(x => nodes[x.ToString()]).ToList(),
-                    Property = props[gsaMesh.Property.ToString()]
-                };
+        //        MeshFace face = new MeshFace()
+        //        {
+        //            Nodes = gsaMesh.Topo.Select(x => nodes[x.ToString()]).ToList(),
+        //            Property = props[gsaMesh.Property.ToString()]
+        //        };
 
-                face.ApplyTaggedName(gsaMesh.Name);
-                face.CustomData[AdapterID] = gsaMesh.Ref;
-                faceList.Add(face);
+        //        face.ApplyTaggedName(gsaMesh.Name);
+        //        face.CustomData[AdapterID] = gsaMesh.Ref;
+        //        faceList.Add(face);
 
-            }
-            return faceList;
-        }
+        //    }
+        //    return faceList;
+        //}
 
         /***************************************/
 
@@ -277,7 +277,7 @@ namespace BH.Engine.GSA
 
                 FEMesh mesh = new FEMesh()
                 {
-                    MeshFaces = new List<FEMeshFace>() { new FEMeshFace() { NodeListIndices = Enumerable.Range(0, gsaMesh.NumTopo).ToList() } },
+                    Faces = new List<FEMeshFace>() { new FEMeshFace() { NodeListIndices = Enumerable.Range(0, gsaMesh.NumTopo).ToList() } },
                     Nodes = gsaMesh.Topo.Select(x => nodes[x.ToString()]).ToList(),
                     Property = props[gsaMesh.Property.ToString()]
                 };
@@ -327,7 +327,7 @@ namespace BH.Engine.GSA
             if (gStr.Length < 11)
                 return null;
 
-            BHM.MaterialType type = GetTypeFromString(gStr[5]);
+            BHMF.MaterialType type = GetTypeFromString(gStr[5]);
 
             double E, v, tC, G, rho;
 
@@ -342,7 +342,29 @@ namespace BH.Engine.GSA
             if (!double.TryParse(gStr[9], out rho))
                 return null;
 
-            BHM.Material mat = Engine.Common.Create.Material("", type, E, v, tC, rho);
+            BHM.Material mat;
+
+            switch (type)
+            {
+                case BHMF.MaterialType.Steel:
+                    mat = Engine.Structure.Create.SteelMaterial("", E, v, tC, rho);
+                    break;
+                case BHMF.MaterialType.Concrete:
+                    mat = Engine.Structure.Create.ConcreteMaterial("", E, v, tC, rho);
+                    break;
+                case BHMF.MaterialType.Timber:
+                case BHMF.MaterialType.Rebar:
+                case BHMF.MaterialType.Tendon:
+                case BHMF.MaterialType.Glass:
+                case BHMF.MaterialType.Aluminium:
+                case BHMF.MaterialType.Cable:
+                case BHMF.MaterialType.Undefined:
+                default:
+                    mat = new BHM.Material() { Density = rho };
+                    Engine.Reflection.Compute.RecordWarning("Pulling of material of type " + type.ToString() + " currently not implemented. Empty material with no structural proeprties will be provided");
+                    break;
+            }
+
             mat.ApplyTaggedName(gStr[3]);
 
             mat.CustomData.Add(AdapterID, int.Parse(gStr[1]));
@@ -546,7 +568,7 @@ namespace BH.Engine.GSA
                             W = double.Parse(desc[3]) * factor;
                             T = double.Parse(desc[4]) * factor;
                             t = double.Parse(desc[5]) * factor;
-                            dimensions = Structure.Create.ISectionProfile(D, W, T, t, 0, 0);
+                            dimensions = Geometry.Create.ISectionProfile(D, W, T, t, 0, 0);
                             break;
                         case "GI":
                             D = double.Parse(desc[2]) * factor;
@@ -555,12 +577,12 @@ namespace BH.Engine.GSA
                             Tw = double.Parse(desc[5]) * factor;
                             Tt = double.Parse(desc[6]) * factor;
                             Tb = double.Parse(desc[7]) * factor;
-                            dimensions = Structure.Create.FabricatedISectionProfile(D, Wt, Wb, Tw, Tt, Tb, 0);
+                            dimensions = Geometry.Create.FabricatedISectionProfile(D, Wt, Wb, Tw, Tt, Tb, 0);
                             break;
                         case "CHS":
                             D = double.Parse(desc[2]) * factor;
                             t = double.Parse(desc[3]) * factor;
-                            dimensions = Structure.Create.TubeProfile(D, t);
+                            dimensions = Geometry.Create.TubeProfile(D, t);
                             break;
                         case "RHS":
                             D = double.Parse(desc[2]) * factor;
@@ -568,39 +590,39 @@ namespace BH.Engine.GSA
                             T = double.Parse(desc[4]) * factor;
                             t = double.Parse(desc[5]) * factor;
                             if (T == t)
-                                dimensions = Structure.Create.BoxProfile(D, W, T, 0, 0); //TODO: Additional checks for fabricated/Standard
+                                dimensions = Geometry.Create.BoxProfile(D, W, T, 0, 0); //TODO: Additional checks for fabricated/Standard
                             else
-                                dimensions = Structure.Create.FabricatedBoxProfile(D, W, T, t, t, 0);
+                                dimensions = Geometry.Create.FabricatedBoxProfile(D, W, T, t, t, 0);
                             break;
                         case "R":
                             D = double.Parse(desc[2]) * factor;
                             W = double.Parse(desc[3]) * factor;
-                            dimensions = Structure.Create.RectangleProfile(D, W, 0);
+                            dimensions = Geometry.Create.RectangleProfile(D, W, 0);
                             break;
                         case "C":
                             D = double.Parse(desc[2]) * factor;
-                            dimensions = Structure.Create.CircleProfile(D);
+                            dimensions = Geometry.Create.CircleProfile(D);
                             break;
                         case "T":
                             D = double.Parse(desc[2]) * factor;
                             W = double.Parse(desc[3]) * factor;
                             T = double.Parse(desc[4]) * factor;
                             t = double.Parse(desc[5]) * factor;
-                            dimensions = Structure.Create.TSectionProfile(D, W, T, t, 0, 0);
+                            dimensions = Geometry.Create.TSectionProfile(D, W, T, t, 0, 0);
                             break;
                         case "A":
                             D = double.Parse(desc[2]) * factor;
                             W = double.Parse(desc[3]) * factor;
                             T = double.Parse(desc[4]) * factor;
                             t = double.Parse(desc[5]) * factor;
-                            dimensions = Structure.Create.AngleProfile(D, W, T, t, 0, 0);
+                            dimensions = Geometry.Create.AngleProfile(D, W, T, t, 0, 0);
                             break;
                         case "CH":
                             D = double.Parse(desc[2]) * factor;
                             W = double.Parse(desc[3]) * factor;
                             T = double.Parse(desc[4]) * factor;
                             t = double.Parse(desc[5]) * factor;
-                            dimensions = Structure.Create.ChannelProfile(D, W, T, t, 0, 0);
+                            dimensions = Geometry.Create.ChannelProfile(D, W, T, t, 0, 0);
                             break;
                         default:
                             Reflection.Compute.RecordError("Section convertion for the type: " + type + " is not implmented in the GSA adapter");
@@ -610,22 +632,22 @@ namespace BH.Engine.GSA
 
 
 
-                    switch (materials[materialId].Type)
+                    switch (materials[materialId].MaterialType())
                     {
-                        case BHM.MaterialType.Steel:
+                        case BHMF.MaterialType.Steel:
                             secProp = Structure.Create.SteelSectionFromProfile(dimensions);
                             break;
-                        case BHM.MaterialType.Concrete:
+                        case BHMF.MaterialType.Concrete:
                             secProp = Structure.Create.ConcreteSectionFromProfile(dimensions);
                             break;
-                        case BHM.MaterialType.Aluminium:
-                        case BHM.MaterialType.Timber:
-                        case BHM.MaterialType.Rebar:
-                        case BHM.MaterialType.Tendon:
-                        case BHM.MaterialType.Glass:
-                        case BHM.MaterialType.Cable:
+                        case BHMF.MaterialType.Aluminium:
+                        case BHMF.MaterialType.Timber:
+                        case BHMF.MaterialType.Rebar:
+                        case BHMF.MaterialType.Tendon:
+                        case BHMF.MaterialType.Glass:
+                        case BHMF.MaterialType.Cable:
                         default:
-                            Reflection.Compute.RecordError("Material type " + materials[materialId].Type.ToString() + " for cross section not implemented");
+                            Reflection.Compute.RecordError("Material type " + materials[materialId].MaterialType().ToString() + " for cross section not implemented");
                             return null;
                     }
                 }
