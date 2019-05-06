@@ -25,7 +25,7 @@ using System.Linq;
 using System.Collections.Generic;
 using BH.oM.Structure.Loads;
 using BH.oM.Structure.Elements;
-using BH.oM.Structure.Properties.Section;
+using BH.oM.Structure.SectionProperties;
 using BH.oM.Base;
 using BH.Engine.GSA;
 
@@ -119,7 +119,7 @@ namespace BH.Adapter.GSA
             int id = (int)NextId(mesh.GetType(), true);
             List<int> allIds = new List<int>();
 
-            for (int i = 0; i < mesh.MeshFaces.Count; i++)
+            for (int i = 0; i < mesh.Faces.Count; i++)
             {
                 success &= ComCall(Engine.GSA.Convert.ToGsaString(mesh,id,i));
                 allIds.Add(id);

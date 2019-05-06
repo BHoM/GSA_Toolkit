@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BH.oM.Common;
 using BH.oM.Structure.Loads;
 
 namespace BH.Engine.GSA
@@ -36,7 +35,7 @@ namespace BH.Engine.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
-        public static string ForceTypeString(this PointForce load)
+        public static string ForceTypeString(this PointLoad load)
         {
             return "LOAD_NODE";
         }
@@ -92,7 +91,7 @@ namespace BH.Engine.GSA
 
         /***************************************************/
 
-        public static string ForceTypeString(this AreaUniformalyDistributedLoad load)
+        public static string ForceTypeString(this AreaUniformlyDistributedLoad load)
         {
             return "LOAD_2D_FACE";
         }

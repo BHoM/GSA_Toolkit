@@ -37,7 +37,7 @@ namespace BH.Engine.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
-        public static Vector[] TranslationVector(this PointForce load)
+        public static Vector[] TranslationVector(this PointLoad load)
         {
             Vector[] loadVec = { load.Force, BH.Engine.Geometry.Create.Vector() };
             return loadVec;
@@ -77,7 +77,7 @@ namespace BH.Engine.GSA
 
         /***************************************************/
 
-        public static Vector[] TranslationVector(this AreaUniformalyDistributedLoad load)
+        public static Vector[] TranslationVector(this AreaUniformlyDistributedLoad load)
         {
             Vector[] forceVecs = { load.Pressure, BH.Engine.Geometry.Create.Vector() };
             return forceVecs;

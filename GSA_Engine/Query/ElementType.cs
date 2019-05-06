@@ -49,10 +49,10 @@ namespace BH.Engine.GSA
 
         /***************************************************/
 
-        public static string ElementType(this BHoMGroup<MeshFace> group)
-        {
-            return "ELEMENT";
-        }
+        //public static string ElementType(this BHoMGroup<MeshFace> group)
+        //{
+        //    return "ELEMENT";
+        //}
 
         /***************************************************/
 

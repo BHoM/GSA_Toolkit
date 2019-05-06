@@ -25,12 +25,12 @@ using System.Linq;
 using BH.oM.Structure.Elements;
 using BH.oM.Geometry;
 using BH.oM.Structure.Loads;
-using BH.oM.Structure.Properties.Section;
-using BH.oM.Structure.Properties.Surface;
-using BH.oM.Structure.Properties.Constraint;
+using BH.oM.Structure.SectionProperties;
+using BH.oM.Structure.SurfaceProperties;
+using BH.oM.Structure.Constraints;
 using BH.Engine.Structure;
 using BH.Adapter.GSA;
-using BH.oM.Common.Materials;
+using BH.oM.Physical.Materials;
 using BH.oM.DataManipulation.Queries;
 using BH.oM.Structure.Results;
 using BH.oM.Base;
@@ -93,39 +93,39 @@ namespace GSA_Test
             List<object> test = app.Pull(new FilterQuery() { Type = typeof(Node) }).ToList();
         }
 
-        private static void TestPushMeshFace()
-        {
-            //C: \Users\inaslund\Documents\GSA sandbox\SimpleBeam Pt load.gwb
-            Point p1 = new Point { X = 0, Y = 0, Z = 0 };
-            Point p2 = new Point { X = 1, Y = 0, Z = 0 };
-            Point p3 = new Point { X = 1, Y = 1, Z = 0 };
-            Point p4 = new Point { X = 0, Y = 1, Z = 0 };
+        //private static void TestPushMeshFace()
+        //{
+        //    //C: \Users\inaslund\Documents\GSA sandbox\SimpleBeam Pt load.gwb
+        //    Point p1 = new Point { X = 0, Y = 0, Z = 0 };
+        //    Point p2 = new Point { X = 1, Y = 0, Z = 0 };
+        //    Point p3 = new Point { X = 1, Y = 1, Z = 0 };
+        //    Point p4 = new Point { X = 0, Y = 1, Z = 0 };
 
-            Point p5 = new Point { X = 2, Y = 1, Z = 0 };
-            Point p6 = new Point { X = 2, Y = 0, Z = 0 };
+        //    Point p5 = new Point { X = 2, Y = 1, Z = 0 };
+        //    Point p6 = new Point { X = 2, Y = 0, Z = 0 };
 
-            Constraint6DOF con = BH.Engine.Structure.Create.Constraint6DOF("hi", new List<bool>() { true, true, false, false, false, false }, new List<double>() { 0, 0, 100, 0, 0, 0 });
+        //    Constraint6DOF con = BH.Engine.Structure.Create.Constraint6DOF("hi", new List<bool>() { true, true, false, false, false, false }, new List<double>() { 0, 0, 100, 0, 0, 0 });
 
-            Node n1 = BH.Engine.Structure.Create.Node( p1,"" , con );
-            Node n2 = BH.Engine.Structure.Create.Node(p2);
-            Node n3 = BH.Engine.Structure.Create.Node( p3);
-            Node n4 = BH.Engine.Structure.Create.Node( p4);
-            Node n5 = BH.Engine.Structure.Create.Node( p5);
-            Node n6 = BH.Engine.Structure.Create.Node( p6);
+        //    Node n1 = BH.Engine.Structure.Create.Node( p1,"" , con );
+        //    Node n2 = BH.Engine.Structure.Create.Node(p2);
+        //    Node n3 = BH.Engine.Structure.Create.Node( p3);
+        //    Node n4 = BH.Engine.Structure.Create.Node( p4);
+        //    Node n5 = BH.Engine.Structure.Create.Node( p5);
+        //    Node n6 = BH.Engine.Structure.Create.Node( p6);
             
-            LoadingPanelProperty prop = new LoadingPanelProperty { LoadApplication = LoadPanelSupportConditions.AllSides, ReferenceEdge = 1, Material = new Material() };
+        //    LoadingPanelProperty prop = new LoadingPanelProperty { LoadApplication = LoadPanelSupportConditions.AllSides, ReferenceEdge = 1, Material = new Material() };
 
-            MeshFace face = new MeshFace { Nodes = new List<Node> { n1, n2, n3, n4 }, Property = prop };
-            MeshFace face2 = new MeshFace { Nodes = new List<Node> { n2, n3, n5 }, Property = prop };
+        //    MeshFace face = new MeshFace { Nodes = new List<Node> { n1, n2, n3, n4 }, Property = prop };
+        //    MeshFace face2 = new MeshFace { Nodes = new List<Node> { n2, n3, n5 }, Property = prop };
 
-            List<MeshFace> faces = new List<MeshFace> { face, face2 };
-            //BH.Engine.Reflection.Query.DistinctProperties(faces, typeof(Node));
-            BHoMGroup<MeshFace> faceGroup = new BHoMGroup<MeshFace> { Elements = new List<MeshFace> { face, face2 } };
+        //    List<MeshFace> faces = new List<MeshFace> { face, face2 };
+        //    //BH.Engine.Reflection.Query.DistinctProperties(faces, typeof(Node));
+        //    BHoMGroup<MeshFace> faceGroup = new BHoMGroup<MeshFace> { Elements = new List<MeshFace> { face, face2 } };
 
-            GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\EmptyFile.gwb");
-            app.Push(faces);
-            app.Push(new List<BHoMGroup<MeshFace>> { faceGroup });
-        }
+        //    GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\EmptyFile.gwb");
+        //    app.Push(faces);
+        //    app.Push(new List<BHoMGroup<MeshFace>> { faceGroup });
+        //}
 
         private static void TestPushRigidLinks()
         {
@@ -197,7 +197,7 @@ namespace GSA_Test
             BHoMGroup<BHoMObject> bhGr = new BHoMGroup<BHoMObject>() { Name = "Test" };
 
             BarPointLoad barPointLoad = Create.BarPointLoad(lCase, bGr, 3.2, force1, moment1);
-            PointForce pForce = Create.PointForce(lCase,nGr, force1, moment1);
+            PointLoad pForce = Create.PointLoad(lCase,nGr, force1, moment1);
             PointDisplacement pDisp = Create.PointDisplacement(lCase,nGr, force1, moment1);
             BarUniformlyDistributedLoad bUniform = Create.BarUniformlyDistributedLoad(lCase,bGr, force1, moment1);
             BarVaryingDistributedLoad bVary = Create.BarVaryingDistributedLoad(lCase,bGr, 1.6, force1, moment1, 2.3, force2, moment2);
@@ -339,26 +339,26 @@ namespace GSA_Test
             bars2b.Add(bar11b);
             bars2b.Add(bar12b);
 
-            ISectionProperty sec1a = new ExplicitSection();
-            sec1a.Material = BH.Engine.Common.Create.Material("Material1", MaterialType.Concrete, 10, 10, 10, 10);
-            sec1a.Name = "Section 1";
+            //ISectionProperty sec1a = new ExplicitSection();
+            //sec1a.Material = BH.Engine.Common.Create.Material("Material1", MaterialType.Concrete, 10, 10, 10, 10);
+            //sec1a.Name = "Section 1";
 
-            ISectionProperty sec1b = new ExplicitSection();
-            sec1b.Material = BH.Engine.Common.Create.Material("Material1", MaterialType.Concrete, 10, 10, 10, 10);
-            sec1b.Name = "Section 1";
+            //ISectionProperty sec1b = new ExplicitSection();
+            //sec1b.Material = BH.Engine.Common.Create.Material("Material1", MaterialType.Concrete, 10, 10, 10, 10);
+            //sec1b.Name = "Section 1";
 
-            ISectionProperty sec2 = new ExplicitSection();
-            sec2.Material = BH.Engine.Common.Create.Material("Material2", MaterialType.Concrete, 10, 10, 10, 10);
-            sec2.Name = "Section 2";
+            //ISectionProperty sec2 = new ExplicitSection();
+            //sec2.Material = BH.Engine.Common.Create.Material("Material2", MaterialType.Concrete, 10, 10, 10, 10);
+            //sec2.Name = "Section 2";
 
-            ISectionProperty sec3 = new ExplicitSection();
-            sec3.Material = BH.Engine.Common.Create.Material("Material2", MaterialType.Concrete, 10, 10, 10, 10);
-            sec3.Name = "Section 3";
+            //ISectionProperty sec3 = new ExplicitSection();
+            //sec3.Material = BH.Engine.Common.Create.Material("Material2", MaterialType.Concrete, 10, 10, 10, 10);
+            //sec3.Name = "Section 3";
 
-            foreach (Bar b in bars1.Concat(bars2a).Concat(bars2b))
-            {
-                b.SectionProperty = sec1a;
-            }
+            //foreach (Bar b in bars1.Concat(bars2a).Concat(bars2b))
+            //{
+            //    b.SectionProperty = sec1a;
+            //}
 
 
 
@@ -398,7 +398,7 @@ namespace GSA_Test
 
         //    GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\EmptyFile.gwb");
 
-        //    BH.oM.Structure.Properties.SectionProperty sec1a = new BH.oM.Structure.Properties.ExplicitSectionProperty();
+        //    BH.oM.Structure.SectionPropertiesProperty sec1a = new BH.oM.Structure.Properties.ExplicitSectionProperty();
         //    sec1a.Material = new BH.oM.Materials.Material("Material1", BH.oM.Materials.MaterialType.Concrete, 10, 10, 10, 10, 10);
         //    sec1a.Name = "Section 1";
 

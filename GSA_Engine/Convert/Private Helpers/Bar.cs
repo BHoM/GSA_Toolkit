@@ -23,7 +23,7 @@
 using BH.Engine.Structure;
 using BH.oM.Base;
 using BH.oM.Structure.Elements;
-using BH.oM.Structure.Properties.Constraint;
+using BH.oM.Structure.Constraints;
 
 namespace BH.Engine.GSA
 {

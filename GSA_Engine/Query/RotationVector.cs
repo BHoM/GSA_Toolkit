@@ -37,7 +37,7 @@ namespace BH.Engine.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
-        public static Vector[] RotationVector(this PointForce load)
+        public static Vector[] RotationVector(this PointLoad load)
         {
             Vector[] momentVecs = { load.Moment, BH.Engine.Geometry.Create.Vector() };
             return momentVecs;

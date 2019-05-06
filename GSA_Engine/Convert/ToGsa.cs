@@ -22,11 +22,11 @@
 
 using BH.Engine.Serialiser;
 using BH.Engine.Structure;
-using BH.oM.Common.Materials;
+using BH.oM.Physical.Materials;
 using BH.oM.Structure.Elements;
-using BH.oM.Structure.Properties.Section;
-using BH.oM.Structure.Properties.Surface;
-using BH.oM.Structure.Properties.Constraint;
+using BH.oM.Structure.SectionProperties;
+using BH.oM.Structure.SurfaceProperties;
+using BH.oM.Structure.Constraints;
 using BH.oM.Structure.Loads;
 using BH.oM.Geometry;
 using BH.oM.Base;
@@ -57,8 +57,6 @@ namespace BH.Engine.GSA
                 return "PROP_SEC";
             else if (type == typeof(ISurfaceProperty))
                 return "PROP_2D";
-            else if (type == typeof(MeshFace))
-                return "EL";
             else if (type == typeof(FEMesh))
                 return "EL";
             else if (type == typeof(RigidLink))
@@ -243,21 +241,36 @@ namespace BH.Engine.GSA
 
         private static string ToGsaString(this Material material, string index)
         {
-            string command = "MAT";
-            string num = index;//(GSA.GwaCommand("HIGHEST, PROP_SEC") + 1).ToString();
-            string mModel = "MAT_ELAS_ISO";
-            string name = material.TaggedName();
-            string colour = "NO_RGB";
-            string type = GetMaterialType(material).ToString();
-            string E = material.YoungsModulus.ToString();
-            string nu = material.PoissonsRatio.ToString();
-            string rho = material.Density.ToString();
-            string alpha = material.CoeffThermalExpansion.ToString();
-            string G = material.ShearModulus().ToString();
-            string damp = material.DampingRatio.ToString();
-            
-            string str = command + "," + num + "," + mModel + "," + name + "," + colour + "," + type + ",6," + E + "," + nu + "," + rho + "," + alpha + "," + G + "," + damp + ",0,0,NO_ENV";
-            return str;
+
+            if (!material.IsStructural())
+            {
+                Engine.Reflection.Compute.RecordWarning("Material with name " + material.Name + " is does not contain structural properties. Please check the material");
+                return "";
+            }
+
+            if (material.IsIsotropic())
+            {
+                string command = "MAT";
+                string num = index;
+                string mModel = "MAT_ELAS_ISO";
+                string name = material.TaggedName();
+                string colour = "NO_RGB";
+                string type = GetMaterialType(material).ToString();
+                string E = material.YoungsModulusIsotropic().ToString();
+                string nu = material.PoissonsRatioIsotropic().ToString();
+                string rho = material.Density.ToString();
+                string alpha = material.ThermalExpansionCoeffIsotropic().ToString();
+                string G = material.ShearModulusIsotropic().ToString();
+                string damp = material.DampingRatio().ToString();
+
+                string str = command + "," + num + "," + mModel + "," + name + "," + colour + "," + type + ",6," + E + "," + nu + "," + rho + "," + alpha + "," + G + "," + damp + ",0,0,NO_ENV";
+                return str;
+            }
+           else
+            {
+                Engine.Reflection.Compute.RecordWarning("GSA_Toolkit does currently only suport Isotropic material. Material with name " + material.Name + " have been NOT been pushed");
+                return "";
+            }
         }
 
         /***************************************/
@@ -401,41 +414,41 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        private static string ToGsaString(this MeshFace face, string index)
-        {
+        //private static string ToGsaString(this MeshFace face, string index)
+        //{
 
-            string command = "EL.2";
-            string type;
+        //    string command = "EL.2";
+        //    string type;
 
-            //TODO: Implement QUAD8 and TRI6
-            if (face.Nodes.Count == 3)
-                type = "TRI3";
-            else if (face.Nodes.Count == 4)
-                type = "QUAD4";
-            else
-                return "";
+        //    //TODO: Implement QUAD8 and TRI6
+        //    if (face.Nodes.Count == 3)
+        //        type = "TRI3";
+        //    else if (face.Nodes.Count == 4)
+        //        type = "QUAD4";
+        //    else
+        //        return "";
 
-            string name = face.TaggedName();
-
-
-            string propertyIndex = face.Property.CustomData[AdapterID].ToString();
-            int group = 0;
+        //    string name = face.TaggedName();
 
 
-            string topology = "";
+        //    string propertyIndex = face.Property.CustomData[AdapterID].ToString();
+        //    int group = 0;
 
-            foreach (Node n in face.Nodes)
-            {
-                topology += n.CustomData[AdapterID].ToString() + ",";
-            }
 
-            string dummy = CheckDummy(face);
-            //EL	1	gfdgdf	NO_RGB	QUAD4	1	1	1	2	3	4	0	0	NO_RLS	NO_OFFSET	DUMMY
-            //EL  2       NO_RGB TRI3    1   1   1   2   5   0   0   NO_RLS NO_OFFSET   DUMMY
+        //    string topology = "";
 
-            string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + propertyIndex + ", " + group + ", " +topology + " 0 , 0" + ", NO_RLS" + ", NO_OFFSET," + dummy;
-            return str;
-        }
+        //    foreach (Node n in face.Nodes)
+        //    {
+        //        topology += n.CustomData[AdapterID].ToString() + ",";
+        //    }
+
+        //    string dummy = CheckDummy(face);
+        //    //EL	1	gfdgdf	NO_RGB	QUAD4	1	1	1	2	3	4	0	0	NO_RLS	NO_OFFSET	DUMMY
+        //    //EL  2       NO_RGB TRI3    1   1   1   2   5   0   0   NO_RLS NO_OFFSET   DUMMY
+
+        //    string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + propertyIndex + ", " + group + ", " +topology + " 0 , 0" + ", NO_RLS" + ", NO_OFFSET," + dummy;
+        //    return str;
+        //}
 
         /***************************************/
 
@@ -445,7 +458,7 @@ namespace BH.Engine.GSA
             string command = "EL.2";
             string type;
 
-            FEMeshFace face = mesh.MeshFaces[faceID];
+            FEMeshFace face = mesh.Faces[faceID];
             face.CustomData[AdapterID] = index;
 
             //TODO: Implement QUAD8 and TRI6

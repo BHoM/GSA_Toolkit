@@ -20,17 +20,19 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BHM = BH.oM.Common.Materials;
+using BHM = BH.oM.Structure.MaterialFragments;
+using BHP = BH.oM.Physical.Materials;
+using BH.Engine.Structure;
 
 namespace BH.Engine.GSA
 {
     public static partial class Convert
     {
         /***************************************/
-        private static MaterialType GetMaterialType(BHM.Material material)
+        private static MaterialType GetMaterialType(BHP.Material material)
         {
 
-            switch (material.Type)
+            switch (material.MaterialType())
             {
                 case BHM.MaterialType.Aluminium:
                     return MaterialType.MT_ALUMINIUM;

@@ -24,7 +24,6 @@ using BH.Engine.GSA;
 using BH.oM.Base;
 using BH.oM.Common;
 using BH.oM.Structure.Elements;
-using BH.oM.Structure.Properties;
 using BH.oM.Structure.Results;
 using Interop.gsa_8_7;
 using System;

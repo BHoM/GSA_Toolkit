@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Analytical_oM">
+      <HintPath>..\..\BHoM\Build\Analytical_oM.dll</HintPath>
+    </Reference>
     <Reference Include="BHoM">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM\Build\BHoM.dll</HintPath>
@@ -45,7 +48,8 @@
       <HintPath>..\..\BHoM_Engine\Build\Common_Engine.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Common_oM">
+    <Reference Include="Common_oM, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM\Build\Common_oM.dll</HintPath>
     </Reference>
     <Reference Include="Geometry_Engine">
@@ -64,6 +68,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM_Engine\Build\Library_Engine.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="Physical_oM">
+      <HintPath>..\..\BHoM\Build\Physical_oM.dll</HintPath>
     </Reference>
     <Reference Include="Reflection_Engine">
       <SpecificVersion>False</SpecificVersion>
@@ -104,7 +111,6 @@
     <Compile Include="Convert\Private Helpers\Load.cs" />
     <Compile Include="Convert\Private Helpers\LoadCombination.cs" />
     <Compile Include="Convert\Private Helpers\Material.cs" />
-    <Compile Include="Convert\Private Helpers\MeshFace.cs" />
     <Compile Include="Convert\Private Helpers\Node.cs" />
     <Compile Include="Convert\Private Helpers\Property2d.cs" />
     <Compile Include="Convert\Private Helpers\SectionProperty.cs" />
