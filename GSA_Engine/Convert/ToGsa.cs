@@ -414,43 +414,6 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        //private static string ToGsaString(this MeshFace face, string index)
-        //{
-
-        //    string command = "EL.2";
-        //    string type;
-
-        //    //TODO: Implement QUAD8 and TRI6
-        //    if (face.Nodes.Count == 3)
-        //        type = "TRI3";
-        //    else if (face.Nodes.Count == 4)
-        //        type = "QUAD4";
-        //    else
-        //        return "";
-
-        //    string name = face.TaggedName();
-
-
-        //    string propertyIndex = face.Property.CustomData[AdapterID].ToString();
-        //    int group = 0;
-
-
-        //    string topology = "";
-
-        //    foreach (Node n in face.Nodes)
-        //    {
-        //        topology += n.CustomData[AdapterID].ToString() + ",";
-        //    }
-
-        //    string dummy = CheckDummy(face);
-        //    //EL	1	gfdgdf	NO_RGB	QUAD4	1	1	1	2	3	4	0	0	NO_RLS	NO_OFFSET	DUMMY
-        //    //EL  2       NO_RGB TRI3    1   1   1   2   5   0   0   NO_RLS NO_OFFSET   DUMMY
-
-        //    string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + propertyIndex + ", " + group + ", " +topology + " 0 , 0" + ", NO_RLS" + ", NO_OFFSET," + dummy;
-        //    return str;
-        //}
-
-        /***************************************/
 
         public static string ToGsaString(this FEMesh mesh, int index, int faceID)
         {
