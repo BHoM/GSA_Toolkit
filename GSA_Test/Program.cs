@@ -46,7 +46,6 @@ namespace GSA_Test
         {
             TestDesignCode();
             //TestPullNodes();
-            //TestPushMeshFace();
             //TestPushRigidLinks();
             //TestReadLinks();
             //TestExecuteCommand()
@@ -93,40 +92,7 @@ namespace GSA_Test
             List<object> test = app.Pull(new FilterQuery() { Type = typeof(Node) }).ToList();
         }
 
-        //private static void TestPushMeshFace()
-        //{
-        //    //C: \Users\inaslund\Documents\GSA sandbox\SimpleBeam Pt load.gwb
-        //    Point p1 = new Point { X = 0, Y = 0, Z = 0 };
-        //    Point p2 = new Point { X = 1, Y = 0, Z = 0 };
-        //    Point p3 = new Point { X = 1, Y = 1, Z = 0 };
-        //    Point p4 = new Point { X = 0, Y = 1, Z = 0 };
-
-        //    Point p5 = new Point { X = 2, Y = 1, Z = 0 };
-        //    Point p6 = new Point { X = 2, Y = 0, Z = 0 };
-
-        //    Constraint6DOF con = BH.Engine.Structure.Create.Constraint6DOF("hi", new List<bool>() { true, true, false, false, false, false }, new List<double>() { 0, 0, 100, 0, 0, 0 });
-
-        //    Node n1 = BH.Engine.Structure.Create.Node( p1,"" , con );
-        //    Node n2 = BH.Engine.Structure.Create.Node(p2);
-        //    Node n3 = BH.Engine.Structure.Create.Node( p3);
-        //    Node n4 = BH.Engine.Structure.Create.Node( p4);
-        //    Node n5 = BH.Engine.Structure.Create.Node( p5);
-        //    Node n6 = BH.Engine.Structure.Create.Node( p6);
-            
-        //    LoadingPanelProperty prop = new LoadingPanelProperty { LoadApplication = LoadPanelSupportConditions.AllSides, ReferenceEdge = 1, Material = new Material() };
-
-        //    MeshFace face = new MeshFace { Nodes = new List<Node> { n1, n2, n3, n4 }, Property = prop };
-        //    MeshFace face2 = new MeshFace { Nodes = new List<Node> { n2, n3, n5 }, Property = prop };
-
-        //    List<MeshFace> faces = new List<MeshFace> { face, face2 };
-        //    //BH.Engine.Reflection.Query.DistinctProperties(faces, typeof(Node));
-        //    BHoMGroup<MeshFace> faceGroup = new BHoMGroup<MeshFace> { Elements = new List<MeshFace> { face, face2 } };
-
-        //    GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\EmptyFile.gwb");
-        //    app.Push(faces);
-        //    app.Push(new List<BHoMGroup<MeshFace>> { faceGroup });
-        //}
-
+       
         private static void TestPushRigidLinks()
         {
             //C: \Users\inaslund\Documents\GSA sandbox\SimpleBeam Pt load.gwb

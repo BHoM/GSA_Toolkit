@@ -228,37 +228,6 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        //public static List<MeshFace> ToBHoMMeshFace(IEnumerable<GsaElement> gsaElements, Dictionary<string, ISurfaceProperty> props, Dictionary<string, Node> nodes)
-        //{
-        //    List<MeshFace> faceList = new List<MeshFace>();
-
-        //    foreach (GsaElement gsaMesh in gsaElements)
-        //    {
-        //        switch (gsaMesh.eType)
-        //        {
-        //            case 5://Quad4      //TODO: Quad8 and Tri6
-        //            case 7://Tri3
-        //                break;
-        //            default:
-        //                continue;
-
-        //        }
-
-        //        MeshFace face = new MeshFace()
-        //        {
-        //            Nodes = gsaMesh.Topo.Select(x => nodes[x.ToString()]).ToList(),
-        //            Property = props[gsaMesh.Property.ToString()]
-        //        };
-
-        //        face.ApplyTaggedName(gsaMesh.Name);
-        //        face.CustomData[AdapterID] = gsaMesh.Ref;
-        //        faceList.Add(face);
-
-        //    }
-        //    return faceList;
-        //}
-
-        /***************************************/
 
         public static List<FEMesh> ToBHoMFEMesh(IEnumerable<GsaElement> gsaElements, Dictionary<string, ISurfaceProperty> props, Dictionary<string, Node> nodes)
         {
