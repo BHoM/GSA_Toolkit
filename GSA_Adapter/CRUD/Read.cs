@@ -22,7 +22,7 @@
 
 using BH.Engine.GSA;
 using BH.oM.Base;
-using BH.oM.Physical.Materials;
+using BH.oM.Structure.MaterialFragments;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Structure.SurfaceProperties;
@@ -50,9 +50,7 @@ namespace BH.Adapter.GSA
                 return ReadBars(indices as dynamic);
             else if (type == typeof(ISectionProperty) || type.GetInterfaces().Contains(typeof(ISectionProperty)))
                 return ((List<ISectionProperty>)ReadSectionProperties(indices as dynamic)).Cast<BHoMObject>();
-            else if (type == typeof(Material))
-                return ReadMaterials(indices as dynamic);
-            else if (type == typeof(Material))
+            else if (type == typeof(IMaterialFragment))
                 return ReadMaterials(indices as dynamic);
             else if (type == typeof(LoadCombination))
                 return ReadLoadCombinations(indices as dynamic);
@@ -79,23 +77,23 @@ namespace BH.Adapter.GSA
         /**** Protected Methods                         ****/
         /***************************************************/
 
-        public List<Material> ReadMaterials(List<string> ids = null)
+        public List<IMaterialFragment> ReadMaterials(List<string> ids = null)
         {
             return ReadMaterials(ids, false);
         }
 
         /***************************************************/
 
-        public List<Material> ReadMaterials(List<string> ids = null, bool includeStandard = false)
+        public List<IMaterialFragment> ReadMaterials(List<string> ids = null, bool includeStandard = false)
         {
-            List<Material> materials = new List<Material>();
+            List<IMaterialFragment> materials = new List<IMaterialFragment>();
 
             string allProps = m_gsaCom.GwaCommand("GET_ALL, MAT").ToString();
             string[] matArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
             if (ids == null)
-                materials = matArr.Select(x => Engine.GSA.Convert.ToBHoMMaterial(x)).ToList();
+                materials = matArr.Select(x => Engine.GSA.Convert.ToBHoMMaterial(x)).Where(x => x != null).ToList();
             else
-                materials = matArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.ToBHoMMaterial(x)).ToList();
+                materials = matArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Engine.GSA.Convert.ToBHoMMaterial(x)).Where(x => x != null).ToList();
 
             if (includeStandard)
                 materials.AddRange(GetStandardGsaMaterials());
@@ -191,8 +189,8 @@ namespace BH.Adapter.GSA
 
         public List<ISectionProperty> ReadSectionProperties(List<string> ids = null)
         {
-            List<Material> matList = ReadMaterials(null, true);
-            Dictionary<string, Material> materials = matList.ToDictionary(x => x.CustomData[AdapterId].ToString());
+            List<IMaterialFragment> matList = ReadMaterials(null, true);
+            Dictionary<string, IMaterialFragment> materials = matList.ToDictionary(x => x.CustomData[AdapterId].ToString());
 
             string allProps = m_gsaCom.GwaCommand("GET_ALL, PROP_SEC").ToString();
             string[] proArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
@@ -207,8 +205,8 @@ namespace BH.Adapter.GSA
 
         public List<ISurfaceProperty> ReadProperty2d(List<string> ids = null)
         {
-            List<Material> matList = ReadMaterials(null, true);
-            Dictionary<string, Material> materials = matList.ToDictionary(x => x.CustomData[AdapterId].ToString());
+            List<IMaterialFragment> matList = ReadMaterials(null, true);
+            Dictionary<string, IMaterialFragment> materials = matList.ToDictionary(x => x.CustomData[AdapterId].ToString());
 
             string allProps = m_gsaCom.GwaCommand("GET_ALL, PROP_2D").ToString();
             string[] proArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
@@ -295,18 +293,24 @@ namespace BH.Adapter.GSA
 
         /***************************************/
 
-        private List<Material> GetStandardGsaMaterials()
+        private List<IMaterialFragment> GetStandardGsaMaterials()
         {
             // TODO: What about the other materials in MaterialType enum? Shouldn't they match?
             List<string> names = new List<string> { "STEEL", "CONC_SHORT", "CONC_LONG", "ALUMINIUM", "GLASS" };
 
-            List<Material> materials = new List<Material>();
-            foreach (string name in names)
-            {
-                Material mat = new Material { Name = "GSA Standard " + name };
-                mat.CustomData.Add(AdapterId, name);
-                materials.Add(mat);
-            }
+            List<IMaterialFragment> materials = new List<IMaterialFragment>();
+            materials.Add(new Steel() { Name = "GSA Standard STEEL", CustomData = new Dictionary<string, object> { { AdapterId, "STEEL" } } });
+            materials.Add(new Concrete() { Name = "GSA Standard CONC_SHORT", CustomData = new Dictionary<string, object> { { AdapterId, "CONC_SHORT" } } });
+            materials.Add(new Concrete() { Name = "GSA Standard CONC_LONG", CustomData = new Dictionary<string, object> { { AdapterId, "CONC_LONG" } } });
+            materials.Add(new Aluminium() { Name = "GSA Standard ALUMINIUM", CustomData = new Dictionary<string, object> { { AdapterId, "ALUMINIUM" } } });
+
+
+            //foreach (string name in names)
+            //{
+            //    //IMaterialFragment mat = new IMaterialFragment { Name = "GSA Standard " + name };
+            //    mat.CustomData.Add(AdapterId, name);
+            //    materials.Add(mat);
+            //}
 
             return materials;
         }

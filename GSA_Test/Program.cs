@@ -30,7 +30,7 @@ using BH.oM.Structure.SurfaceProperties;
 using BH.oM.Structure.Constraints;
 using BH.Engine.Structure;
 using BH.Adapter.GSA;
-using BH.oM.Physical.Materials;
+using BH.oM.Structure.MaterialFragments;
 using BH.oM.DataManipulation.Queries;
 using BH.oM.Structure.Results;
 using BH.oM.Base;

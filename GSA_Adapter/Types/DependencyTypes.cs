@@ -20,7 +20,7 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Physical.Materials;
+using BH.oM.Structure.MaterialFragments;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Structure.SurfaceProperties;
@@ -66,10 +66,10 @@ namespace BH.Adapter.GSA
         private static Dictionary<Type, List<Type>> m_DependencyTypes = new Dictionary<Type, List<Type>>
         {
             {typeof(Bar), new List<Type> { typeof(ISectionProperty), typeof(Node) } },
-            {typeof(ISectionProperty), new List<Type> { typeof(Material) } },
+            {typeof(ISectionProperty), new List<Type> { typeof(IMaterialFragment) } },
             {typeof(RigidLink), new List<Type> { typeof(LinkConstraint), typeof(Node) } },
             {typeof(FEMesh), new List<Type> { typeof(ISurfaceProperty), typeof(Node) } },
-            {typeof(ISurfaceProperty), new List<Type> { typeof(Material) } }
+            {typeof(ISurfaceProperty), new List<Type> { typeof(IMaterialFragment) } }
         };
 
 

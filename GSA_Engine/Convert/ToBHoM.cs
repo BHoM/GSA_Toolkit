@@ -22,7 +22,7 @@
 
 using BH.Engine.Serialiser;
 using BH.Engine.Structure;
-using BHM = BH.oM.Physical.Materials;
+using BHM = BH.oM.Structure.MaterialFragments;
 using BHL = BH.oM.Structure.Loads;
 using BHMF = BH.oM.Structure.MaterialFragments;
 using BH.oM.Geometry;
@@ -286,7 +286,7 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        public static BHM.Material ToBHoMMaterial(string gsaString)
+        public static BHM.IMaterialFragment ToBHoMMaterial(string gsaString)
         {
             if (string.IsNullOrWhiteSpace(gsaString))
                 return null;
@@ -296,7 +296,7 @@ namespace BH.Engine.GSA
             if (gStr.Length < 11)
                 return null;
 
-            BHMF.MaterialType type = GetTypeFromString(gStr[5]);
+            //BHMF.MaterialType type = GetTypeFromString(gStr[5]);
 
             double E, v, tC, G, rho;
 
@@ -311,28 +311,30 @@ namespace BH.Engine.GSA
             if (!double.TryParse(gStr[9], out rho))
                 return null;
 
-            BHM.Material mat;
+            BHM.IMaterialFragment mat;
 
-            switch (type)
+
+            switch (gStr[5])
             {
-                case BHMF.MaterialType.Steel:
-                    mat = Engine.Structure.Create.SteelMaterial("", E, v, tC, rho);
+                case "MT_ALUMINIUM":
+                    mat = Engine.Structure.Create.Aluminium("", E, v, tC, rho);
                     break;
-                case BHMF.MaterialType.Concrete:
-                    mat = Engine.Structure.Create.ConcreteMaterial("", E, v, tC, rho);
+                case "MT_CONCRETE":
+                    mat = Structure.Create.Concrete("", E, v, tC, rho);
                     break;
-                case BHMF.MaterialType.Timber:
-                case BHMF.MaterialType.Rebar:
-                case BHMF.MaterialType.Tendon:
-                case BHMF.MaterialType.Glass:
-                case BHMF.MaterialType.Aluminium:
-                case BHMF.MaterialType.Cable:
-                case BHMF.MaterialType.Undefined:
+                case "MT_STEEL":
+                case "MT_REBAR":
+                    mat = Structure.Create.Steel("", E, v, tC, rho);
+                    break;
+                case "MT_TIMBER":
+                case "MT_UNDEF":
+                case "MT_GLASS":
                 default:
-                    mat = new BHM.Material() { Density = rho };
-                    Engine.Reflection.Compute.RecordWarning("Pulling of material of type " + type.ToString() + " currently not implemented. Empty material with no structural proeprties will be provided");
-                    break;
+                    Engine.Reflection.Compute.RecordWarning("Pulling material of type " + gStr[5] + " is not suported. Material with name " + gStr[3] + " failed");
+                    return null;
             }
+        
+
 
             mat.ApplyTaggedName(gStr[3]);
 
@@ -415,7 +417,7 @@ namespace BH.Engine.GSA
         /// </param>
         /// <param name="materials"></param>
         /// <returns></returns>
-        public static ISectionProperty ToBHoMSectionProperty(string gsaString, Dictionary<string, BHM.Material> materials)
+        public static ISectionProperty ToBHoMSectionProperty(string gsaString, Dictionary<string, BHM.IMaterialFragment> materials)
         {
             ISectionProperty secProp = null;
 
@@ -598,27 +600,18 @@ namespace BH.Engine.GSA
                             return null;
                     }
 
+                    BHM.IMaterialFragment mat = materials[materialId];
 
-
-
-                    switch (materials[materialId].MaterialType())
+                    if (mat is BHM.Steel)
+                        secProp = Structure.Create.SteelSectionFromProfile(dimensions);
+                    else if (mat is BHM.Concrete)
+                        secProp = Structure.Create.ConcreteSectionFromProfile(dimensions);
+                    else
                     {
-                        case BHMF.MaterialType.Steel:
-                            secProp = Structure.Create.SteelSectionFromProfile(dimensions);
-                            break;
-                        case BHMF.MaterialType.Concrete:
-                            secProp = Structure.Create.ConcreteSectionFromProfile(dimensions);
-                            break;
-                        case BHMF.MaterialType.Aluminium:
-                        case BHMF.MaterialType.Timber:
-                        case BHMF.MaterialType.Rebar:
-                        case BHMF.MaterialType.Tendon:
-                        case BHMF.MaterialType.Glass:
-                        case BHMF.MaterialType.Cable:
-                        default:
-                            Reflection.Compute.RecordError("Material type " + materials[materialId].MaterialType().ToString() + " for cross section not implemented");
-                            return null;
+                        Reflection.Compute.RecordError("Material type " + mat.GetType().Name + " for cross section not implemented");
+                        return null;
                     }
+                    
                 }
             }
 
@@ -742,7 +735,7 @@ namespace BH.Engine.GSA
         }
 
         /***************************************/
-        public static ISurfaceProperty ToBHoMProperty2d(string gsaString, Dictionary<string, BHM.Material> materials)
+        public static ISurfaceProperty ToBHoMProperty2d(string gsaString, Dictionary<string, BHM.IMaterialFragment> materials)
         {
             ISurfaceProperty panProp = null;
 
