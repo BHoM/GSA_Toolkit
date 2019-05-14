@@ -22,7 +22,7 @@
 
 using BH.Engine.Serialiser;
 using BH.Engine.Structure;
-using BH.oM.Physical.Materials;
+using BH.oM.Structure.MaterialFragments;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Structure.SurfaceProperties;
@@ -51,7 +51,7 @@ namespace BH.Engine.GSA
                 return "NODE";
             else if (type == typeof(Bar))
                 return "EL";
-            else if (type == typeof(Material))
+            else if (type == typeof(IMaterialFragment))
                 return "MAT";
             else if (type == typeof(ISectionProperty))
                 return "PROP_SEC";
@@ -239,29 +239,25 @@ namespace BH.Engine.GSA
 
         /***************************************************/
 
-        private static string ToGsaString(this Material material, string index)
+        private static string ToGsaString(this IMaterialFragment material, string index)
         {
 
-            if (!material.IsStructural())
-            {
-                Engine.Reflection.Compute.RecordWarning("Material with name " + material.Name + " is does not contain structural properties. Please check the material");
-                return "";
-            }
 
-            if (material.IsIsotropic())
+            if (material is IIsotropic)
             {
+                IIsotropic isotropic = material as IIsotropic;
                 string command = "MAT";
                 string num = index;
                 string mModel = "MAT_ELAS_ISO";
                 string name = material.TaggedName();
                 string colour = "NO_RGB";
                 string type = GetMaterialType(material).ToString();
-                string E = material.YoungsModulusIsotropic().ToString();
-                string nu = material.PoissonsRatioIsotropic().ToString();
-                string rho = material.Density.ToString();
-                string alpha = material.ThermalExpansionCoeffIsotropic().ToString();
-                string G = material.ShearModulusIsotropic().ToString();
-                string damp = material.DampingRatio().ToString();
+                string E = isotropic.YoungsModulus.ToString();
+                string nu = isotropic.PoissonsRatio.ToString();
+                string rho = isotropic.Density.ToString();
+                string alpha = isotropic.ThermalExpansionCoeff.ToString();
+                string G = isotropic.ShearModulus().ToString();
+                string damp = isotropic.DampingRatio.ToString();
 
                 string str = command + "," + num + "," + mModel + "," + name + "," + colour + "," + type + ",6," + E + "," + nu + "," + rho + "," + alpha + "," + G + "," + damp + ",0,0,NO_ENV";
                 return str;

@@ -21,7 +21,7 @@
  */
 
 using BH.Engine.Base.Objects;
-using BH.oM.Physical.Materials;
+using BH.oM.Structure.MaterialFragments;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Structure.SurfaceProperties;
@@ -61,7 +61,7 @@ namespace BH.Adapter.GSA
         {
             {typeof(Node), new BH.Engine.Structure.NodeDistanceComparer(3) },
             {typeof(ISectionProperty), new BHoMObjectNameOrToStringComparer() },
-            {typeof(Material), new BHoMObjectNameComparer() },
+            {typeof(IMaterialFragment), new BHoMObjectNameComparer() },
             {typeof(LinkConstraint), new BHoMObjectNameComparer() },
         };
 
