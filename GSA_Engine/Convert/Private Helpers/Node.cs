@@ -33,12 +33,12 @@ namespace BH.Engine.GSA
 
         private static string GetRestraintString(Node node)
         {
-            if (node.Constraint != null)
+            if (node.Support != null)
             {
                 string rest = "REST";
 
 
-                bool[] fixities = node.Constraint.Fixities();
+                bool[] fixities = node.Support.Fixities();
                 for (int i = 0; i < fixities.Length; i++)
                 {
                     rest += "," + (fixities[i] ? 1 : 0);
@@ -46,7 +46,7 @@ namespace BH.Engine.GSA
 
                 rest += ",STIFF";
 
-                double[] stiffnesses = node.Constraint.ElasticValues();
+                double[] stiffnesses = node.Support.ElasticValues();
                 for (int i = 0; i < stiffnesses.Length; i++)
                 {
                     rest += "," + ((stiffnesses[i] > 0) ? stiffnesses[i] : 0);

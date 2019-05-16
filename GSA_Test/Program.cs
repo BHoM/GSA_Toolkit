@@ -223,10 +223,10 @@ namespace GSA_Test
             Node n3a = BH.Engine.Structure.Create.Node( p7,  "3");
             Node n4a = BH.Engine.Structure.Create.Node( p8,  "4");
         
-            n1a.Constraint = pin;
-            n2a.Constraint = pin;
-            n3a.Constraint = fix;
-            n4a.Constraint = fix;
+            n1a.Support = pin;
+            n2a.Support = pin;
+            n3a.Support = fix;
+            n4a.Support = fix;
 
             nodesA.Add(n1a);
             nodesA.Add(n2a);
@@ -242,10 +242,10 @@ namespace GSA_Test
             Node n3b = BH.Engine.Structure.Create.Node( p7b,  "3");
             Node n4b = BH.Engine.Structure.Create.Node( p8b,  "4");
 
-            n1b.Constraint = pin;
-            n2b.Constraint = pin;
-            n3b.Constraint = Create.FullReleaseConstraint6DOF();
-            n4b.Constraint = fix;
+            n1b.Support = pin;
+            n2b.Support = pin;
+            n3b.Support = Create.FullReleaseConstraint6DOF();
+            n4b.Support = fix;
 
             nodesB.Add(n1b);
             nodesB.Add(n2b);
