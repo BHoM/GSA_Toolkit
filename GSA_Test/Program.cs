@@ -31,7 +31,7 @@ using BH.oM.Structure.Constraints;
 using BH.Engine.Structure;
 using BH.Adapter.GSA;
 using BH.oM.Structure.MaterialFragments;
-using BH.oM.DataManipulation.Queries;
+using BH.oM.Data.Requests;
 using BH.oM.Structure.Results;
 using BH.oM.Base;
 using Interop.gsa_8_7;
@@ -89,7 +89,7 @@ namespace GSA_Test
         {
             GSAAdapter app = new GSAAdapter(@"C:\Users\iNaslund\OneDrive\Documents\GSA Sandbox\Empty.gwb");
 
-            List<object> test = app.Pull(new FilterQuery() { Type = typeof(Node) }).ToList();
+            List<object> test = app.Pull(new FilterRequest() { Type = typeof(Node) }).ToList();
         }
 
        
@@ -137,7 +137,7 @@ namespace GSA_Test
         {
             //C: \Users\inaslund\Documents\GSA sandbox\SimpleBeam Pt load.gwb
             GSAAdapter app = new GSAAdapter(@"C:\Users\phesari\Desktop\Gsa1.gwb");
-            FilterQuery query = new FilterQuery { Type = typeof(LoadCombination) };
+            FilterRequest query = new FilterRequest { Type = typeof(LoadCombination) };
             app.Pull(query);
         }
 
@@ -145,7 +145,7 @@ namespace GSA_Test
         {
             //C: \Users\inaslund\Documents\GSA sandbox\SimpleBeam Pt load.gwb
             GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\SimpleBeam Pt load.gwa");
-            FilterQuery query = new FilterQuery { Type = typeof(BarDeformation) };
+            FilterRequest query = new FilterRequest { Type = typeof(BarDeformation) };
             app.Pull(query);
         }
 
@@ -337,7 +337,7 @@ namespace GSA_Test
 
             app.Push(nodesB, "Nodes");
 
-            app.Delete(new FilterQuery { Type = typeof(Node), Tag = "Nodes" });
+            app.Delete(new FilterRequest { Type = typeof(Node), Tag = "Nodes" });
 
             //List<string> ids;
             //app.PushObjects(nodesA, out ids, "Nodes");
@@ -382,7 +382,7 @@ namespace GSA_Test
         //{
         //    GSAAdapter app = new GSAAdapter(@"C:\Users\inaslund\Documents\GSA sandbox\Test.gwb");
 
-        //    BH.Adapter.Queries.FilterQuery query = new BH.Adapter.Queries.FilterQuery();
+        //    BH.Adapter.Queries.FilterRequest query = new BH.Adapter.Queries.FilterRequest();
         //    app.Delete(query);
         //}
 
