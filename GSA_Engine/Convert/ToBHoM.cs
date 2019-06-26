@@ -436,6 +436,16 @@ namespace BH.Engine.GSA
             Int32.TryParse(gsaStrings[1], out id);
 
             string materialId = gsaStrings[4];
+
+            BHM.IMaterialFragment mat;
+
+            if (!materials.TryGetValue(materialId, out mat))
+            { 
+                Reflection.Compute.RecordError(string.Format("Failed to extract material with id {0}. Section with Id {1} could not be extracted.", materialId, id));
+                return null;
+            }
+
+
             string description = gsaStrings[5];
 
             if (description == "EXP")
@@ -603,31 +613,22 @@ namespace BH.Engine.GSA
                             return null;
                     }
 
-                    BHM.IMaterialFragment mat;
-
-                    if (materials.TryGetValue(materialId, out mat))
-                    {
-                        if (mat is BHM.Steel)
-                            secProp = Structure.Create.SteelSectionFromProfile(dimensions);
-                        else if (mat is BHM.Concrete)
-                            secProp = Structure.Create.ConcreteSectionFromProfile(dimensions);
-                        else
-                        {
-                            Reflection.Compute.RecordError("Material type " + mat.GetType().Name + " for cross section not implemented");
-                            return null;
-                        }
-                    }
+                    if (mat is BHM.Steel)
+                        secProp = Structure.Create.SteelSectionFromProfile(dimensions);
+                    else if (mat is BHM.Concrete)
+                        secProp = Structure.Create.ConcreteSectionFromProfile(dimensions);
                     else
                     {
-                        Reflection.Compute.RecordError(string.Format("Failed to extract material with id {0}. Section with Id {1} could not be extracted.", materialId, id));
+                        Reflection.Compute.RecordError("Material type " + mat.GetType().Name + " for cross section not implemented");
                         return null;
                     }
-                    
+
                 }
             }
 
             secProp.CustomData[AdapterID] = id;
             secProp.ApplyTaggedName(gsaStrings[2]);
+            secProp.Material = mat;
             return secProp;
         }
 
