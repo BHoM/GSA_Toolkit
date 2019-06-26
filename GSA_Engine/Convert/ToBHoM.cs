@@ -326,8 +326,11 @@ namespace BH.Engine.GSA
                 case "MT_REBAR":
                     mat = Structure.Create.Steel("", E, v, tC, rho);
                     break;
-                case "MT_TIMBER":
                 case "MT_UNDEF":
+                    mat = Structure.Create.Steel("", E, v, tC, rho);
+                    Engine.Reflection.Compute.RecordWarning(string.Format("Material with id {0} and name {1} has no type defined. A steel material will be assumed", gStr[1], gStr[3]));
+                    break;
+                case "MT_TIMBER":
                 case "MT_GLASS":
                 default:
                     Engine.Reflection.Compute.RecordWarning("Pulling material of type " + gStr[5] + " is not suported. Material with name " + gStr[3] + " failed");
