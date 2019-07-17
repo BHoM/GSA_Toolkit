@@ -58,8 +58,8 @@
     <Reference Include="Geometry_oM">
       <HintPath>..\..\BHoM\Build\Geometry_oM.dll</HintPath>
     </Reference>
-    <Reference Include="Interop.Gsa_8_7">
-      <HintPath>C:\Program Files\Oasys\GSA 8.7\Interop.Gsa_8_7.dll</HintPath>
+    <Reference Include="Interop.Gsa_8_7, Version=8.7.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\BHoM.Interop.GSA8_7.1.0.0\lib\net45\Interop.Gsa_8_7.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Physical_oM">
@@ -114,6 +114,9 @@
       <Name>GSA_oM</Name>
       <Private>False</Private>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
