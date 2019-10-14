@@ -155,7 +155,7 @@ namespace BH.Engine.GSA
         private static bool CreateDescString(FabricatedBoxProfile dimensions, out string desc)
         {
             if(dimensions.TopFlangeThickness != dimensions.BotFlangeThickness)
-                throw new NotSupportedException("Box sections with varying flange thickness between top and bottom are currently not suported in the GSA adapter");
+                throw new NotSupportedException("Box sections with varying flange thickness between top and bottom are currently not supported in the GSA adapter");
 
             double h, w, wt, ft;
 
@@ -241,7 +241,7 @@ namespace BH.Engine.GSA
 
         private static bool CreateDescString(ZSectionProfile dimensions, out string desc)
         {
-            throw new NotSupportedException("Zed sections are currently not suported in the GSA adapter");
+            throw new NotSupportedException("Zed sections are currently not supported in the GSA adapter");
         }
 
         /***************************************/

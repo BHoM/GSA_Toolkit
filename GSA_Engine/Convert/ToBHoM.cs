@@ -333,7 +333,7 @@ namespace BH.Engine.GSA
                 case "MT_TIMBER":
                 case "MT_GLASS":
                 default:
-                    Engine.Reflection.Compute.RecordWarning("Pulling material of type " + gStr[5] + " is not suported. Material with name " + gStr[3] + " failed");
+                    Engine.Reflection.Compute.RecordWarning("Pulling material of type " + gStr[5] + " is not supported. Material with name " + gStr[3] + " failed");
                     return null;
             }
         
