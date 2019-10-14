@@ -43,7 +43,7 @@ namespace BH.Adapter.GSA
 
             if (typeString == null)
             {
-                ErrorLog.Add("Delete failed due to wrong type");
+                Engine.Reflection.Compute.RecordError("Delete failed due to wrong type");
                 return 0;
             }
             else if (indices == null)
