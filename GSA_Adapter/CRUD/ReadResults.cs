@@ -64,7 +64,7 @@ namespace BH.Adapter.GSA
             else if (typeof(ModalDynamics).IsAssignableFrom(type))
                 return ExtractGlobalDynamics(caseNumbers);
             else
-                ErrorLog.Add("Force type " + type.Name + " not suported");
+                Engine.Reflection.Compute.RecordError("Force type " + type.Name + " not suported");
 
 
             return new List<IResult>();
@@ -164,7 +164,7 @@ namespace BH.Adapter.GSA
                         }
                         else
                         {
-                            ErrorLog.Add("Different number of results compared to the expected for object with id " + id + ", for loadcase: " + loadCase);
+                            Engine.Reflection.Compute.RecordError("Different number of results compared to the expected for object with id " + id + ", for loadcase: " + loadCase);
                         }
                     }
                 }
@@ -226,7 +226,7 @@ namespace BH.Adapter.GSA
             else
             {
                 axis = null;
-                ErrorLog.Add("Force type " + type.Name + " not suported");
+                Engine.Reflection.Compute.RecordError("Force type " + type.Name + " not suported");
                 header = ResHeader.REF_ACC;
                 converter = null;
                 unitFactor = 1;
@@ -244,7 +244,7 @@ namespace BH.Adapter.GSA
             int inputFlags = (int)BH.Engine.GSA.Output_Init_Flags.OP_INIT_1D_AUTO_PTS;
             if (m_gsaCom.Output_Init_Arr(inputFlags, axis, loadCase, header, divisions) != 0)
             {
-                ErrorLog.Add("Failed to initialize result extraction for loadcase: " + loadCase);
+                Engine.Reflection.Compute.RecordError("Failed to initialize result extraction for loadcase: " + loadCase);
                 return false;
             }
             return true;
@@ -260,7 +260,7 @@ namespace BH.Adapter.GSA
             }
             catch
             {
-                ErrorLog.Add("Failed to extract results for item " + objectId);
+                Engine.Reflection.Compute.RecordError("Failed to extract results for item " + objectId);
                 return null;
             }
 
@@ -386,7 +386,7 @@ namespace BH.Adapter.GSA
                     }
                     catch
                     {
-                        ErrorLog.Add("Analysis task " + i + "could not be found in the model.");
+                        Engine.Reflection.Compute.RecordError("Analysis task " + i + "could not be found in the model.");
                     }
                 }
 
@@ -451,7 +451,7 @@ namespace BH.Adapter.GSA
                     }
                     catch
                     {
-                        ErrorLog.Add("Analysis task " + i + "could not be found in the model.");
+                        Engine.Reflection.Compute.RecordError("Analysis task " + i + "could not be found in the model.");
                     }
                 }
 
@@ -465,7 +465,7 @@ namespace BH.Adapter.GSA
                     }
                     catch
                     {
-                        ErrorLog.Add("Analysis task " + i + "could not be found in the model.");
+                        Engine.Reflection.Compute.RecordError("Analysis task " + i + "could not be found in the model.");
                     }
                 }
             }
@@ -521,7 +521,7 @@ namespace BH.Adapter.GSA
 
             if (m_gsaCom.CaseExist(caseDescription[0].ToString(), caseId) != 1)
             {
-                ErrorLog.Add("Error, analysis case " + caseDescription + " does not exist.");
+                Engine.Reflection.Compute.RecordError("Error, analysis case " + caseDescription + " does not exist.");
                 return false;
             }
 
@@ -536,7 +536,7 @@ namespace BH.Adapter.GSA
 
             if (m_gsaCom.CaseResultsExist(caseDescription[0].ToString(), caseId, 0) != 1)
             {
-                ErrorLog.Add("Error, analysis case " + caseDescription + " has no results.");
+                Engine.Reflection.Compute.RecordError("Error, analysis case " + caseDescription + " has no results.");
                 return false;
             }
 

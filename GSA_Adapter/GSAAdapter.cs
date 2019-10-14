@@ -68,7 +68,7 @@ namespace BH.Adapter.GSA
                 return true;
             else
             {
-                ErrorLog.Add("Failure calling the command: " + str);
+                Engine.Reflection.Compute.RecordError("Failure calling the command: " + str);
                 return false;
             }
         }
@@ -85,7 +85,7 @@ namespace BH.Adapter.GSA
                 return returnVar;
             else
             {
-                ErrorLog.Add("Failure calling the command: " + str);
+                Engine.Reflection.Compute.RecordError("Failure calling the command: " + str);
                 return default(T);
             }
         }
