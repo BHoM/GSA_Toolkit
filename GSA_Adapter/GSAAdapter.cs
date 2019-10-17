@@ -60,7 +60,7 @@ namespace BH.Adapter.GSA
         /**** Private  Methods - Com Interop            ****/
         /***************************************************/
 
-        private bool ComCall(string str)
+        private bool ComCall(string str, bool raiseError = true)
         {
             dynamic commandResult = m_gsaCom.GwaCommand(str);
 
@@ -68,7 +68,9 @@ namespace BH.Adapter.GSA
                 return true;
             else
             {
-                Engine.Reflection.Compute.RecordError("Failure calling the command: " + str);
+                if(raiseError)
+                    Engine.Reflection.Compute.RecordError("Failure calling the command: " + str);
+
                 return false;
             }
         }
