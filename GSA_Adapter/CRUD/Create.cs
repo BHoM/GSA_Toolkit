@@ -73,7 +73,7 @@ namespace BH.Adapter.GSA
             string catString = prop.CreateCatalogueString();
             if (catString != null)
             {
-                bool success = ComCall(catString);
+                bool success = ComCall(catString, false);
                 if (success)
                     return true;
             }
