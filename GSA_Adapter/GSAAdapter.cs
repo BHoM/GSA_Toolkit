@@ -35,11 +35,6 @@ namespace BH.Adapter.GSA
         {
             AdapterId = BH.Engine.GSA.Convert.AdapterID;
 
-            Config.SeparateProperties = true;
-            Config.MergeWithComparer = true;
-            Config.ProcessInMemory = false;
-            Config.CloneBeforePush = true;
-
             if (active)
             {
                 m_gsaCom = new ComAuto();

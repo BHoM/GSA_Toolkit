@@ -37,7 +37,7 @@ namespace BH.Adapter.GSA
         /**** Index Adapter Interface                   ****/
         /***************************************************/
 
-        protected override bool Create<T>(IEnumerable<T> objects, bool replaceAll = false)
+        protected override bool Create<T>(IEnumerable<T> objects)
         {
             bool success = true;
 
@@ -50,7 +50,7 @@ namespace BH.Adapter.GSA
                     if (typeof(FEMesh).IsAssignableFrom(typeof(T)))
                         success &= CreateFEMesh(obj as FEMesh);
                     else
-                        success &= Create((obj as dynamic));
+                        success &= CreateObject((obj as dynamic));
                 }
             }
 
@@ -60,14 +60,14 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        private bool Create(BH.oM.Base.IBHoMObject obj)
+        private bool CreateObject(BH.oM.Base.IBHoMObject obj)
         {
             return ComCall(Engine.GSA.Convert.IToGsaString(obj, obj.CustomData[AdapterId].ToString()));
         }
 
         /***************************************************/
 
-        private bool Create(ISectionProperty prop)
+        private bool CreateObject(ISectionProperty prop)
         {
             //Try creating a catalogue section
             string catString = prop.CreateCatalogueString();
@@ -132,7 +132,7 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        private bool Create(LoadCombination loadComb)
+        private bool CreateObject(LoadCombination loadComb)
         {
             bool success = true;
 
@@ -145,14 +145,14 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        private bool Create(Loadcase loadCase)
+        private bool CreateObject(Loadcase loadCase)
         {
             return ComCall(loadCase.ToGsaString());
         }
 
         /***************************************************/
 
-        private bool Create(ILoad load)
+        private bool CreateObject(ILoad load)
         {
             bool success = true;
             double[] unitFactors = GetUnitFactors();

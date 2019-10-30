@@ -33,7 +33,7 @@ namespace BH.Adapter.GSA
 
         protected override bool UpdateObjects<T>(IEnumerable<T> objects)
         {
-            return Create(objects, false);
+            return Create(objects);
         }
 
         /***************************************************/
