@@ -32,7 +32,7 @@ namespace BH.Adapter.GSA
         {
             List<object> readresult = new List<object>();
 
-            if (request == null || (request as FilterRequest)?.Type == null)
+            if (request == null || (request is FilterRequest && (request as FilterRequest)?.Type == null))
             {
                 readresult.AddRange(ReadNodes());
                 readresult.AddRange(ReadBars());
