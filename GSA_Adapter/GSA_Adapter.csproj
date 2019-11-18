@@ -102,6 +102,7 @@
     <Compile Include="AdapterActions\Pull.cs" />
     <Compile Include="AdapterActions\Execute.cs" />
     <Compile Include="CRUD\ReadResults.cs" />
+    <Compile Include="CRUD\ReadResultsElements.cs" />
     <Compile Include="CRUD\UpdateObjects.cs" />
     <Compile Include="CRUD\UpdateProperty.cs" />
     <Compile Include="Types\DependencyTypes.cs" />
