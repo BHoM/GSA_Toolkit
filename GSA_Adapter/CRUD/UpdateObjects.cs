@@ -31,7 +31,7 @@ namespace BH.Adapter.GSA
         /**** Adapter Methods                           ****/
         /***************************************************/
 
-        protected override bool UpdateObjects<T>(IEnumerable<T> objects)
+        protected override bool Update<T>(IEnumerable<T> objects)
         {
             return Create(objects);
         }
