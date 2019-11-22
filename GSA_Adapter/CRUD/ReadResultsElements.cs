@@ -117,11 +117,18 @@ namespace BH.Adapter.GSA
                     header = ResHeader.REF_FORCE_EL1D;
                     unitFactor = unitFactors[(int)BH.Engine.GSA.UnitType.FORCE];
                     break;
-                case BarResultType.BarDeformation:
-                    converter = BH.Engine.GSA.Convert.ToBHoMBarDeformation;
+                case BarResultType.BarDisplacement:
+                    axis = BH.Engine.GSA.Output_Axis.Global();
+                    converter = BH.Engine.GSA.Convert.ToBHoMBarDisplacement;
                     header = ResHeader.REF_DISP_EL1D;
                     unitFactor = unitFactors[(int)BH.Engine.GSA.UnitType.LENGTH];
                     break;
+                case BarResultType.BarDeformation:
+                    converter = null;
+                    header = ResHeader.REF_ACC;
+                    unitFactor = 1;
+                    Engine.Reflection.Compute.RecordError("Extraction of Localised BarDeformations is not supported in GSA. To get full displacements of the Bar in global coordinates, try pulling BarDisplacements");
+                    return false;
                 case BarResultType.BarStress:
                     converter = BH.Engine.GSA.Convert.ToBHoMBarStress;
                     header = ResHeader.REF_STRESS_EL1D;

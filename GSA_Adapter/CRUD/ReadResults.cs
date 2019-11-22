@@ -43,14 +43,12 @@ namespace BH.Adapter.GSA
 
         protected override IEnumerable<IResult> ReadResults(Type type, IList ids = null, IList cases = null, int divisions = 5)
         {
-            IResultRequest request = Engine.Structure.Compute.GenerateResultRequest(type, ids, cases, divisions);
+            IResultRequest request = Engine.Structure.Create.IResultRequest(type, ids?.Cast<object>(), cases?.Cast<object>(), divisions);
 
             if (request != null)
                 return this.ReadResults(request as dynamic);
             else
                 return new List<IResult>();
-
-
         }
 
  
