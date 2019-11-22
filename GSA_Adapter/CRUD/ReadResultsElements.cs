@@ -38,6 +38,8 @@ namespace BH.Adapter.GSA
     public partial class GSAAdapter
     {
 
+        public delegate IResult ForceConverter(GsaResults results, string id, string loadCase, int divisions, double timeStep = 0);
+
         /***************************************************/
         /**** Public method - Read override             ****/
         /***************************************************/
@@ -45,7 +47,7 @@ namespace BH.Adapter.GSA
         public IEnumerable<IResult> ReadResults(IResultRequest request)
         {
             List<int> objectIds = CheckAndGetIds(request);
-            List<string> loadCases = CheckAndGetAnalysisCases(request.Cases);
+            List<string> loadCases = CheckAndGetAnalysisCases(request);
 
             ResHeader header;// = type.ResultHeader();
             ForceConverter converter;
@@ -222,6 +224,33 @@ namespace BH.Adapter.GSA
             return true;
         }
 
+        /***************************************************/
+
+        private GsaResults[] GetResults(int objectId, double unitFactor)
+        {
+            GsaResults[] results;
+            int numOfComponents;
+            try
+            {
+                m_gsaCom.Output_Extract_Arr(objectId, out results, out numOfComponents);
+            }
+            catch
+            {
+                Engine.Reflection.Compute.RecordError("Failed to extract results for item " + objectId);
+                return null;
+            }
+
+            // Convert to SI
+            if (unitFactor != 1)
+            {
+                foreach (GsaResults r in results)
+                    for (int i = 0; i < r.dynaResults.Length; i++)
+                        r.dynaResults[i] /= unitFactor;
+            }
+
+            return results;
+        }
+
 
         /***************************************************/
         /**** Private  Methods - Index checking         ****/
@@ -292,6 +321,22 @@ namespace BH.Adapter.GSA
 
             return nodes.Select(x => x.Ref).ToList();
         }
+
+
+        /***************************************************/
+
+        static public int[] CreateIntSequence(int maxId)
+        {
+            int[] ids = new int[maxId];
+
+            for (int i = 0; i < maxId; i++)
+            {
+                ids[i] = i + 1;
+            }
+
+            return ids;
+        }
+
 
         /***************************************************/
 
