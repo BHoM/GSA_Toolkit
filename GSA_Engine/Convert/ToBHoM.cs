@@ -996,9 +996,9 @@ namespace BH.Engine.GSA
 
         /***************************************************/
 
-        public static BarDeformation ToBHoMBarDeformation(GsaResults results, string id, string loadCase, int divisions, double timeStep = 0)
+        public static BarDisplacement ToBHoMBarDisplacement(GsaResults results, string id, string loadCase, int divisions, double timeStep = 0)
         {
-            BarDeformation def = new BarDeformation
+            BarDisplacement disp = new BarDisplacement
             {
                 ObjectId = id,
                 ResultCase = loadCase,
@@ -1012,7 +1012,7 @@ namespace BH.Engine.GSA
                 RY = results.dynaResults[5],
                 RZ = results.dynaResults[6]
             };
-            return def;
+            return disp;
         }
 
         /***************************************************/
