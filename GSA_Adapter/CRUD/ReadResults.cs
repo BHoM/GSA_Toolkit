@@ -25,6 +25,7 @@ using BH.oM.Base;
 using BH.oM.Common;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.Results;
+using BH.oM.Data.Requests;
 using Interop.gsa_8_7;
 using System;
 using System.Collections;
@@ -40,274 +41,24 @@ namespace BH.Adapter.GSA
         /**** Adaptor  Methods                          ****/
         /***************************************************/
 
-        public delegate IResult ForceConverter(GsaResults results, string id, string loadCase, int divisions, double timeStep = 0);
-
         protected override IEnumerable<IResult> ReadResults(Type type, IList ids = null, IList cases = null, int divisions = 5)
         {
-            if (typeof(StructuralGlobalResult).IsAssignableFrom(type))
-                return ExtractGlobalresults(type, cases);
+            IResultRequest request = Engine.Structure.Compute.GenerateResultRequest(type, ids, cases, divisions);
+
+            if (request != null)
+                return this.ReadResults(request as dynamic);
             else
-                return ExtractObjectResults(type, ids, cases, divisions);
-
-        }
-
-        /***************************************************/
-        /**** Global Results  Methods                   ****/
-        /***************************************************/
-
-        private IEnumerable<IResult> ExtractGlobalresults(Type type, IList cases)
-        {
-            List<int> caseNumbers = CheckAndGetAnalysisCaseNumbers(cases);
-
-            if (typeof(GlobalReactions).IsAssignableFrom(type))
-                return ExtractGlobalReaction(caseNumbers);
-            else if (typeof(ModalDynamics).IsAssignableFrom(type))
-                return ExtractGlobalDynamics(caseNumbers);
-            else
-                Engine.Reflection.Compute.RecordError("Force type " + type.Name + " not suported");
-
-
-            return new List<IResult>();
-
-        }
-
-
-        /***************************************************/
-        /**** Object Results  Methods                   ****/
-        /***************************************************/
-
-        private IEnumerable<IResult> ExtractObjectResults(Type type, IList ids = null, IList cases = null, int divisions = 5)
-        {
-            List<int> objectIds = CheckAndGetIds(ids, type);
-            List<string> loadCases = CheckAndGetAnalysisCases(cases);
-
-            ResHeader header;// = type.ResultHeader();
-            ForceConverter converter;
-            string axis;
-            double unitFactor;
-            if (!GetExtractionParameters(type, out header, out converter, out axis, out unitFactor, ref divisions))
                 return new List<IResult>();
 
-            List<IResult> results = new List<IResult>();
-            int midPoints = divisions == 1 ? divisions : divisions - 2;
-            foreach (string loadCase in loadCases)
-            {
-                if (InitializeLoadextraction(header, loadCase, midPoints, axis))
-                {
-                    foreach (int id in objectIds)
-                    {
-                        GsaResults[] gsaResults = GetResults(id, unitFactor);
-                        if (gsaResults != null && gsaResults.Length == divisions)
-                        {
-                            foreach (GsaResults gsaRes in gsaResults)
-                            {
-                                results.Add(converter.Invoke(gsaRes, id.ToString(), loadCase, divisions));
-                            }
-                        }
-                        else
-                        {
-                            Engine.Reflection.Compute.RecordError("Different number of results compared to the expected for object with id " + id + ", for loadcase: " + loadCase);
-                        }
-                    }
-                }
-            }
 
-            return results;
-            
         }
 
-        /***************************************************/
-
-        private bool GetExtractionParameters(Type type, out ResHeader header, out ForceConverter converter, out string axis, out double unitFactor, ref int divisions)
-        {
-            double[] unitFactors = GetUnitFactors();
-            if (typeof(NodeReaction).IsAssignableFrom(type))
-            {
-                header = ResHeader.REF_REAC;
-                axis = BH.Engine.GSA.Output_Axis.Global();
-                converter = BH.Engine.GSA.Convert.ToBHoMReaction;
-                divisions = 1;
-                unitFactor = unitFactors[(int)BH.Engine.GSA.UnitType.FORCE];
-            }
-            else if (typeof(NodeDisplacement).IsAssignableFrom(type))
-            {
-                axis = BH.Engine.GSA.Output_Axis.Global();
-                converter = BH.Engine.GSA.Convert.ToBHoMNodeDisplacement;
-                header = ResHeader.REF_DISP;
-                divisions = 1;
-                unitFactor = unitFactors[(int)BH.Engine.GSA.UnitType.LENGTH];
-            }
-            else if (typeof(BarForce).IsAssignableFrom(type))
-            {
-                axis = BH.Engine.GSA.Output_Axis.Local();
-                converter = BH.Engine.GSA.Convert.ToBHoMBarForce;
-                header = ResHeader.REF_FORCE_EL1D;
-                unitFactor = unitFactors[(int)BH.Engine.GSA.UnitType.FORCE];
-            }
-            else if (typeof(BarDeformation).IsAssignableFrom(type))
-            {
-                axis = BH.Engine.GSA.Output_Axis.Local();
-                converter = BH.Engine.GSA.Convert.ToBHoMBarDeformation;
-                header = ResHeader.REF_DISP_EL1D;
-                unitFactor = unitFactors[(int)BH.Engine.GSA.UnitType.LENGTH];
-            }
-            else if (typeof(BarStress).IsAssignableFrom(type))
-            {
-                axis = BH.Engine.GSA.Output_Axis.Local();
-                converter = BH.Engine.GSA.Convert.ToBHoMBarStress;
-                header = ResHeader.REF_STRESS_EL1D;
-                unitFactor = unitFactors[(int)BH.Engine.GSA.UnitType.STRESS];
-            }
-            else if (typeof(BarStrain).IsAssignableFrom(type))
-            {
-                axis = BH.Engine.GSA.Output_Axis.Local();
-                converter = BH.Engine.GSA.Convert.ToBHoMBarStrain;
-                header = ResHeader.REF_STRAIN_EL1D;
-                unitFactor = 1;
-            }
-            else
-            {
-                axis = null;
-                Engine.Reflection.Compute.RecordError("Force type " + type.Name + " not suported");
-                header = ResHeader.REF_ACC;
-                converter = null;
-                unitFactor = 1;
-                return false;
-            }
-            return true;
-        }
-
-        /***************************************************/
-        /**** Private  Methods - Result extraction      ****/
-        /***************************************************/
-
-        private bool InitializeLoadextraction(ResHeader header, string loadCase, int divisions, string axis)
-        {
-            int inputFlags = (int)BH.Engine.GSA.Output_Init_Flags.OP_INIT_1D_AUTO_PTS;
-            if (m_gsaCom.Output_Init_Arr(inputFlags, axis, loadCase, header, divisions) != 0)
-            {
-                Engine.Reflection.Compute.RecordError("Failed to initialize result extraction for loadcase: " + loadCase);
-                return false;
-            }
-            return true;
-        }
-
-        private GsaResults[] GetResults(int objectId, double unitFactor)
-        {
-            GsaResults[] results;
-            int numOfComponents;
-            try
-            {
-                m_gsaCom.Output_Extract_Arr(objectId, out results, out numOfComponents);
-            }
-            catch
-            {
-                Engine.Reflection.Compute.RecordError("Failed to extract results for item " + objectId);
-                return null;
-            }
-
-            // Convert to SI
-            if (unitFactor != 1)
-            {
-                foreach (GsaResults r in results)
-                    for (int i = 0; i < r.dynaResults.Length; i++)
-                        r.dynaResults[i] /= unitFactor;
-            }
-
-            return results;
-        }
-
-       
+ 
 
         /***************************************************/
         /**** Private  Methods - Index checking         ****/
         /***************************************************/
-
-        private List<int> CheckAndGetIds(IList ids, Type type)
-        {
-            if (ids == null || ids.Count == 0)
-            {
-                if (typeof(BarResult).IsAssignableFrom(type))
-                    return GetAllBarIds();
-                else if (typeof(NodeResult).IsAssignableFrom(type))
-                    return GetAllNodeIds();
-
-            }
-            else if (ids is List<string>)
-                return (ids as List<string>).Select(x => int.Parse(x)).ToList();
-            else if (ids is List<int>)
-                return ids as List<int>;
-            else if (ids is List<double>)
-                return (ids as List<double>).Select(x => (int)Math.Round(x)).ToList();
-            else
-            {
-                List<int> idsOut = new List<int>();
-                foreach (object o in ids)
-                {
-                    int id;
-                    object idObj;
-                    if (int.TryParse(o.ToString(), out id))
-                    {
-                        idsOut.Add(id);
-                    }
-                    else if (o is IBHoMObject && (o as IBHoMObject).CustomData.TryGetValue(AdapterId, out idObj) && int.TryParse(idObj.ToString(), out id))
-                        idsOut.Add(id);
-                }
-                return idsOut;
-            }
-
-            return new List<int>();
-        }
-
-        /***************************************************/
-
-        private List<int> GetAllBarIds()
-        {
-            List<int> ids = new List<int>();
-            int maxIndex = m_gsaCom.GwaCommand("HIGHEST, EL");
-            GsaElement[] gsaElems;
-            m_gsaCom.Elements(CreateIntSequence(maxIndex), out gsaElems);
-
-            foreach (GsaElement elem in gsaElems)
-            {
-                int gsaType = elem.eType;
-
-                //Check that the element type is a bar
-                if (gsaType == 1 || gsaType == 2 || gsaType == 20 || gsaType == 21)
-                    ids.Add(elem.Ref);
-
-            }
-
-            return ids;
-        }
-
-        /***************************************************/
-        private List<int> GetAllNodeIds()
-        {
-
-            int highestIndex = m_gsaCom.GwaCommand("HIGHEST, NODE");
-
-            GsaNode[] nodes;
-            m_gsaCom.Nodes(CreateIntSequence(highestIndex), out nodes);
-
-            return nodes.Select(x => x.Ref).ToList();
-
-        }
-
-        /***************************************************/
-        static public int[] CreateIntSequence(int maxId)
-        {
-            int[] ids = new int[maxId];
-
-            for (int i = 0; i < maxId; i++)
-            {
-                ids[i] = i+1;
-            }
-
-            return ids;
-        }
-
-        /***************************************************/
+        
         private List<int> CheckAndGetAnalysisCaseNumbers(IList cases)
         {
             List<int> loadCases;
@@ -373,6 +124,14 @@ namespace BH.Adapter.GSA
         }
 
         /***************************************************/
+
+        private List<string> CheckAndGetAnalysisCases(IResultRequest request)
+        {
+            return CheckAndGetAnalysisCases(request.Cases);
+        }
+
+        /***************************************************/
+
         private List<string> CheckAndGetAnalysisCases(IList cases)
         {
             List<string> loadCases;
