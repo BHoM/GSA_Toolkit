@@ -120,7 +120,7 @@ namespace BH.Adapter.GSA
                 }
             }
 
-            return loadCases.Where(x => CheckAnalysisCaseExists(x, "A" + x.ToString(), raiseMessages) && CheckAnalysisCaseResultsExists(x, "A" + x, raiseMessages)).ToList();
+            return loadCases.Where(x => CheckAnalysisCaseExists(x, "A" + x.ToString(), raiseMessages) && CheckAnalysisCaseResultsExists(x, "A" + x)).ToList();
         }
 
         /***************************************************/
@@ -209,7 +209,7 @@ namespace BH.Adapter.GSA
             {
                 string descriptionCase = ac;
                 int idCase = System.Convert.ToInt32(Char.IsLetter(ac[0]) ? ac.Trim().Substring(1) : ac.Trim());
-                if (CheckAnalysisCaseExists(idCase, ac, raiseMessages) && (!checkResults || CheckAnalysisCaseResultsExists(idCase, ac, raiseMessages)))
+                if (CheckAnalysisCaseExists(idCase, ac, raiseMessages) && (!checkResults || CheckAnalysisCaseResultsExists(idCase, ac)))
                 {
                     checkedCases.Add(ac);
                 }
@@ -224,7 +224,7 @@ namespace BH.Adapter.GSA
             if (m_gsaCom.CaseExist(caseDescription[0].ToString(), caseId) != 1)
             {
                 if(raiseError)
-                    Engine.Reflection.Compute.RecordError("Error, analysis case " + caseDescription + " does not exist.");
+                    Engine.Reflection.Compute.RecordError("Analysis case " + caseDescription + " does not exist.");
                 return false;
             }
 
@@ -234,14 +234,12 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        private bool CheckAnalysisCaseResultsExists(int caseId, string caseDescription, bool raiseWarning = true)
+        private bool CheckAnalysisCaseResultsExists(int caseId, string caseDescription)
         {
 
             if (m_gsaCom.CaseResultsExist(caseDescription[0].ToString(), caseId, 0) != 1)
             {
-                if(raiseWarning)
-                    Engine.Reflection.Compute.RecordWarning("Error, analysis case " + caseDescription + " has no results.");
-
+                Engine.Reflection.Compute.RecordWarning("Analysis case " + caseDescription + " has no results.");
                 return false;
             }
 
