@@ -49,7 +49,7 @@ namespace BH.Adapter.GSA
             List<int> objectIds = CheckAndGetIds(request);
             List<string> loadCases = CheckAndGetAnalysisCases(request);
 
-            ResHeader header;// = type.ResultHeader();
+            ResHeader header;
             ForceConverter converter;
             string axis;
             double unitFactor;
