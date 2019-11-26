@@ -47,16 +47,23 @@ namespace BH.Adapter.GSA
             List<int> caseNumbers = CheckAndGetAnalysisCaseNumbers(request.Cases);
             CheckModes(request);
 
+            List<IResult> results;
+
             switch (request.ResultType)
             {
                 case GlobalResultType.Reactions:
-                    return ExtractGlobalReaction(caseNumbers);
+                    results = ExtractGlobalReaction(caseNumbers).ToList();
+                    break;
                 case GlobalResultType.ModalDynamics:
-                    return ExtractGlobalDynamics(caseNumbers);
+                    results = ExtractGlobalDynamics(caseNumbers).ToList();
+                    break;
                 default:
                     Engine.Reflection.Compute.RecordError("Result of type " + request.ResultType + " is not yet supported");
-                    return new List<IResult>();
+                    results = new List<IResult>();
+                    break;
             }
+            results.Sort();
+            return results;
         }
 
         /***************************************************/
