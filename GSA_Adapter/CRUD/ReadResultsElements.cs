@@ -58,6 +58,8 @@ namespace BH.Adapter.GSA
             if (!IGetExtractionParameters(request, out header, out converter, out axis, out unitFactor, out divisions, out flags))
                 return new List<IResult>();
 
+            flags += (int)Output_Init_Flags.OP_INIT_INFINITY;
+
             List<IResult> results = new List<IResult>();
             int midPoints = divisions == 1 ? divisions : divisions - 2;
             foreach (string loadCase in loadCases)
