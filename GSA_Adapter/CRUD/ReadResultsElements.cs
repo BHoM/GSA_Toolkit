@@ -91,6 +91,7 @@ namespace BH.Adapter.GSA
                 }
             }
 
+            results.Sort();
             return results;
         }
 
