@@ -60,6 +60,8 @@ namespace BH.Adapter.GSA
 
             flags += (int)Output_Init_Flags.OP_INIT_INFINITY;
 
+            bool raiseDivisionsWarning = (request is BarResultRequest) && ((request as BarResultRequest).DivisionType == DivisionType.EvenlyDistributed);
+
             List<IResult> results = new List<IResult>();
             int midPoints = divisions == 1 ? divisions : divisions - 2;
             foreach (string loadCase in loadCases)
@@ -76,7 +78,7 @@ namespace BH.Adapter.GSA
                                 results.Add(converter.Invoke(gsaRes, id.ToString(), loadCase, gsaResults.Length));
                             }
 
-                            if(gsaResults.Length != divisions)
+                            if(raiseDivisionsWarning && gsaResults.Length != divisions)
                                 Engine.Reflection.Compute.RecordWarning("Different number of results compared to the expected for object with id " + id + ", for loadcase: " + loadCase);
 
                         }
