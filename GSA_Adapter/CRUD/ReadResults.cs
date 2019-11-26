@@ -24,7 +24,7 @@ using BH.Engine.GSA;
 using BH.oM.Base;
 using BH.oM.Common;
 using BH.oM.Structure.Elements;
-using BH.oM.Structure.Results;
+using BH.oM.Structure.Requests;
 using BH.oM.Data.Requests;
 using Interop.gsa_8_7;
 using System;
@@ -51,12 +51,21 @@ namespace BH.Adapter.GSA
                 return new List<IResult>();
         }
 
- 
+
 
         /***************************************************/
         /**** Private  Methods - Index checking         ****/
         /***************************************************/
-        
+
+        private void CheckModes(IStructuralResultRequest request)
+        {
+            //TODO: Handle mode selection
+
+            if (request.Modes != null && request.Modes.Count > 0)
+                Engine.Reflection.Compute.RecordWarning("Mode selection is not yet implemented in the GSA_Adapter.");
+        }
+
+
         private List<int> CheckAndGetAnalysisCaseNumbers(IList cases)
         {
             List<int> loadCases;

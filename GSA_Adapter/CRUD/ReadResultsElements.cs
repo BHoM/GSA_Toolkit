@@ -44,10 +44,11 @@ namespace BH.Adapter.GSA
         /**** Public method - Read override             ****/
         /***************************************************/
 
-        public IEnumerable<IResult> ReadResults(IResultRequest request)
+        public IEnumerable<IResult> ReadResults(IStructuralResultRequest request)
         {
             List<int> objectIds = CheckAndGetIds(request);
             List<string> loadCases = CheckAndGetAnalysisCases(request);
+            CheckModes(request);
 
             ResHeader header;
             ForceConverter converter;
