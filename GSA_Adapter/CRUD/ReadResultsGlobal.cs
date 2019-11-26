@@ -45,7 +45,8 @@ namespace BH.Adapter.GSA
         public IEnumerable<IResult> ReadResults(GlobalResultRequest request)
         {
             List<int> caseNumbers = CheckAndGetAnalysisCaseNumbers(request.Cases);
-            
+            CheckModes(request);
+
             switch (request.ResultType)
             {
                 case GlobalResultType.Reactions:
