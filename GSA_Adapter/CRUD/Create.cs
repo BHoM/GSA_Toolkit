@@ -63,7 +63,7 @@ namespace BH.Adapter.GSA
 
         private bool CreateObject(BH.oM.Base.IBHoMObject obj)
         {
-            return ComCall(Engine.GSA.Convert.IToGsaString(obj, obj.CustomData[AdapterId].ToString()));
+            return ComCall(Engine.GSA.Convert.IToGsaString(obj, obj.GetAdapterId<int>().ToString()));
         }
 
         /***************************************************/
@@ -79,7 +79,7 @@ namespace BH.Adapter.GSA
                     return true;
             }
 
-            return ComCall(Engine.GSA.Convert.IToGsaString(prop, prop.CustomData[AdapterId].ToString()));
+            return ComCall(Engine.GSA.Convert.IToGsaString(prop, prop.GetAdapterId<int>().ToString()));
         }
 
         /***************************************************/
@@ -91,7 +91,7 @@ namespace BH.Adapter.GSA
             bool success = true;
             foreach (RigidLink link in links)
             {
-                success &= ComCall(Engine.GSA.Convert.ToGsaString(link, link.CustomData[AdapterId].ToString(), 0));
+                success &= ComCall(Engine.GSA.Convert.ToGsaString(link, link.GetAdapterId<int>().ToString(), 0));
             }
 
             foreach (RigidLink link in links)
@@ -125,7 +125,7 @@ namespace BH.Adapter.GSA
                 success &= ComCall(Engine.GSA.Convert.ToGsaString(mesh,id,i));
                 allIds.Add(id);
                 id++;
-                //mesh.CustomData[AdapterId] = allIds; //TODO: SOLVE THIS
+                //mesh.GetAdapterId<int>() = allIds; //TODO: SOLVE THIS
             }
 
             return success;
