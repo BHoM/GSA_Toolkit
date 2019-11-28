@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Adapter_Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BHoM_Adapter\Build\Adapter_Engine.dll</HintPath>
+    </Reference>
     <Reference Include="Analytical_oM">
       <HintPath>..\..\BHoM\Build\Analytical_oM.dll</HintPath>
       <Private>False</Private>

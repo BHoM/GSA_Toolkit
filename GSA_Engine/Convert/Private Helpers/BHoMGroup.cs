@@ -27,6 +27,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BH.oM.Structure.Loads;
 using BH.oM.Base;
+using BH.Engine.Adapter;
 
 namespace BH.Engine.GSA
 {
@@ -39,7 +40,7 @@ namespace BH.Engine.GSA
                 return "\"" + load.Objects.Name + "\"";
 
             //Otherwise apply to the corresponding indecies
-            return load.Objects.Elements.Select(x => int.Parse(x.CustomData[AdapterID].ToString())).GeterateIdString();
+            return load.Objects.Elements.Select(x => int.Parse(x.GetAdapterId<int>().ToString())).GeterateIdString();
 
         }
 

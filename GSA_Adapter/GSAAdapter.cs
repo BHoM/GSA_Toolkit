@@ -22,11 +22,16 @@
 
 using Interop.gsa_8_7;
 using BH.oM.GSA;
+using System.ComponentModel;
+using System;
+using BH.oM.Adapter;
 
 namespace BH.Adapter.GSA
 {
-    public partial class GSAAdapter : BHoMAdapter
+    public partial class GSAAdapter : StructuralAnalysisAdapter
     {
+        public override Type AdapterIdFragmentType { get; set; } = typeof(GSAIdFragment);
+
         /***************************************************/
         /**** Constructors                              ****/
         /***************************************************/

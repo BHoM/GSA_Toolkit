@@ -30,7 +30,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Adapter_oM">
+    <Reference Include="Adapter_Engine">
+      <HintPath>..\..\BHoM_Adapter\Build\Adapter_Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="Adapter_oM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM_Adapter\Build\Adapter_oM.dll</HintPath>
     </Reference>
     <Reference Include="Analytical_oM">
@@ -84,6 +88,9 @@
       <HintPath>..\..\BHoM\Build\Reflection_oM.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="StructuralAnalysisAdapter">
+      <HintPath>..\..\BHoM_Adapter\Build\StructuralAnalysisAdapter.dll</HintPath>
+    </Reference>
     <Reference Include="Structure_Engine">
       <HintPath>..\..\BHoM_Engine\Build\Structure_Engine.dll</HintPath>
       <Private>False</Private>
@@ -107,7 +114,7 @@
     <Compile Include="CRUD\ReadResults.cs" />
     <Compile Include="CRUD\ReadResultsElements.cs" />
     <Compile Include="CRUD\ReadResultsGlobal.cs" />
-    <Compile Include="CRUD\UpdateObjects.cs" />
+    <Compile Include="CRUD\Update.cs" />
     <Compile Include="CRUD\UpdateProperty.cs" />
     <Compile Include="Types\DependencyTypes.cs" />
     <Compile Include="Types\Comparer.cs" />

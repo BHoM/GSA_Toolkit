@@ -28,6 +28,7 @@ using BH.oM.Structure.Elements;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Base;
 using BH.Engine.GSA;
+using BH.Engine.Adapter;
 
 namespace BH.Adapter.GSA
 {
@@ -98,13 +99,13 @@ namespace BH.Adapter.GSA
                 List<string> allIds = new List<string>();
                 for (int i = 1; i < link.SlaveNodes.Count; i++)
                 {
-                    string id =  NextId(link.GetType(), i == 1).ToString();
+                    string id =  NextId<int>(link.GetType(), i == 1).Id.ToString();
                     success &= ComCall(Engine.GSA.Convert.ToGsaString(link, id, i));
                     allIds.Add(id);
                 }
                 if (link.SlaveNodes.Count > 1)
                 {
-                    allIds.Add(link.CustomData[AdapterId].ToString());
+                    allIds.Add(link.GetAdapterId<int>().ToString());
                     link.CustomData[AdapterId + "-AllIds"] = allIds;
                 }
             }
@@ -116,7 +117,7 @@ namespace BH.Adapter.GSA
         private bool CreateFEMesh(FEMesh mesh)
         {
             bool success = true;
-            int id = (int)NextId(mesh.GetType(), true);
+            int id = NextId<int>(mesh.GetType(), true).Id;
             List<int> allIds = new List<int>();
 
             for (int i = 0; i < mesh.Faces.Count; i++)
@@ -124,7 +125,7 @@ namespace BH.Adapter.GSA
                 success &= ComCall(Engine.GSA.Convert.ToGsaString(mesh,id,i));
                 allIds.Add(id);
                 id++;
-                mesh.CustomData[AdapterId] = allIds;
+                //mesh.CustomData[AdapterId] = allIds; //TODO: SOLVE THIS
             }
 
             return success;

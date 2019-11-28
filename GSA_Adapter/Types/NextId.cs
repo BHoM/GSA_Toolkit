@@ -21,6 +21,9 @@
  */
 
 using BH.Engine.GSA;
+using BH.oM.Adapter;
+using BH.oM.Base;
+using BH.oM.GSA;
 using BH.oM.Structure.Loads;
 using System;
 using System.Collections;
@@ -35,15 +38,14 @@ namespace BH.Adapter.GSA
         /**** Index Adapter Interface                   ****/
         /***************************************************/
 
-        protected override object NextId(Type type, bool refresh)
+        protected override AdapterIdFragment<T> NextId<T>(Type type, bool refresh)
         {
-
             if (type == typeof(LoadCombination))
-                return 0; //TODO: Needed?
+                return null; //TODO: Needed?
             else if (type == typeof(Loadcase))
-                return 0; //TODO: Needed?
+                return null; //TODO: Needed?
             else if (type == typeof(ILoad) || type.GetInterfaces().Contains(typeof(ILoad)))
-                return 0;
+                return null;
 
             string typeString = type.ToGsaString();
 
@@ -55,11 +57,11 @@ namespace BH.Adapter.GSA
             }
             else
             {
-                index =  m_gsaCom.GwaCommand("HIGHEST, " + typeString) + 1;
+                index = m_gsaCom.GwaCommand("HIGHEST, " + typeString) + 1;
                 m_indexDict[type] = index;
             }
 
-            return index;
+            return new AdapterIdFragment<T>(index as dynamic);
         }
 
 

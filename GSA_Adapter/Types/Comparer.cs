@@ -59,6 +59,7 @@ namespace BH.Adapter.GSA
 
         private static Dictionary<Type, object> m_Comparers = new Dictionary<Type, object>
         {
+            {typeof(Bar), new BH.Engine.Structure.BarEndNodesDistanceComparer(3) },
             {typeof(Node), new BH.Engine.Structure.NodeDistanceComparer(3) },
             {typeof(ISectionProperty), new BHoMObjectNameOrToStringComparer() },
             {typeof(IMaterialFragment), new BHoMObjectNameComparer() },
