@@ -25,6 +25,7 @@ using BH.oM.Structure.SectionProperties;
 using BH.oM.Geometry.ShapeProfiles;
 using System;
 using System.Collections.Generic;
+using BH.Engine.Adapter;
 
 namespace BH.Engine.GSA
 {
@@ -78,7 +79,7 @@ namespace BH.Engine.GSA
 
                         
 
-                        return "PROP_SEC," + secProp.CustomData[AdapterID].ToString() + ", " + name + ", NO_RGB," + secProp.Material.CustomData[AdapterID] + "," + catProp + ", NO," + secProp.SectionType() + ", 0, NO_PROP," + secProp.ModifiersString() + ", FLAME_CUT, NO_J";
+                        return "PROP_SEC," + secProp.GetAdapterId<int>().ToString() + ", " + name + ", NO_RGB," + secProp.Material.GetAdapterId<int>() + "," + catProp + ", NO," + secProp.SectionType() + ", 0, NO_PROP," + secProp.ModifiersString() + ", FLAME_CUT, NO_J";
 
 
                     }

@@ -30,7 +30,7 @@ using System.Collections.Generic;
 
 namespace BH.Adapter.GSA
 {
-    public partial class GSAAdapter 
+    public partial class GSAAdapter
     {
         /***************************************************/
         /**** BHoM Adapter Interface                    ****/
@@ -55,7 +55,7 @@ namespace BH.Adapter.GSA
                 }
             }
 
-            return new List<Type>();         
+            return new List<Type>();
         }
 
 
@@ -65,6 +65,8 @@ namespace BH.Adapter.GSA
 
         private static Dictionary<Type, List<Type>> m_DependencyTypes = new Dictionary<Type, List<Type>>
         {
+            {typeof(BH.oM.Structure.Loads.Load<Node>), new List<Type> { typeof(Node) }  },
+            {typeof(BH.oM.Structure.Loads.Load<Bar>), new List<Type> { typeof(Bar) } },
             {typeof(Bar), new List<Type> { typeof(ISectionProperty), typeof(Node) } },
             {typeof(ISectionProperty), new List<Type> { typeof(IMaterialFragment) } },
             {typeof(RigidLink), new List<Type> { typeof(LinkConstraint), typeof(Node) } },

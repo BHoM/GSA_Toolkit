@@ -23,12 +23,13 @@
 using System.Collections.Generic;
 using System.Collections;
 using BH.oM.Data.Requests;
+using BH.oM.Adapter;
 
 namespace BH.Adapter.GSA
 {
     public partial class GSAAdapter
     {
-        public override IEnumerable<object> Pull(IRequest request, BH.oM.Adapter.PullType pullType, Dictionary<string, object> config = null)
+        public override IEnumerable<object> Pull(IRequest request, PullType pullType = PullType.AdapterDefault)
         {
             List<object> readresult = new List<object>();
 
@@ -43,7 +44,7 @@ namespace BH.Adapter.GSA
                 return readresult;
             }
 
-            return base.Pull(request,  pullType, config);
+            return base.Pull(request, pullType);
         }
     }
 }

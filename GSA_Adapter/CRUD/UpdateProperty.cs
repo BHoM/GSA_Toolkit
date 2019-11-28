@@ -32,25 +32,19 @@ namespace BH.Adapter.GSA
 {
     public partial class GSAAdapter
     {
-        protected override int UpdateProperty(Type type, IEnumerable<object> ids, string property, object newValue)
+        protected override int UpdateTag(Type type, IEnumerable<object> ids, object newTag)
         {
+            List<string> indecies = ids.Select(x => x.ToString()).ToList();
+            if (indecies.Count < 1)
+                return 0;
 
-            if (property == "Tags")
-            {
-                List<string> indecies = ids.Select(x => x.ToString()).ToList();
-                if (indecies.Count < 1)
-                    return 0;
-
-                List<HashSet<string>> tags = (newValue as IEnumerable<HashSet<string>>).ToList();
-                return UpdateDateTags(type, indecies, tags);
-            }
-
-            return 0;
+            List<HashSet<string>> tags = (newTag as IEnumerable<HashSet<string>>).ToList();
+            return UpdateDateTags(type, indecies, tags);
         }
 
         private int UpdateDateTags(Type t, List<string> indecies, List<HashSet<string>> tags)
         {
-            
+
             List<IBHoMObject> objects = Read(t, indecies.ToList()).ToList();
 
             for (int i = 0; i < objects.Count; i++)
