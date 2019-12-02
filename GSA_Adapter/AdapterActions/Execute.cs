@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 using System.Collections;
+using BH.oM.Adapter;
 
 namespace BH.Adapter.GSA
 {
@@ -31,7 +32,7 @@ namespace BH.Adapter.GSA
         /**** IAdapter Interface                        ****/
         /***************************************************/
 
-        public override bool Execute(string command, Dictionary<string, object> parameters = null, Dictionary<string, object> config = null)
+        public override bool Execute(string command, Dictionary<string, object> parameters = null, ActionConfig actionConfig = null)
         {
             string commandUpper = command.ToUpper();
 

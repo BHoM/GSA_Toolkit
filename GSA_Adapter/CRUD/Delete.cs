@@ -21,6 +21,7 @@
  */
 
 using BH.Engine.GSA;
+using BH.oM.Adapter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace BH.Adapter.GSA
         /**** Index Adapter Methods                     ****/
         /***************************************************/
 
-        protected override int Delete(Type type, IEnumerable<object> indices)
+        protected override int IDelete(Type type, IEnumerable<object> indices, ActionConfig actionConfig = null)
         {
             //object source;
             //if (config != null && config.TryGetValue("Source", out source) && source.ToString() == "Replace")

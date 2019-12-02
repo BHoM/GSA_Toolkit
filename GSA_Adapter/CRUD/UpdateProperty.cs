@@ -27,35 +27,32 @@ using BH.oM.Structure.Loads;
 using BH.oM.Structure.Elements;
 using BH.oM.Base;
 using BH.Engine.GSA;
+using BH.oM.Adapter;
 
 namespace BH.Adapter.GSA
 {
     public partial class GSAAdapter
     {
-        protected override int UpdateTag(Type type, IEnumerable<object> ids, object newTag)
+        protected override int IUpdateTags(Type type, IEnumerable<object> ids, IEnumerable<HashSet<string>> newTags, ActionConfig actionConfig = null)
         {
             List<string> indecies = ids.Select(x => x.ToString()).ToList();
             if (indecies.Count < 1)
                 return 0;
 
-            List<HashSet<string>> tags = (newTag as IEnumerable<HashSet<string>>).ToList();
-            return UpdateDateTags(type, indecies, tags);
-        }
+            List<HashSet<string>> tags = newTags.ToList();
 
-        private int UpdateDateTags(Type t, List<string> indecies, List<HashSet<string>> tags)
-        {
-
-            List<IBHoMObject> objects = Read(t, indecies.ToList()).ToList();
+            List<IBHoMObject> objects = IRead(type, indecies.ToList(), actionConfig).ToList();
 
             for (int i = 0; i < objects.Count; i++)
             {
                 objects[i].Tags = tags[i];
             }
 
-            if (Create(objects))
+            if (ICreate(objects, actionConfig))
                 return objects.Count;
 
             return 0;
+
         }
     }
 }

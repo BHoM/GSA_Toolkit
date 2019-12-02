@@ -34,6 +34,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using BH.Engine.Adapter;
+using BH.oM.Adapter;
 
 namespace BH.Adapter.GSA
 {
@@ -43,7 +44,7 @@ namespace BH.Adapter.GSA
         /**** Index Adapter Methods                     ****/
         /***************************************************/
 
-        protected override IEnumerable<IBHoMObject> Read(Type type, IList indices)
+        protected override IEnumerable<IBHoMObject> IRead(Type type, IList indices, ActionConfig actionConfig = null)
         {
             if (type == typeof(Node))
                 return ReadNodes(indices as dynamic);
@@ -136,8 +137,8 @@ namespace BH.Adapter.GSA
             List<ISectionProperty> secPropList = ReadSectionProperties();
             List<Node> nodeList = ReadNodes();
 
-            Dictionary<string, ISectionProperty> secProps = secPropList.Where(x => x != null).ToDictionary(x => x.GetAdapterId<int>().ToString());
-            Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.GetAdapterId<int>().ToString());
+            Dictionary<string, ISectionProperty> secProps = secPropList.Where(x => x != null).ToDictionary(x => x.GetExternalId().ToString());
+            Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.GetExternalId().ToString());
 
             return Engine.GSA.Convert.ToBHoMBars(barArr, secProps, nodes, ids);
         }
@@ -191,7 +192,7 @@ namespace BH.Adapter.GSA
         public List<ISectionProperty> ReadSectionProperties(List<string> ids = null)
         {
             List<IMaterialFragment> matList = ReadMaterials(null, true);
-            Dictionary<string, IMaterialFragment> materials = matList.ToDictionary(x => x.GetAdapterId<int>().ToString());
+            Dictionary<string, IMaterialFragment> materials = matList.ToDictionary(x => x.GetExternalId().ToString());
 
             string allProps = m_gsaCom.GwaCommand("GET_ALL, PROP_SEC").ToString();
             string[] proArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
@@ -207,7 +208,7 @@ namespace BH.Adapter.GSA
         public List<ISurfaceProperty> ReadProperty2d(List<string> ids = null)
         {
             List<IMaterialFragment> matList = ReadMaterials(null, true);
-            Dictionary<string, IMaterialFragment> materials = matList.ToDictionary(x => x.GetAdapterId<int>().ToString());
+            Dictionary<string, IMaterialFragment> materials = matList.ToDictionary(x => x.GetExternalId().ToString());
 
             string allProps = m_gsaCom.GwaCommand("GET_ALL, PROP_2D").ToString();
             string[] proArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
@@ -231,8 +232,8 @@ namespace BH.Adapter.GSA
             List<ISurfaceProperty> secPropList = ReadProperty2d();
             List<Node> nodeList = ReadNodes();
 
-            Dictionary<string, ISurfaceProperty> props = secPropList.ToDictionary(x => x.GetAdapterId<int>().ToString());
-            Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.GetAdapterId<int>().ToString());
+            Dictionary<string, ISurfaceProperty> props = secPropList.ToDictionary(x => x.GetExternalId().ToString());
+            Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.GetExternalId().ToString());
 
             return Engine.GSA.Convert.ToBHoMFEMesh(gsaElements, props, nodes);
         }
@@ -257,8 +258,8 @@ namespace BH.Adapter.GSA
             List<LinkConstraint> constraintList = ReadLinkConstraint(null);
             List<Node> nodeList = ReadNodes();
 
-            Dictionary<string, LinkConstraint> constraints = constraintList.ToDictionary(x => x.GetAdapterId<int>().ToString());
-            Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.GetAdapterId<int>().ToString());
+            Dictionary<string, LinkConstraint> constraints = constraintList.ToDictionary(x => x.GetExternalId().ToString());
+            Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.GetExternalId().ToString());
 
             int[] potentialBeamRefs = GenerateIndices(ids, typeof(RigidLink));
             GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];

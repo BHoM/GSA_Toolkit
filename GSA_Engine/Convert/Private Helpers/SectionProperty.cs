@@ -79,7 +79,7 @@ namespace BH.Engine.GSA
 
                         
 
-                        return "PROP_SEC," + secProp.GetAdapterId<int>().ToString() + ", " + name + ", NO_RGB," + secProp.Material.GetAdapterId<int>() + "," + catProp + ", NO," + secProp.SectionType() + ", 0, NO_PROP," + secProp.ModifiersString() + ", FLAME_CUT, NO_J";
+                        return "PROP_SEC," + secProp.GetExternalId().ToString() + ", " + name + ", NO_RGB," + secProp.Material.GetExternalId() + "," + catProp + ", NO," + secProp.SectionType() + ", 0, NO_PROP," + secProp.ModifiersString() + ", FLAME_CUT, NO_J";
 
 
                     }
