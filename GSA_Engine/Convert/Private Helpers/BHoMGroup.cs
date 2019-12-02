@@ -40,7 +40,7 @@ namespace BH.Engine.GSA
                 return "\"" + load.Objects.Name + "\"";
 
             //Otherwise apply to the corresponding indecies
-            return load.Objects.Elements.Select(x => int.Parse(x.GetAdapterId<int>().ToString())).GeterateIdString();
+            return load.Objects.Elements.Select(x => int.Parse(x.GetExternalId().ToString())).GeterateIdString();
 
         }
 

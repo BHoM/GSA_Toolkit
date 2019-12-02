@@ -29,7 +29,7 @@ namespace BH.Adapter.GSA
 {
     public partial class GSAAdapter
     {
-        public override IEnumerable<object> Pull(IRequest request, PullType pullType = PullType.AdapterDefault)
+        public override IEnumerable<object> Pull(IRequest request, PullType pullType = PullType.AdapterDefault, ActionConfig actionConfig = null)
         {
             List<object> readresult = new List<object>();
 
@@ -44,7 +44,7 @@ namespace BH.Adapter.GSA
                 return readresult;
             }
 
-            return base.Pull(request, pullType);
+            return base.Pull(request, pullType, actionConfig);
         }
     }
 }

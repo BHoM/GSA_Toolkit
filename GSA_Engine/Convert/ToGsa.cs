@@ -277,11 +277,11 @@ namespace BH.Engine.GSA
             string name = bar.TaggedName();
             string type = GetElementTypeString(bar);
 
-            string sectionPropertyIndex = bar.SectionProperty != null ? bar.SectionProperty.GetAdapterId<int>().ToString() : "1";
+            string sectionPropertyIndex = bar.SectionProperty != null ? bar.SectionProperty.GetExternalId().ToString() : "1";
             int group = 0;
 
-            string startIndex = bar.StartNode.GetAdapterId<int>().ToString();
-            string endIndex = bar.EndNode.GetAdapterId<int>().ToString();
+            string startIndex = bar.StartNode.GetExternalId().ToString();
+            string endIndex = bar.EndNode.GetExternalId().ToString();
 
             string orientationAngle = (bar.OrientationAngle * 180 / Math.PI).ToString();
             // TODO: Make sure that these are doing the correct thing. Release vs restraint corresponding to true vs false
@@ -312,7 +312,7 @@ namespace BH.Engine.GSA
         {
             string name = prop.TaggedName();
 
-            string mat = prop.Material.GetAdapterId<int>().ToString();// materialId;  //"STEEL";// material.Name;
+            string mat = prop.Material.GetExternalId().ToString();// materialId;  //"STEEL";// material.Name;
 
             string desc;
             string props;
@@ -340,7 +340,7 @@ namespace BH.Engine.GSA
         {
 
             string name = panProp.TaggedName();
-            string mat = panProp.Material.GetAdapterId<int>().ToString();
+            string mat = panProp.Material.GetExternalId().ToString();
 
 
             string command = "PROP_2D";
@@ -393,12 +393,12 @@ namespace BH.Engine.GSA
             string name = link.TaggedName();
             string type = "LINK";
 
-            string constraintIndex = link.Constraint.GetAdapterId<int>().ToString();
+            string constraintIndex = link.Constraint.GetExternalId().ToString();
             string group = "0";
 
-            string startIndex = link.MasterNode.GetAdapterId<int>().ToString();
+            string startIndex = link.MasterNode.GetExternalId().ToString();
 
-            string endIndex = link.SlaveNodes[slaveIndex].GetAdapterId<int>().ToString();  
+            string endIndex = link.SlaveNodes[slaveIndex].GetExternalId().ToString();  
 
             string dummy = CheckDummy(link);
 
@@ -418,7 +418,7 @@ namespace BH.Engine.GSA
             string type;
 
             FEMeshFace face = mesh.Faces[faceID];
-            face.SetAdapterId<int>(index);
+            face.SetExternalId(index);
 
             //TODO: Implement QUAD8 and TRI6
             if (face.NodeListIndices.Count == 3)
@@ -430,14 +430,14 @@ namespace BH.Engine.GSA
 
             string name = mesh.TaggedName();
 
-            string propertyIndex = mesh.Property.GetAdapterId<int>().ToString();
+            string propertyIndex = mesh.Property.GetExternalId().ToString();
             int group = 0;
 
             string topology = "";
 
             foreach (int nodeIndex in face.NodeListIndices)
             {
-                topology += mesh.Nodes[nodeIndex].GetAdapterId<int>().ToString() + ",";
+                topology += mesh.Nodes[nodeIndex].GetExternalId().ToString() + ",";
             }
 
             string dummy = CheckDummy(face);
@@ -455,7 +455,7 @@ namespace BH.Engine.GSA
             string command = "LIST";
             string name = group.Name;
             string type = group.IElementType();
-            string desc = group.Elements.Select(x => int.Parse(x.GetAdapterId<int>().ToString())).GeterateIdString();
+            string desc = group.Elements.Select(x => int.Parse(x.GetExternalId().ToString())).GeterateIdString();
 
             return command + ", " + index + ", " + name + ", " + type +", " + desc;
         }

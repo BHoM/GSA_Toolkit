@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BH.oM.GSA
 {
-    public class GSAIdFragment : AdapterIdFragment<int>
+    public class GSAIdFragment : ExternalIdFragment
     {
         public GSAIdFragment(int id) : base(id) { }
     }

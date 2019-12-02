@@ -90,7 +90,7 @@ namespace BH.Engine.GSA
 
                 bar.SectionProperty = prop;
 
-                bar.SetAdapterId<int>(gsaBar.Ref);
+                bar.SetExternalId(gsaBar.Ref);
 
                 barList.Add(bar);
 
@@ -220,7 +220,7 @@ namespace BH.Engine.GSA
                 bar.Release = new BarRelease() { StartRelease = startConst, EndRelease = endConst };
 
 
-                bar.SetAdapterId<int>(int.Parse(arr[1]));
+                bar.SetExternalId(int.Parse(arr[1]));
 
                 barList.Add(bar);
             }
@@ -253,7 +253,7 @@ namespace BH.Engine.GSA
                 };
 
                 mesh.ApplyTaggedName(gsaMesh.Name);
-                mesh.SetAdapterId<int>(gsaMesh.Ref);
+                mesh.SetExternalId(gsaMesh.Ref);
                 meshList.Add(mesh);
             }
             return meshList;
@@ -278,7 +278,7 @@ namespace BH.Engine.GSA
                 };
 
                 face.ApplyTaggedName(gsaLink.Name);
-                face.SetAdapterId<int>(gsaLink.Ref);
+                face.SetExternalId(gsaLink.Ref);
                 linkList.Add(face);
 
             }
@@ -627,7 +627,7 @@ namespace BH.Engine.GSA
                 }
             }
 
-            secProp.SetAdapterId<int>(id);
+            secProp.SetExternalId(id);
             secProp.ApplyTaggedName(gsaStrings[2]);
             secProp.Material = mat;
             return secProp;
@@ -741,7 +741,7 @@ namespace BH.Engine.GSA
             }
 
             constraint.Name = name;
-            constraint.SetAdapterId<int>(int.Parse(id));
+            constraint.SetExternalId(int.Parse(id));
 
             return constraint;
         }

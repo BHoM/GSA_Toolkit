@@ -20,6 +20,7 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using BH.oM.Adapter;
 using System.Collections.Generic;
 
 
@@ -31,9 +32,9 @@ namespace BH.Adapter.GSA
         /**** Adapter Methods                           ****/
         /***************************************************/
 
-        protected override bool Update<T>(IEnumerable<T> objects)
+        protected override bool IUpdate<T>(IEnumerable<T> objects, ActionConfig actionConfig = null)
         {
-            return Create(objects);
+            return ICreate(objects, actionConfig);
         }
 
         /***************************************************/

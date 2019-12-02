@@ -29,6 +29,7 @@ using BH.oM.Structure.SectionProperties;
 using BH.oM.Base;
 using BH.Engine.GSA;
 using BH.Engine.Adapter;
+using BH.oM.Adapter;
 
 namespace BH.Adapter.GSA
 {
@@ -38,7 +39,7 @@ namespace BH.Adapter.GSA
         /**** Index Adapter Interface                   ****/
         /***************************************************/
 
-        protected override bool Create<T>(IEnumerable<T> objects)
+        protected override bool ICreate<T>(IEnumerable<T> objects, ActionConfig actionConfig = null)
         {
             bool success = true;
 
@@ -63,7 +64,7 @@ namespace BH.Adapter.GSA
 
         private bool CreateObject(BH.oM.Base.IBHoMObject obj)
         {
-            return ComCall(Engine.GSA.Convert.IToGsaString(obj, obj.GetAdapterId<int>().ToString()));
+            return ComCall(Engine.GSA.Convert.IToGsaString(obj, obj.GetExternalId().ToString()));
         }
 
         /***************************************************/
@@ -79,7 +80,7 @@ namespace BH.Adapter.GSA
                     return true;
             }
 
-            return ComCall(Engine.GSA.Convert.IToGsaString(prop, prop.GetAdapterId<int>().ToString()));
+            return ComCall(Engine.GSA.Convert.IToGsaString(prop, prop.GetExternalId().ToString()));
         }
 
         /***************************************************/
@@ -91,7 +92,7 @@ namespace BH.Adapter.GSA
             bool success = true;
             foreach (RigidLink link in links)
             {
-                success &= ComCall(Engine.GSA.Convert.ToGsaString(link, link.GetAdapterId<int>().ToString(), 0));
+                success &= ComCall(Engine.GSA.Convert.ToGsaString(link, link.GetExternalId().ToString(), 0));
             }
 
             foreach (RigidLink link in links)
@@ -99,13 +100,13 @@ namespace BH.Adapter.GSA
                 List<string> allIds = new List<string>();
                 for (int i = 1; i < link.SlaveNodes.Count; i++)
                 {
-                    string id =  NextId<int>(link.GetType(), i == 1).Id.ToString();
+                    string id =  NextFreeId(link.GetType(), i == 1).Id.ToString();
                     success &= ComCall(Engine.GSA.Convert.ToGsaString(link, id, i));
                     allIds.Add(id);
                 }
                 if (link.SlaveNodes.Count > 1)
                 {
-                    allIds.Add(link.GetAdapterId<int>().ToString());
+                    allIds.Add(link.GetExternalId().ToString());
                     link.CustomData[AdapterId + "-AllIds"] = allIds;
                 }
             }
@@ -117,7 +118,7 @@ namespace BH.Adapter.GSA
         private bool CreateFEMesh(FEMesh mesh)
         {
             bool success = true;
-            int id = NextId<int>(mesh.GetType(), true).Id;
+            int id = (int)NextFreeId(mesh.GetType(), true).Id;
             List<int> allIds = new List<int>();
 
             for (int i = 0; i < mesh.Faces.Count; i++)
@@ -125,7 +126,7 @@ namespace BH.Adapter.GSA
                 success &= ComCall(Engine.GSA.Convert.ToGsaString(mesh,id,i));
                 allIds.Add(id);
                 id++;
-                //mesh.GetAdapterId<int>() = allIds; //TODO: SOLVE THIS
+                //mesh.GetExternalId() = allIds; //TODO: SOLVE THIS
             }
 
             return success;
