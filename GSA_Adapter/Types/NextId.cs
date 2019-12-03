@@ -38,7 +38,7 @@ namespace BH.Adapter.GSA
         /**** Index Adapter Interface                   ****/
         /***************************************************/
 
-        protected override ExternalIdFragment NextFreeId(Type type, bool refresh)
+        protected override object NextFreeId(Type type, bool refresh)
         {
             if (type == typeof(LoadCombination))
                 return null; //TODO: Needed?
@@ -61,7 +61,7 @@ namespace BH.Adapter.GSA
                 m_indexDict[type] = index;
             }
 
-            return new GSAIdFragment(index);
+            return index;
         }
 
 
