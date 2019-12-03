@@ -30,8 +30,6 @@ namespace BH.Adapter.GSA
 {
     public partial class GSAAdapter : StructuralAnalysisAdapter
     {
-        public override Type ExternalIdFragmentType { get; set; } = typeof(GSAIdFragment);
-
         /***************************************************/
         /**** Constructors                              ****/
         /***************************************************/

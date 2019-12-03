@@ -28,6 +28,7 @@ using BH.oM.Structure.SurfaceProperties;
 using BH.oM.Structure.Constraints;
 using System;
 using System.Collections.Generic;
+using BH.oM.Adapter;
 
 namespace BH.Adapter.GSA
 {
@@ -37,7 +38,7 @@ namespace BH.Adapter.GSA
         /**** BHoM Adapter Interface                    ****/
         /***************************************************/
 
-        protected override IEqualityComparer<T> Comparer<T>()
+        protected override IEqualityComparer<T> GetComparerForType<T>(ActionConfig actionConfig = null)
         {
             Type type = typeof(T);
 

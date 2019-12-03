@@ -342,7 +342,7 @@ namespace BH.Engine.GSA
 
             mat.ApplyTaggedName(gStr[3]);
 
-            mat.CustomData.Add(AdapterID, int.Parse(gStr[1]));
+            mat.SetExternalId(int.Parse(gStr[1]));
 
             return mat;
         }

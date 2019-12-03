@@ -64,7 +64,7 @@ namespace BH.Adapter.GSA
 
         private bool CreateObject(BH.oM.Base.IBHoMObject obj)
         {
-            return ComCall(Engine.GSA.Convert.IToGsaString(obj, obj.GetExternalId().ToString()));
+            return ComCall(Engine.GSA.Convert.IToGsaString(obj, obj.CustomData[AdapterId].ToString()));
         }
 
         /***************************************************/
@@ -80,7 +80,7 @@ namespace BH.Adapter.GSA
                     return true;
             }
 
-            return ComCall(Engine.GSA.Convert.IToGsaString(prop, prop.GetExternalId().ToString()));
+            return ComCall(Engine.GSA.Convert.IToGsaString(prop, prop.CustomData[AdapterId].ToString()));
         }
 
         /***************************************************/
@@ -92,7 +92,7 @@ namespace BH.Adapter.GSA
             bool success = true;
             foreach (RigidLink link in links)
             {
-                success &= ComCall(Engine.GSA.Convert.ToGsaString(link, link.GetExternalId().ToString(), 0));
+                success &= ComCall(Engine.GSA.Convert.ToGsaString(link, link.CustomData[AdapterId].ToString(), 0));
             }
 
             foreach (RigidLink link in links)
@@ -100,13 +100,13 @@ namespace BH.Adapter.GSA
                 List<string> allIds = new List<string>();
                 for (int i = 1; i < link.SlaveNodes.Count; i++)
                 {
-                    string id =  NextFreeId(link.GetType(), i == 1).Id.ToString();
+                    string id =  NextFreeId(link.GetType(), i == 1).ToString();
                     success &= ComCall(Engine.GSA.Convert.ToGsaString(link, id, i));
                     allIds.Add(id);
                 }
                 if (link.SlaveNodes.Count > 1)
                 {
-                    allIds.Add(link.GetExternalId().ToString());
+                    allIds.Add(link.CustomData[AdapterId].ToString());
                     link.CustomData[AdapterId + "-AllIds"] = allIds;
                 }
             }
@@ -118,7 +118,7 @@ namespace BH.Adapter.GSA
         private bool CreateFEMesh(FEMesh mesh)
         {
             bool success = true;
-            int id = (int)NextFreeId(mesh.GetType(), true).Id;
+            int id = (int)NextFreeId(mesh.GetType(), true);
             List<int> allIds = new List<int>();
 
             for (int i = 0; i < mesh.Faces.Count; i++)
@@ -126,7 +126,7 @@ namespace BH.Adapter.GSA
                 success &= ComCall(Engine.GSA.Convert.ToGsaString(mesh,id,i));
                 allIds.Add(id);
                 id++;
-                //mesh.GetExternalId() = allIds; //TODO: SOLVE THIS
+                //mesh.CustomData[AdapterId] = allIds; //TODO: SOLVE THIS
             }
 
             return success;
