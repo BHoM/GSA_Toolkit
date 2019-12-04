@@ -116,8 +116,6 @@
     <Compile Include="CRUD\ReadResultsGlobal.cs" />
     <Compile Include="CRUD\Update.cs" />
     <Compile Include="CRUD\UpdateProperty.cs" />
-    <Compile Include="Types\DependencyTypes.cs" />
-    <Compile Include="Types\Comparer.cs" />
     <Compile Include="CRUD\Delete.cs" />
     <Compile Include="Types\NextId.cs" />
     <Compile Include="CRUD\Create.cs" />

@@ -25,6 +25,13 @@ using BH.oM.GSA;
 using System.ComponentModel;
 using System;
 using BH.oM.Adapter;
+using BH.oM.Structure.Elements;
+using BH.Engine.Base.Objects;
+using BH.oM.Structure.SectionProperties;
+using BH.oM.Structure.MaterialFragments;
+using BH.oM.Structure.Constraints;
+using System.Collections.Generic;
+using BH.oM.Structure.SurfaceProperties;
 
 namespace BH.Adapter.GSA
 {
@@ -36,7 +43,27 @@ namespace BH.Adapter.GSA
 
         public GSAAdapter(string filePath = "", GSAConfig gsaConfig = null, bool active = false)
         {
-            AdapterId = BH.Engine.GSA.Convert.AdapterID;
+            AdapterIdName = BH.Engine.GSA.Convert.AdapterIdName;
+
+            m_adapterComparers = new Dictionary<Type, object>
+            {
+                {typeof(Bar), new BH.Engine.Structure.BarEndNodesDistanceComparer(3) },
+                {typeof(Node), new BH.Engine.Structure.NodeDistanceComparer(3) },
+                {typeof(ISectionProperty), new BHoMObjectNameOrToStringComparer() },
+                {typeof(IMaterialFragment), new BHoMObjectNameComparer() },
+                {typeof(LinkConstraint), new BHoMObjectNameComparer() },
+            };
+
+            m_dependencyTypes = new Dictionary<Type, List<Type>>
+            {
+                {typeof(BH.oM.Structure.Loads.Load<Node>), new List<Type> { typeof(Node) }  },
+                {typeof(BH.oM.Structure.Loads.Load<Bar>), new List<Type> { typeof(Bar) } },
+                {typeof(Bar), new List<Type> { typeof(ISectionProperty), typeof(Node) } },
+                {typeof(ISectionProperty), new List<Type> { typeof(IMaterialFragment) } },
+                {typeof(RigidLink), new List<Type> { typeof(LinkConstraint), typeof(Node) } },
+                {typeof(FEMesh), new List<Type> { typeof(ISurfaceProperty), typeof(Node) } },
+                {typeof(ISurfaceProperty), new List<Type> { typeof(IMaterialFragment) } }
+            };
 
             if (active)
             {
@@ -66,7 +93,7 @@ namespace BH.Adapter.GSA
                 return true;
             else
             {
-                if(raiseError)
+                if (raiseError)
                     Engine.Reflection.Compute.RecordError("Failure calling the command: " + str);
 
                 return false;

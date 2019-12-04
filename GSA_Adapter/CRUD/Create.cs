@@ -64,7 +64,7 @@ namespace BH.Adapter.GSA
 
         private bool CreateObject(BH.oM.Base.IBHoMObject obj)
         {
-            return ComCall(Engine.GSA.Convert.IToGsaString(obj, obj.CustomData[AdapterId].ToString()));
+            return ComCall(Engine.GSA.Convert.IToGsaString(obj, obj.CustomData[AdapterIdName].ToString()));
         }
 
         /***************************************************/
@@ -80,7 +80,7 @@ namespace BH.Adapter.GSA
                     return true;
             }
 
-            return ComCall(Engine.GSA.Convert.IToGsaString(prop, prop.CustomData[AdapterId].ToString()));
+            return ComCall(Engine.GSA.Convert.IToGsaString(prop, prop.CustomData[AdapterIdName].ToString()));
         }
 
         /***************************************************/
@@ -92,7 +92,7 @@ namespace BH.Adapter.GSA
             bool success = true;
             foreach (RigidLink link in links)
             {
-                success &= ComCall(Engine.GSA.Convert.ToGsaString(link, link.CustomData[AdapterId].ToString(), 0));
+                success &= ComCall(Engine.GSA.Convert.ToGsaString(link, link.CustomData[AdapterIdName].ToString(), 0));
             }
 
             foreach (RigidLink link in links)
@@ -106,8 +106,8 @@ namespace BH.Adapter.GSA
                 }
                 if (link.SlaveNodes.Count > 1)
                 {
-                    allIds.Add(link.CustomData[AdapterId].ToString());
-                    link.CustomData[AdapterId + "-AllIds"] = allIds;
+                    allIds.Add(link.CustomData[AdapterIdName].ToString());
+                    link.CustomData[AdapterIdName + "-AllIds"] = allIds;
                 }
             }
             return success;
@@ -126,7 +126,7 @@ namespace BH.Adapter.GSA
                 success &= ComCall(Engine.GSA.Convert.ToGsaString(mesh,id,i));
                 allIds.Add(id);
                 id++;
-                //mesh.CustomData[AdapterId] = allIds; //TODO: SOLVE THIS
+                //mesh.CustomData[AdapterIdName] = allIds; //TODO: SOLVE THIS
             }
 
             return success;
