@@ -277,11 +277,11 @@ namespace BH.Engine.GSA
             string name = bar.TaggedName();
             string type = GetElementTypeString(bar);
 
-            string sectionPropertyIndex = bar.SectionProperty != null ? bar.SectionProperty.CustomData[AdapterID].ToString() : "1";
+            string sectionPropertyIndex = bar.SectionProperty != null ? bar.SectionProperty.CustomData[AdapterIdName].ToString() : "1";
             int group = 0;
 
-            string startIndex = bar.StartNode.CustomData[AdapterID].ToString();
-            string endIndex = bar.EndNode.CustomData[AdapterID].ToString();
+            string startIndex = bar.StartNode.CustomData[AdapterIdName].ToString();
+            string endIndex = bar.EndNode.CustomData[AdapterIdName].ToString();
 
             string orientationAngle = (bar.OrientationAngle * 180 / Math.PI).ToString();
             // TODO: Make sure that these are doing the correct thing. Release vs restraint corresponding to true vs false
@@ -312,7 +312,7 @@ namespace BH.Engine.GSA
         {
             string name = prop.TaggedName();
 
-            string mat = prop.Material.CustomData[AdapterID].ToString();// materialId;  //"STEEL";// material.Name;
+            string mat = prop.Material.CustomData[AdapterIdName].ToString();// materialId;  //"STEEL";// material.Name;
 
             string desc;
             string props;
@@ -340,7 +340,7 @@ namespace BH.Engine.GSA
         {
 
             string name = panProp.TaggedName();
-            string mat = panProp.Material.CustomData[AdapterID].ToString();
+            string mat = panProp.Material.CustomData[AdapterIdName].ToString();
 
 
             string command = "PROP_2D";
@@ -393,12 +393,12 @@ namespace BH.Engine.GSA
             string name = link.TaggedName();
             string type = "LINK";
 
-            string constraintIndex = link.Constraint.CustomData[AdapterID].ToString();
+            string constraintIndex = link.Constraint.CustomData[AdapterIdName].ToString();
             string group = "0";
 
-            string startIndex = link.MasterNode.CustomData[AdapterID].ToString();
+            string startIndex = link.MasterNode.CustomData[AdapterIdName].ToString();
 
-            string endIndex = link.SlaveNodes[slaveIndex].CustomData[AdapterID].ToString();  
+            string endIndex = link.SlaveNodes[slaveIndex].CustomData[AdapterIdName].ToString();  
 
             string dummy = CheckDummy(link);
 
@@ -430,14 +430,14 @@ namespace BH.Engine.GSA
 
             string name = mesh.TaggedName();
 
-            string propertyIndex = mesh.Property.CustomData[AdapterID].ToString();
+            string propertyIndex = mesh.Property.CustomData[AdapterIdName].ToString();
             int group = 0;
 
             string topology = "";
 
             foreach (int nodeIndex in face.NodeListIndices)
             {
-                topology += mesh.Nodes[nodeIndex].CustomData[AdapterID].ToString() + ",";
+                topology += mesh.Nodes[nodeIndex].CustomData[AdapterIdName].ToString() + ",";
             }
 
             string dummy = CheckDummy(face);
@@ -455,7 +455,7 @@ namespace BH.Engine.GSA
             string command = "LIST";
             string name = group.Name;
             string type = group.IElementType();
-            string desc = group.Elements.Select(x => int.Parse(x.CustomData[AdapterID].ToString())).GeterateIdString();
+            string desc = group.Elements.Select(x => int.Parse(x.CustomData[AdapterIdName].ToString())).GeterateIdString();
 
             return command + ", " + index + ", " + name + ", " + type +", " + desc;
         }

@@ -779,7 +779,7 @@ namespace BH.Engine.GSA
                 ((LoadingPanelProperty)panProp).ReferenceEdge = int.Parse(gsaStrings[8]);
             }
 
-            panProp.CustomData.Add(AdapterID, id);
+            panProp.CustomData.Add(AdapterIdName, id);
             panProp.Name = name;
             return panProp;
         }
@@ -857,7 +857,7 @@ namespace BH.Engine.GSA
 
             Node node = Structure.Create.Node( pos,"", con );
             node.ApplyTaggedName(name);
-            node.CustomData.Add(AdapterID, id);
+            node.CustomData.Add(AdapterIdName, id);
             return node;
             //Node node = new Node { Position = new Point { X = gn.Coor[0], Y = gn.Coor[1], Z = gn.Coor[2] } };
             //node.ApplyTaggedName(gn.Name);

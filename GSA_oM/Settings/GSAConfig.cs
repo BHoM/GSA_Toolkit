@@ -25,11 +25,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BH.oM.Adapter;
 using BH.oM.Base;
 
 namespace BH.oM.GSA
 {
-    public class GSAConfig : BHoMObject
+    public class GSAConfig : ActionConfig
     {
         /***************************************************/
         /**** Properties                                ****/
