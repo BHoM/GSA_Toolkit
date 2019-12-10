@@ -58,7 +58,8 @@ namespace BH.Engine.GSA
                         else if (steel.SectionProfile.Shape == ShapeType.Box || steel.SectionProfile.Shape == ShapeType.Tube)
                         {
                             //Add tailing .0 for closed sections
-                            if (arr[1].ToCharArray()[arr[1].Length - 2] != '.')
+                            char[] chArr = arr[1].ToCharArray();
+                            if (chArr.Length > 2 && chArr[arr[1].Length - 2] != '.')
                             {
                                 arr[1] += ".0";
                             }
