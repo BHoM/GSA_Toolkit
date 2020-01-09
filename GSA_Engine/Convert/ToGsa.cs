@@ -418,7 +418,7 @@ namespace BH.Engine.GSA
             string type;
 
             FEMeshFace face = mesh.Faces[faceID];
-            face.SetExternalId(index);
+            face.CustomData[AdapterIdName] = index;
 
             //TODO: Implement QUAD8 and TRI6
             if (face.NodeListIndices.Count == 3)
