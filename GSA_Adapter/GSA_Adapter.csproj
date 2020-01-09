@@ -91,6 +91,9 @@
     <Reference Include="StructuralAnalysisAdapter">
       <HintPath>..\..\BHoM_Adapter\Build\StructuralAnalysisAdapter.dll</HintPath>
     </Reference>
+    <Reference Include="Structure_AdapterModule">
+      <HintPath>..\..\BHoM_Adapter\Build\Structure_AdapterModule.dll</HintPath>
+    </Reference>
     <Reference Include="Structure_Engine">
       <HintPath>..\..\BHoM_Engine\Build\Structure_Engine.dll</HintPath>
       <Private>False</Private>
