@@ -45,6 +45,8 @@ namespace BH.Adapter.GSA
         {
             AdapterIdName = BH.Engine.GSA.Convert.AdapterIdName;
 
+            BH.Adapter.Modules.ModuleLoader.LoadStructuralModules(this);
+
             m_adapterComparers = new Dictionary<Type, object>
             {
                 {typeof(Bar), new BH.Engine.Structure.BarEndNodesDistanceComparer(3) },
@@ -56,7 +58,7 @@ namespace BH.Adapter.GSA
 
             m_dependencyTypes = new Dictionary<Type, List<Type>>
             {
-                {typeof(BH.oM.Structure.Loads.Load<Node>), new List<Type> { typeof(Node) }  },
+                {typeof(BH.oM.Structure.Loads.Load<Node>), new List<Type> { typeof(Node) } },
                 {typeof(BH.oM.Structure.Loads.Load<Bar>), new List<Type> { typeof(Bar) } },
                 {typeof(Bar), new List<Type> { typeof(ISectionProperty), typeof(Node) } },
                 {typeof(ISectionProperty), new List<Type> { typeof(IMaterialFragment) } },

@@ -90,7 +90,8 @@ namespace BH.Engine.GSA
 
                 bar.SectionProperty = prop;
 
-                bar.SetExternalId(gsaBar.Ref);
+                int id = gsaBar.Ref;
+                bar.CustomData[AdapterIdName] = id;
 
                 barList.Add(bar);
 
@@ -111,9 +112,9 @@ namespace BH.Engine.GSA
 
                 string[] arr = gsaBar.Split(',');
 
-                string id = arr[1];
+                string index = arr[1];
 
-                if (checkId && !ids.Contains(id))
+                if (checkId && !ids.Contains(index))
                     continue;
 
                 BarFEAType feType;
@@ -219,8 +220,8 @@ namespace BH.Engine.GSA
 
                 bar.Release = new BarRelease() { StartRelease = startConst, EndRelease = endConst };
 
-
-                bar.SetExternalId(int.Parse(arr[1]));
+                int id = int.Parse(arr[1]);
+                bar.CustomData[AdapterIdName] = id;
 
                 barList.Add(bar);
             }
@@ -253,7 +254,10 @@ namespace BH.Engine.GSA
                 };
 
                 mesh.ApplyTaggedName(gsaMesh.Name);
-                mesh.SetExternalId(gsaMesh.Ref);
+
+                int id = gsaMesh.Ref;
+                mesh.CustomData[AdapterIdName] = id;
+
                 meshList.Add(mesh);
             }
             return meshList;
@@ -278,7 +282,8 @@ namespace BH.Engine.GSA
                 };
 
                 face.ApplyTaggedName(gsaLink.Name);
-                face.SetExternalId(gsaLink.Ref);
+                int id = gsaLink.Ref;
+                face.CustomData[AdapterIdName] = id;
                 linkList.Add(face);
 
             }
@@ -342,7 +347,8 @@ namespace BH.Engine.GSA
 
             mat.ApplyTaggedName(gStr[3]);
 
-            mat.SetExternalId(int.Parse(gStr[1]));
+            int id = int.Parse(gStr[1]);
+            mat.CustomData[AdapterIdName] = id;
 
             return mat;
         }
@@ -627,7 +633,7 @@ namespace BH.Engine.GSA
                 }
             }
 
-            secProp.SetExternalId(id);
+            secProp.CustomData[AdapterIdName] = id;
             secProp.ApplyTaggedName(gsaStrings[2]);
             secProp.Material = mat;
             return secProp;
@@ -741,7 +747,7 @@ namespace BH.Engine.GSA
             }
 
             constraint.Name = name;
-            constraint.SetExternalId(int.Parse(id));
+            constraint.CustomData[AdapterIdName] = int.Parse(id);
 
             return constraint;
         }
