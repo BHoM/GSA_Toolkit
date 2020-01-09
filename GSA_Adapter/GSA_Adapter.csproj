@@ -88,9 +88,6 @@
       <HintPath>..\..\BHoM\Build\Reflection_oM.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="StructuralAnalysisAdapter">
-      <HintPath>..\..\BHoM_Adapter\Build\StructuralAnalysisAdapter.dll</HintPath>
-    </Reference>
     <Reference Include="Structure_AdapterModule">
       <HintPath>..\..\BHoM_Adapter\Build\Structure_AdapterModule.dll</HintPath>
     </Reference>
