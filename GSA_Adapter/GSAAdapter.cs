@@ -35,7 +35,7 @@ using BH.oM.Structure.SurfaceProperties;
 
 namespace BH.Adapter.GSA
 {
-    public partial class GSAAdapter : StructuralAnalysisAdapter
+    public partial class GSAAdapter : BHoMAdapter
     {
         /***************************************************/
         /**** Constructors                              ****/
