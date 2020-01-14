@@ -33,83 +33,39 @@ namespace BH.Adapter.GSA
         /**** IAdapter Interface                        ****/
         /***************************************************/
 
-        public override Output<object,bool> Execute(string command, Dictionary<string, object> parameters = null, ActionConfig actionConfig = null)
+        public override Output<object,bool> Execute(IExecuteCommand command, ActionConfig actionConfig = null)
         {
-            var output = new Output<object, bool>() { Item1 = null };
+            var output = new Output<object, bool>() { Item1 = null, Item2 = false };
 
-            string commandUpper = command.ToUpper();
 
-            if (commandUpper == "CLOSE")
+            if (command is BH.oM.Adapter.Commands.Close)
                 output.Item2 = Close();
 
-            else if (commandUpper == "SAVE")
+            else if (command is BH.oM.Adapter.Commands.SaveAs)
             {
-                string fileName = default(string);
-                string[] fileNameStringAlt = {
-                    "Filename",
-                    "File name",
-                    "File_name",
-                    "filename",
-                    "file name",
-                    "file_name",
-                    "FileName",
-                    "File Name",
-                    "File_Name",
-                    "FILENAME",
-                    "FILE NAME",
-                    "FILE_NAME"
-                };
-                foreach (string str in fileNameStringAlt)
-                {
-                    if (parameters.ContainsKey(str))
-                    {
-                        fileName = (string)parameters[str];
-                        break;
-                    }
-                }
+                var cmd = command as BH.oM.Adapter.Commands.SaveAs;
+                string fileName = cmd.FileName;
                 output.Item2 = Save(fileName);
             }
 
-            else if (commandUpper == "CLEARRESULTS" || commandUpper == "DELETERESULTS")
+            else if (command is BH.oM.Adapter.Commands.ClearResults)
             {
                 output.Item2 = ClearResults();
             }
 
-            else if (commandUpper == "ANALYSE" || commandUpper == "RUN")
+            else if (command is BH.oM.Adapter.Commands.AnalyseLoadCases)
             {
-                IList cases = null;
-                string[] caseStringAlt = 
-                {
-                    "Cases",
-                    "CASES",
-                    "cases",
-                    "LoadCases",
-                    "LOADCASES",
-                    "loadcases",
-                    "Loadcases",
-                    "Load Cases",
-                    "LOAD CASES",
-                    "load cases",
-                    "Load cases",
-                    "Load_Cases",
-                    "LOAD_CASES",
-                    "load_cases",
-                    "Load_cases"
-                };
-                foreach (string str in caseStringAlt)
-                {
-                    object obj;
-                    if (parameters.TryGetValue(str, out obj))
-                    {
-                        cases = obj as IList;
-                        break;
-                    }
-                }
-                output.Item2 = Analyse(cases);
+                var cmd = command as BH.oM.Adapter.Commands.AnalyseLoadCases;
+
+                output.Item2 = Analyse(cmd.LoadCases);
             }
 
-            else
-                output.Item2 = ComCall(command);
+            else if (command is BH.oM.Adapter.Commands.CustomCommand)
+            {
+                var cmd = command as BH.oM.Adapter.Commands.CustomCommand;
+
+                output.Item2 = ComCall(cmd.Command);
+            }
 
             return output;
         }
