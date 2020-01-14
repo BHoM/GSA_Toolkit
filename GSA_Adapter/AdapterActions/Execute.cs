@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 using System.Collections;
 using BH.oM.Adapter;
+using BH.oM.Reflection;
 
 namespace BH.Adapter.GSA
 {
@@ -32,12 +33,14 @@ namespace BH.Adapter.GSA
         /**** IAdapter Interface                        ****/
         /***************************************************/
 
-        public override bool Execute(string command, Dictionary<string, object> parameters = null, ActionConfig actionConfig = null)
+        public override Output<object,bool> Execute(string command, Dictionary<string, object> parameters = null, ActionConfig actionConfig = null)
         {
+            var output = new Output<object, bool>() { Item1 = null };
+
             string commandUpper = command.ToUpper();
 
             if (commandUpper == "CLOSE")
-                return Close();
+                output.Item2 = Close();
 
             else if (commandUpper == "SAVE")
             {
@@ -64,12 +67,12 @@ namespace BH.Adapter.GSA
                         break;
                     }
                 }
-                return Save(fileName);
+                output.Item2 = Save(fileName);
             }
 
             else if (commandUpper == "CLEARRESULTS" || commandUpper == "DELETERESULTS")
             {
-                return ClearResults();
+                output.Item2 = ClearResults();
             }
 
             else if (commandUpper == "ANALYSE" || commandUpper == "RUN")
@@ -102,11 +105,13 @@ namespace BH.Adapter.GSA
                         break;
                     }
                 }
-                return Analyse(cases);
+                output.Item2 = Analyse(cases);
             }
 
             else
-                return ComCall(command);
+                output.Item2 = ComCall(command);
+
+            return output;
         }
 
 
