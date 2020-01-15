@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Collections;
 using BH.oM.Adapter;
 using BH.oM.Reflection;
+using BH.oM.Adapter.Commands;
 
 namespace BH.Adapter.GSA
 {
@@ -33,73 +34,47 @@ namespace BH.Adapter.GSA
         /**** IAdapter Interface                        ****/
         /***************************************************/
 
-        public override Output<object,bool> Execute(IExecuteCommand command, ActionConfig actionConfig = null)
+        public override Output<object, bool> Execute(IExecuteCommand command, ActionConfig actionConfig = null)
         {
-            var output = new Output<object, bool>() { Item1 = null, Item2 = false };
-
-
-            if (command is BH.oM.Adapter.Commands.Close)
-                output.Item2 = Close();
-
-            else if (command is BH.oM.Adapter.Commands.SaveAs)
-            {
-                var cmd = command as BH.oM.Adapter.Commands.SaveAs;
-                string fileName = cmd.FileName;
-                output.Item2 = Save(fileName);
-            }
-
-            else if (command is BH.oM.Adapter.Commands.ClearResults)
-            {
-                output.Item2 = ClearResults();
-            }
-
-            else if (command is BH.oM.Adapter.Commands.AnalyseLoadCases)
-            {
-                var cmd = command as BH.oM.Adapter.Commands.AnalyseLoadCases;
-
-                output.Item2 = Analyse(cmd.LoadCases);
-            }
-
-            else if (command is BH.oM.Adapter.Commands.CustomCommand)
-            {
-                var cmd = command as BH.oM.Adapter.Commands.CustomCommand;
-
-                output.Item2 = ComCall(cmd.Command);
-            }
-
-            return output;
-        }
-
-
-        /***************************************************/
-
-        public bool ClearResults()
-        {
-            return m_gsaCom.Delete("RESULTS") == 0;
+            return RunCommand(command as dynamic);
         }
 
         /***************************************************/
 
-        public bool Close()
+        public Output<object, bool> RunCommand(ClearResults command)
         {
-            return m_gsaCom.Close() == 0;
+            return new Output<object, bool>() { Item1 = null, Item2 = m_gsaCom.Delete("RESULTS") == 0 };
         }
 
         /***************************************************/
 
-        public bool Save(string fileName = null)
+        public Output<object, bool> RunCommand(Close command)
         {
-            if (fileName == null)
-                return m_gsaCom.Save() == 0;
-            else
-                return m_gsaCom.SaveAs("@"+fileName) == 0;
+            return new Output<object, bool>() { Item1 = null, Item2 = m_gsaCom.Close() == 0 };
         }
 
         /***************************************************/
 
-        public bool Analyse(IList cases = null)
+        public Output<object, bool> RunCommand(Save command)
+        {
+            return new Output<object, bool>() { Item1 = null, Item2 = m_gsaCom.Save() == 0 };
+
+        }
+
+        /***************************************************/
+
+        public Output<object, bool> RunCommand(SaveAs command)
+        {
+            return new Output<object, bool>() { Item1 = null, Item2 = m_gsaCom.SaveAs("@" + command.FileName) == 0 };
+        }
+
+        /***************************************************/
+
+        public Output<object, bool> RunCommand(AnalyseLoadCases command)
         {
             short res;
+
+            var cases = command.LoadCases;
 
             if (cases == null)
             {
@@ -117,9 +92,15 @@ namespace BH.Adapter.GSA
                         res += m_gsaCom.Analyse(num);
                 }
             }
-            return res == 0;
+            return new Output<object, bool>() { Item1 = null, Item2 = res == 0 };
         }
 
         /***************************************************/
+
+        public Output<object, bool> RunCommand(CustomCommand command)
+        {
+            return new Output<object, bool>() { Item1 = null, Item2 = ComCall(command.Command) };
+        }
     }
 }
+
