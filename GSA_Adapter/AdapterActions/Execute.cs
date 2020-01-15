@@ -36,41 +36,45 @@ namespace BH.Adapter.GSA
 
         public override Output<object, bool> Execute(IExecuteCommand command, ActionConfig actionConfig = null)
         {
-            return RunCommand(command as dynamic);
+            var output = new Output<object, bool>() { Item1 = null, Item2 = false };
+
+            output.Item2 = RunCommand(command as dynamic);
+
+            return output;
         }
 
         /***************************************************/
 
-        public Output<object, bool> RunCommand(ClearResults command)
+        public bool RunCommand(ClearResults command)
         {
-            return new Output<object, bool>() { Item1 = null, Item2 = m_gsaCom.Delete("RESULTS") == 0 };
+            return m_gsaCom.Delete("RESULTS") == 0;
         }
 
         /***************************************************/
 
-        public Output<object, bool> RunCommand(Close command)
+        public bool RunCommand(Close command)
         {
-            return new Output<object, bool>() { Item1 = null, Item2 = m_gsaCom.Close() == 0 };
+            return m_gsaCom.Close() == 0;
         }
 
         /***************************************************/
 
-        public Output<object, bool> RunCommand(Save command)
+        public bool RunCommand(Save command)
         {
-            return new Output<object, bool>() { Item1 = null, Item2 = m_gsaCom.Save() == 0 };
+            return m_gsaCom.Save() == 0;
 
         }
 
         /***************************************************/
 
-        public Output<object, bool> RunCommand(SaveAs command)
+        public bool RunCommand(SaveAs command)
         {
-            return new Output<object, bool>() { Item1 = null, Item2 = m_gsaCom.SaveAs("@" + command.FileName) == 0 };
+            return m_gsaCom.SaveAs("@" + command.FileName) == 0;
         }
 
         /***************************************************/
 
-        public Output<object, bool> RunCommand(AnalyseLoadCases command)
+        public bool RunCommand(AnalyseLoadCases command)
         {
             short res;
 
@@ -92,14 +96,14 @@ namespace BH.Adapter.GSA
                         res += m_gsaCom.Analyse(num);
                 }
             }
-            return new Output<object, bool>() { Item1 = null, Item2 = res == 0 };
+            return res == 0;
         }
 
         /***************************************************/
 
-        public Output<object, bool> RunCommand(CustomCommand command)
+        public bool RunCommand(CustomCommand command)
         {
-            return new Output<object, bool>() { Item1 = null, Item2 = ComCall(command.Command) };
+            return ComCall(command.Command);
         }
     }
 }
