@@ -30,7 +30,7 @@ using BH.oM.Base;
 
 namespace BH.oM.GSA
 {
-    public class GSAConfig : IActionConfig
+    public class GSAConfig : ActionConfig
     {
         /***************************************************/
         /**** Properties                                ****/
