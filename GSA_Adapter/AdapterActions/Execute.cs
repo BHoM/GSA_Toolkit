@@ -34,9 +34,9 @@ namespace BH.Adapter.GSA
         /**** IAdapter Interface                        ****/
         /***************************************************/
 
-        public override Output<object, bool> Execute(IExecuteCommand command, ActionConfig actionConfig = null)
+        public override Output<List<object>, bool> Execute(IExecuteCommand command, ActionConfig actionConfig = null)
         {
-            var output = new Output<object, bool>() { Item1 = null, Item2 = false };
+            var output = new Output<List<object>, bool>() { Item1 = null, Item2 = false };
 
             output.Item2 = RunCommand(command as dynamic);
 
