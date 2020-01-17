@@ -101,9 +101,31 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
+        public bool RunCommand(NewModel command)
+        {
+            return m_gsaCom.NewFile() == 0;
+        }
+
+        /***************************************************/
+
+        public bool RunCommand(Open command)
+        {
+            return m_gsaCom.Open(command.FileName) == 0;
+        }
+
+        /***************************************************/
+
         public bool RunCommand(CustomCommand command)
         {
             return ComCall(command.Command);
+        }
+
+        /***************************************************/
+
+        public bool RunCommand(IExecuteCommand command)
+        {
+            Engine.Reflection.Compute.RecordWarning($"The command {command.GetType().Name} is not supported by this Adapter.");
+            return false;
         }
     }
 }
