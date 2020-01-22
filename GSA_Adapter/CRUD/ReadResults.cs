@@ -31,6 +31,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using BH.oM.Adapter;
 
 namespace BH.Adapter.GSA
 {
@@ -41,7 +42,7 @@ namespace BH.Adapter.GSA
         /**** Adaptor  Methods                          ****/
         /***************************************************/
 
-        protected override IEnumerable<IResult> ReadResults(Type type, IList ids = null, IList cases = null, int divisions = 5)
+        protected override IEnumerable<IResult> ReadResults(Type type, IList ids = null, IList cases = null, int divisions = 5, ActionConfig actionConfig = null)
         {
             IResultRequest request = Engine.Structure.Create.IResultRequest(type, ids?.Cast<object>(), cases?.Cast<object>(), divisions);
 
