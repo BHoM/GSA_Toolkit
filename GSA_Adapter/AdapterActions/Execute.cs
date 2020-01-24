@@ -74,6 +74,13 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
+        public bool RunCommand(Analyse command)
+        {
+            return m_gsaCom.Analyse() == 0;
+        }
+
+        /***************************************************/
+
         public bool RunCommand(AnalyseLoadCases command)
         {
             short res;
