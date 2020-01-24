@@ -62,7 +62,6 @@ namespace BH.Adapter.GSA
         public bool RunCommand(Save command)
         {
             return m_gsaCom.Save() == 0;
-
         }
 
         /***************************************************/
