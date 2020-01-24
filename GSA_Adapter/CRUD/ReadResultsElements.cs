@@ -26,6 +26,7 @@ using BH.oM.Common;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.Requests;
 using BH.oM.Data.Requests;
+using BH.oM.Adapter;
 using BH.oM.Structure.Results;
 using Interop.gsa_8_7;
 using System;
@@ -44,7 +45,7 @@ namespace BH.Adapter.GSA
         /**** Public method - Read override             ****/
         /***************************************************/
 
-        public IEnumerable<IResult> ReadResults(IStructuralResultRequest request)
+        public IEnumerable<IResult> ReadResults(IStructuralResultRequest request, ActionConfig actionConfig)
         {
             List<int> objectIds = CheckAndGetIds(request);
             List<string> loadCases = CheckAndGetAnalysisCases(request);

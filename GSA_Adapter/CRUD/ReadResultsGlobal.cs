@@ -23,6 +23,7 @@
 using BH.Engine.GSA;
 using BH.oM.Base;
 using BH.oM.Common;
+using BH.oM.Adapter;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.Requests;
 using BH.oM.Data.Requests;
@@ -42,7 +43,7 @@ namespace BH.Adapter.GSA
         /**** Public method - Read override             ****/
         /***************************************************/
 
-        public IEnumerable<IResult> ReadResults(GlobalResultRequest request)
+        public IEnumerable<IResult> ReadResults(GlobalResultRequest request, ActionConfig actionConfig)
         {
             List<int> caseNumbers = CheckAndGetAnalysisCaseNumbers(request.Cases);
             CheckModes(request);
