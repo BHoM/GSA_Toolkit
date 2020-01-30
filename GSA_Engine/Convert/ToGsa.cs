@@ -317,7 +317,8 @@ namespace BH.Engine.GSA
             string desc;
             string props;
 
-            ICreateDescAndPropString(prop, out desc, out props);
+            if (!ICreateDescAndPropString(prop, out desc, out props))
+                return "";
 
             string command = "PROP_SEC";
             string colour = "NO_RGB";
