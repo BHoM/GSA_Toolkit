@@ -283,7 +283,7 @@ namespace BH.Engine.GSA
             }
             else
             {
-                Engine.Reflection.Compute.RecordWarning("GSA_Toolkit does currently only suport Isotropic material. Material with name " + material.Name + " have been NOT been pushed");
+                Engine.Reflection.Compute.RecordWarning("GSA_Toolkit does currently only suport Isotropic and Orthotropic materials. Material with name " + material.Name + " has NOT been pushed");
                 return "";
             }
         }
