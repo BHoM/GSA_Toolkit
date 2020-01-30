@@ -620,6 +620,7 @@ namespace BH.Engine.GSA
                             return null;
                     }
 
+                    //Creates a section based on the material type provided, with fallback to Generic
                     secProp = Structure.Create.SectionPropertyFromProfile(dimensions, mat, "");
 
                 }
