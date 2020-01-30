@@ -89,7 +89,12 @@ namespace BH.Adapter.GSA
 
         private bool ComCall(string str, bool raiseError = true)
         {
-            dynamic commandResult = m_gsaCom.GwaCommand(str);
+            dynamic commandResult;
+
+            if (!string.IsNullOrWhiteSpace(str))
+                commandResult = m_gsaCom.GwaCommand(str);
+            else
+                return false;
 
             if (1 == (int)commandResult)
                 return true;
