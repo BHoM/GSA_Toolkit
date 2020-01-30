@@ -502,7 +502,7 @@ namespace BH.Engine.GSA
 
         public static string ToGsaString(this object obj, string index)
         {
-            Engine.Reflection.Compute.RecordWarning("Objects of type " + obj.GetType().Name + " are not suppoerted in this Adapter");
+            Compute.NotSupportedWarning(obj.GetType());
             return "";
         }
 
@@ -510,7 +510,8 @@ namespace BH.Engine.GSA
 
         public static string ToGsaString(this Panel obj, string index)
         {
-            Engine.Reflection.Compute.RecordWarning("GSA has no meshing capabilities and does therefor not support Panel objects. Try meshing the panel and create a FEMesh and then push again");
+            Engine.Reflection.Compute.RecordWarning("GSA has no meshing capabilities and does therefore not support Panel objects. \n"+
+                                                    "To be able to push a Panel it first needs to be meshed and turned into a FEMesh.");
             return "";
         }
 

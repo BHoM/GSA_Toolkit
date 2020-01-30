@@ -147,7 +147,7 @@ namespace BH.Engine.GSA
             //This will handle Steel, Concrete, Aluminium, Timber and Generi section, i.e. all profile based sections, the same way.
             prop = "NO_PROP";
             desc = "";
-            Reflection.Compute.RecordWarning("Section property of type " + secProp.GetType().Name + " is not suppoerted in the GSA Adapter");
+            Compute.NotSupportedWarning(secProp.GetType(), "Section properties");
             return false; 
         }
 
@@ -335,7 +335,7 @@ namespace BH.Engine.GSA
 
         private static bool CreateDescString(IProfile profile, out string desc)
         {
-            Reflection.Compute.RecordWarning("Profile of type " + profile.GetType().Name + " is not suppoerted in the GSA Adapter");
+            Compute.NotSupportedWarning(profile.GetType(), "Section profiles");
             desc = "";
             return false;
         }
