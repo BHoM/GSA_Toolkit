@@ -278,7 +278,7 @@ namespace BH.Engine.GSA
                 string G = CommaSeparatedValues(orthotropic.ShearModulus);
                 string damp = orthotropic.DampingRatio.ToString();
 
-                string str = command + "," + num + "," + mModel + "," + name + "," + colour + "," + type + ",6," + E + "," + nu + "," + rho + "," + alpha + "," + G + "," + damp + ",0,0,NO_ENV";
+                string str = command + "," + num + "," + mModel + "," + name + "," + colour + "," + type + ",14," + E + "," + nu + "," + rho + "," + alpha + "," + G + "," + damp + ",0,0,NO_ENV";
                 return str;
             }
             else
