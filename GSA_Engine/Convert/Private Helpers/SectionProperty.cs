@@ -146,7 +146,7 @@ namespace BH.Engine.GSA
             //This will handle Steel, Concrete, Aluminium, Timber and Generi section, i.e. all profile based sections, the same way.
             prop = "NO_PROP";
             desc = "";
-            Reflection.Compute.RecordWarning("Section proeprty of type " + secProp.GetType().Name + " is not suppoerted in this adapter");
+            Reflection.Compute.RecordWarning("Section property of type " + secProp.GetType().Name + " is not suppoerted in the GSA Adapter");
             return false; 
         }
 
@@ -246,13 +246,6 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        private static bool CreateDescString(ZSectionProfile dimensions, out string desc)
-        {
-            throw new NotSupportedException("Zed sections are currently not supported in the GSA adapter");
-        }
-
-        /***************************************/
-
         private static bool CreateDescString(ISectionProfile dimensions, out string desc)
         {
             double h, w, tw, tf;
@@ -339,9 +332,11 @@ namespace BH.Engine.GSA
 
         /***************************************/
 
-        private static bool CreateDescString(FreeFormProfile profile, out string desc)
+        private static bool CreateDescString(IProfile profile, out string desc)
         {
-            throw new NotImplementedException();
+            Reflection.Compute.RecordWarning("Profile of type " + profile.GetType().Name + " is not suppoerted in the GSA Adapter");
+            desc = "";
+            return false;
         }
 
         /***************************************/
