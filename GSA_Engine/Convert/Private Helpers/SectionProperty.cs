@@ -131,18 +131,23 @@ namespace BH.Engine.GSA
         }
 
         /***************************************/
-        private static bool CreateDescAndPropString(SteelSection secProp, out string desc, out string prop)
+
+        private static bool CreateDescAndPropString(IGeometricalSection secProp, out string desc, out string prop)
         {
+            //This will handle Steel, Concrete, Aluminium, Timber and Generi section, i.e. all profile based sections, the same way.
             prop = "NO_PROP";
             return ICreateDescString(secProp.SectionProfile, out desc);
         }
 
         /***************************************/
-        private static bool CreateDescAndPropString(ConcreteSection secProp, out string desc, out string prop)
+
+        private static bool CreateDescAndPropString(ISectionProperty secProp, out string desc, out string prop)
         {
-            //TODO: Reinforcement???
+            //This will handle Steel, Concrete, Aluminium, Timber and Generi section, i.e. all profile based sections, the same way.
             prop = "NO_PROP";
-            return ICreateDescString(secProp.SectionProfile, out desc);
+            desc = "";
+            Reflection.Compute.RecordWarning("Section proeprty of type " + secProp.GetType().Name + " is not suppoerted in this adapter");
+            return false; 
         }
 
         /***************************************/
