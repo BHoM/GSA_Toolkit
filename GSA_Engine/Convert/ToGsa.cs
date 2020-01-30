@@ -262,11 +262,37 @@ namespace BH.Engine.GSA
                 string str = command + "," + num + "," + mModel + "," + name + "," + colour + "," + type + ",6," + E + "," + nu + "," + rho + "," + alpha + "," + G + "," + damp + ",0,0,NO_ENV";
                 return str;
             }
-           else
+            else if(material is IOrthotropic)
+            {
+                IOrthotropic orthotropic = material as IOrthotropic;
+                string command = "MAT";
+                string num = index;
+                string mModel = "MAT_ELAS_ORTHO";
+                string name = material.TaggedName();
+                string colour = "NO_RGB";
+                string type = GetMaterialType(material).ToString();
+                string E = CommaSeparatedValues(orthotropic.YoungsModulus);
+                string nu = CommaSeparatedValues(orthotropic.PoissonsRatio);
+                string rho = orthotropic.Density.ToString();
+                string alpha = CommaSeparatedValues(orthotropic.ThermalExpansionCoeff);
+                string G = CommaSeparatedValues(orthotropic.ShearModulus);
+                string damp = orthotropic.DampingRatio.ToString();
+
+                string str = command + "," + num + "," + mModel + "," + name + "," + colour + "," + type + ",6," + E + "," + nu + "," + rho + "," + alpha + "," + G + "," + damp + ",0,0,NO_ENV";
+                return str;
+            }
+            else
             {
                 Engine.Reflection.Compute.RecordWarning("GSA_Toolkit does currently only suport Isotropic material. Material with name " + material.Name + " have been NOT been pushed");
                 return "";
             }
+        }
+
+        /***************************************/
+
+        private static string CommaSeparatedValues(Vector v)
+        {
+            return v.X + "," + v.Y + "," + v.Z;
         }
 
         /***************************************/
