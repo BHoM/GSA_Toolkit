@@ -135,6 +135,7 @@ namespace BH.Engine.GSA
         private static bool CreateDescAndPropString(IGeometricalSection secProp, out string desc, out string prop)
         {
             //This will handle Steel, Concrete, Aluminium, Timber and Generi section, i.e. all profile based sections, the same way.
+            //If reinforement for concrete is to be added, this needs to be handled separately.
             prop = "NO_PROP";
             return ICreateDescString(secProp.SectionProfile, out desc);
         }
