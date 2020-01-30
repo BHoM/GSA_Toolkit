@@ -40,7 +40,7 @@ namespace BH.Engine.GSA
         [Input("category", "The object category to raise a warning for. Defaults to object")]
         public static void NotSupportedWarning(Type type, string category = "Objects")
         {
-            Engine.Reflection.Compute.RecordWarning(category + " of type " + type.FullName + " are not suppoerted in this the GSA Adapter");
+            Engine.Reflection.Compute.RecordWarning(category + " of type " + type.FullName + " are not suppoerted in the GSA Adapter");
         }
 
         /***************************************************/
