@@ -469,6 +469,23 @@ namespace BH.Engine.GSA
             return ToGsaString(obj as dynamic, index);
         }
 
+        /***************************************************/
+        /**** Private fallback                          ****/
+        /***************************************************/
+
+        public static string ToGsaString(this object obj, string index)
+        {
+            Engine.Reflection.Compute.RecordWarning("Objects of type " + obj.GetType().Name + " are not suppoerted in this Adapter");
+            return "";
+        }
+
+        /***************************************/
+
+        public static string ToGsaString(this Panel obj, string index)
+        {
+            Engine.Reflection.Compute.RecordWarning("GSA has no meshing capabilities and does therefor not support Panel objects. Try meshing the panel and create a FEMesh and then push again");
+            return "";
+        }
 
         /***************************************/
     }
