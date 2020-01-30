@@ -112,6 +112,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compute\NotSupportedWarning.cs" />
     <Compile Include="Convert\AdapterID.cs" />
     <Compile Include="Convert\ToBHoM.cs" />
     <Compile Include="Convert\Private Helpers\Bar.cs" />
