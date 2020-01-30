@@ -302,47 +302,104 @@ namespace BH.Engine.GSA
             if (gStr.Length < 11)
                 return null;
 
-            //BHMF.MaterialType type = GetTypeFromString(gStr[5]);
-
-            double E, v, tC, G, rho;
-
-            if (!double.TryParse(gStr[7], out E))
-                return null;
-            if (!double.TryParse(gStr[8], out v))
-                return null;
-            if (!double.TryParse(gStr[10], out tC))
-                return null;
-            if (!double.TryParse(gStr[11], out G))
-                return null;
-            if (!double.TryParse(gStr[9], out rho))
-                return null;
-
             BHM.IMaterialFragment mat;
 
-
-            switch (gStr[5])
+            if (gStr[2] == "MAT_ELAS_ISO")
             {
-                case "MT_ALUMINIUM":
-                    mat = Engine.Structure.Create.Aluminium("", E, v, tC, rho);
-                    break;
-                case "MT_CONCRETE":
-                    mat = Structure.Create.Concrete("", E, v, tC, rho);
-                    break;
-                case "MT_STEEL":
-                case "MT_REBAR":
-                    mat = Structure.Create.Steel("", E, v, tC, rho);
-                    break;
-                case "MT_UNDEF":
-                    mat = Structure.Create.Steel("", E, v, tC, rho);
-                    Engine.Reflection.Compute.RecordWarning(string.Format("Material with id {0} and name {1} has no type defined. A steel material will be assumed", gStr[1], gStr[3]));
-                    break;
-                case "MT_TIMBER":
-                case "MT_GLASS":
-                default:
-                    Engine.Reflection.Compute.RecordWarning("Pulling material of type " + gStr[5] + " is not supported. Material with name " + gStr[3] + " failed");
+                //BHMF.MaterialType type = GetTypeFromString(gStr[5]);
+
+                double E, v, tC, G, rho;
+
+                if (!double.TryParse(gStr[7], out E))
                     return null;
+                if (!double.TryParse(gStr[8], out v))
+                    return null;
+                if (!double.TryParse(gStr[10], out tC))
+                    return null;
+                if (!double.TryParse(gStr[11], out G))
+                    return null;
+                if (!double.TryParse(gStr[9], out rho))
+                    return null;
+
+                switch (gStr[5])
+                {
+                    case "MT_ALUMINIUM":
+                        mat = Engine.Structure.Create.Aluminium("", E, v, tC, rho);
+                        break;
+                    case "MT_CONCRETE":
+                        mat = Structure.Create.Concrete("", E, v, tC, rho);
+                        break;
+                    case "MT_STEEL":
+                    case "MT_REBAR":
+                        mat = Structure.Create.Steel("", E, v, tC, rho);
+                        break;
+                    case "MT_TIMBER":
+                        mat = Structure.Create.Timber("", new Vector { X = E, Y = E, Z = E }, new Vector { X = v, Y = v, Z = v }, new Vector { X = G, Y = G, Z = G }, new Vector { X = tC, Y = tC, Z = tC }, rho, 0);
+                        break;
+                    default:
+                        mat = new oM.Structure.MaterialFragments.GenericIsotropicMaterial { YoungsModulus = E, Density = rho, PoissonsRatio = v, ThermalExpansionCoeff = tC };
+                        Engine.Reflection.Compute.RecordWarning(string.Format("Material with id {0} and name {1} is of a type not currently fully supported or has no type defined. A generic isotropic material will be assumed", gStr[1], gStr[3]));
+                        break;
+
+                }
             }
-        
+            else if (gStr[2] == "MAT_ELAS_ORTHO")
+            {
+                double E1, E2, E3, v1, v2, v3, tC1, tC2, tC3, G1, G2, G3, rho;
+
+                if (!double.TryParse(gStr[7], out E1))
+                    return null;
+                if (!double.TryParse(gStr[8], out E2))
+                    return null;
+                if (!double.TryParse(gStr[9], out E3))
+                    return null;
+
+                if (!double.TryParse(gStr[10], out v1))
+                    return null;
+                if (!double.TryParse(gStr[11], out v2))
+                    return null;
+                if (!double.TryParse(gStr[12], out v3))
+                    return null;
+
+                if (!double.TryParse(gStr[13], out rho))
+                    return null;
+
+                if (!double.TryParse(gStr[14], out tC1))
+                    return null;
+                if (!double.TryParse(gStr[15], out tC2))
+                    return null;
+                if (!double.TryParse(gStr[16], out tC3))
+                    return null;
+
+                if (!double.TryParse(gStr[17], out G1))
+                    return null;
+                if (!double.TryParse(gStr[18], out G2))
+                    return null;
+                if (!double.TryParse(gStr[19], out G3))
+                    return null;
+
+                Vector e = new Vector { X = E1, Y = E2, Z = E3 };
+                Vector v = new Vector { X = v1, Y = v2, Z = v3 };
+                Vector tC = new Vector { X = tC1, Y = tC2, Z = tC3 };
+                Vector g = new Vector { X = G1, Y = G2, Z = G3 };
+
+                switch (gStr[5])
+                {
+
+                    case "MT_TIMBER":
+                        mat = Structure.Create.Timber("", e, v, g, tC, rho, 0);
+                        break;
+                    default:
+                        mat = new oM.Structure.MaterialFragments.GenericOrthotropicMaterial { YoungsModulus = e, ShearModulus = g, Density = rho, ThermalExpansionCoeff = tC, PoissonsRatio = v };
+                        Engine.Reflection.Compute.RecordWarning(string.Format("Material with id {0} and name {1} is of a type not currently fully supported or has no orthotropic type defined. A generic orthotropic material will be assumed", gStr[1], gStr[3]));
+                        break;
+
+                }
+            }
+            else
+            {
+                return null;
+            }
 
 
             mat.ApplyTaggedName(gStr[3]);
