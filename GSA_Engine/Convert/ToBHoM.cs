@@ -620,22 +620,13 @@ namespace BH.Engine.GSA
                             return null;
                     }
 
-                    if (mat is BHM.Steel)
-                        secProp = Structure.Create.SteelSectionFromProfile(dimensions);
-                    else if (mat is BHM.Concrete)
-                        secProp = Structure.Create.ConcreteSectionFromProfile(dimensions);
-                    else
-                    {
-                        Reflection.Compute.RecordError("Material type " + mat.GetType().Name + " for cross section not implemented");
-                        return null;
-                    }
+                    secProp = Structure.Create.SectionPropertyFromProfile(dimensions, mat, "");
 
                 }
             }
 
             secProp.CustomData[AdapterIdName] = id;
             secProp.ApplyTaggedName(gsaStrings[2]);
-            secProp.Material = mat;
             return secProp;
         }
 
