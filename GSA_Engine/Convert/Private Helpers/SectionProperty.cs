@@ -144,7 +144,7 @@ namespace BH.Engine.GSA
 
         private static bool CreateDescAndPropString(ISectionProperty secProp, out string desc, out string prop)
         {
-            //This will handle Steel, Concrete, Aluminium, Timber and Generi section, i.e. all profile based sections, the same way.
+            //Fallback method for section types not implemented.
             prop = "NO_PROP";
             desc = "";
             Compute.NotSupportedWarning(secProp.GetType(), "Section properties");
