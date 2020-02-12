@@ -43,7 +43,7 @@ namespace BH.Adapter.GSA
 
         public GSAAdapter(string filePath = "", GSAConfig gsaConfig = null, bool active = false)
         {
-            AdapterIdName = BH.Engine.GSA.Convert.AdapterIdName;
+            AdapterIdName = BH.Adapter.GSA.Convert.AdapterIdName;
 
             Modules.Structure.ModuleLoader.LoadModules(this);
 
