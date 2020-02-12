@@ -27,7 +27,6 @@ using BH.oM.Structure.Loads;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Base;
-using BH.Adapter.GSA;
 using BH.Engine.Adapter;
 using BH.oM.Adapter;
 

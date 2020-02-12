@@ -26,7 +26,6 @@ using System.Linq;
 using BH.oM.Structure.Loads;
 using BH.oM.Structure.Elements;
 using BH.oM.Base;
-using BH.Adapter.GSA;
 using BH.oM.Adapter;
 
 namespace BH.Adapter.GSA

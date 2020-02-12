@@ -21,7 +21,7 @@
  */
 
 using BH.Engine.Serialiser;
-using BHM = BH.oM.Structure.MaterialFragments;
+using BH.oM.Structure.MaterialFragments;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Geometry.ShapeProfiles;
 using System;
@@ -46,7 +46,7 @@ namespace BH.Adapter.GSA
         /// </param>
         /// <param name="materials"></param>
         /// <returns></returns>
-        public static ISectionProperty FromGsaSectionProperty(string gsaString, Dictionary<string, BHM.IMaterialFragment> materials)
+        public static ISectionProperty FromGsaSectionProperty(string gsaString, Dictionary<string, IMaterialFragment> materials)
         {
             ISectionProperty secProp = null;
 
@@ -63,7 +63,7 @@ namespace BH.Adapter.GSA
 
             string materialId = gsaStrings[4];
 
-            BHM.IMaterialFragment mat;
+            IMaterialFragment mat;
 
             if (!materials.TryGetValue(materialId, out mat))
             {

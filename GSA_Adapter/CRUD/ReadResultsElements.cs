@@ -20,14 +20,11 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.Adapter.GSA;
 using BH.oM.Base;
 using BH.oM.Common;
-using BH.oM.Structure.Elements;
 using BH.oM.Structure.Requests;
 using BH.oM.Data.Requests;
 using BH.oM.Adapter;
-using BH.oM.Structure.Results;
 using Interop.gsa_8_7;
 using System;
 using System.Collections;

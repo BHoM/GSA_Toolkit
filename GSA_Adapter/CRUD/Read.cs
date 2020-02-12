@@ -20,7 +20,7 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.Adapter.GSA;
+
 using BH.oM.Base;
 using BH.oM.Structure.MaterialFragments;
 using BH.oM.Structure.Elements;
@@ -33,7 +33,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using BH.Engine.Adapter;
 using BH.oM.Adapter;
 
 namespace BH.Adapter.GSA
