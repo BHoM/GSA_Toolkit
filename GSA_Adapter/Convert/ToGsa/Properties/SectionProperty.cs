@@ -21,11 +21,9 @@
  */
 
 using BH.Engine.Serialiser;
-using BH.Engine.Structure;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Geometry.ShapeProfiles;
 using System;
-using BH.Engine.Common;
 
 
 namespace BH.Adapter.GSA

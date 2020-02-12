@@ -21,22 +21,9 @@
  */
 
 using BH.Engine.Serialiser;
-using BH.Engine.Structure;
-using BHM = BH.oM.Structure.MaterialFragments;
-using BHL = BH.oM.Structure.Loads;
-using BHMF = BH.oM.Structure.MaterialFragments;
+using BH.oM.Structure.MaterialFragments;
 using BH.oM.Geometry;
-using BH.oM.Structure.Elements;
-using BH.oM.Structure.SectionProperties;
-using BH.oM.Geometry.ShapeProfiles;
-using BH.oM.Structure.SurfaceProperties;
-using BH.oM.Structure.Constraints;
-using Interop.gsa_8_7;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using BH.oM.Structure.Results;
-using BH.Engine.Adapter;
+
 
 namespace BH.Adapter.GSA
 {
@@ -46,7 +33,7 @@ namespace BH.Adapter.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
-        public static BHM.IMaterialFragment FromGsaMaterial(string gsaString)
+        public static IMaterialFragment FromGsaMaterial(string gsaString)
         {
             if (string.IsNullOrWhiteSpace(gsaString))
                 return null;
@@ -56,7 +43,7 @@ namespace BH.Adapter.GSA
             if (gStr.Length < 11)
                 return null;
 
-            BHM.IMaterialFragment mat;
+            IMaterialFragment mat;
 
             if (gStr[2] == "MAT_ELAS_ISO")
             {
@@ -91,7 +78,7 @@ namespace BH.Adapter.GSA
                         mat = Engine.Structure.Create.Timber("", new Vector { X = E, Y = E, Z = E }, new Vector { X = v, Y = v, Z = v }, new Vector { X = G, Y = G, Z = G }, new Vector { X = tC, Y = tC, Z = tC }, rho, 0);
                         break;
                     default:
-                        mat = new oM.Structure.MaterialFragments.GenericIsotropicMaterial { YoungsModulus = E, Density = rho, PoissonsRatio = v, ThermalExpansionCoeff = tC };
+                        mat = new GenericIsotropicMaterial { YoungsModulus = E, Density = rho, PoissonsRatio = v, ThermalExpansionCoeff = tC };
                         Engine.Reflection.Compute.RecordWarning(string.Format("Material with id {0} and name {1} is of a type not currently fully supported or has no type defined. A generic isotropic material will be assumed", gStr[1], gStr[3]));
                         break;
 
@@ -144,7 +131,7 @@ namespace BH.Adapter.GSA
                         mat = Engine.Structure.Create.Timber("", e, v, g, tC, rho, 0);
                         break;
                     default:
-                        mat = new oM.Structure.MaterialFragments.GenericOrthotropicMaterial { YoungsModulus = e, ShearModulus = g, Density = rho, ThermalExpansionCoeff = tC, PoissonsRatio = v };
+                        mat = new GenericOrthotropicMaterial { YoungsModulus = e, ShearModulus = g, Density = rho, ThermalExpansionCoeff = tC, PoissonsRatio = v };
                         Engine.Reflection.Compute.RecordWarning(string.Format("Material with id {0} and name {1} is of a type not currently fully supported or has no orthotropic type defined. A generic orthotropic material will be assumed", gStr[1], gStr[3]));
                         break;
 

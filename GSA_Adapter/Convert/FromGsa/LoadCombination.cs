@@ -20,23 +20,11 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.Engine.Serialiser;
-using BH.Engine.Structure;
-using BHM = BH.oM.Structure.MaterialFragments;
-using BHL = BH.oM.Structure.Loads;
-using BHMF = BH.oM.Structure.MaterialFragments;
-using BH.oM.Geometry;
-using BH.oM.Structure.Elements;
-using BH.oM.Structure.SectionProperties;
-using BH.oM.Geometry.ShapeProfiles;
-using BH.oM.Structure.SurfaceProperties;
-using BH.oM.Structure.Constraints;
-using Interop.gsa_8_7;
+
+using BH.oM.Structure.Loads;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using BH.oM.Structure.Results;
-using BH.Engine.Adapter;
+
 
 namespace BH.Adapter.GSA
 {
@@ -46,13 +34,13 @@ namespace BH.Adapter.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
-        public static BHL.LoadCombination FromGsaAnalTask(string gsaString, Dictionary<string, BHL.Loadcase> lCases)
+        public static LoadCombination FromGsaAnalTask(string gsaString, Dictionary<string, Loadcase> lCases)
         {
 
             if (string.IsNullOrWhiteSpace(gsaString))
                 return null;
 
-            List<Tuple<double, BHL.ICase>> lCasesForTask = new List<Tuple<double, BHL.ICase>>();
+            List<Tuple<double, ICase>> lCasesForTask = new List<Tuple<double, ICase>>();
             string[] gStr = gsaString.Split(',');
             string[] lCaseArr = gStr[4].Split('+');
 
@@ -70,8 +58,8 @@ namespace BH.Adapter.GSA
                     if (string.IsNullOrEmpty(lCaseParam[0]))
                         lCaseParam[0] = "1.0";
 
-                    BHL.Loadcase templCase = lCases[lCaseParam[1]];
-                    Tuple<double, BHL.ICase> loadCase = new Tuple<double, BHL.ICase>(double.Parse(lCaseParam[0]), templCase);
+                    Loadcase templCase = lCases[lCaseParam[1]];
+                    Tuple<double, ICase> loadCase = new Tuple<double, ICase>(double.Parse(lCaseParam[0]), templCase);
                     lCasesForTask.Add(loadCase);
                 }
             }
