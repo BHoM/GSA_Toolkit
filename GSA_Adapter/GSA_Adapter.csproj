@@ -67,6 +67,9 @@
     <Reference Include="Data_oM">
       <HintPath>..\..\BHoM\Build\Data_oM.dll</HintPath>
     </Reference>
+    <Reference Include="Geometry_Engine">
+      <HintPath>..\..\BHoM_Engine\Build\Geometry_Engine.dll</HintPath>
+    </Reference>
     <Reference Include="Geometry_oM">
       <HintPath>..\..\BHoM\Build\Geometry_oM.dll</HintPath>
       <Private>False</Private>
@@ -74,6 +77,9 @@
     <Reference Include="Interop.Gsa_8_7, Version=8.7.0.0, Culture=neutral, processorArchitecture=AMD64">
       <HintPath>..\packages\BHoM.Interop.GSA8_7.1.0.0\lib\net45\Interop.Gsa_8_7.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Library_Engine">
+      <HintPath>..\..\BHoM_Engine\Build\Library_Engine.dll</HintPath>
     </Reference>
     <Reference Include="Physical_oM">
       <HintPath>..\..\BHoM\Build\Physical_oM.dll</HintPath>
@@ -87,6 +93,9 @@
     <Reference Include="Reflection_oM">
       <HintPath>..\..\BHoM\Build\Reflection_oM.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="Serialiser_Engine">
+      <HintPath>..\..\BHoM_Engine\Build\Serialiser_Engine.dll</HintPath>
     </Reference>
     <Reference Include="Structure_AdapterModules">
       <HintPath>..\..\BHoM_Adapter\Build\Structure_AdapterModules.dll</HintPath>
@@ -111,6 +120,40 @@
   <ItemGroup>
     <Compile Include="AdapterActions\Pull.cs" />
     <Compile Include="AdapterActions\Execute.cs" />
+    <Compile Include="Convert\AdapterID.cs" />
+    <Compile Include="Convert\FromGsa\Bar.cs" />
+    <Compile Include="Convert\FromGsa\FEMesh.cs" />
+    <Compile Include="Convert\FromGsa\LinkConstraint.cs" />
+    <Compile Include="Convert\FromGsa\Loadcase.cs" />
+    <Compile Include="Convert\FromGsa\LoadCombination.cs" />
+    <Compile Include="Convert\FromGsa\Material.cs" />
+    <Compile Include="Convert\FromGsa\Node.cs" />
+    <Compile Include="Convert\FromGsa\Results.cs" />
+    <Compile Include="Convert\FromGsa\RigidLink.cs" />
+    <Compile Include="Convert\FromGsa\SectionProperty.cs" />
+    <Compile Include="Convert\NotSupportedWarning.cs" />
+    <Compile Include="GsaEnums.cs" />
+    <Compile Include="Convert\FromGsa\SurfaceProperty.cs" />
+    <Compile Include="Convert\ToGsa\Elements\Bar.cs" />
+    <Compile Include="Convert\ToGsa\Elements\FEMesh.cs" />
+    <Compile Include="Convert\ToGsa\Group.cs" />
+    <Compile Include="Convert\ToGsa\Loads\AreaLoads.cs" />
+    <Compile Include="Convert\ToGsa\Loads\BarLoads.cs" />
+    <Compile Include="Convert\ToGsa\Loads\Factor.cs" />
+    <Compile Include="Convert\ToGsa\Loads\ForceType.cs" />
+    <Compile Include="Convert\ToGsa\Loads\Load.cs" />
+    <Compile Include="Convert\ToGsa\Loads\Loadcase.cs" />
+    <Compile Include="Convert\ToGsa\Loads\LoadCombination.cs" />
+    <Compile Include="Convert\ToGsa\Loads\NodeLoad.cs" />
+    <Compile Include="Convert\ToGsa\Loads\RotationVector.cs" />
+    <Compile Include="Convert\ToGsa\Loads\TranslationVector.cs" />
+    <Compile Include="Convert\ToGsa\Properties\LinkConstraint.cs" />
+    <Compile Include="Convert\ToGsa\Properties\Material.cs" />
+    <Compile Include="Convert\ToGsa\Elements\Node.cs" />
+    <Compile Include="Convert\ToGsa\Elements\RigidLink.cs" />
+    <Compile Include="Convert\ToGsa\Properties\SectionProperty.cs" />
+    <Compile Include="Convert\ToGsa\Properties\SurfaceProperties.cs" />
+    <Compile Include="Convert\ToGsa\_ToGsa.cs" />
     <Compile Include="CRUD\ReadResults.cs" />
     <Compile Include="CRUD\ReadResultsElements.cs" />
     <Compile Include="CRUD\ReadResultsGlobal.cs" />

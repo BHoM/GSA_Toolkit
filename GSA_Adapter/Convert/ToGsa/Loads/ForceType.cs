@@ -1,0 +1,129 @@
+﻿/*
+ * This file is part of the Buildings and Habitats object Model (BHoM)
+ * Copyright (c) 2015 - 2020, the respective contributors. All rights reserved.
+ *
+ * Each contributor holds copyright over their respective contributions.
+ * The project versioning (Git) records all such contribution source information.
+ *                                           
+ *                                                                              
+ * The BHoM is free software: you can redistribute it and/or modify         
+ * it under the terms of the GNU Lesser General Public License as published by  
+ * the Free Software Foundation, either version 3.0 of the License, or          
+ * (at your option) any later version.                                          
+ *                                                                              
+ * The BHoM is distributed in the hope that it will be useful,              
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of               
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the                 
+ * GNU Lesser General Public License for more details.                          
+ *                                                                            
+ * You should have received a copy of the GNU Lesser General Public License     
+ * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
+ */
+
+using BH.Engine.Serialiser;
+using BH.Engine.Structure;
+using BH.oM.Structure.MaterialFragments;
+using BH.oM.Structure.Elements;
+using BH.oM.Structure.SectionProperties;
+using BH.oM.Structure.SurfaceProperties;
+using BH.oM.Structure.Constraints;
+using BH.oM.Structure.Loads;
+using BH.oM.Geometry;
+using BH.oM.Base;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using BH.Engine.Common;
+using BH.Engine.Adapter;
+using Interop.gsa_8_7;
+
+namespace BH.Adapter.GSA
+{
+    public static partial class Convert
+    {
+        /***************************************************/
+        /**** Public  Methods                           ****/
+        /***************************************************/
+
+        private static string ForceTypeString(this PointLoad load)
+        {
+            return "LOAD_NODE";
+        }
+
+        /***************************************************/
+
+        private static string ForceTypeString(this PointDisplacement load)
+        {
+            return "DISP_NODE";
+        }
+
+        /***************************************************/
+
+        private static string ForceTypeString(this BarPointLoad load)
+        {
+            return "LOAD_BEAM_POINT";
+        }
+
+        /***************************************************/
+
+        private static string ForceTypeString(this BarUniformlyDistributedLoad load)
+        {
+            return "LOAD_BEAM_UDL";
+        }
+
+        /***************************************************/
+
+        private static string ForceTypeString(this BarVaryingDistributedLoad load)
+        {
+            return "LOAD_BEAM_TRILIN";
+        }
+
+        /***************************************************/
+
+        private static string ForceTypeString(this GravityLoad load)
+        {
+            return "LOAD_GRAVITY.2";
+        }
+
+        /***************************************************/
+
+        private static string ForceTypeString(this BarPrestressLoad load)
+        {
+            return "LOAD_BEAM_PRE.2";
+        }
+
+        /***************************************************/
+
+        private static string ForceTypeString(this BarTemperatureLoad load)
+        {
+            return "TEMP_BEAM";
+        }
+
+        /***************************************************/
+
+        private static string ForceTypeString(this AreaUniformlyDistributedLoad load)
+        {
+            return "LOAD_2D_FACE";
+        }
+
+        /***************************************************/
+
+        //private static string ForceTypeString(this AreaVaryingDistributedLoad load)
+        //{
+        //    return "LOAD_2D_FACE";
+        //}
+
+        /***************************************************/
+        /**** private Methods - Interfaces               ****/
+        /***************************************************/
+
+        private static string IForceTypeString(this ILoad load)
+        {
+            return ForceTypeString(load as dynamic);
+        }
+
+        /***************************************************/
+
+    }
+}
+

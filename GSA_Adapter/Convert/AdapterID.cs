@@ -20,40 +20,12 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using BH.oM.Structure.Loads;
-using BH.oM.Structure.Elements;
-using BH.oM.Base;
-using BH.Adapter.GSA;
-using BH.oM.Adapter;
 
 namespace BH.Adapter.GSA
 {
-    public partial class GSAAdapter
+    public static partial class Convert
     {
-        protected override int IUpdateTags(Type type, IEnumerable<object> ids, IEnumerable<HashSet<string>> newTags, ActionConfig actionConfig = null)
-        {
-            List<string> indecies = ids.Select(x => x.ToString()).ToList();
-            if (indecies.Count < 1)
-                return 0;
-
-            List<HashSet<string>> tags = newTags.ToList();
-
-            List<IBHoMObject> objects = IRead(type, indecies.ToList(), actionConfig).ToList();
-
-            for (int i = 0; i < objects.Count; i++)
-            {
-                objects[i].Tags = tags[i];
-            }
-
-            if (ICreate(objects, actionConfig))
-                return objects.Count;
-
-            return 0;
-
-        }
+        public const string AdapterIdName = "GSA_id";
     }
 }
 
