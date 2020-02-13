@@ -132,7 +132,7 @@
     <Compile Include="Convert\FromGsa\Elements\RigidLink.cs" />
     <Compile Include="Convert\FromGsa\Properties\SectionProperty.cs" />
     <Compile Include="Convert\NotSupportedWarning.cs" />
-    <Compile Include="GsaEnums.cs" />
+    <Compile Include="Enums\MaterialType.cs" />
     <Compile Include="Convert\FromGsa\Properties\SurfaceProperty.cs" />
     <Compile Include="Convert\ToGsa\Elements\Bar.cs" />
     <Compile Include="Convert\ToGsa\Elements\FEMesh.cs" />
@@ -160,6 +160,9 @@
     <Compile Include="CRUD\Update.cs" />
     <Compile Include="CRUD\UpdateProperty.cs" />
     <Compile Include="CRUD\Delete.cs" />
+    <Compile Include="Enums\Output_Axis.cs" />
+    <Compile Include="Enums\Output_Init_Flags.cs" />
+    <Compile Include="Enums\UnitType.cs" />
     <Compile Include="Types\NextId.cs" />
     <Compile Include="CRUD\Create.cs" />
     <Compile Include="GSAAdapter.cs" />
