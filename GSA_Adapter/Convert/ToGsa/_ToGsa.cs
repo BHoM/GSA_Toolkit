@@ -44,11 +44,11 @@ namespace BH.Adapter.GSA
                 return "NODE";
             else if (type == typeof(Bar))
                 return "EL";
-            else if (type == typeof(IMaterialFragment))
+            else if (typeof(IMaterialFragment).IsAssignableFrom(type))
                 return "MAT";
-            else if (type == typeof(ISectionProperty))
+            else if (typeof(ISectionProperty).IsAssignableFrom(type))
                 return "PROP_SEC";
-            else if (type == typeof(ISurfaceProperty))
+            else if (typeof(ISurfaceProperty).IsAssignableFrom(type))
                 return "PROP_2D";
             else if (type == typeof(FEMesh))
                 return "EL";
