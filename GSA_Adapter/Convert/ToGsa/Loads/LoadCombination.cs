@@ -77,6 +77,7 @@ namespace BH.Adapter.GSA
                         type = AnalysisType.SoapFilm;
                         break;
                     case "STATIC":
+                    default:
                         type = AnalysisType.LinearStatic;
                         break;
                 }
@@ -84,9 +85,11 @@ namespace BH.Adapter.GSA
 
                 Engine.Reflection.Compute.RecordWarning("Task type was found through the use of custom data. This of extracting task type is being deprecated. Try setting the task type of you loadcombination by the use of the `SetAnalysisType` method instead.");
             }
-
-            type = AnalysisType.LinearStatic;
-            stage = 0;
+            else
+            {
+                type = AnalysisType.LinearStatic;
+                stage = 0;
+            }
         }
 
         /***************************************************/
