@@ -29,9 +29,9 @@ namespace BH.Adapter.GSA
     //the three different options of outputaxis. It's used when extracting info in SIGSA.
     public static class Output_Axis
     {
-        static public string Default() { return "default"; }
-        static public string Global() { return "global"; }
-        static public string Local() { return "local"; }
+        public const string Default = "default";
+        public const string Global = "global"; 
+        public const string Local = "local"; 
     }
 
     /***************************************/

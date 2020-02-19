@@ -232,7 +232,7 @@ namespace BH.Adapter.GSA
             //Fallback method for section types not implemented.
             prop = "NO_PROP";
             desc = "";
-            NotSupportedWarning(secProp.GetType(), "Section properties");
+            GSAAdapter.NotSupportedWarning(secProp.GetType(), "Section properties");
             return false;
         }
 
@@ -420,7 +420,7 @@ namespace BH.Adapter.GSA
 
         private static bool CreateDescString(IProfile profile, out string desc)
         {
-            NotSupportedWarning(profile.GetType(), "Section profiles");
+            GSAAdapter.NotSupportedWarning(profile.GetType(), "Section profiles");
             desc = "";
             return false;
         }

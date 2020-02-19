@@ -28,7 +28,7 @@ namespace BH.Adapter.GSA
     public static partial class Convert
     {
         /***************************************************/
-        /**** Public Methods                            ****/
+        /**** Private Methods                            ****/
         /***************************************************/
 
         private static double Factor(this PointLoad load, double[] unitType)
