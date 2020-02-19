@@ -50,6 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums.cs" />
+    <Compile Include="Enum\TaskType.cs" />
+    <Compile Include="Fragments\AnalysisTaskFragment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\GSAConfig.cs" />
   </ItemGroup>
