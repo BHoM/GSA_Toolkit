@@ -23,6 +23,8 @@
 
 using BH.oM.Structure.Loads;
 using System.Collections.Generic;
+using BH.oM.External.GSA;
+using BH.Engine.Base;
 
 namespace BH.Adapter.GSA
 {
@@ -39,8 +41,10 @@ namespace BH.Adapter.GSA
             string combNo = loadComb.Number.ToString();
             List<string> gsaStrings = new List<string>();
             gsaStrings.Add(AnalysisCase(combNo, loadComb.Name, combNo, desc));
-            string type = TaskType(loadComb);
-            gsaStrings.Add(AnalysisTask(combNo, loadComb.Name, type, "0", combNo));
+            AnalysisType type;
+            int stage;
+            TaskTypeAndStage(loadComb, out type, out stage);
+            gsaStrings.Add(AnalysisTask(combNo, loadComb.Name, type, stage, combNo));
 
             return gsaStrings;
         }
@@ -49,12 +53,40 @@ namespace BH.Adapter.GSA
         /**** Private Methods                           ****/
         /***************************************************/
 
-        private static string TaskType(LoadCombination comb)
+        private static void TaskTypeAndStage(LoadCombination comb, out AnalysisType type, out int stage)
         {
-            if (comb.CustomData.ContainsKey("Task Type"))
-                return comb.CustomData["Task Type"].ToString();
+            AnalysisTaskFragment fragment = comb.FindFragment<AnalysisTaskFragment>();
 
-            return "STATIC";
+            if (fragment != null)
+            {
+                type = fragment.AnalysisType;
+                stage = fragment.Stage;
+            }
+            else if (comb.CustomData.ContainsKey("Task Type"))
+            {
+                string taskTypeOld = comb.CustomData["Task Type"].ToString();
+                switch (taskTypeOld)
+                {
+                    case "NL_STATIC":
+                        type = AnalysisType.NonLinearStatic;
+                        break;
+                    case "FORM_FIND":
+                        type = AnalysisType.FormFinding;
+                        break;
+                    case "SOAP_FILM":
+                        type = AnalysisType.SoapFilm;
+                        break;
+                    case "STATIC":
+                        type = AnalysisType.LinearStatic;
+                        break;
+                }
+                stage = 0;
+
+                Engine.Reflection.Compute.RecordWarning("Task type was found through the use of custom data. This of extracting task type is being deprecated. Try setting the task type of you loadcombination by the use of the `SetAnalysisType` method instead.");
+            }
+
+            type = AnalysisType.LinearStatic;
+            stage = 0;
         }
 
         /***************************************************/
@@ -75,7 +107,7 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        private static string AnalysisTask(string taskNo, string name, string type, string stage, string anal_caseNo)
+        private static string AnalysisTask(string taskNo, string name, AnalysisType type, int stage, string anal_caseNo)
         {
             string addTask;
             string command = "TASK";
@@ -84,29 +116,29 @@ namespace BH.Adapter.GSA
 
             switch (type)
             {
-                case "NL_STATIC":
+                case AnalysisType.NonLinearStatic:
                     solution = "SOL_BUCKLING_NL";
                     scheme = "SINGLE";
                     break;
 
-                case "FORM_FIND":
+                case AnalysisType.FormFinding:
                     solution = "SOL_FORM_FINDING";
                     //scheme = "SINGLE"; //GSA 8.7 build 27
                     scheme = "FORM_FIND"; //GSA 8.7 build 45    
                     break;
 
-                case "SOAP_FILM":
+                case AnalysisType.SoapFilm:
                     solution = "SOL_FORM_FINDING";
                     scheme = "SOAP_FORM";
                     break;
 
-                case "STATIC":
+                case AnalysisType.LinearStatic:
                     solution = "SOL_STATIC";
                     scheme = "SINGLE";
                     break;
             }
 
-            if (type == "STATIC")
+            if (type == AnalysisType.LinearStatic)
             {
                 addTask = command
                      + "," + taskNo
