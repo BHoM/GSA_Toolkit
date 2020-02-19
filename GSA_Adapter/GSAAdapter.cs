@@ -32,6 +32,7 @@ using BH.oM.Structure.MaterialFragments;
 using BH.oM.Structure.Constraints;
 using System.Collections.Generic;
 using BH.oM.Structure.SurfaceProperties;
+using BH.oM.Reflection.Attributes;
 
 namespace BH.Adapter.GSA
 {
@@ -82,6 +83,18 @@ namespace BH.Adapter.GSA
             }
         }
 
+
+        /***************************************************/
+        /**** Public Methods                            ****/
+        /***************************************************/
+
+        [Description("Raises a warning for types not supported")]
+        [Input("type", "The type not supported")]
+        [Input("category", "The object category to raise a warning for. Defaults to object")]
+        public static void NotSupportedWarning(Type type, string category = "Objects")
+        {
+            Engine.Reflection.Compute.RecordWarning(category + " of type " + type.FullName + " are not supported in the GSA Adapter");
+        }
 
         /***************************************************/
         /**** Private  Methods - Com Interop            ****/

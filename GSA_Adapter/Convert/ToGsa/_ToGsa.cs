@@ -76,7 +76,7 @@ namespace BH.Adapter.GSA
 
         public static string ToGsaString(this object obj, string index)
         {
-            NotSupportedWarning(obj.GetType());
+            GSAAdapter.NotSupportedWarning(obj.GetType());
             return "";
         }
 

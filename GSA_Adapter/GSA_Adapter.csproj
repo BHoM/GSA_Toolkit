@@ -131,7 +131,6 @@
     <Compile Include="Convert\FromGsa\Results\Results.cs" />
     <Compile Include="Convert\FromGsa\Elements\RigidLink.cs" />
     <Compile Include="Convert\FromGsa\Properties\SectionProperty.cs" />
-    <Compile Include="Convert\NotSupportedWarning.cs" />
     <Compile Include="Enums\MaterialType.cs" />
     <Compile Include="Convert\FromGsa\Properties\SurfaceProperty.cs" />
     <Compile Include="Convert\ToGsa\Elements\Bar.cs" />

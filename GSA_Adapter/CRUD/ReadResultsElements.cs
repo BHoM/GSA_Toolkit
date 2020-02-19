@@ -98,7 +98,7 @@ namespace BH.Adapter.GSA
 
         private bool GetExtractionParameters(BarResultRequest request, out ResHeader header, out ForceConverter converter, out string axis, out double unitFactor, out int divisions, out int flags)
         {
-            axis = BH.Adapter.GSA.Output_Axis.Local();
+            axis = BH.Adapter.GSA.Output_Axis.Local;
             divisions = request.Divisions;
 
             double[] unitFactors = GetUnitFactors();
@@ -122,7 +122,7 @@ namespace BH.Adapter.GSA
                     unitFactor = unitFactors[(int)BH.Adapter.GSA.UnitType.FORCE];
                     break;
                 case BarResultType.BarDisplacement:
-                    axis = BH.Adapter.GSA.Output_Axis.Global();
+                    axis = BH.Adapter.GSA.Output_Axis.Global;
                     converter = BH.Adapter.GSA.Convert.FromGsaBarDisplacement;
                     header = ResHeader.REF_DISP_EL1D;
                     unitFactor = unitFactors[(int)BH.Adapter.GSA.UnitType.LENGTH];
@@ -162,11 +162,11 @@ namespace BH.Adapter.GSA
             switch (request.Axis)
             {
                 case oM.Structure.Loads.LoadAxis.Local:
-                    axis = BH.Adapter.GSA.Output_Axis.Local();
+                    axis = BH.Adapter.GSA.Output_Axis.Local;
                     break;
                 case oM.Structure.Loads.LoadAxis.Global:
                 default:
-                    axis = BH.Adapter.GSA.Output_Axis.Global();
+                    axis = BH.Adapter.GSA.Output_Axis.Global;
                     break;
             }
 
