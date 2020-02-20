@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2020, the respective contributors. All rights reserved.
  *
@@ -22,54 +22,59 @@
 
 
 using BH.oM.Structure.Loads;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+
 
 namespace BH.Adapter.GSA
 {
-    public partial class GSAAdapter
+    public static partial class Convert
     {
         /***************************************************/
-        /**** Index Adapter Interface                   ****/
+        /**** Public  Methods                           ****/
         /***************************************************/
 
-        protected override object NextFreeId(Type type, bool refresh)
+        static public string ToGsaString(this Loadcase loadCase)
         {
-            if (type == typeof(LoadCombination))
-                return null; //TODO: Needed?
-            else if (type == typeof(Loadcase))
-                return null; //TODO: Needed?
-            else if (type == typeof(ILoad) || type.GetInterfaces().Contains(typeof(ILoad)))
-                return null;
+            string title = loadCase.Name; ;
+            string type = LoadNatureString(loadCase.Nature);
 
-            string typeString = type.ToGsaString();
+            string str;
+            string command = "LOAD_TITLE.1";
+            string bridge = "BRIDGE_NO";
 
-            int index;
-            if (!refresh && m_indexDict.TryGetValue(type, out index))
-            {
-                index++;
-                m_indexDict[type] = index;
-            }
-            else
-            {
-                index = m_gsaCom.GwaCommand("HIGHEST, " + typeString) + 1;
-                m_indexDict[type] = index;
-            }
-
-            return index;
+            str = command + "," + loadCase.Number + "," + title + "," + type + "," + bridge;
+            return str;
         }
 
+        /***************************************************/
+        /**** Private  Methods                          ****/
+        /***************************************************/
+
+        private static string LoadNatureString(this LoadNature loadNature)
+        {
+            if (loadNature == LoadNature.Dead || loadNature == LoadNature.SuperDead)
+                return "LC_PERM_SELF";
+            if (loadNature == LoadNature.Live)
+                return "LC_VAR_IMP";
+            if (loadNature == LoadNature.Other)
+                return "LC_UNDEF";
+            if (loadNature == LoadNature.Seismic)
+                return "LC_EQE_ACC";
+            if (loadNature == LoadNature.Snow)
+                return "LC_VAR_SNOW";
+            if (loadNature == LoadNature.Temperature)
+                return "LC_VAR_TEMP";
+            if (loadNature == LoadNature.Wind)
+                return "LC_VAR_WIND";
+            if (loadNature == LoadNature.Prestress)
+                return "LC_PRESTRESS";
+            if (loadNature == LoadNature.Accidental)
+                return "LC_ACCIDENTAL";
+            else
+                return "";
+        }
 
         /***************************************************/
-        /**** Private Fields                            ****/
-        /***************************************************/
 
-        private Dictionary<Type, int> m_indexDict = new Dictionary<Type, int>();
-
-
-        /***************************************************/
     }
 }
 

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2020, the respective contributors. All rights reserved.
  *
@@ -20,56 +20,56 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using BH.Engine.Serialiser;
+using BH.oM.Structure.Elements;
 
-using BH.oM.Structure.Loads;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace BH.Adapter.GSA
 {
-    public partial class GSAAdapter
+    public static partial class Convert
     {
         /***************************************************/
-        /**** Index Adapter Interface                   ****/
+        /**** Public  Methods                           ****/
         /***************************************************/
 
-        protected override object NextFreeId(Type type, bool refresh)
+        public static string ToGsaString(this FEMesh mesh, int index, int faceID)
         {
-            if (type == typeof(LoadCombination))
-                return null; //TODO: Needed?
-            else if (type == typeof(Loadcase))
-                return null; //TODO: Needed?
-            else if (type == typeof(ILoad) || type.GetInterfaces().Contains(typeof(ILoad)))
-                return null;
 
-            string typeString = type.ToGsaString();
+            string command = "EL.2";
+            string type;
 
-            int index;
-            if (!refresh && m_indexDict.TryGetValue(type, out index))
-            {
-                index++;
-                m_indexDict[type] = index;
-            }
+            FEMeshFace face = mesh.Faces[faceID];
+            face.CustomData[AdapterIdName] = index;
+
+            //TODO: Implement QUAD8 and TRI6
+            if (face.NodeListIndices.Count == 3)
+                type = "TRI3";
+            else if (face.NodeListIndices.Count == 4)
+                type = "QUAD4";
             else
+                return "";
+
+            string name = mesh.TaggedName();
+
+            string propertyIndex = mesh.Property.CustomData[AdapterIdName].ToString();
+            int group = 0;
+
+            string topology = "";
+
+            foreach (int nodeIndex in face.NodeListIndices)
             {
-                index = m_gsaCom.GwaCommand("HIGHEST, " + typeString) + 1;
-                m_indexDict[type] = index;
+                topology += mesh.Nodes[nodeIndex].CustomData[AdapterIdName].ToString() + ",";
             }
 
-            return index;
+            string dummy = CheckDummy(face);
+            //EL	1	gfdgdf	NO_RGB	QUAD4	1	1	1	2	3	4	0	0	NO_RLS	NO_OFFSET	DUMMY
+            //EL  2       NO_RGB TRI3    1   1   1   2   5   0   0   NO_RLS NO_OFFSET   DUMMY
+
+            string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + propertyIndex + ", " + group + ", " + topology + " 0 , 0" + ", NO_RLS" + ", NO_OFFSET," + dummy;
+            return str;
         }
 
-
-        /***************************************************/
-        /**** Private Fields                            ****/
         /***************************************************/
 
-        private Dictionary<Type, int> m_indexDict = new Dictionary<Type, int>();
-
-
-        /***************************************************/
     }
 }
-

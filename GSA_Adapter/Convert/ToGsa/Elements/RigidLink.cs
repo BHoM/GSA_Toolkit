@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2020, the respective contributors. All rights reserved.
  *
@@ -20,56 +20,41 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using BH.Engine.Serialiser;
+using BH.oM.Structure.Elements;
 
-using BH.oM.Structure.Loads;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace BH.Adapter.GSA
 {
-    public partial class GSAAdapter
+    public static partial class Convert
     {
         /***************************************************/
-        /**** Index Adapter Interface                   ****/
+        /**** Public  Methods                           ****/
         /***************************************************/
 
-        protected override object NextFreeId(Type type, bool refresh)
+        public static string ToGsaString(this RigidLink link, string index, int slaveIndex = 0)
         {
-            if (type == typeof(LoadCombination))
-                return null; //TODO: Needed?
-            else if (type == typeof(Loadcase))
-                return null; //TODO: Needed?
-            else if (type == typeof(ILoad) || type.GetInterfaces().Contains(typeof(ILoad)))
-                return null;
+            string command = "EL.2";
+            string name = link.TaggedName();
+            string type = "LINK";
 
-            string typeString = type.ToGsaString();
+            string constraintIndex = link.Constraint.CustomData[AdapterIdName].ToString();
+            string group = "0";
 
-            int index;
-            if (!refresh && m_indexDict.TryGetValue(type, out index))
-            {
-                index++;
-                m_indexDict[type] = index;
-            }
-            else
-            {
-                index = m_gsaCom.GwaCommand("HIGHEST, " + typeString) + 1;
-                m_indexDict[type] = index;
-            }
+            string startIndex = link.MasterNode.CustomData[AdapterIdName].ToString();
 
-            return index;
+            string endIndex = link.SlaveNodes[slaveIndex].CustomData[AdapterIdName].ToString();
+
+            string dummy = CheckDummy(link);
+
+
+            //EL	1	gfdgfdg	NO_RGB	LINK	1	1	1	2	0	0	NO_RLS	NO_OFFSET	DUMMY
+            string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + constraintIndex + ", " + group + ", " + startIndex + ", " + endIndex + " , 0" + ",0" + ", NO_RLS" + ", NO_OFFSET," + dummy;
+            return str;
         }
 
-
-        /***************************************************/
-        /**** Private Fields                            ****/
         /***************************************************/
 
-        private Dictionary<Type, int> m_indexDict = new Dictionary<Type, int>();
-
-
-        /***************************************************/
     }
 }
 

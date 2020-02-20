@@ -20,56 +20,58 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-
-using BH.oM.Structure.Loads;
+using BH.oM.Structure.MaterialFragments;
+using BH.oM.Structure.SurfaceProperties;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+
 
 namespace BH.Adapter.GSA
 {
-    public partial class GSAAdapter
+    public static partial class Convert
     {
         /***************************************************/
-        /**** Index Adapter Interface                   ****/
+        /**** Public Methods                            ****/
         /***************************************************/
-
-        protected override object NextFreeId(Type type, bool refresh)
+      
+        public static ISurfaceProperty FromGsaSurfaceProperty(string gsaString, Dictionary<string, IMaterialFragment> materials)
         {
-            if (type == typeof(LoadCombination))
-                return null; //TODO: Needed?
-            else if (type == typeof(Loadcase))
-                return null; //TODO: Needed?
-            else if (type == typeof(ILoad) || type.GetInterfaces().Contains(typeof(ILoad)))
+            ISurfaceProperty panProp = null;
+
+            if (gsaString == "")
+            {
                 return null;
-
-            string typeString = type.ToGsaString();
-
-            int index;
-            if (!refresh && m_indexDict.TryGetValue(type, out index))
-            {
-                index++;
-                m_indexDict[type] = index;
-            }
-            else
-            {
-                index = m_gsaCom.GwaCommand("HIGHEST, " + typeString) + 1;
-                m_indexDict[type] = index;
             }
 
-            return index;
+            string[] gsaStrings = gsaString.Split(',');
+
+            int id;
+
+            Int32.TryParse(gsaStrings[1], out id);
+            string name = gsaStrings[2];
+            string materialId = gsaStrings[5];
+            string description = gsaStrings[6];
+
+            if (description == "SHELL")
+            {
+                panProp = new ConstantThickness();
+                panProp.Material = materials[materialId];
+                double t = double.Parse(gsaStrings[7]);
+                ((ConstantThickness)panProp).Thickness = t;
+            }
+            else if (description == "LOAD")
+            {
+                panProp = new LoadingPanelProperty();
+                ((LoadingPanelProperty)panProp).LoadApplication = GetLoadingConditionFromString(gsaStrings[7]);
+                ((LoadingPanelProperty)panProp).ReferenceEdge = int.Parse(gsaStrings[8]);
+            }
+
+            panProp.CustomData.Add(AdapterIdName, id);
+            panProp.Name = name;
+            return panProp;
         }
 
-
-        /***************************************************/
-        /**** Private Fields                            ****/
         /***************************************************/
 
-        private Dictionary<Type, int> m_indexDict = new Dictionary<Type, int>();
-
-
-        /***************************************************/
     }
 }
-

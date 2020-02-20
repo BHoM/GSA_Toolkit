@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2020, the respective contributors. All rights reserved.
  *
@@ -23,53 +23,68 @@
 
 using BH.oM.Structure.Loads;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+
 
 namespace BH.Adapter.GSA
 {
-    public partial class GSAAdapter
+    public static partial class Convert
     {
         /***************************************************/
-        /**** Index Adapter Interface                   ****/
+        /**** Public Methods                            ****/
         /***************************************************/
 
-        protected override object NextFreeId(Type type, bool refresh)
+        public static Loadcase FromGsaLoadcase(string gsaString)
         {
-            if (type == typeof(LoadCombination))
-                return null; //TODO: Needed?
-            else if (type == typeof(Loadcase))
-                return null; //TODO: Needed?
-            else if (type == typeof(ILoad) || type.GetInterfaces().Contains(typeof(ILoad)))
+
+            if (string.IsNullOrWhiteSpace(gsaString))
                 return null;
 
-            string typeString = type.ToGsaString();
+            string[] gStr = gsaString.Split(',');
 
-            int index;
-            if (!refresh && m_indexDict.TryGetValue(type, out index))
+            if (gStr.Length < 5)
+                return null;
+
+            LoadNature loadNature = BHoMLoadNature(gStr[3]);
+            Loadcase lCase = Engine.Structure.Create.Loadcase(gStr[2], int.Parse(gStr[1]), loadNature);
+
+            int lCasenum = 0;
+
+            if (Int32.TryParse(gStr[1], out lCasenum))
             {
-                index++;
-                m_indexDict[type] = index;
-            }
-            else
-            {
-                index = m_gsaCom.GwaCommand("HIGHEST, " + typeString) + 1;
-                m_indexDict[type] = index;
+                lCase.Number = lCasenum;
             }
 
-            return index;
+            return lCase;
         }
 
-
         /***************************************************/
-        /**** Private Fields                            ****/
+        /**** Private Methods                           ****/
         /***************************************************/
 
-        private Dictionary<Type, int> m_indexDict = new Dictionary<Type, int>();
-
+        private static LoadNature BHoMLoadNature(string loadNature)
+        {
+            if (loadNature == "LC_PERM_SELF")
+                return LoadNature.Dead;
+            if (loadNature == "LC_VAR_IMP")
+                return LoadNature.Live;
+            if (loadNature == "LC_UNDEF")
+                return LoadNature.Other;
+            if (loadNature == "LC_EQE_ACC")
+                return LoadNature.Seismic;
+            if (loadNature == "LC_VAR_SNOW")
+                return LoadNature.Snow;
+            if (loadNature == "LC_VAR_TEMP")
+                return LoadNature.Temperature;
+            if (loadNature == "LC_VAR_WIND")
+                return LoadNature.Wind;
+            if (loadNature == "LC_PRESTRESS")
+                return LoadNature.Prestress;
+            if (loadNature == "LC_ACCIDENTAL")
+                return LoadNature.Accidental;
+            else
+                return LoadNature.Other;
+        }
 
         /***************************************************/
     }
 }
-

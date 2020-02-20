@@ -20,7 +20,7 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.Engine.GSA;
+
 using BH.oM.Base;
 using BH.oM.Common;
 using BH.oM.Adapter;
@@ -87,7 +87,7 @@ namespace BH.Adapter.GSA
                 string stiffness = m_gsaCom.GwaCommand("GET, MODAL_STIFF, " + loadCase);
                 string effMassTran = m_gsaCom.GwaCommand("GET, EFF_MASS, " + loadCase + ",TRAN");
                 string effMassRot = m_gsaCom.GwaCommand("GET, EFF_MASS, " + loadCase + ",ROT");
-                dynamics.Add(BH.Engine.GSA.Convert.ToBHoMModalDynamics(id, mode, frequency, mass, stiffness, damping, effMassTran, effMassRot));
+                dynamics.Add(BH.Adapter.GSA.Convert.FromGsaModalDynamics(id, mode, frequency, mass, stiffness, damping, effMassTran, effMassRot));
             }
 
             return dynamics;
@@ -118,9 +118,9 @@ namespace BH.Adapter.GSA
 
                 //string force = m_gsaCom.GwaCommand("GET, TOTAL_FORCE, " + loadCase + ",REACT");
                 //string moment = m_gsaCom.GwaCommand("GET, TOTAL_MOMENT, " + loadCase + ",REACT");
-                //reactions.Add(BH.Engine.GSA.Convert.ToBHoMGlobalReactions(id, force, moment));
+                //reactions.Add(BH.Adapter.GSA.Convert.FromGsaGlobalReactions(id, force, moment));
 
-                reactions.Add(BH.Engine.GSA.Convert.ToBHoMGlobalReactions(id, forceStrings, momentStrings));
+                reactions.Add(BH.Adapter.GSA.Convert.FromGsaGlobalReactions(id, forceStrings, momentStrings));
             }
 
             return reactions;

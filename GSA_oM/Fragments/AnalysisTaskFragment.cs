@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2020, the respective contributors. All rights reserved.
  *
@@ -21,53 +21,22 @@
  */
 
 
-using BH.oM.Structure.Loads;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using BH.oM.Base;
+using System.ComponentModel;
 
-namespace BH.Adapter.GSA
+namespace BH.oM.External.GSA
 {
-    public partial class GSAAdapter
+    [Description("Fragment to be put on a LoadCombination to help you control the analysis task type to use in GSA and for which stage the combination should be run.")]
+    public class AnalysisTaskFragment : IBHoMFragment
     {
         /***************************************************/
-        /**** Index Adapter Interface                   ****/
+        /**** Properties                                ****/
         /***************************************************/
 
-        protected override object NextFreeId(Type type, bool refresh)
-        {
-            if (type == typeof(LoadCombination))
-                return null; //TODO: Needed?
-            else if (type == typeof(Loadcase))
-                return null; //TODO: Needed?
-            else if (type == typeof(ILoad) || type.GetInterfaces().Contains(typeof(ILoad)))
-                return null;
+        public AnalysisType AnalysisType { get; set; } = AnalysisType.LinearStatic;
 
-            string typeString = type.ToGsaString();
-
-            int index;
-            if (!refresh && m_indexDict.TryGetValue(type, out index))
-            {
-                index++;
-                m_indexDict[type] = index;
-            }
-            else
-            {
-                index = m_gsaCom.GwaCommand("HIGHEST, " + typeString) + 1;
-                m_indexDict[type] = index;
-            }
-
-            return index;
-        }
-
-
-        /***************************************************/
-        /**** Private Fields                            ****/
-        /***************************************************/
-
-        private Dictionary<Type, int> m_indexDict = new Dictionary<Type, int>();
-
+        [Description("The stage number for the combination to be run on.")]
+        public int Stage { get; set; } = 0;
 
         /***************************************************/
     }

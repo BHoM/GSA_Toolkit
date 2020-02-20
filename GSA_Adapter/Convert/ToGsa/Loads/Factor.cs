@@ -20,54 +20,71 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-
 using BH.oM.Structure.Loads;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+
 
 namespace BH.Adapter.GSA
 {
-    public partial class GSAAdapter
+    public static partial class Convert
     {
         /***************************************************/
-        /**** Index Adapter Interface                   ****/
+        /**** Private Methods                            ****/
         /***************************************************/
 
-        protected override object NextFreeId(Type type, bool refresh)
+        private static double Factor(this PointLoad load, double[] unitType)
         {
-            if (type == typeof(LoadCombination))
-                return null; //TODO: Needed?
-            else if (type == typeof(Loadcase))
-                return null; //TODO: Needed?
-            else if (type == typeof(ILoad) || type.GetInterfaces().Contains(typeof(ILoad)))
-                return null;
-
-            string typeString = type.ToGsaString();
-
-            int index;
-            if (!refresh && m_indexDict.TryGetValue(type, out index))
-            {
-                index++;
-                m_indexDict[type] = index;
-            }
-            else
-            {
-                index = m_gsaCom.GwaCommand("HIGHEST, " + typeString) + 1;
-                m_indexDict[type] = index;
-            }
-
-            return index;
+            return unitType[(int)UnitType.FORCE];
         }
 
-
-        /***************************************************/
-        /**** Private Fields                            ****/
         /***************************************************/
 
-        private Dictionary<Type, int> m_indexDict = new Dictionary<Type, int>();
+        private static double Factor(this PointDisplacement load, double[] unitType)
+        {
+            return unitType[(int)UnitType.LENGTH];
+        }
 
+        /***************************************************/
+
+        private static double Factor(this BarPointLoad load, double[] unitType)
+        {
+            return unitType[(int)UnitType.FORCE];
+        }
+
+        /***************************************************/
+
+        private static double Factor(this BarUniformlyDistributedLoad load, double[] unitType)
+        {
+            return unitType[(int)UnitType.FORCE];
+        }
+
+        /***************************************************/
+
+        private static double Factor(this BarVaryingDistributedLoad load, double[] unitType)
+        {
+            return unitType[(int)UnitType.FORCE];
+        }
+
+        /***************************************************/
+
+        private static double Factor(this AreaUniformlyDistributedLoad load, double[] unitType)
+        {
+            return unitType[(int)UnitType.FORCE];
+        }
+
+        /***************************************************/
+        //private static double Factor(this AreaVaryingDistributedLoad load, double[] unitType)
+        //{
+        //    return unitType[(int)UnitType.FORCE];
+        //}
+
+        /***************************************************/
+        /**** private Methods - Interfaces              ****/
+        /***************************************************/
+
+        private static double IFactor(this ILoad load, double[] unitType)
+        {
+            return Factor(load as dynamic, unitType);
+        }
 
         /***************************************************/
     }

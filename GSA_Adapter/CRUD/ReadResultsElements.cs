@@ -20,14 +20,11 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.Engine.GSA;
 using BH.oM.Base;
 using BH.oM.Common;
-using BH.oM.Structure.Elements;
 using BH.oM.Structure.Requests;
 using BH.oM.Data.Requests;
 using BH.oM.Adapter;
-using BH.oM.Structure.Results;
 using Interop.gsa_8_7;
 using System;
 using System.Collections;
@@ -101,7 +98,7 @@ namespace BH.Adapter.GSA
 
         private bool GetExtractionParameters(BarResultRequest request, out ResHeader header, out ForceConverter converter, out string axis, out double unitFactor, out int divisions, out int flags)
         {
-            axis = BH.Engine.GSA.Output_Axis.Local();
+            axis = Output_Axis.Local;
             divisions = request.Divisions;
 
             double[] unitFactors = GetUnitFactors();
@@ -120,15 +117,15 @@ namespace BH.Adapter.GSA
             switch (request.ResultType)
             {
                 case BarResultType.BarForce:
-                    converter = BH.Engine.GSA.Convert.ToBHoMBarForce;
+                    converter = Convert.FromGsaBarForce;
                     header = ResHeader.REF_FORCE_EL1D;
-                    unitFactor = unitFactors[(int)BH.Engine.GSA.UnitType.FORCE];
+                    unitFactor = unitFactors[(int)UnitType.FORCE];
                     break;
                 case BarResultType.BarDisplacement:
-                    axis = BH.Engine.GSA.Output_Axis.Global();
-                    converter = BH.Engine.GSA.Convert.ToBHoMBarDisplacement;
+                    axis = Output_Axis.Global;
+                    converter = Convert.FromGsaBarDisplacement;
                     header = ResHeader.REF_DISP_EL1D;
-                    unitFactor = unitFactors[(int)BH.Engine.GSA.UnitType.LENGTH];
+                    unitFactor = unitFactors[(int)UnitType.LENGTH];
                     break;
                 case BarResultType.BarDeformation:
                     converter = null;
@@ -137,12 +134,12 @@ namespace BH.Adapter.GSA
                     Engine.Reflection.Compute.RecordError("Extraction of Localised BarDeformations is not supported in GSA. To get full displacements of the Bar in global coordinates, try pulling BarDisplacements");
                     return false;
                 case BarResultType.BarStress:
-                    converter = BH.Engine.GSA.Convert.ToBHoMBarStress;
+                    converter = Convert.FromGsaBarStress;
                     header = ResHeader.REF_STRESS_EL1D;
-                    unitFactor = unitFactors[(int)BH.Engine.GSA.UnitType.STRESS];
+                    unitFactor = unitFactors[(int)UnitType.STRESS];
                     break;
                 case BarResultType.BarStrain:
-                    converter = BH.Engine.GSA.Convert.ToBHoMBarStrain;
+                    converter = Convert.FromGsaBarStrain;
                     header = ResHeader.REF_STRAIN_EL1D;
                     unitFactor = 1;
                     break;
@@ -165,11 +162,11 @@ namespace BH.Adapter.GSA
             switch (request.Axis)
             {
                 case oM.Structure.Loads.LoadAxis.Local:
-                    axis = BH.Engine.GSA.Output_Axis.Local();
+                    axis = Output_Axis.Local;
                     break;
                 case oM.Structure.Loads.LoadAxis.Global:
                 default:
-                    axis = BH.Engine.GSA.Output_Axis.Global();
+                    axis = Output_Axis.Global;
                     break;
             }
 
@@ -182,13 +179,13 @@ namespace BH.Adapter.GSA
             {
                 case NodeResultType.NodeReaction:
                     header = ResHeader.REF_REAC;
-                    converter = BH.Engine.GSA.Convert.ToBHoMReaction;
-                    unitFactor = unitFactors[(int)BH.Engine.GSA.UnitType.FORCE];
+                    converter = Convert.FromGsaReaction;
+                    unitFactor = unitFactors[(int)UnitType.FORCE];
                     break;
                 case NodeResultType.NodeDisplacement:
-                    converter = BH.Engine.GSA.Convert.ToBHoMNodeDisplacement;
+                    converter = Convert.FromGsaNodeDisplacement;
                     header = ResHeader.REF_DISP;
-                    unitFactor = unitFactors[(int)BH.Engine.GSA.UnitType.LENGTH];
+                    unitFactor = unitFactors[(int)UnitType.LENGTH];
                     break;
                 case NodeResultType.NodeVelocity:
                 case NodeResultType.NodeAcceleration:

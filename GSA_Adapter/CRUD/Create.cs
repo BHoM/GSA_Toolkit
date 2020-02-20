@@ -27,7 +27,6 @@ using BH.oM.Structure.Loads;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Base;
-using BH.Engine.GSA;
 using BH.Engine.Adapter;
 using BH.oM.Adapter;
 
@@ -64,7 +63,7 @@ namespace BH.Adapter.GSA
 
         private bool CreateObject(BH.oM.Base.IBHoMObject obj)
         {
-            return ComCall(Engine.GSA.Convert.IToGsaString(obj, obj.CustomData[AdapterIdName].ToString()));
+            return ComCall(Convert.IToGsaString(obj, obj.CustomData[AdapterIdName].ToString()));
         }
 
         /***************************************************/
@@ -80,7 +79,7 @@ namespace BH.Adapter.GSA
                     return true;
             }
 
-            return ComCall(Engine.GSA.Convert.IToGsaString(prop, prop.CustomData[AdapterIdName].ToString()));
+            return ComCall(Convert.IToGsaString(prop, prop.CustomData[AdapterIdName].ToString()));
         }
 
         /***************************************************/
@@ -92,7 +91,7 @@ namespace BH.Adapter.GSA
             bool success = true;
             foreach (RigidLink link in links)
             {
-                success &= ComCall(Engine.GSA.Convert.ToGsaString(link, link.CustomData[AdapterIdName].ToString(), 0));
+                success &= ComCall(Convert.ToGsaString(link, link.CustomData[AdapterIdName].ToString(), 0));
             }
 
             foreach (RigidLink link in links)
@@ -101,7 +100,7 @@ namespace BH.Adapter.GSA
                 for (int i = 1; i < link.SlaveNodes.Count; i++)
                 {
                     string id =  NextFreeId(link.GetType(), i == 1).ToString();
-                    success &= ComCall(Engine.GSA.Convert.ToGsaString(link, id, i));
+                    success &= ComCall(Convert.ToGsaString(link, id, i));
                     allIds.Add(id);
                 }
                 if (link.SlaveNodes.Count > 1)
@@ -123,7 +122,7 @@ namespace BH.Adapter.GSA
 
             for (int i = 0; i < mesh.Faces.Count; i++)
             {
-                success &= ComCall(Engine.GSA.Convert.ToGsaString(mesh,id,i));
+                success &= ComCall(Convert.ToGsaString(mesh,id,i));
                 allIds.Add(id);
                 id++;
                 //mesh.CustomData[AdapterIdName] = allIds; //TODO: SOLVE THIS
@@ -166,6 +165,8 @@ namespace BH.Adapter.GSA
             return success;
         }
 
+        /***************************************************/
+
         public double[] GetUnitFactors()
         {
             string iUnitFactor = m_gsaCom.GwaCommand("GET_ALL, UNIT_DATA");
@@ -184,6 +185,8 @@ namespace BH.Adapter.GSA
 
             return factors;
         }
+
+        /***************************************************/
     }
 }
 

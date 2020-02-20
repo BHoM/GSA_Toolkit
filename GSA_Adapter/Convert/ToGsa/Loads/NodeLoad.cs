@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2020, the respective contributors. All rights reserved.
  *
@@ -20,56 +20,47 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-
+using BH.oM.Structure.Elements;
 using BH.oM.Structure.Loads;
-using System;
-using System.Collections;
+using BH.oM.Geometry;
 using System.Collections.Generic;
-using System.Linq;
+
 
 namespace BH.Adapter.GSA
 {
-    public partial class GSAAdapter
+    public static partial class Convert
     {
         /***************************************************/
-        /**** Index Adapter Interface                   ****/
+        /**** Public  Methods                           ****/
         /***************************************************/
 
-        protected override object NextFreeId(Type type, bool refresh)
+        public static List<string> ToGsaString(this Load<Node> nodeLoad, double[] unitFactors)
         {
-            if (type == typeof(LoadCombination))
-                return null; //TODO: Needed?
-            else if (type == typeof(Loadcase))
-                return null; //TODO: Needed?
-            else if (type == typeof(ILoad) || type.GetInterfaces().Contains(typeof(ILoad)))
-                return null;
+            string command;
+            List<string> forceStrings = new List<string>();
+            double factor;
 
-            string typeString = type.ToGsaString();
+            Vector[] force = nodeLoad.ITranslationVector();
+            command = nodeLoad.IForceTypeString();
+            Vector[] moment = nodeLoad.IRotationVector();
+            factor = nodeLoad.IFactor(unitFactors);
 
-            int index;
-            if (!refresh && m_indexDict.TryGetValue(type, out index))
-            {
-                index++;
-                m_indexDict[type] = index;
-            }
-            else
-            {
-                index = m_gsaCom.GwaCommand("HIGHEST, " + typeString) + 1;
-                m_indexDict[type] = index;
-            }
+            string name = nodeLoad.Name;
+            string str;
+            string appliedTo = nodeLoad.CreateIdListOrGroupName();
+            string caseNo = nodeLoad.Loadcase.Number.ToString();
+            string axis = IsGlobal(nodeLoad);
+            string[] pos = { ("," + nodeLoad.ILoadPosition()[0]), ("," + nodeLoad.ILoadPosition()[1]) };
 
-            return index;
+            str = command + "," + name + "," + appliedTo + "," + caseNo + "," + axis;
+
+            VectorDataToString(str, force, ref forceStrings, factor, true, pos);
+            VectorDataToString(str, moment, ref forceStrings, factor, false, pos);
+
+            return forceStrings;
         }
 
-
-        /***************************************************/
-        /**** Private Fields                            ****/
         /***************************************************/
 
-        private Dictionary<Type, int> m_indexDict = new Dictionary<Type, int>();
-
-
-        /***************************************************/
     }
 }
-
