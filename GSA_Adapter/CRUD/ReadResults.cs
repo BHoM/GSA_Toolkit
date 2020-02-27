@@ -44,7 +44,7 @@ namespace BH.Adapter.GSA
             IResultRequest request = Engine.Structure.Create.IResultRequest(type, ids?.Cast<object>(), cases?.Cast<object>(), divisions);
 
             if (request != null)
-                return this.ReadResults(request as dynamic);
+                return this.ReadResults(request as dynamic, actionConfig);
             else
                 return new List<IResult>();
         }
