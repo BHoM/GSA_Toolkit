@@ -303,20 +303,42 @@ namespace BH.Adapter.GSA
 
         private List<int> GetAllIds(BarResultRequest request)
         {
-            List<int> ids = new List<int>();
-            int maxIndex = m_gsaCom.GwaCommand("HIGHEST, EL");
-            GsaElement[] gsaElems;
-            m_gsaCom.Elements(CreateIntSequence(maxIndex), out gsaElems);
+            string allBars = m_gsaCom.GwaCommand("GET_ALL, EL.2").ToString();
+            string[] barArr = string.IsNullOrWhiteSpace(allBars) ? new string[0] : allBars.Split('\n');
 
-            foreach (GsaElement elem in gsaElems)
+            List<int> ids = new List<int>();
+            bool containsDummies = false;
+            foreach (string gsaBar in barArr)
             {
-                int gsaType = elem.eType;
+
+                string[] arr = gsaBar.Split(',');
+
+                string index = arr[1];
 
                 //Check that the element type is a bar
-                if (gsaType == 1 || gsaType == 2 || gsaType == 20 || gsaType == 21)
-                    ids.Add(elem.Ref);
+                switch (arr[4])
+                {
+                    case "BEAM":
+                    case "BAR":
+                    case "TIE":
+                    case "STRUT":
+                        break;
+                    default:
+                        continue;
+                }
 
+                //Check if dummy
+                if (arr.Last().ToUpper() == "DUMMY")
+                {
+                    containsDummies = true;
+                    continue;
+                }
+
+                ids.Add(int.Parse(index));
             }
+
+            if(containsDummies)
+                Engine.Reflection.Compute.RecordNote("Model contains 'dummy'-elements. The elements with this tag do not contain any results and will not have any results extracted.");
 
             return ids;
         }
