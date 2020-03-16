@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2020, the respective contributors. All rights reserved.
  *
@@ -29,37 +29,14 @@ using System.Threading.Tasks;
 namespace BH.oM.GSA
 {
     /***************************************************/
+
     public enum SteelDesignSpecification
     {
         Eurocode1993,
         ASCI
     }
-    /***************************************************/
-
-    public enum ConcreteDesignSpecification
-    {
-        Eurocode1992,
-        ACI
-    }
 
     /***************************************************/
 
-    public enum Country
-    {
-        Undefined,
-        UK,
-        US,
-        Germany,
-        NL,
-        France,
-        Italy,
-        Denmark,
-        Singapore,
-        //HK,
-        //India,
-        //Can,
-    }
-
-    /***************************************************/
 }
 
