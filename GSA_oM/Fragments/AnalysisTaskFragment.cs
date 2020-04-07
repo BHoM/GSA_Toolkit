@@ -1,4 +1,4 @@
-﻿/*
+/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2020, the respective contributors. All rights reserved.
  *
@@ -33,10 +33,10 @@ namespace BH.oM.External.GSA
         /**** Properties                                ****/
         /***************************************************/
 
-        public AnalysisType AnalysisType { get; set; } = AnalysisType.LinearStatic;
+        public virtual AnalysisType AnalysisType { get; set; } = AnalysisType.LinearStatic;
 
         [Description("The stage number for the combination to be run on.")]
-        public int Stage { get; set; } = 0;
+        public virtual int Stage { get; set; } = 0;
 
         /***************************************************/
     }
