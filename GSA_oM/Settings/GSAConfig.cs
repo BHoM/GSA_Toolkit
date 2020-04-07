@@ -36,11 +36,11 @@ namespace BH.oM.GSA
         /**** Properties                                ****/
         /***************************************************/
 
-        public SteelDesignSpecification SteelDesign { get; set; } = SteelDesignSpecification.Eurocode1993;
+        public virtual SteelDesignSpecification SteelDesign { get; set; } = SteelDesignSpecification.Eurocode1993;
 
-        public ConcreteDesignSpecification ConcreteDesign { get; set; } = ConcreteDesignSpecification.Eurocode1992;
+        public virtual ConcreteDesignSpecification ConcreteDesign { get; set; } = ConcreteDesignSpecification.Eurocode1992;
 
-        public Country Country { get; set; } = Country.UK;
+        public virtual Country Country { get; set; } = Country.UK;
 
         /***************************************************/
     }
