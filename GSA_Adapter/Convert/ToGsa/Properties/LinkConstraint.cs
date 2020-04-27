@@ -21,6 +21,8 @@
  */
 
 using BH.oM.Structure.Constraints;
+using BH.Engine.Structure;
+using BH.Engine.Serialiser;
 
 namespace BH.Adapter.GSA
 {
@@ -33,7 +35,8 @@ namespace BH.Adapter.GSA
         private static string ToGsaString(LinkConstraint constraint, string index)
         {
             string command = "PROP_LINK";
-            string name = constraint.Name;
+            constraint.Name = constraint.DescriptionOrName();
+            string name = constraint.TaggedName();
             string restraint = GetRestraintString(constraint);
             return command + ", " + index + ", " + name + ", NO_RGB, " + restraint;
         }
