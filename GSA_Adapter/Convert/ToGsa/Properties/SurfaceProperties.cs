@@ -22,6 +22,7 @@
 
 using BH.Engine.Serialiser;
 using BH.oM.Structure.SurfaceProperties;
+using BH.Engine.Structure;
 
 
 namespace BH.Adapter.GSA
@@ -34,6 +35,7 @@ namespace BH.Adapter.GSA
        
         private static string ToGsaString(ConstantThickness panProp, string index)
         {
+            panProp.Name = panProp.DescriptionOrName();
             string name = panProp.TaggedName();
             string mat = panProp.Material.CustomData[AdapterIdName].ToString();
 
@@ -56,6 +58,7 @@ namespace BH.Adapter.GSA
         private static string ToGsaString(LoadingPanelProperty panProp, string index)
         {
             string command = "PROP_2D";
+            panProp.Name = panProp.DescriptionOrName();
             string name = panProp.TaggedName();
             string colour = "NO_RGB";
             string axis = "0";
