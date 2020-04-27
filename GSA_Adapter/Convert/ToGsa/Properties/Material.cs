@@ -20,6 +20,9 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using System.Collections.Generic;
+using System.Reflection;
+using System.Linq;
 using BH.Engine.Serialiser;
 using BH.Engine.Structure;
 using BH.oM.Structure.MaterialFragments;
@@ -39,6 +42,7 @@ namespace BH.Adapter.GSA
             string command = "MAT";
             string num = index;
             string mModel = "MAT_ELAS_ISO";
+            material.Name = material.DescriptionOrName();
             string name = material.TaggedName();
             string colour = "NO_RGB";
             string type = GetMaterialType(material).ToString();
@@ -61,6 +65,8 @@ namespace BH.Adapter.GSA
             string command = "MAT";
             string num = index;
             string mModel = "MAT_ELAS_ORTHO";
+            material = CheckMaterialVectors(material);
+            material.Name = material.DescriptionOrName();
             string name = material.TaggedName();
             string colour = "NO_RGB";
             string type = GetMaterialType(material).ToString();
@@ -109,6 +115,66 @@ namespace BH.Adapter.GSA
             else
                 return MaterialType.MT_UNDEF;
 
+        }
+
+        /***************************************************/
+
+        private static IOrthotropic CheckMaterialVectors(this IOrthotropic material)
+        {
+            List<string> failingProperties = new List<string>();
+            IOrthotropic clone = material.GetShallowClone() as IOrthotropic;
+
+            if (material.YoungsModulus == null)
+            {
+                clone.YoungsModulus = new Vector();
+                failingProperties.Add("YoungsModulus");
+            }
+
+            if (material.PoissonsRatio == null)
+            {
+                clone.PoissonsRatio = new Vector();
+                failingProperties.Add("PoissonsRatio");
+            }
+
+            if (material.ShearModulus == null)
+            {
+                clone.ShearModulus = new Vector();
+                failingProperties.Add("ShearModulus");
+            }
+
+            if (material.ThermalExpansionCoeff == null)
+            {
+                clone.ThermalExpansionCoeff = new Vector();
+                failingProperties.Add("ThermalExpansionCoeff");
+            }
+
+            if (failingProperties.Count > 0)
+            {
+                string message;
+                if (failingProperties.Count == 1)
+                {
+                    message = "The vector property " + failingProperties[0];
+                }
+                else
+                {
+                    message = "The vector properties ";
+                    for (int i = 0; i < failingProperties.Count - 1; i++)
+                    {
+                        message += failingProperties[i] + " ,";
+                    }
+                    message += " and " + failingProperties[failingProperties.Count - 1];
+                }
+
+                message += " is/are unset (null) for a material of type " + material.GetType().Name;
+                if (!string.IsNullOrWhiteSpace(material.Name))
+                    message += " , named " + material.Name;
+
+                message += ". All unset (null) properties have been replaced with empty (zero length) vectors. Please check your input data!";
+
+                Engine.Reflection.Compute.RecordError(message);
+            }
+
+            return clone;
         }
 
         /***************************************************/
