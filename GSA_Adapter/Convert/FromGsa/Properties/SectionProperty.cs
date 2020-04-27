@@ -251,7 +251,7 @@ namespace BH.Adapter.GSA
                 string error = "At least part of the section extraction failed and an empty explicit section has been returned in place of the section in GSA.";
                 if (!string.IsNullOrWhiteSpace(message))
                     error += " The following error was reported by the adapter: " + message;
-                Engine.Reflection.Compute.RecordError(error);
+                Engine.Reflection.Compute.RecordWarning(error);
             }
 
             secProp.CustomData[AdapterIdName] = id;
