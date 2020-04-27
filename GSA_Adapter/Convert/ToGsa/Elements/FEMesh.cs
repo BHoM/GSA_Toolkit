@@ -49,7 +49,7 @@ namespace BH.Adapter.GSA
             else
                 return "";
 
-            string name = mesh.TaggedName();
+            string name = mesh.TaggedName().ToGSACleanName();
 
             string propertyIndex = mesh.Property.CustomData[AdapterIdName].ToString();
             int group = 0;

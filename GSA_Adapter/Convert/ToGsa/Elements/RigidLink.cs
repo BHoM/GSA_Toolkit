@@ -35,7 +35,7 @@ namespace BH.Adapter.GSA
         public static string ToGsaString(this RigidLink link, string index, int slaveIndex = 0)
         {
             string command = "EL.2";
-            string name = link.TaggedName();
+            string name = link.TaggedName().ToGSACleanName();
             string type = "LINK";
 
             string constraintIndex = link.Constraint.CustomData[AdapterIdName].ToString();

@@ -42,7 +42,7 @@ namespace BH.Adapter.GSA
             string command = "MAT";
             string num = index;
             string mModel = "MAT_ELAS_ISO";
-            material.Name = material.DescriptionOrName();
+            material.Name = material.DescriptionOrName().ToGSACleanName();
             string name = material.TaggedName();
             string colour = "NO_RGB";
             string type = GetMaterialType(material).ToString();
@@ -66,7 +66,7 @@ namespace BH.Adapter.GSA
             string num = index;
             string mModel = "MAT_ELAS_ORTHO";
             material = CheckMaterialVectors(material);
-            material.Name = material.DescriptionOrName();
+            material.Name = material.DescriptionOrName().ToGSACleanName();
             string name = material.TaggedName();
             string colour = "NO_RGB";
             string type = GetMaterialType(material).ToString();

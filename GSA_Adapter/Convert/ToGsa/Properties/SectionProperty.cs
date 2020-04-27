@@ -37,7 +37,7 @@ namespace BH.Adapter.GSA
 
         private static string ToGsaString(this ISectionProperty prop, string index)
         {
-            prop.Name = prop.DescriptionOrName();
+            prop.Name = prop.DescriptionOrName().ToGSACleanName();
             string name = prop.TaggedName();
 
             string mat = prop.Material.CustomData[AdapterIdName].ToString();// materialId;  //"STEEL";// material.Name;
