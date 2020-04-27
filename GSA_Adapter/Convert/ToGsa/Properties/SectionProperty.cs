@@ -21,6 +21,7 @@
  */
 
 using BH.Engine.Serialiser;
+using BH.Engine.Structure;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Geometry.ShapeProfiles;
 using System;
@@ -36,6 +37,7 @@ namespace BH.Adapter.GSA
 
         private static string ToGsaString(this ISectionProperty prop, string index)
         {
+            prop.Name = prop.DescriptionOrName();
             string name = prop.TaggedName();
 
             string mat = prop.Material.CustomData[AdapterIdName].ToString();// materialId;  //"STEEL";// material.Name;
