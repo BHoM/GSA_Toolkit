@@ -151,25 +151,29 @@ namespace BH.Adapter.GSA
             if (failingProperties.Count > 0)
             {
                 string message;
+                string isAre;
                 if (failingProperties.Count == 1)
                 {
                     message = "The vector property " + failingProperties[0];
+                    isAre = "is";
                 }
                 else
                 {
+                    isAre = "are";
                     message = "The vector properties ";
                     for (int i = 0; i < failingProperties.Count - 1; i++)
                     {
-                        message += failingProperties[i] + " ,";
+                        message += failingProperties[i] + ", ";
                     }
+                    message = message.TrimEnd(' ', ',');
                     message += " and " + failingProperties[failingProperties.Count - 1];
                 }
 
-                message += " is/are unset (null) for a material of type " + material.GetType().Name;
+                message += " " + isAre + " unset (null) for a material of type " + material.GetType().Name;
                 if (!string.IsNullOrWhiteSpace(material.Name))
                     message += ", with the name " + material.Name;
 
-                message += ".\nAll unset (null) properties have been replaced with empty (zero length) vectors. Please check your input data!";
+                message += ".\nAll unset (null) properties have been replaced with empty (zero length) vectors. Please check the input data!";
 
                 Engine.Reflection.Compute.RecordError(message);
             }
