@@ -33,6 +33,7 @@ using BH.oM.Structure.Constraints;
 using System.Collections.Generic;
 using BH.oM.Structure.SurfaceProperties;
 using BH.oM.Reflection.Attributes;
+using BH.Engine.Structure;
 
 namespace BH.Adapter.GSA
 {
@@ -50,11 +51,12 @@ namespace BH.Adapter.GSA
 
             AdapterComparers = new Dictionary<Type, object>
             {
-                {typeof(Bar), new BH.Engine.Structure.BarEndNodesDistanceComparer(3) },
-                {typeof(Node), new BH.Engine.Structure.NodeDistanceComparer(3) },
-                {typeof(ISectionProperty), new BHoMObjectNameOrToStringComparer() },
-                {typeof(IMaterialFragment), new BHoMObjectNameComparer() },
-                {typeof(LinkConstraint), new BHoMObjectNameComparer() },
+                {typeof(Bar), new BarEndNodesDistanceComparer(3) },
+                {typeof(Node), new NodeDistanceComparer(3) },
+                {typeof(ISectionProperty), new NameOrDescriptionComparer() },
+                {typeof(ISurfaceProperty), new NameOrDescriptionComparer() },
+                {typeof(IMaterialFragment), new NameOrDescriptionComparer() },
+                {typeof(LinkConstraint), new NameOrDescriptionComparer() },
             };
 
             DependencyTypes = new Dictionary<Type, List<Type>>
