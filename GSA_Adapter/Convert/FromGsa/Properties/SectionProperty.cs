@@ -123,6 +123,7 @@ namespace BH.Adapter.GSA
                     if (secProp != null)
                     {
                         secProp = secProp.GetShallowClone() as ISectionProperty;
+                        secProp.Material = mat;
                     }
                     else
                     {
