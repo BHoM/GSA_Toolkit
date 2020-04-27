@@ -27,7 +27,7 @@ using BH.Engine.Serialiser;
 using BH.Engine.Structure;
 using BH.oM.Structure.MaterialFragments;
 using BH.oM.Geometry;
-using BH.Engine.Common;
+
 
 namespace BH.Adapter.GSA
 {
