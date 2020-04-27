@@ -49,6 +49,7 @@ namespace BH.Adapter.GSA
         public static ISectionProperty FromGsaSectionProperty(string gsaString, Dictionary<string, IMaterialFragment> materials)
         {
             ISectionProperty secProp = null;
+            string message = "";
 
             if (gsaString == "")
             {
@@ -67,8 +68,7 @@ namespace BH.Adapter.GSA
 
             if (!materials.TryGetValue(materialId, out mat))
             {
-                Engine.Reflection.Compute.RecordError(string.Format("Failed to extract material with id {0}. Section with Id {1} could not be extracted.", materialId, id));
-                return null;
+                Engine.Reflection.Compute.RecordWarning(string.Format("Failed to extract material with id {0}. Section with Id {1} will not have any material applied to it.", materialId, id));
             }
 
 
@@ -99,7 +99,7 @@ namespace BH.Adapter.GSA
             }
             else
             {
-                IProfile dimensions = null;
+                IProfile profile = null;
 
                 if (description.StartsWith("CAT"))
                 {
@@ -107,8 +107,7 @@ namespace BH.Adapter.GSA
 
                     if (desc.Length < 3)
                     {
-                        Engine.Reflection.Compute.RecordError("Failed to parse the GSASection :" + description);
-                        return null;
+                        message += "Failed to parse the GSASection :" + description + "\n";
                     }
 
                     //Change from EA and UA to L for angles
@@ -135,12 +134,11 @@ namespace BH.Adapter.GSA
 
                             description += arr[0] + "%" + arr[1] + "%" + arr[2] + "%" + arr[2];
 
-                            Engine.Reflection.Compute.RecordWarning("Section of type: " + desc[2] + " not found in the library. Custom section will be used");
+                            Engine.Reflection.Compute.RecordNote("Section of type: " + desc[2] + " not found in the library. Custom section will be used");
                         }
                         else
                         {
-                            Engine.Reflection.Compute.RecordError("Catalogue section of type " + desc[2] + " not found in library");
-                            return null;
+                            message += "Catalogue section of type " + desc[2] + " not found in library\n";
                         }
                     }
                 }
@@ -178,7 +176,7 @@ namespace BH.Adapter.GSA
                             W = double.Parse(desc[3]) * factor;
                             T = double.Parse(desc[4]) * factor;
                             t = double.Parse(desc[5]) * factor;
-                            dimensions = Engine.Geometry.Create.ISectionProfile(D, W, T, t, 0, 0);
+                            profile = Engine.Geometry.Create.ISectionProfile(D, W, T, t, 0, 0);
                             break;
                         case "GI":
                             D = double.Parse(desc[2]) * factor;
@@ -187,12 +185,12 @@ namespace BH.Adapter.GSA
                             Tw = double.Parse(desc[5]) * factor;
                             Tt = double.Parse(desc[6]) * factor;
                             Tb = double.Parse(desc[7]) * factor;
-                            dimensions = Engine.Geometry.Create.FabricatedISectionProfile(D, Wt, Wb, Tw, Tt, Tb, 0);
+                            profile = Engine.Geometry.Create.FabricatedISectionProfile(D, Wt, Wb, Tw, Tt, Tb, 0);
                             break;
                         case "CHS":
                             D = double.Parse(desc[2]) * factor;
                             t = double.Parse(desc[3]) * factor;
-                            dimensions = Engine.Geometry.Create.TubeProfile(D, t);
+                            profile = Engine.Geometry.Create.TubeProfile(D, t);
                             break;
                         case "RHS":
                             D = double.Parse(desc[2]) * factor;
@@ -200,49 +198,59 @@ namespace BH.Adapter.GSA
                             T = double.Parse(desc[4]) * factor;
                             t = double.Parse(desc[5]) * factor;
                             if (T == t)
-                                dimensions = Engine.Geometry.Create.BoxProfile(D, W, T, 0, 0); //TODO: Additional checks for fabricated/Standard
+                                profile = Engine.Geometry.Create.BoxProfile(D, W, T, 0, 0); //TODO: Additional checks for fabricated/Standard
                             else
-                                dimensions = Engine.Geometry.Create.FabricatedBoxProfile(D, W, T, t, t, 0);
+                                profile = Engine.Geometry.Create.FabricatedBoxProfile(D, W, T, t, t, 0);
                             break;
                         case "R":
                             D = double.Parse(desc[2]) * factor;
                             W = double.Parse(desc[3]) * factor;
-                            dimensions = Engine.Geometry.Create.RectangleProfile(D, W, 0);
+                            profile = Engine.Geometry.Create.RectangleProfile(D, W, 0);
                             break;
                         case "C":
                             D = double.Parse(desc[2]) * factor;
-                            dimensions = Engine.Geometry.Create.CircleProfile(D);
+                            profile = Engine.Geometry.Create.CircleProfile(D);
                             break;
                         case "T":
                             D = double.Parse(desc[2]) * factor;
                             W = double.Parse(desc[3]) * factor;
                             T = double.Parse(desc[4]) * factor;
                             t = double.Parse(desc[5]) * factor;
-                            dimensions = Engine.Geometry.Create.TSectionProfile(D, W, T, t, 0, 0);
+                            profile = Engine.Geometry.Create.TSectionProfile(D, W, T, t, 0, 0);
                             break;
                         case "A":
                             D = double.Parse(desc[2]) * factor;
                             W = double.Parse(desc[3]) * factor;
                             T = double.Parse(desc[4]) * factor;
                             t = double.Parse(desc[5]) * factor;
-                            dimensions = Engine.Geometry.Create.AngleProfile(D, W, T, t, 0, 0);
+                            profile = Engine.Geometry.Create.AngleProfile(D, W, T, t, 0, 0);
                             break;
                         case "CH":
                             D = double.Parse(desc[2]) * factor;
                             W = double.Parse(desc[3]) * factor;
                             T = double.Parse(desc[4]) * factor;
                             t = double.Parse(desc[5]) * factor;
-                            dimensions = Engine.Geometry.Create.ChannelProfile(D, W, T, t, 0, 0);
+                            profile = Engine.Geometry.Create.ChannelProfile(D, W, T, t, 0, 0);
                             break;
                         default:
-                            Engine.Reflection.Compute.RecordError("Section convertion for the type: " + type + " is not implmented in the GSA adapter");
-                            return null;
+                            message += "Section convertion for the type: " + type + " is not implmented in the GSA adapter";
+                            break;
                     }
 
                     //Creates a section based on the material type provided, with fallback to Generic
-                    secProp = Engine.Structure.Create.SectionPropertyFromProfile(dimensions, mat, "");
+                    if(profile != null)
+                        secProp = Engine.Structure.Create.SectionPropertyFromProfile(profile, mat, "");
 
                 }
+            }
+
+            if (secProp == null)
+            {
+                secProp = new ExplicitSection { Material = mat };
+                string error = "At least part of the section extraction failed and an empty explicit section has been returned in place of the section in GSA.";
+                if (!string.IsNullOrWhiteSpace(message))
+                    error += " The following error was reported by the adapter: " + message;
+                Engine.Reflection.Compute.RecordError(error);
             }
 
             secProp.CustomData[AdapterIdName] = id;
