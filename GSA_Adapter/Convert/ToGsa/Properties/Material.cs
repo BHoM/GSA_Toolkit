@@ -167,9 +167,9 @@ namespace BH.Adapter.GSA
 
                 message += " is/are unset (null) for a material of type " + material.GetType().Name;
                 if (!string.IsNullOrWhiteSpace(material.Name))
-                    message += " , named " + material.Name;
+                    message += ", with the name " + material.Name;
 
-                message += ". All unset (null) properties have been replaced with empty (zero length) vectors. Please check your input data!";
+                message += "\n. All unset (null) properties have been replaced with empty (zero length) vectors. Please check your input data!";
 
                 Engine.Reflection.Compute.RecordError(message);
             }
