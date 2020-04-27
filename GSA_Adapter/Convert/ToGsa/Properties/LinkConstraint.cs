@@ -35,7 +35,7 @@ namespace BH.Adapter.GSA
         private static string ToGsaString(LinkConstraint constraint, string index)
         {
             string command = "PROP_LINK";
-            constraint.Name = constraint.DescriptionOrName();
+            constraint.Name = constraint.DescriptionOrName().ToGSACleanName();
             string name = constraint.TaggedName();
             string restraint = GetRestraintString(constraint);
             return command + ", " + index + ", " + name + ", NO_RGB, " + restraint;

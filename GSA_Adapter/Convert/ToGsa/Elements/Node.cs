@@ -37,7 +37,7 @@ namespace BH.Adapter.GSA
         private static string ToGsaString(this Node node, string index)
         {
             string command = "NODE.2";
-            string name = node.TaggedName();
+            string name = node.TaggedName().ToGSACleanName();
 
             string restraint = GetRestraintString(node);
             Point position = node.Position();

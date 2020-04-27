@@ -39,7 +39,7 @@ namespace BH.Adapter.GSA
         private static string ToGsaString(this Bar bar, string index)
         {
             string command = "EL.2";
-            string name = bar.TaggedName();
+            string name = bar.TaggedName().ToGSACleanName();
             string type = GetElementTypeString(bar);
 
             string sectionPropertyIndex = bar.SectionProperty != null ? bar.SectionProperty.CustomData[AdapterIdName].ToString() : "1";

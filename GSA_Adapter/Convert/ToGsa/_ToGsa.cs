@@ -28,6 +28,7 @@ using BH.oM.Structure.SurfaceProperties;
 using BH.oM.Structure.Constraints;
 using BH.oM.Base;
 using System;
+using System.ComponentModel;
 
 
 namespace BH.Adapter.GSA
@@ -59,6 +60,22 @@ namespace BH.Adapter.GSA
             else if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)
                 return "List";
             return null;
+        }
+
+        /***************************************************/
+
+        [Description("Removing dissallowed characters like ',' from the string to make it possible to push using GWA commands.")]
+        public static string ToGSACleanName(this string name)
+        {
+            if(name == null)
+                return "";
+
+            if (name.Contains(","))
+            {
+                Engine.Reflection.Compute.RecordNote("Any ',' in the name of the object pushed to GSA has been replaced by a ';' due to naming limitations through the GSA API.");
+                name = name.Replace(',', ';');
+            }
+            return name;
         }
 
         /***************************************************/
