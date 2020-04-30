@@ -234,7 +234,7 @@ namespace BH.Adapter.GSA
                             profile = Engine.Geometry.Create.ChannelProfile(D, W, T, t, 0, 0);
                             break;
                         default:
-                            message += "Section convertion for the type: " + type + " is not implmented in the GSA adapter";
+                            message += "Section convertion for the type: " + type + " is not implemented in the GSA adapter";
                             break;
                     }
 
