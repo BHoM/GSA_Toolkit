@@ -64,7 +64,7 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        [Description("Removing dissallowed characters like ',' from the string to make it possible to push using GWA commands.")]
+        [Description("Removing disallowed characters like ',' from the string to make it possible to push using GSA commands.")]
         public static string ToGSACleanName(this string name)
         {
             if(name == null)
