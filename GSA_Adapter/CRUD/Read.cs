@@ -28,6 +28,7 @@ using BH.oM.Structure.SectionProperties;
 using BH.oM.Structure.SurfaceProperties;
 using BH.oM.Structure.Constraints;
 using BH.oM.Structure.Loads;
+using BH.oM.Geometry;
 using Interop.gsa_8_7;
 using System;
 using System.Collections;
@@ -270,6 +271,16 @@ namespace BH.Adapter.GSA
             //    return proArr.Select(x => Convert.FromGsaSectionProperty(x, materials)).ToList();
             //else
             //    return proArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Convert.FromGsaSectionProperty(x, materials)).ToList();
+        }
+
+        /***************************************/
+
+        public List<CustomObject> ReadAxes(List<string> ids = null)
+        {
+            string allAxis = m_gsaCom.GwaCommand("GET_ALL, AXIS").ToString();
+            string[] axisArr = string.IsNullOrWhiteSpace(allAxis) ? new string[0] : allAxis.Split('\n');
+
+            return axisArr.Select(x => Convert.FromGsaAxis(x)).Where(x => x != null).ToList();
         }
 
         /***************************************************/

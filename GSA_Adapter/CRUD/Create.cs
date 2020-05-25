@@ -26,6 +26,8 @@ using System.Collections.Generic;
 using BH.oM.Structure.Loads;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.SectionProperties;
+using BH.oM.Geometry;
+using BH.oM.Geometry.CoordinateSystem;
 using BH.oM.Base;
 using BH.Engine.Adapter;
 using BH.oM.Adapter;
@@ -42,7 +44,9 @@ namespace BH.Adapter.GSA
         {
             bool success = true;
 
-            if (typeof(RigidLink).IsAssignableFrom(typeof(T)))
+            if (typeof(Node).IsAssignableFrom(typeof(T)))
+                success = CreateNodes(objects as IEnumerable<Node>);
+            else if (typeof(RigidLink).IsAssignableFrom(typeof(T)))
                 success = CreateLinks(objects as IEnumerable<RigidLink>);
             else
             {
@@ -108,6 +112,34 @@ namespace BH.Adapter.GSA
                     allIds.Add(link.CustomData[AdapterIdName].ToString());
                     link.CustomData[AdapterIdName + "-AllIds"] = allIds;
                 }
+            }
+            return success;
+        }
+
+        /***************************************************/
+
+        private bool CreateNodes(IEnumerable<Node> nodes)
+        {
+            //Method dealing with axis in GSA. GSA axes are handled as separate obejcts, but can not be dealt with via dependencytypes
+            //as the BHoM equivalent is a basis on the node, which is not a BHoMObject but an IGeometry.
+
+            BH.Engine.GSA.BasisComparer orientationComparer = new Engine.GSA.BasisComparer(6);
+            Basis baseSystem = Basis.XY;
+
+            List<Node> nonGlobalNodes = nodes.Where(x => x.Orientation != null && !orientationComparer.Equals(x.Orientation, baseSystem)).ToList();
+
+            if (nonGlobalNodes.Count != 0)
+            {
+                List<CustomObject> existingAxes = ReadAxes();
+
+
+            }
+
+            bool success = true;
+            //Create all nodes
+            foreach (Node n in nodes)
+            {
+                success &= CreateObject(n);
             }
             return success;
         }
