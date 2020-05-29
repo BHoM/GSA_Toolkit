@@ -22,7 +22,7 @@
 
 using System.ComponentModel;
 
-namespace BH.oM.External.GSA
+namespace BH.oM.Adapters.GSA
 {
     [Description("Controls which type of analysis solver used for a Loadcombination.")]
     public enum AnalysisType

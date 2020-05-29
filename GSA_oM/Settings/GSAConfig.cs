@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 using BH.oM.Adapter;
 using BH.oM.Base;
 
-namespace BH.oM.GSA
+namespace BH.oM.Adapters.GSA
 {
     public class GSAConfig : ActionConfig
     {

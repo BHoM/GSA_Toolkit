@@ -1,0 +1,30 @@
+﻿{
+  "Namespace": {
+    "ToNew": {
+
+    },
+    "ToOld": {
+
+    }
+  },
+  "Type": {
+    "ToNew": {
+	      "BH.oM.GSA.ConcreteDesignSpecification":  "BH.oM.Adapters.GSA.ConcreteDesignSpecification"
+		  "BH.oM.GSA.Country":  "BH.oM.Adapters.GSA.Country"
+		  "BH.oM.GSA.SteelDesignSpecification":  "BH.oM.Adapters.GSA.SteelDesignSpecification"
+		  "BH.oM.GSA.External.AnalysisType":  "BH.oM.Adapters.GSA.AnalysisType"
+		  "BH.oM.GSA.External.AnalysisTaskFragment":  "BH.oM.Adapters.GSA.AnalysisTaskFragment"
+		  "BH.oM.GSA.GSAConfig":  "BH.oM.Adapters.GSA.GSAConfig"
+
+    },
+    "ToOld": {
+	      "BH.oM.Adapters.GSA.ConcreteDesignSpecification":  "BH.oM.GSA.ConcreteDesignSpecification"
+		  "BH.oM.Adapters.GSA.Country":  "BH.oM.GSA.Country"
+		  "BH.oM.Adapters.GSA.SteelDesignSpecification":  "BH.oM.GSA.SteelDesignSpecification"
+		  "BH.oM.Adapters.GSA.AnalysisType":  "BH.oM.External.GSA.AnalysisType"
+		  "BH.oM.Adapters.GSA.AnalysisTaskFragment":  "BH.oM.External.GSA.AnalysisTaskFragment"
+		  "BH.oM.Adapters.GSA.GSAConfig":  "BH.oM.GSA.GSAConfig"
+
+    }
+  }
+} 

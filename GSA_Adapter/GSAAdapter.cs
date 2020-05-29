@@ -21,7 +21,7 @@
  */
 
 using Interop.gsa_8_7;
-using BH.oM.GSA;
+using BH.oM.Adapters.GSA;
 using System.ComponentModel;
 using System;
 using BH.oM.Adapter;

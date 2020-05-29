@@ -7,7 +7,7 @@
     <ProjectGuid>{CA275200-B50F-4B09-BE44-FBB106E3DE42}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BH.Engine.GSA</RootNamespace>
+    <RootNamespace>BH.Engine.Adapters.GSA</RootNamespace>
     <AssemblyName>GSA_Engine</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -126,6 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Versioning_32.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Compute\" />

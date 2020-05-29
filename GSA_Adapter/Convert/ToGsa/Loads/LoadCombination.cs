@@ -23,7 +23,7 @@
 
 using BH.oM.Structure.Loads;
 using System.Collections.Generic;
-using BH.oM.External.GSA;
+using BH.oM.Adapters.GSA;
 using BH.Engine.Base;
 
 namespace BH.Adapter.GSA

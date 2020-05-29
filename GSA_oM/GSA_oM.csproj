@@ -7,7 +7,7 @@
     <ProjectGuid>{3634FF67-B327-4C2F-BF45-E13E8FFF69A6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BH.oM.GSA</RootNamespace>
+    <RootNamespace>BH.oM.Adapters.GSA</RootNamespace>
     <AssemblyName>GSA_oM</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -53,10 +53,13 @@
     <Compile Include="Enum\ConcreteDesignSpecification.cs" />
     <Compile Include="Enum\Country.cs" />
     <Compile Include="Enum\SteelDesignSpecification.cs" />
-    <Compile Include="Enum\TaskType.cs" />
+    <Compile Include="Enum\AnalysisType.cs" />
     <Compile Include="Fragments\AnalysisTaskFragment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\GSAConfig.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Versioning_32.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

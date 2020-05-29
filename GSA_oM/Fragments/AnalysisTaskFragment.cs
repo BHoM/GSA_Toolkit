@@ -24,7 +24,7 @@
 using BH.oM.Base;
 using System.ComponentModel;
 
-namespace BH.oM.External.GSA
+namespace BH.oM.Adapters.GSA
 {
     [Description("Fragment to be put on a LoadCombination to help you control the analysis task type to use in GSA and for which stage the combination should be run.")]
     public class AnalysisTaskFragment : IFragment
