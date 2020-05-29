@@ -1,0 +1,20 @@
+﻿{
+  "Namespace": {
+    "ToNew": {
+
+    },
+    "ToOld": {
+
+    }
+  },
+  "Type": {
+    "ToNew": {
+	      "BH.Engine.External.GSA.Modify":  "BH.Engine.Adapters.GSA.Modify"
+		  "BH.Engine.GSA.Create":  "BH.Engine.Adapters.GSA.Create"
+    },
+    "ToOld": {
+	      "BH.Engine.Adapters.GSA.Modify":  "BH.Engine.External.GSA.Modify"
+		  "BH.Engine.Adapters.GSA.Create":  "BH.Engine.GSA.Create"
+    }
+  }
+} 

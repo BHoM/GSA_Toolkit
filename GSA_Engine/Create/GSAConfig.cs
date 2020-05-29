@@ -20,10 +20,10 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.GSA;
+using BH.oM.Adapters.GSA;
 using BH.oM.Reflection.Attributes;
 
-namespace BH.Engine.GSA
+namespace BH.Engine.Adapters.GSA
 {
     public static partial class Create
     {
