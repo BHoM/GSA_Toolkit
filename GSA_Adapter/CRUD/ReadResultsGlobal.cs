@@ -22,7 +22,7 @@
 
 
 using BH.oM.Base;
-using BH.oM.Common;
+using BH.oM.Analytical.Results;
 using BH.oM.Adapter;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.Requests;

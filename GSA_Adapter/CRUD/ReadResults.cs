@@ -21,7 +21,7 @@
  */
 
 
-using BH.oM.Common;
+using BH.oM.Analytical.Results;
 using BH.oM.Structure.Requests;
 using BH.oM.Data.Requests;
 using System;
