@@ -255,6 +255,29 @@ namespace BH.Adapter.GSA
         }
 
         /***************************************************/
+
+        private int TryExtractMode(string loadcase)
+        {
+            if (loadcase.Contains("A"))
+                loadcase = loadcase.Replace("A", "");
+
+            string modeString = m_gsaCom.GwaCommand("GET, MODE, " + loadcase).ToString();
+            int mode = -1;
+            if (!string.IsNullOrWhiteSpace(modeString))
+            {
+                string[] modeArr = modeString.Split(',');
+                if (modeArr.Length > 2)
+                {
+                    if (!int.TryParse(modeArr[2], out mode))
+                        mode = -1;
+                }
+            }
+
+
+            return mode;
+        }
+
+        /***************************************************/
     }
 }
 
