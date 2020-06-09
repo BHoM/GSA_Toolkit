@@ -36,7 +36,7 @@ namespace BH.Adapter.GSA
     public partial class GSAAdapter
     {
 
-        public delegate IResult ForceConverter(GsaResults results, string id, string loadCase, int divisions, double timeStep = 0);
+        public delegate IResult ForceConverter(GsaResults results, int id, string loadCase, int divisions, double timeStep = 0, int mode = -1);
 
         /***************************************************/
         /**** Public method - Read override             ****/
@@ -65,6 +65,10 @@ namespace BH.Adapter.GSA
             int midPoints = divisions == 1 ? divisions : divisions - 2;
             foreach (string loadCase in loadCases)
             {
+                //Try get mode
+                int mode = TryExtractMode(loadCase);
+                double timeStep = 0;
+
                 if (InitializeLoadextraction(header, loadCase, midPoints, axis, flags))
                 {
                     foreach (int id in objectIds)
@@ -74,7 +78,7 @@ namespace BH.Adapter.GSA
                         {
                             foreach (GsaResults gsaRes in gsaResults)
                             {
-                                results.Add(converter.Invoke(gsaRes, id.ToString(), loadCase, gsaResults.Length));
+                                results.Add(converter.Invoke(gsaRes, id, loadCase, gsaResults.Length, timeStep, mode));
                             }
 
                             if(raiseDivisionsWarning && gsaResults.Length != divisions)

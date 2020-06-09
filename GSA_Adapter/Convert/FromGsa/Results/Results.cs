@@ -34,164 +34,151 @@ namespace BH.Adapter.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
-        public static NodeDisplacement FromGsaNodeDisplacement(GsaResults results, string id, string loadCase, int divisions = 0, double timeStep = 0)
+        public static NodeDisplacement FromGsaNodeDisplacement(GsaResults results, int id, string loadCase, int divisions = 0, double timeStep = 0, int mode = -1)
         {
-            NodeDisplacement disp = new NodeDisplacement
-            {
-                ObjectId = id,
-                ResultCase = loadCase,
-                TimeStep = timeStep,
-                UX = results.dynaResults[0],
-                UY = results.dynaResults[1],
-                UZ = results.dynaResults[2],
-                RX = results.dynaResults[4],
-                RY = results.dynaResults[5],
-                RZ = results.dynaResults[6]
-            };
-            return disp;
+            return new NodeDisplacement(
+                        id,
+                        loadCase,
+                        mode,
+                        timeStep,
+                        oM.Geometry.Basis.XY,
+                        results.dynaResults[0],
+                        results.dynaResults[1],
+                        results.dynaResults[2],
+                        results.dynaResults[4],
+                        results.dynaResults[5],
+                        results.dynaResults[6]
+                        );
         }
 
         /***************************************************/
 
-        public static NodeReaction FromGsaReaction(GsaResults results, string id, string loadCase, int divisions = 0, double timeStep = 0)
+        public static NodeReaction FromGsaReaction(GsaResults results, int id, string loadCase, int divisions = 0, double timeStep = 0, int mode = -1)
         {
+            return new NodeReaction(
+                        id,
+                        loadCase,
+                        mode,
+                        timeStep,
+                        oM.Geometry.Basis.XY,
+                        results.dynaResults[0],
+                        results.dynaResults[1],
+                        results.dynaResults[2],
+                        results.dynaResults[4],
+                        results.dynaResults[5],
+                        results.dynaResults[6]
+                        );
 
-            NodeReaction reac = new NodeReaction
-            {
-                ObjectId = id,
-                ResultCase = loadCase,
-                TimeStep = timeStep,
-                FX = results.dynaResults[0],
-                FY = results.dynaResults[1],
-                FZ = results.dynaResults[2],
-                MX = results.dynaResults[4],
-                MY = results.dynaResults[5],
-                MZ = results.dynaResults[6]
-            };
-
-            return reac;
         }
 
         /***************************************************/
 
-        public static NodeVelocity FromGsaNodeVelocity(GsaResults results, string id, string loadCase, int divisions = 0, double timeStep = 0)
+        public static NodeVelocity FromGsaNodeVelocity(GsaResults results, int id, string loadCase, int divisions = 0, double timeStep = 0, int mode = -1)
         {
             //TODO: Needs testing
-            NodeVelocity disp = new NodeVelocity
-            {
-                ObjectId = id,
-                ResultCase = loadCase,
-                TimeStep = timeStep,
-                UX = results.dynaResults[0],
-                UY = results.dynaResults[1],
-                UZ = results.dynaResults[2],
-                RX = results.dynaResults[4],
-                RY = results.dynaResults[5],
-                RZ = results.dynaResults[6]
-            };
-            return disp;
+            return new NodeVelocity(
+                        id,
+                        loadCase,
+                        mode,
+                        timeStep,
+                        oM.Geometry.Basis.XY,
+                        results.dynaResults[0],
+                        results.dynaResults[1],
+                        results.dynaResults[2],
+                        results.dynaResults[4],
+                        results.dynaResults[5],
+                        results.dynaResults[6]
+                        );
         }
 
         /***************************************************/
 
-        public static NodeAcceleration FromGsaNodeAcceleration(GsaResults results, string id, string loadCase, int divisions = 0, double timeStep = 0)
+        public static NodeAcceleration FromGsaNodeAcceleration(GsaResults results, int id, string loadCase, int divisions = 0, double timeStep = 0, int mode = -1)
         {
             //TODO: Needs testing
-            NodeAcceleration disp = new NodeAcceleration
-            {
-                ObjectId = id,
-                ResultCase = loadCase,
-                TimeStep = timeStep,
-                UX = results.dynaResults[0],
-                UY = results.dynaResults[1],
-                UZ = results.dynaResults[2],
-                RX = results.dynaResults[4],
-                RY = results.dynaResults[5],
-                RZ = results.dynaResults[6]
-            };
-            return disp;
+            return new NodeAcceleration(
+                        id,
+                        loadCase,
+                        mode,
+                        timeStep,
+                        oM.Geometry.Basis.XY,
+                        results.dynaResults[0],
+                        results.dynaResults[1],
+                        results.dynaResults[2],
+                        results.dynaResults[4],
+                        results.dynaResults[5],
+                        results.dynaResults[6]
+            );
         }
 
         /***************************************************/
 
-        public static BarForce FromGsaBarForce(GsaResults results, string id, string loadCase, int divisions, double timeStep = 0)
+        public static BarForce FromGsaBarForce(GsaResults results, int id, string loadCase, int divisions, double timeStep = 0, int mode = -1)
         {
-            BarForce force = new BarForce
-            {
-                ObjectId = id,
-                ResultCase = loadCase,
-                TimeStep = timeStep,
-                Divisions = divisions,
-                Position = results.Pos,
-                FX = results.dynaResults[0],
-                FY = results.dynaResults[1],
-                FZ = results.dynaResults[2],
-                MX = results.dynaResults[4],
-                MY = results.dynaResults[5],
-                MZ = -results.dynaResults[6]
-            };
-            return force;
+            return new BarForce(
+                id,
+                loadCase,
+                mode,
+                timeStep,
+                results.Pos,
+                divisions,
+                results.dynaResults[0],
+                results.dynaResults[1],
+                results.dynaResults[2],
+                results.dynaResults[4],
+                results.dynaResults[5],
+                -results.dynaResults[6]
+                );
         }
 
         /***************************************************/
 
-        public static BarStress FromGsaBarStress(GsaResults results, string id, string loadCase, int divisions, double timeStep = 0)
+        public static BarStress FromGsaBarStress(GsaResults results, int id, string loadCase, int divisions, double timeStep = 0, int mode = -1)
         {
-            BarStress force = new BarStress
-            {
-                ObjectId = id,
-                ResultCase = loadCase,
-                TimeStep = timeStep,
-                Divisions = divisions,
-                Position = results.Pos,
-                Axial = results.dynaResults[0],
-                ShearY = results.dynaResults[1],
-                ShearZ = results.dynaResults[2],
-                BendingY_Bot = results.dynaResults[3],
-                BendingY_Top = results.dynaResults[4],
-                BendingZ_Bot = results.dynaResults[5],
-                BendingZ_Top = results.dynaResults[6],
-                CombAxialBendingPos = results.dynaResults[7],
-                CombAxialBendingNeg = results.dynaResults[8]
-            };
-            return force;
+            return new BarStress(
+                id,
+                loadCase,
+                mode,
+                timeStep,
+                results.Pos,
+                divisions,
+                results.dynaResults[0],
+                results.dynaResults[1],
+                results.dynaResults[2],
+                results.dynaResults[4],
+                results.dynaResults[3],
+                results.dynaResults[6],
+                results.dynaResults[5],
+                results.dynaResults[7],
+                results.dynaResults[8]
+                );
         }
 
         /***************************************************/
 
-        public static BarDisplacement FromGsaBarDisplacement(GsaResults results, string id, string loadCase, int divisions, double timeStep = 0)
+        public static BarDisplacement FromGsaBarDisplacement(GsaResults results, int id, string loadCase, int divisions, double timeStep = 0, int mode = -1)
         {
-            BarDisplacement disp = new BarDisplacement
-            {
-                ObjectId = id,
-                ResultCase = loadCase,
-                TimeStep = timeStep,
-                Divisions = divisions,
-                Position = results.Pos,
-                UX = results.dynaResults[0],
-                UY = results.dynaResults[1],
-                UZ = results.dynaResults[2],
-                RX = results.dynaResults[4],
-                RY = results.dynaResults[5],
-                RZ = results.dynaResults[6]
-            };
-            return disp;
+            return new BarDisplacement(
+                id,
+                loadCase,
+                mode,
+                timeStep,
+                results.Pos,
+                divisions,
+                results.dynaResults[0],
+                results.dynaResults[1],
+                results.dynaResults[2],
+                results.dynaResults[4],
+                results.dynaResults[5],
+                results.dynaResults[6]
+                );
         }
 
         /***************************************************/
 
-        public static BarStrain FromGsaBarStrain(GsaResults results, string id, string loadCase, int divisions, double timeStep = 0)
+        public static BarStrain FromGsaBarStrain(GsaResults results, int id, string loadCase, int divisions, double timeStep = 0, int mode = -1)
         {
-            BarStrain strain = new BarStrain
-            {
-                ObjectId = id,
-                ResultCase = loadCase,
-                TimeStep = timeStep,
-                Divisions = divisions,
-                Position = results.Pos,
-                Axial = results.dynaResults[0]
-            };
-            return strain;
+            return new BarStrain(id, loadCase, mode, timeStep, results.Pos, divisions, results.dynaResults[0], 0, 0, 0, 0, 0, 0, 0, 0);
         }
 
         /***************************************************/
@@ -201,16 +188,15 @@ namespace BH.Adapter.GSA
             string[] fArr = force.Split(',');
             string[] mArr = moment.Split(',');
 
-            return new GlobalReactions()
-            {
-                ResultCase = "A" + fArr[1],
-                FX = double.Parse(fArr[3]),
-                FY = double.Parse(fArr[4]),
-                FZ = double.Parse(fArr[5]),
-                MX = double.Parse(mArr[3]),
-                MY = double.Parse(mArr[4]),
-                MZ = double.Parse(mArr[5])
-            };
+
+            return new GlobalReactions(id, "A" + fArr[1], -1, 0,
+                        double.Parse(fArr[3]),
+                        double.Parse(fArr[4]),
+                        double.Parse(fArr[5]),
+                        double.Parse(mArr[3]),
+                        double.Parse(mArr[4]),
+                        double.Parse(mArr[5])
+                );
         }
 
         /***************************************************/
@@ -257,17 +243,8 @@ namespace BH.Adapter.GSA
                 mz += double.Parse(arr[5]);
             }
 
+            return new GlobalReactions("", lCase, -1, 0, fx, fy, fz, mx, my, mz);
 
-            return new GlobalReactions()
-            {
-                ResultCase = lCase,
-                FX = fx,
-                FY = fy,
-                FZ = fz,
-                MX = mx,
-                MY = my,
-                MZ = mz,
-            };
         }
 
         /***************************************************/
@@ -288,22 +265,23 @@ namespace BH.Adapter.GSA
 
             double totMass = double.Parse(massArr[2]);
             //TODO: Modal damping
-            return new ModalDynamics()
-            {
-                ObjectId = id,
-                ResultCase = "A" + modeArr[1],
-                ModeNumber = int.Parse(modeArr[2]),
-                Frequency = double.Parse(frArr[2]),
-                ModalMass = totMass,
-                ModalStiffness = double.Parse(stiArr[2]),
-                MassRatioX = double.Parse(tranArr[3]) / totMass,
-                MassRatioY = double.Parse(tranArr[4]) / totMass,
-                MassRatioZ = double.Parse(tranArr[5]) / totMass,
-                InertiaRatioX = double.Parse(rotArr[3]) / totMass,
-                InertiaRatioY = double.Parse(rotArr[4]) / totMass,
-                InertiaRatioZ = double.Parse(rotArr[5]) / totMass,
-                ModalDamping = damp
-            };
+
+            return new ModalDynamics(
+                id,
+                "A" + modeArr[1],
+                int.Parse(modeArr[2]),
+                0,
+                double.Parse(frArr[2]),
+                totMass,
+                double.Parse(stiArr[2]),
+                damp,
+                double.Parse(tranArr[3]) / totMass,
+                double.Parse(tranArr[4]) / totMass,
+                double.Parse(tranArr[5]) / totMass,
+                double.Parse(rotArr[3]) / totMass,
+                double.Parse(rotArr[4]) / totMass,
+                double.Parse(rotArr[5]) / totMass
+                );
         }
 
         /***************************************************/
