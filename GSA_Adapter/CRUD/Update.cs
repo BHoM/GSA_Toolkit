@@ -22,6 +22,8 @@
 
 using BH.oM.Adapter;
 using System.Collections.Generic;
+using BH.oM.Base;
+using BH.oM.Structure.Elements;
 
 
 namespace BH.Adapter.GSA
@@ -34,7 +36,34 @@ namespace BH.Adapter.GSA
 
         protected override bool IUpdate<T>(IEnumerable<T> objects, ActionConfig actionConfig = null)
         {
+            return Update(objects as dynamic, actionConfig);
+        }
+
+        /***************************************************/
+
+        private bool Update(IEnumerable<IBHoMObject> objects, ActionConfig actionConfig = null)
+        {
             return ICreate(objects, actionConfig);
+        }
+
+        /***************************************************/
+
+        private bool Update(IEnumerable<FEMesh> objects, ActionConfig actionConfig = null)
+        {
+            bool success = true;
+            foreach (FEMesh mesh in objects)
+            {
+                if (mesh == null || !mesh.CustomData.ContainsKey(AdapterIdName) || mesh.Faces.Count != 1)
+                {
+                    Engine.Reflection.Compute.RecordError("Can only update meshes with exactly one face and with a set adapter id");
+                    success = false;
+                    continue;
+                }
+
+                success &= ComCall(Convert.ToGsaString(mesh, (int)mesh.CustomData[AdapterIdName], 0));
+            }
+
+            return success;
         }
 
         /***************************************************/
