@@ -28,6 +28,9 @@ using BH.oM.Structure.SectionProperties;
 using BH.oM.Structure.SurfaceProperties;
 using BH.oM.Structure.Constraints;
 using BH.oM.Structure.Loads;
+using BH.oM.Structure.Results;
+using BH.oM.Structure.Requests;
+using BH.oM.Analytical.Results;
 using Interop.gsa_8_7;
 using System;
 using System.Collections;
@@ -69,6 +72,12 @@ namespace BH.Adapter.GSA
                 return ReadLoadCases(indices as dynamic);
             if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)
                 return new List<BHoMGroup<IBHoMObject>>();
+            if (typeof(IResult).IsAssignableFrom(type))
+            {
+                Modules.Structure.ErrorMessages.ReadResultsError(type);
+                return null;
+            }
+
 
             return null;
         }
@@ -271,6 +280,7 @@ namespace BH.Adapter.GSA
             //else
             //    return proArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Convert.FromGsaSectionProperty(x, materials)).ToList();
         }
+
 
         /***************************************************/
         /**** Private  Methods                          ****/
