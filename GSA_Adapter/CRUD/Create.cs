@@ -97,13 +97,13 @@ namespace BH.Adapter.GSA
             foreach (RigidLink link in links)
             {
                 List<string> allIds = new List<string>();
-                for (int i = 1; i < link.SlaveNodes.Count; i++)
+                for (int i = 1; i < link.SecondaryNodes.Count; i++)
                 {
                     string id =  NextFreeId(link.GetType(), i == 1).ToString();
                     success &= ComCall(Convert.ToGsaString(link, id, i));
                     allIds.Add(id);
                 }
-                if (link.SlaveNodes.Count > 1)
+                if (link.SecondaryNodes.Count > 1)
                 {
                     allIds.Add(link.CustomData[AdapterIdName].ToString());
                     link.CustomData[AdapterIdName + "-AllIds"] = allIds;

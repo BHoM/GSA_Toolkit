@@ -32,7 +32,7 @@ namespace BH.Adapter.GSA
         /**** Public  Methods                           ****/
         /***************************************************/
 
-        public static string ToGsaString(this RigidLink link, string index, int slaveIndex = 0)
+        public static string ToGsaString(this RigidLink link, string index, int secondaryIndex = 0)
         {
             string command = "EL.2";
             string name = link.TaggedName().ToGSACleanName();
@@ -41,9 +41,9 @@ namespace BH.Adapter.GSA
             string constraintIndex = link.Constraint.CustomData[AdapterIdName].ToString();
             string group = "0";
 
-            string startIndex = link.MasterNode.CustomData[AdapterIdName].ToString();
+            string startIndex = link.PrimaryNode.CustomData[AdapterIdName].ToString();
 
-            string endIndex = link.SlaveNodes[slaveIndex].CustomData[AdapterIdName].ToString();
+            string endIndex = link.SecondaryNodes[secondaryIndex].CustomData[AdapterIdName].ToString();
 
             string dummy = CheckDummy(link);
 
