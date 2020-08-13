@@ -46,8 +46,8 @@ namespace BH.Adapter.GSA
 
                 RigidLink face = new RigidLink()
                 {
-                    MasterNode = nodes[gsaLink.Topo[0].ToString()],
-                    SlaveNodes = new List<Node> { nodes[gsaLink.Topo[1].ToString()] },
+                    PrimaryNode = nodes[gsaLink.Topo[0].ToString()],
+                    SecondaryNodes = new List<Node> { nodes[gsaLink.Topo[1].ToString()] },
                     Constraint = constraints[gsaLink.Property.ToString()]
                 };
 
