@@ -34,7 +34,7 @@ namespace BH.Adapter.GSA
         /**** Public  Methods                           ****/
         /***************************************************/
 
-        public static List<string> ToGsaString(this Load<Node> nodeLoad, double[] unitFactors)
+        public static List<string> ToGsaString(this IElementLoad<Node> nodeLoad, double[] unitFactors)
         {
             string command;
             List<string> forceStrings = new List<string>();
