@@ -49,7 +49,7 @@ namespace BH.Adapter.GSA
         /**** Private  Methods                          ****/
         /***************************************************/
 
-        public static string CreateIdListOrGroupName<T>(this Load<T> load) where T : IBHoMObject
+        public static string CreateIdListOrGroupName<T>(this IElementLoad<T> load) where T : IBHoMObject
         {
             //For a named group, appy loads to the group name
             if (!string.IsNullOrWhiteSpace(load.Objects.Name))

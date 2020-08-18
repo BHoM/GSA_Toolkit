@@ -34,7 +34,7 @@ namespace BH.Adapter.GSA
         /**** Public  Methods                           ****/
         /***************************************************/
 
-        public static List<string> ToGsaString(this Load<IAreaElement> areaLoad, double[] unitFactors)
+        public static List<string> ToGsaString(this IElementLoad<IAreaElement> areaLoad, double[] unitFactors)
         {
             List<string> forceStrings = new List<string>();
 
@@ -79,7 +79,7 @@ namespace BH.Adapter.GSA
         /**** Public Methods - Interfaces               ****/
         /***************************************************/
 
-        private static string IAreaLoadTypeString(this Load<IAreaElement> load)
+        private static string IAreaLoadTypeString(this IElementLoad<IAreaElement> load)
         {
             return AreaLoadTypeString(load as dynamic);
         }
