@@ -24,6 +24,7 @@ using BH.oM.Structure.Elements;
 using BH.oM.Structure.Loads;
 using BH.oM.Geometry;
 using System.Collections.Generic;
+using BH.Engine.Structure;
 
 
 namespace BH.Adapter.GSA
@@ -47,6 +48,9 @@ namespace BH.Adapter.GSA
             Vector[] moment = { barLoad.IRotationVector()[0], barLoad.IRotationVector()[1] };
             string caseNo = barLoad.Loadcase.Number.ToString();
             string command = barLoad.IForceTypeString();
+            string[] positions = barLoad.ILoadPosition();
+            if (positions == null)
+                return new List<string>();
             string[] pos = { ("," + barLoad.ILoadPosition()[0]), ("," + barLoad.ILoadPosition()[1]) };
 
             if (appliedTo == null)
@@ -114,8 +118,20 @@ namespace BH.Adapter.GSA
 
         public static string[] LoadPosition(BarVaryingDistributedLoad load)
         {
-            string[] positions = { load.DistanceFromA.ToString() + ",", load.DistanceFromB.ToString() + "," };
-            return positions;
+            if (load.Objects.Elements.Count == 1)
+            {
+                return new string[] { load.DistanceFromA.ToString() + ",", (load.Objects.Elements[0].Length() - load.DistanceFromB).ToString() + "," };
+            }
+            if (load.DistanceFromB == 0)
+            {
+                Engine.Reflection.Compute.RecordNote("");
+                return new string[] { load.DistanceFromA.ToString() + ",", "100%" + "," };
+            }
+            else
+            {
+                Engine.Reflection.Compute.RecordError("GSA Adapter can currently only handle Varying loads with a single item or 'DistanceFromB' set to 0.");
+                return null;
+            }
         }
 
         /***************************************************/
