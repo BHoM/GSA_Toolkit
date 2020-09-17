@@ -61,7 +61,7 @@ namespace BH.Adapter.GSA
 
         private static string ForceTypeString(this BarVaryingDistributedLoad load)
         {
-            return "LOAD_BEAM_TRILIN";
+            return "LOAD_BEAM_PATCH";
         }
 
         /***************************************************/
