@@ -124,12 +124,12 @@ namespace BH.Adapter.GSA
             }
             if (load.DistanceFromB == 0)
             {
-                Engine.Reflection.Compute.RecordNote("");
+                Engine.Reflection.Compute.RecordNote("Setting the second position on BarVaryingDistributedLoad to parameteric '100%' for DistanceFromB values equal to 0.");
                 return new string[] { load.DistanceFromA.ToString() + ",", "100%" + "," };
             }
             else
             {
-                Engine.Reflection.Compute.RecordError("GSA Adapter can currently only handle Varying loads with a single item or 'DistanceFromB' set to 0.");
+                Engine.Reflection.Compute.RecordError("GSA Adapter can currently only handle BarVaryingDistributedLoads with a single item or 'DistanceFromB' set to 0.");
                 return null;
             }
         }
