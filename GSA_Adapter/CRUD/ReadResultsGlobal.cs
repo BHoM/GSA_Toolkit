@@ -83,11 +83,13 @@ namespace BH.Adapter.GSA
                     continue;
                 string frequency = m_gsaCom.GwaCommand("GET, FREQ, " + loadCase);
                 string mass = m_gsaCom.GwaCommand("GET, MASS, " + loadCase);
+                string inertia = m_gsaCom.GwaCommand("GET, INERTIA, " + loadCase);
+                string modalMass = m_gsaCom.GwaCommand("GET, MODAL_MASS, " + loadCase);
                 string damping = m_gsaCom.GwaCommand("GET, MODAL_DAMP, " + loadCase);
                 string stiffness = m_gsaCom.GwaCommand("GET, MODAL_STIFF, " + loadCase);
                 string effMassTran = m_gsaCom.GwaCommand("GET, EFF_MASS, " + loadCase + ",TRAN");
                 string effMassRot = m_gsaCom.GwaCommand("GET, EFF_MASS, " + loadCase + ",ROT");
-                dynamics.Add(BH.Adapter.GSA.Convert.FromGsaModalDynamics(id, mode, frequency, mass, stiffness, damping, effMassTran, effMassRot));
+                dynamics.Add(BH.Adapter.GSA.Convert.FromGsaModalDynamics(id, mode, frequency, mass, inertia, modalMass, stiffness, damping, effMassTran, effMassRot));
             }
 
             return dynamics;
