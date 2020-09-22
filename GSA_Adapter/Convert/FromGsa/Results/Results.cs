@@ -249,7 +249,7 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        public static ModalDynamics FromGsaModalDynamics(string id, string mode, string frequency, string mass, string stiffness, string damping, string effMassTran, string effMassRot)
+        public static ModalDynamics FromGsaModalDynamics(string id, string mode, string frequency, string mass, string inertia, string modalMass, string stiffness, string damping, string effMassTran, string effMassRot)
         {
             string[] modeArr = mode.Split(',');
             string[] frArr = frequency.Split(',');
@@ -257,6 +257,8 @@ namespace BH.Adapter.GSA
             string[] stiArr = stiffness.Split(',');
             string[] tranArr = effMassTran.Split(',');
             string[] rotArr = effMassRot.Split(',');
+            string[] inertiaArr = inertia.Split(',');
+            string[] modMassArr = modalMass.Split(',');
             double damp;
             if (String.IsNullOrWhiteSpace(damping))
                 damp = 0;
@@ -264,6 +266,7 @@ namespace BH.Adapter.GSA
                 damp = double.Parse(damping.Split(',')[2]);
 
             double totMass = double.Parse(massArr[2]);
+            double modMass = double.Parse(modMassArr[2]);
             //TODO: Modal damping
 
             return new ModalDynamics(
@@ -272,15 +275,15 @@ namespace BH.Adapter.GSA
                 int.Parse(modeArr[2]),
                 0,
                 double.Parse(frArr[2]),
-                totMass,
+                modMass,
                 double.Parse(stiArr[2]),
                 damp,
                 double.Parse(tranArr[3]) / totMass,
                 double.Parse(tranArr[4]) / totMass,
                 double.Parse(tranArr[5]) / totMass,
-                double.Parse(rotArr[3]) / totMass,
-                double.Parse(rotArr[4]) / totMass,
-                double.Parse(rotArr[5]) / totMass
+                double.Parse(rotArr[3]) / double.Parse(inertiaArr[2]),
+                double.Parse(rotArr[4]) / double.Parse(inertiaArr[3]),
+                double.Parse(rotArr[5]) / double.Parse(inertiaArr[4])
                 );
         }
 
