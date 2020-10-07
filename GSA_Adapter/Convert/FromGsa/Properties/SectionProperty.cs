@@ -95,6 +95,8 @@ namespace BH.Adapter.GSA
                 expSecProp.Asy = avy;
                 expSecProp.Asz = avz;
 
+                expSecProp.Material = mat;
+
                 secProp = expSecProp;
             }
             else
