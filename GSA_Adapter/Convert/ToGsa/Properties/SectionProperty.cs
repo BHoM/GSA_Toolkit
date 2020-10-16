@@ -23,7 +23,7 @@
 using BH.Engine.Serialiser;
 using BH.Engine.Structure;
 using BH.oM.Structure.SectionProperties;
-using BH.oM.Geometry.ShapeProfiles;
+using BH.oM.Spatial.ShapeProfiles;
 using System;
 
 
