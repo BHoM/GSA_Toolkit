@@ -23,7 +23,7 @@
 using BH.Engine.Serialiser;
 using BH.oM.Structure.MaterialFragments;
 using BH.oM.Structure.SectionProperties;
-using BH.oM.Geometry.ShapeProfiles;
+using BH.oM.Spatial.ShapeProfiles;
 using System;
 using System.Collections.Generic;
 
@@ -179,7 +179,7 @@ namespace BH.Adapter.GSA
                             W = double.Parse(desc[3]) * factor;
                             T = double.Parse(desc[4]) * factor;
                             t = double.Parse(desc[5]) * factor;
-                            profile = Engine.Geometry.Create.ISectionProfile(D, W, T, t, 0, 0);
+                            profile = Engine.Spatial.Create.ISectionProfile(D, W, T, t, 0, 0);
                             break;
                         case "GI":
                             D = double.Parse(desc[2]) * factor;
@@ -188,12 +188,12 @@ namespace BH.Adapter.GSA
                             Tw = double.Parse(desc[5]) * factor;
                             Tt = double.Parse(desc[6]) * factor;
                             Tb = double.Parse(desc[7]) * factor;
-                            profile = Engine.Geometry.Create.FabricatedISectionProfile(D, Wt, Wb, Tw, Tt, Tb, 0);
+                            profile = Engine.Spatial.Create.FabricatedISectionProfile(D, Wt, Wb, Tw, Tt, Tb, 0);
                             break;
                         case "CHS":
                             D = double.Parse(desc[2]) * factor;
                             t = double.Parse(desc[3]) * factor;
-                            profile = Engine.Geometry.Create.TubeProfile(D, t);
+                            profile = Engine.Spatial.Create.TubeProfile(D, t);
                             break;
                         case "RHS":
                             D = double.Parse(desc[2]) * factor;
@@ -201,39 +201,39 @@ namespace BH.Adapter.GSA
                             T = double.Parse(desc[4]) * factor;
                             t = double.Parse(desc[5]) * factor;
                             if (T == t)
-                                profile = Engine.Geometry.Create.BoxProfile(D, W, T, 0, 0); //TODO: Additional checks for fabricated/Standard
+                                profile = Engine.Spatial.Create.BoxProfile(D, W, T, 0, 0); //TODO: Additional checks for fabricated/Standard
                             else
-                                profile = Engine.Geometry.Create.FabricatedBoxProfile(D, W, T, t, t, 0);
+                                profile = Engine.Spatial.Create.FabricatedBoxProfile(D, W, T, t, t, 0);
                             break;
                         case "R":
                             D = double.Parse(desc[2]) * factor;
                             W = double.Parse(desc[3]) * factor;
-                            profile = Engine.Geometry.Create.RectangleProfile(D, W, 0);
+                            profile = Engine.Spatial.Create.RectangleProfile(D, W, 0);
                             break;
                         case "C":
                             D = double.Parse(desc[2]) * factor;
-                            profile = Engine.Geometry.Create.CircleProfile(D);
+                            profile = Engine.Spatial.Create.CircleProfile(D);
                             break;
                         case "T":
                             D = double.Parse(desc[2]) * factor;
                             W = double.Parse(desc[3]) * factor;
                             T = double.Parse(desc[4]) * factor;
                             t = double.Parse(desc[5]) * factor;
-                            profile = Engine.Geometry.Create.TSectionProfile(D, W, T, t, 0, 0);
+                            profile = Engine.Spatial.Create.TSectionProfile(D, W, T, t, 0, 0);
                             break;
                         case "A":
                             D = double.Parse(desc[2]) * factor;
                             W = double.Parse(desc[3]) * factor;
                             T = double.Parse(desc[4]) * factor;
                             t = double.Parse(desc[5]) * factor;
-                            profile = Engine.Geometry.Create.AngleProfile(D, W, T, t, 0, 0);
+                            profile = Engine.Spatial.Create.AngleProfile(D, W, T, t, 0, 0);
                             break;
                         case "CH":
                             D = double.Parse(desc[2]) * factor;
                             W = double.Parse(desc[3]) * factor;
                             T = double.Parse(desc[4]) * factor;
                             t = double.Parse(desc[5]) * factor;
-                            profile = Engine.Geometry.Create.ChannelProfile(D, W, T, t, 0, 0);
+                            profile = Engine.Spatial.Create.ChannelProfile(D, W, T, t, 0, 0);
                             break;
                         default:
                             message += "Section convertion for the type: " + type + " is not implemented in the GSA adapter";
