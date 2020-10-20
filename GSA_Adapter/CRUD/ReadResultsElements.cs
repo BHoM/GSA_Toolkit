@@ -27,6 +27,8 @@ using BH.oM.Data.Requests;
 using BH.oM.Adapter;
 using Interop.gsa_8_7;
 using System;
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;

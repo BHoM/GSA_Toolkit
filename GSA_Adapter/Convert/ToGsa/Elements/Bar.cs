@@ -21,11 +21,15 @@
  */
 
 using BH.Engine.Serialiser;
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
 using BH.Engine.Structure;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.Constraints;
 using BH.oM.Base;
 using System;
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
 
 
 namespace BH.Adapter.GSA
@@ -42,11 +46,11 @@ namespace BH.Adapter.GSA
             string name = bar.TaggedName().ToGSACleanName();
             string type = GetElementTypeString(bar);
 
-            string sectionPropertyIndex = bar.SectionProperty != null ? bar.SectionProperty.CustomData[AdapterIdName].ToString() : "1";
+            string sectionPropertyIndex = bar.SectionProperty != null ? bar.SectionProperty.AdapterId(typeof(GSAId)).ToString() : "1";
             int group = 0;
 
-            string startIndex = bar.StartNode.CustomData[AdapterIdName].ToString();
-            string endIndex = bar.EndNode.CustomData[AdapterIdName].ToString();
+            string startIndex = bar.StartNode.AdapterId(typeof(GSAId)).ToString();
+            string endIndex = bar.EndNode.AdapterId(typeof(GSAId)).ToString();
 
             string orientationAngle = (bar.OrientationAngle * 180 / Math.PI).ToString();
             // TODO: Make sure that these are doing the correct thing. Release vs restraint corresponding to true vs false

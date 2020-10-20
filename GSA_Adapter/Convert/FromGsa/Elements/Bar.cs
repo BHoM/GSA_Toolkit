@@ -21,11 +21,15 @@
  */
 
 using BH.Engine.Serialiser;
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Structure.Constraints;
 using Interop.gsa_8_7;
 using System;
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
 using System.Collections.Generic;
 
 
@@ -82,7 +86,7 @@ namespace BH.Adapter.GSA
                 bar.SectionProperty = prop;
 
                 int id = gsaBar.Ref;
-                bar.CustomData[AdapterIdName] = id;
+                bar.SetAdapterId(typeof(GSAId), id);
 
                 barList.Add(bar);
 
@@ -212,7 +216,7 @@ namespace BH.Adapter.GSA
                 bar.Release = new BarRelease() { StartRelease = startConst, EndRelease = endConst };
 
                 int id = int.Parse(arr[1]);
-                bar.CustomData[AdapterIdName] = id;
+                bar.SetAdapterId(typeof(GSAId), id);
 
                 barList.Add(bar);
             }

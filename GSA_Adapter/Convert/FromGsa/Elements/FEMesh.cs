@@ -21,6 +21,8 @@
  */
 
 using BH.Engine.Serialiser;
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.SurfaceProperties;
 using Interop.gsa_8_7;
@@ -60,7 +62,7 @@ namespace BH.Adapter.GSA
                 mesh.ApplyTaggedName(gsaMesh.Name);
 
                 int id = gsaMesh.Ref;
-                mesh.CustomData[AdapterIdName] = id;
+                mesh.SetAdapterId(typeof(GSAId), id);
 
                 meshList.Add(mesh);
             }

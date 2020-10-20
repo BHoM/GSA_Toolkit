@@ -21,6 +21,8 @@
  */
 
 using System;
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
 using System.Linq;
 using System.Collections.Generic;
 using BH.oM.Structure.Loads;
@@ -63,7 +65,7 @@ namespace BH.Adapter.GSA
 
         private bool CreateObject(BH.oM.Base.IBHoMObject obj)
         {
-            return ComCall(Convert.IToGsaString(obj, obj.CustomData[AdapterIdName].ToString()));
+            return ComCall(Convert.IToGsaString(obj, obj.AdapterId(typeof(GSAId)).ToString()));
         }
 
         /***************************************************/
@@ -79,7 +81,7 @@ namespace BH.Adapter.GSA
                     return true;
             }
 
-            return ComCall(Convert.IToGsaString(prop, prop.CustomData[AdapterIdName].ToString()));
+            return ComCall(Convert.IToGsaString(prop, prop.AdapterId(typeof(GSAId)).ToString()));
         }
 
         /***************************************************/
@@ -91,7 +93,7 @@ namespace BH.Adapter.GSA
             bool success = true;
             foreach (RigidLink link in links)
             {
-                success &= ComCall(Convert.ToGsaString(link, link.CustomData[AdapterIdName].ToString(), 0));
+                success &= ComCall(Convert.ToGsaString(link, link.AdapterId(typeof(GSAId)).ToString(), 0));
             }
 
             foreach (RigidLink link in links)
@@ -105,7 +107,7 @@ namespace BH.Adapter.GSA
                 }
                 if (link.SecondaryNodes.Count > 1)
                 {
-                    allIds.Add(link.CustomData[AdapterIdName].ToString());
+                    allIds.Add(link.AdapterId(typeof(GSAId)).ToString());
                     link.CustomData[AdapterIdName + "-AllIds"] = allIds;
                 }
             }
@@ -125,7 +127,7 @@ namespace BH.Adapter.GSA
                 success &= ComCall(Convert.ToGsaString(mesh,id,i));
                 allIds.Add(id);
                 id++;
-                //mesh.CustomData[AdapterIdName] = allIds; //TODO: SOLVE THIS
+                //mesh.AdapterId(typeof(GSAId)) = allIds; //TODO: SOLVE THIS
             }
 
             return success;

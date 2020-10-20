@@ -25,6 +25,8 @@ using BH.oM.Analytical.Results;
 using BH.oM.Structure.Requests;
 using BH.oM.Data.Requests;
 using System;
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;

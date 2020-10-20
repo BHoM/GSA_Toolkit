@@ -24,7 +24,8 @@ using BH.oM.Adapter;
 using System.Collections.Generic;
 using BH.oM.Base;
 using BH.oM.Structure.Elements;
-
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
 
 namespace BH.Adapter.GSA
 {
@@ -60,7 +61,7 @@ namespace BH.Adapter.GSA
                     continue;
                 }
 
-                success &= ComCall(Convert.ToGsaString(mesh, (int)mesh.CustomData[AdapterIdName], 0));
+                success &= ComCall(Convert.ToGsaString(mesh, (int)mesh.AdapterId(typeof(GSAId)), 0));
             }
 
             return success;

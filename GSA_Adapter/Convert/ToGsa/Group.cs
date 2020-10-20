@@ -25,7 +25,8 @@ using BH.oM.Structure.Loads;
 using BH.oM.Base;
 using System.Collections.Generic;
 using System.Linq;
-
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
 
 namespace BH.Adapter.GSA
 {
@@ -40,7 +41,7 @@ namespace BH.Adapter.GSA
             string command = "LIST";
             string name = group.Name;
             string type = group.IElementType();
-            string desc = group.Elements.Select(x => int.Parse(x.CustomData[AdapterIdName].ToString())).GeterateIdString();
+            string desc = group.Elements.Select(x => int.Parse(x.AdapterId(typeof(GSAId)).ToString())).GeterateIdString();
 
             return command + ", " + index + ", " + name + ", " + type + ", " + desc;
         }
@@ -56,7 +57,7 @@ namespace BH.Adapter.GSA
                 return "\"" + load.Objects.Name + "\"";
 
             //Otherwise apply to the corresponding indecies
-            return load.Objects.Elements.Select(x => int.Parse(x.CustomData[AdapterIdName].ToString())).GeterateIdString();
+            return load.Objects.Elements.Select(x => int.Parse(x.AdapterId(typeof(GSAId)).ToString())).GeterateIdString();
 
         }
 

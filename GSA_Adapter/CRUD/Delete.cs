@@ -22,6 +22,8 @@
 
 using BH.oM.Adapter;
 using System;
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
 using System.Collections.Generic;
 using System.Linq;
 

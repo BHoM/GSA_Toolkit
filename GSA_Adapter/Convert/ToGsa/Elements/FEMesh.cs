@@ -21,6 +21,8 @@
  */
 
 using BH.Engine.Serialiser;
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
 using BH.oM.Structure.Elements;
 
 
@@ -39,7 +41,7 @@ namespace BH.Adapter.GSA
             string type;
 
             FEMeshFace face = mesh.Faces[faceID];
-            face.CustomData[AdapterIdName] = index;
+            face.SetAdapterId(typeof(GSAId), index);
 
             //TODO: Implement QUAD8 and TRI6
             if (face.NodeListIndices.Count == 3)
@@ -51,14 +53,14 @@ namespace BH.Adapter.GSA
 
             string name = mesh.TaggedName().ToGSACleanName();
 
-            string propertyIndex = mesh.Property.CustomData[AdapterIdName].ToString();
+            string propertyIndex = mesh.Property.AdapterId(typeof(GSAId)).ToString();
             int group = 0;
 
             string topology = "";
 
             foreach (int nodeIndex in face.NodeListIndices)
             {
-                topology += mesh.Nodes[nodeIndex].CustomData[AdapterIdName].ToString() + ",";
+                topology += mesh.Nodes[nodeIndex].AdapterId(typeof(GSAId)).ToString() + ",";
             }
 
             string dummy = CheckDummy(face);

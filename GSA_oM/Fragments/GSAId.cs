@@ -1,4 +1,4 @@
-﻿/*
+/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2020, the respective contributors. All rights reserved.
  *
@@ -20,43 +20,15 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.Engine.Serialiser;
-using BH.Engine.Adapter;
-using BH.oM.Adapters.GSA;
-using BH.oM.Structure.Elements;
 
+using BH.oM.Base;
+using System.ComponentModel;
 
-namespace BH.Adapter.GSA
+namespace BH.oM.Adapters.GSA
 {
-    public static partial class Convert
+    public class GSAId : IAdapterId<int>
     {
-        /***************************************************/
-        /**** Public  Methods                           ****/
-        /***************************************************/
-
-        public static string ToGsaString(this RigidLink link, string index, int secondaryIndex = 0)
-        {
-            string command = "EL.2";
-            string name = link.TaggedName().ToGSACleanName();
-            string type = "LINK";
-
-            string constraintIndex = link.Constraint.AdapterId(typeof(GSAId)).ToString();
-            string group = "0";
-
-            string startIndex = link.PrimaryNode.AdapterId(typeof(GSAId)).ToString();
-
-            string endIndex = link.SecondaryNodes[secondaryIndex].AdapterId(typeof(GSAId)).ToString();
-
-            string dummy = CheckDummy(link);
-
-
-            //EL	1	gfdgfdg	NO_RGB	LINK	1	1	1	2	0	0	NO_RLS	NO_OFFSET	DUMMY
-            string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + constraintIndex + ", " + group + ", " + startIndex + ", " + endIndex + " , 0" + ",0" + ", NO_RLS" + ", NO_OFFSET," + dummy;
-            return str;
-        }
-
-        /***************************************************/
-
+        public int Id { get; set; }
     }
 }
 

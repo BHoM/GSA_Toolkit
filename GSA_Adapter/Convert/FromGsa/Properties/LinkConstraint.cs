@@ -21,6 +21,8 @@
  */
 
 
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
 using BH.oM.Structure.Constraints;
 using System.Linq;
 
@@ -138,7 +140,7 @@ namespace BH.Adapter.GSA
             }
 
             constraint.Name = name;
-            constraint.CustomData[AdapterIdName] = int.Parse(id);
+            constraint.SetAdapterId(typeof(GSAId), int.Parse(id));
 
             return constraint;
         }
