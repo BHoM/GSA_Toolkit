@@ -54,7 +54,7 @@ namespace BH.Adapter.GSA
             bool success = true;
             foreach (FEMesh mesh in objects)
             {
-                if (mesh == null || !mesh.CustomData.ContainsKey(m_AdapterName) || mesh.Faces.Count != 1)
+                if (mesh == null || mesh.AdapterId(typeof(GSAId)) != null || mesh.Faces.Count != 1)
                 {
                     Engine.Reflection.Compute.RecordError("Can only update meshes with exactly one face and with a set adapter id");
                     success = false;

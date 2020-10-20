@@ -275,8 +275,6 @@ namespace BH.Adapter.GSA
         /***************************************************/
 
         private ComAuto m_gsaCom;
-        private string m_AdapterName = "GSA_id";
-
 
         /***************************************************/
     }
