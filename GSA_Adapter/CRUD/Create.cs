@@ -21,6 +21,7 @@
  */
 
 using System;
+using BH.Engine.Base;
 using BH.Engine.Adapter;
 using BH.oM.Adapters.GSA;
 using System.Linq;
@@ -98,17 +99,18 @@ namespace BH.Adapter.GSA
 
             foreach (RigidLink link in links)
             {
-                List<string> allIds = new List<string>();
+                List<int> allIds = new List<int>();
                 for (int i = 1; i < link.SecondaryNodes.Count; i++)
                 {
-                    string id =  NextFreeId(link.GetType(), i == 1).ToString();
-                    success &= ComCall(Convert.ToGsaString(link, id, i));
+                    int id =  (int)NextFreeId(link.GetType(), i == 1);
+                    success &= ComCall(Convert.ToGsaString(link, id.ToString(), i));
                     allIds.Add(id);
                 }
                 if (link.SecondaryNodes.Count > 1)
                 {
-                    allIds.Add(link.AdapterId(typeof(GSAId)).ToString());
-                    link.CustomData[m_AdapterName + "-AllIds"] = allIds;
+                    link.Fragments.Remove(typeof(GSAId)); // to remove the existing single id on the link
+                    allIds.Add((int)link.AdapterId(typeof(GSAId)));
+                    link.SetAdapterId(typeof(GSAMultiId), allIds);
                 }
             }
             return success;
@@ -127,8 +129,9 @@ namespace BH.Adapter.GSA
                 success &= ComCall(Convert.ToGsaString(mesh,id,i));
                 allIds.Add(id);
                 id++;
-                //mesh.AdapterId(typeof(GSAId)) = allIds; //TODO: SOLVE THIS
             }
+
+            mesh.SetAdapterId(typeof(GSAMultiId), allIds);
 
             return success;
         }

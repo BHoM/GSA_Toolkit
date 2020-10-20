@@ -23,12 +23,22 @@
 
 using BH.oM.Base;
 using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace BH.oM.Adapters.GSA
 {
-    public class GSAId : IAdapterId<int>
+    public interface IGSAId : IAdapterId
+    { }
+
+
+    public class GSAId : IAdapterId<int>, IGSAId
     {
         public int Id { get; set; }
+    }
+
+    public class GSAMultiId : IAdapterId<List<int>>, IGSAId
+    {
+        public List<int> Id { get; set; }
     }
 }
 

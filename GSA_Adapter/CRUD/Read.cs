@@ -56,7 +56,7 @@ namespace BH.Adapter.GSA
                 return ReadBars(indices as dynamic);
             else if (type == typeof(ISectionProperty) || type.GetInterfaces().Contains(typeof(ISectionProperty)))
                 return ((List<ISectionProperty>)ReadSectionProperties(indices as dynamic)).Cast<BHoMObject>();
-            else if (type == typeof(IMaterialFragment))
+            else if (typeof(IMaterialFragment).IsAssignableFrom(type))
                 return ReadMaterials(indices as dynamic);
             else if (type == typeof(LoadCombination))
                 return ReadLoadCombinations(indices as dynamic);
@@ -202,7 +202,7 @@ namespace BH.Adapter.GSA
         public List<ISectionProperty> ReadSectionProperties(List<string> ids = null)
         {
             List<IMaterialFragment> matList = ReadMaterials(null, true);
-            Dictionary<string, IMaterialFragment> materials = matList.ToDictionary(x => x.AdapterId(typeof(GSAId)).ToString());
+            Dictionary<string, IMaterialFragment> materials = matList.ToDictionary(x => (x.AdapterId(typeof(GSAId)) ?? x.Name).ToString());
 
             string allProps = m_gsaCom.GwaCommand("GET_ALL, PROP_SEC").ToString();
             string[] proArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
@@ -218,7 +218,7 @@ namespace BH.Adapter.GSA
         public List<ISurfaceProperty> ReadProperty2d(List<string> ids = null)
         {
             List<IMaterialFragment> matList = ReadMaterials(null, true);
-            Dictionary<string, IMaterialFragment> materials = matList.ToDictionary(x => x.AdapterId(typeof(GSAId)).ToString());
+            Dictionary<string, IMaterialFragment> materials = matList.ToDictionary(x => (x.AdapterId(typeof(GSAId)) ?? x.Name).ToString());
 
             string allProps = m_gsaCom.GwaCommand("GET_ALL, PROP_2D").ToString();
             string[] proArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
@@ -312,10 +312,10 @@ namespace BH.Adapter.GSA
             List<string> names = new List<string> { "STEEL", "CONC_SHORT", "CONC_LONG", "ALUMINIUM", "GLASS" };
 
             List<IMaterialFragment> materials = new List<IMaterialFragment>();
-            materials.Add(new Steel() { Name = "GSA Standard STEEL", CustomData = new Dictionary<string, object> { { m_AdapterName, "STEEL" } } });
-            materials.Add(new Concrete() { Name = "GSA Standard CONC_SHORT", CustomData = new Dictionary<string, object> { { m_AdapterName, "CONC_SHORT" } } });
-            materials.Add(new Concrete() { Name = "GSA Standard CONC_LONG", CustomData = new Dictionary<string, object> { { m_AdapterName, "CONC_LONG" } } });
-            materials.Add(new Aluminium() { Name = "GSA Standard ALUMINIUM", CustomData = new Dictionary<string, object> { { m_AdapterName, "ALUMINIUM" } } });
+            materials.Add(new Steel() { Name = "STEEL" });
+            materials.Add(new Concrete() { Name = "CONC_SHORT" });
+            materials.Add(new Concrete() { Name = "CONC_LONG" });
+            materials.Add(new Aluminium() { Name = "ALUMINIUM" });
 
 
             //foreach (string name in names)
