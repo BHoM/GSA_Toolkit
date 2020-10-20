@@ -24,6 +24,8 @@ using Interop.gsa_8_7;
 using BH.oM.Adapters.GSA;
 using System.ComponentModel;
 using System;
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
 using BH.oM.Adapter;
 using BH.oM.Structure.Elements;
 using BH.Engine.Base.Objects;

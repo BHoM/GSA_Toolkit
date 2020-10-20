@@ -23,6 +23,8 @@
 
 using BH.oM.Structure.Loads;
 using System;
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;

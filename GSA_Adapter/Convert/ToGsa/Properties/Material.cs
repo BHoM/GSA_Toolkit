@@ -24,6 +24,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
 using BH.Engine.Serialiser;
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
 using BH.Engine.Structure;
 using BH.oM.Structure.MaterialFragments;
 using BH.oM.Geometry;

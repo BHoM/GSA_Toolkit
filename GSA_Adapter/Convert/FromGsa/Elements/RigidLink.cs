@@ -21,6 +21,8 @@
  */
 
 using BH.Engine.Serialiser;
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.Constraints;
 using Interop.gsa_8_7;
@@ -53,7 +55,7 @@ namespace BH.Adapter.GSA
 
                 face.ApplyTaggedName(gsaLink.Name);
                 int id = gsaLink.Ref;
-                face.CustomData[AdapterIdName] = id;
+                face.SetAdapterId(typeof(GSAId), id);
                 linkList.Add(face);
 
             }

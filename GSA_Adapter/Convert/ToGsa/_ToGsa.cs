@@ -28,6 +28,8 @@ using BH.oM.Structure.SurfaceProperties;
 using BH.oM.Structure.Constraints;
 using BH.oM.Base;
 using System;
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
 using System.ComponentModel;
 
 

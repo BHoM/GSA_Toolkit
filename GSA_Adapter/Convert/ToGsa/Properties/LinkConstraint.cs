@@ -23,6 +23,8 @@
 using BH.oM.Structure.Constraints;
 using BH.Engine.Structure;
 using BH.Engine.Serialiser;
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
 
 namespace BH.Adapter.GSA
 {

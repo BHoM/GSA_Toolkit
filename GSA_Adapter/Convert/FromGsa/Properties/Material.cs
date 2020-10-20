@@ -21,6 +21,8 @@
  */
 
 using BH.Engine.Serialiser;
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
 using BH.oM.Structure.MaterialFragments;
 using BH.oM.Geometry;
 
@@ -146,7 +148,7 @@ namespace BH.Adapter.GSA
             mat.ApplyTaggedName(gStr[3]);
 
             int id = int.Parse(gStr[1]);
-            mat.CustomData[AdapterIdName] = id;
+            mat.SetAdapterId(typeof(GSAId), id);
 
             return mat;
         }

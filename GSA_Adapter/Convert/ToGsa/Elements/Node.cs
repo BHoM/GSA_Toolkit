@@ -21,6 +21,8 @@
  */
 
 using BH.Engine.Serialiser;
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
 using BH.Engine.Structure;
 using BH.oM.Structure.Elements;
 using BH.oM.Geometry;

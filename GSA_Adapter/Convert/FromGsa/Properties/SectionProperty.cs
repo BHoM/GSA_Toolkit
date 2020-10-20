@@ -21,10 +21,14 @@
  */
 
 using BH.Engine.Serialiser;
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
 using BH.oM.Structure.MaterialFragments;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Spatial.ShapeProfiles;
 using System;
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
 using System.Collections.Generic;
 
 namespace BH.Adapter.GSA
@@ -256,7 +260,7 @@ namespace BH.Adapter.GSA
                 Engine.Reflection.Compute.RecordWarning(error);
             }
 
-            secProp.CustomData[AdapterIdName] = id;
+            secProp.SetAdapterId(typeof(GSAId), id);
             secProp.ApplyTaggedName(gsaStrings[2]);
             return secProp;
         }
