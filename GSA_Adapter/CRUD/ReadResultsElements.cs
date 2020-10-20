@@ -292,12 +292,11 @@ namespace BH.Adapter.GSA
                 foreach (object o in ids)
                 {
                     int id;
-                    object idObj;
                     if (int.TryParse(o.ToString(), out id))
                     {
                         idsOut.Add(id);
                     }
-                    else if (o is IBHoMObject && (o as IBHoMObject).CustomData.TryGetValue(AdapterIdName, out idObj) && int.TryParse(idObj.ToString(), out id))
+                    else if (o is IBHoMObject && int.TryParse((o as IBHoMObject).AdapterId(typeof(GSAId)).ToString(), out id))
                         idsOut.Add(id);
                 }
                 return idsOut;

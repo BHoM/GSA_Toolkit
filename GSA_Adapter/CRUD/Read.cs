@@ -312,16 +312,16 @@ namespace BH.Adapter.GSA
             List<string> names = new List<string> { "STEEL", "CONC_SHORT", "CONC_LONG", "ALUMINIUM", "GLASS" };
 
             List<IMaterialFragment> materials = new List<IMaterialFragment>();
-            materials.Add(new Steel() { Name = "GSA Standard STEEL", CustomData = new Dictionary<string, object> { { AdapterIdName, "STEEL" } } });
-            materials.Add(new Concrete() { Name = "GSA Standard CONC_SHORT", CustomData = new Dictionary<string, object> { { AdapterIdName, "CONC_SHORT" } } });
-            materials.Add(new Concrete() { Name = "GSA Standard CONC_LONG", CustomData = new Dictionary<string, object> { { AdapterIdName, "CONC_LONG" } } });
-            materials.Add(new Aluminium() { Name = "GSA Standard ALUMINIUM", CustomData = new Dictionary<string, object> { { AdapterIdName, "ALUMINIUM" } } });
+            materials.Add(new Steel() { Name = "GSA Standard STEEL", CustomData = new Dictionary<string, object> { { m_AdapterName, "STEEL" } } });
+            materials.Add(new Concrete() { Name = "GSA Standard CONC_SHORT", CustomData = new Dictionary<string, object> { { m_AdapterName, "CONC_SHORT" } } });
+            materials.Add(new Concrete() { Name = "GSA Standard CONC_LONG", CustomData = new Dictionary<string, object> { { m_AdapterName, "CONC_LONG" } } });
+            materials.Add(new Aluminium() { Name = "GSA Standard ALUMINIUM", CustomData = new Dictionary<string, object> { { m_AdapterName, "ALUMINIUM" } } });
 
 
             //foreach (string name in names)
             //{
             //    //IMaterialFragment mat = new IMaterialFragment { Name = "GSA Standard " + name };
-            //    mat.CustomData.Add(AdapterIdName, name);
+            //    mat.CustomData.Add(m_AdapterName, name);
             //    materials.Add(mat);
             //}
 

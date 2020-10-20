@@ -131,7 +131,6 @@
   <ItemGroup>
     <Compile Include="AdapterActions\Pull.cs" />
     <Compile Include="AdapterActions\Execute.cs" />
-    <Compile Include="Convert\AdapterID.cs" />
     <Compile Include="Convert\FromGsa\Elements\Bar.cs" />
     <Compile Include="Convert\FromGsa\Elements\FEMesh.cs" />
     <Compile Include="Convert\FromGsa\Properties\LinkConstraint.cs" />

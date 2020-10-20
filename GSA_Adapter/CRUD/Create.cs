@@ -108,7 +108,7 @@ namespace BH.Adapter.GSA
                 if (link.SecondaryNodes.Count > 1)
                 {
                     allIds.Add(link.AdapterId(typeof(GSAId)).ToString());
-                    link.CustomData[AdapterIdName + "-AllIds"] = allIds;
+                    link.CustomData[m_AdapterName + "-AllIds"] = allIds;
                 }
             }
             return success;
