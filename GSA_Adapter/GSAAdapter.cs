@@ -47,7 +47,7 @@ namespace BH.Adapter.GSA
 
         public GSAAdapter(string filePath = "", GSAConfig gsaConfig = null, bool active = false)
         {
-            AdapterIdName = Convert.AdapterIdName;
+            AdapterIdFragmentType = typeof(GSAId);
 
             Modules.Structure.ModuleLoader.LoadModules(this);
 
@@ -275,6 +275,7 @@ namespace BH.Adapter.GSA
         /***************************************************/
 
         private ComAuto m_gsaCom;
+        private string m_AdapterName = "GSA_id";
 
 
         /***************************************************/

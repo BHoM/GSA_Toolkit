@@ -111,7 +111,7 @@ namespace BH.Adapter.GSA
 
             Node node = Engine.Structure.Create.Node(pos, "", con);
             node.ApplyTaggedName(name);
-            node.CustomData.Add(AdapterIdName, id);
+            node.SetAdapterId(typeof(GSAId), id);
             return node;
             //Node node = new Node { Position = new Point { X = gn.Coor[0], Y = gn.Coor[1], Z = gn.Coor[2] } };
             //node.ApplyTaggedName(gn.Name);

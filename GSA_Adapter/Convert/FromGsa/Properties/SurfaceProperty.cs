@@ -68,7 +68,7 @@ namespace BH.Adapter.GSA
                 ((LoadingPanelProperty)panProp).ReferenceEdge = int.Parse(gsaStrings[8]);
             }
 
-            panProp.CustomData.Add(AdapterIdName, id);
+            panProp.SetAdapterId(typeof(GSAId), id);
             panProp.Name = name;
             return panProp;
         }
