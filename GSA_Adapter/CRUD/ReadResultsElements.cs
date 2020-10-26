@@ -32,6 +32,7 @@ using BH.oM.Adapters.GSA;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using BH.Engine.Adapters.GSA;
 
 namespace BH.Adapter.GSA
 {
@@ -296,7 +297,7 @@ namespace BH.Adapter.GSA
                     {
                         idsOut.Add(id);
                     }
-                    else if (o is IBHoMObject && int.TryParse((o as IBHoMObject).AdapterId(typeof(GSAId)).ToString(), out id))
+                    else if (o is IBHoMObject && int.TryParse((o as IBHoMObject).GSAId().ToString(), out id))
                         idsOut.Add(id);
                 }
                 return idsOut;

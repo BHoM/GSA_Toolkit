@@ -109,6 +109,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Create\GSAConfig.cs" />
+    <Compile Include="Query\GSAId.cs" />
+    <Compile Include="Modify\SetGSAId.cs" />
     <Compile Include="Modify\SetAnalysisType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -126,7 +128,6 @@
   <ItemGroup>
     <Folder Include="Compute\" />
     <Folder Include="Convert\" />
-    <Folder Include="Query\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

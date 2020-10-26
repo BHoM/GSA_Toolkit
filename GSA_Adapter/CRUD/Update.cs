@@ -26,6 +26,7 @@ using BH.oM.Base;
 using BH.oM.Structure.Elements;
 using BH.Engine.Adapter;
 using BH.oM.Adapters.GSA;
+using BH.Engine.Adapters.GSA;
 
 namespace BH.Adapter.GSA
 {
@@ -54,14 +55,14 @@ namespace BH.Adapter.GSA
             bool success = true;
             foreach (FEMesh mesh in objects)
             {
-                if (mesh == null || mesh.AdapterId(typeof(GSAId)) != null || mesh.Faces.Count != 1)
+                if (mesh == null || GetAdapterId(mesh) != null || mesh.Faces.Count != 1)
                 {
                     Engine.Reflection.Compute.RecordError("Can only update meshes with exactly one face and with a set adapter id");
                     success = false;
                     continue;
                 }
 
-                success &= ComCall(Convert.ToGsaString(mesh, (int)mesh.AdapterId(typeof(GSAId)), 0));
+                success &= ComCall(Convert.ToGsaString(mesh, (int)mesh.GSAId(), 0));
             }
 
             return success;

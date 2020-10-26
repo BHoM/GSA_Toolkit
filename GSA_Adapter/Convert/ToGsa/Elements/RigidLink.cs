@@ -24,7 +24,7 @@ using BH.Engine.Serialiser;
 using BH.Engine.Adapter;
 using BH.oM.Adapters.GSA;
 using BH.oM.Structure.Elements;
-
+using BH.Engine.Adapters.GSA;
 
 namespace BH.Adapter.GSA
 {
@@ -40,12 +40,12 @@ namespace BH.Adapter.GSA
             string name = link.TaggedName().ToGSACleanName();
             string type = "LINK";
 
-            string constraintIndex = link.Constraint.AdapterId(typeof(GSAId)).ToString();
+            string constraintIndex = link.Constraint.GSAId().ToString();
             string group = "0";
 
-            string startIndex = link.PrimaryNode.AdapterId(typeof(GSAId)).ToString();
+            string startIndex = link.PrimaryNode.GSAId().ToString();
 
-            string endIndex = link.SecondaryNodes[secondaryIndex].AdapterId(typeof(GSAId)).ToString();
+            string endIndex = link.SecondaryNodes[secondaryIndex].GSAId().ToString();
 
             string dummy = CheckDummy(link);
 

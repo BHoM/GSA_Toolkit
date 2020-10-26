@@ -30,8 +30,8 @@ using BH.oM.Structure.Loads;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Base;
-using BH.Engine.Adapter;
 using BH.oM.Adapter;
+using BH.Engine.Adapters.GSA;
 
 namespace BH.Adapter.GSA
 {
@@ -66,7 +66,7 @@ namespace BH.Adapter.GSA
 
         private bool CreateObject(BH.oM.Base.IBHoMObject obj)
         {
-            return ComCall(Convert.IToGsaString(obj, obj.AdapterId(typeof(GSAId)).ToString()));
+            return ComCall(Convert.IToGsaString(obj, obj.GSAId().ToString()));
         }
 
         /***************************************************/
@@ -82,7 +82,7 @@ namespace BH.Adapter.GSA
                     return true;
             }
 
-            return ComCall(Convert.IToGsaString(prop, prop.AdapterId(typeof(GSAId)).ToString()));
+            return ComCall(Convert.IToGsaString(prop, prop.GSAId().ToString()));
         }
 
         /***************************************************/
@@ -94,7 +94,7 @@ namespace BH.Adapter.GSA
             bool success = true;
             foreach (RigidLink link in links)
             {
-                success &= ComCall(Convert.ToGsaString(link, link.AdapterId(typeof(GSAId)).ToString(), 0));
+                success &= ComCall(Convert.ToGsaString(link, link.GSAId().ToString(), 0));
             }
 
             foreach (RigidLink link in links)
@@ -109,8 +109,8 @@ namespace BH.Adapter.GSA
                 if (link.SecondaryNodes.Count > 1)
                 {
                     link.Fragments.Remove(typeof(GSAId)); // to remove the existing single id on the link
-                    allIds.Add((int)link.AdapterId(typeof(GSAId)));
-                    link.SetAdapterId(typeof(GSAMultiId), allIds);
+                    allIds.Add(link.AdapterId<int>(typeof(GSAId)));
+                    link.SetAdapterId(typeof(GSAId), allIds);
                 }
             }
             return success;
@@ -131,7 +131,7 @@ namespace BH.Adapter.GSA
                 id++;
             }
 
-            mesh.SetAdapterId(typeof(GSAMultiId), allIds);
+            mesh.SetGSAId(allIds);
 
             return success;
         }

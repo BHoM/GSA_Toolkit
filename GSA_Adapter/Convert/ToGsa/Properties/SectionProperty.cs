@@ -27,9 +27,7 @@ using BH.Engine.Structure;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Spatial.ShapeProfiles;
 using System;
-using BH.Engine.Adapter;
-using BH.oM.Adapters.GSA;
-
+using BH.Engine.Adapters.GSA;
 
 namespace BH.Adapter.GSA
 {
@@ -44,7 +42,7 @@ namespace BH.Adapter.GSA
             prop.Name = prop.DescriptionOrName().ToGSACleanName();
             string name = prop.TaggedName();
 
-            string mat = prop.Material.AdapterId(typeof(GSAId)).ToString();// materialId;  //"STEEL";// material.Name;
+            string mat = prop.Material.GSAId().ToString();// materialId;  //"STEEL";// material.Name;
 
             string desc;
             string props;
@@ -115,7 +113,7 @@ namespace BH.Adapter.GSA
 
 
 
-                        return "PROP_SEC," + secProp.AdapterId(typeof(GSAId)).ToString() + ", " + name + ", NO_RGB," + secProp.Material.AdapterId(typeof(GSAId)) + "," + catProp + ", NO," + secProp.SectionType() + ", 0, NO_PROP," + secProp.ModifiersString() + ", FLAME_CUT, NO_J";
+                        return "PROP_SEC," + secProp.GSAId().ToString() + ", " + name + ", NO_RGB," + secProp.Material.GSAId() + "," + catProp + ", NO," + secProp.SectionType() + ", 0, NO_PROP," + secProp.ModifiersString() + ", FLAME_CUT, NO_J";
 
 
                     }

@@ -29,7 +29,6 @@ using System.ComponentModel;
 using BH.oM.Reflection.Attributes;
 using BH.oM.Base;
 using BH.oM.Structure.Loads;
-using BH.oM.Adapters.GSA;
 
 namespace BH.Engine.Adapters.GSA
 {

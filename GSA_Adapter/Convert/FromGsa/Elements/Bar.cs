@@ -28,8 +28,6 @@ using BH.oM.Structure.SectionProperties;
 using BH.oM.Structure.Constraints;
 using Interop.gsa_8_7;
 using System;
-using BH.Engine.Adapter;
-using BH.oM.Adapters.GSA;
 using System.Collections.Generic;
 
 
