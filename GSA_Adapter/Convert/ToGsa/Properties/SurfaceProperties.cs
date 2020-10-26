@@ -25,7 +25,7 @@ using BH.Engine.Adapter;
 using BH.oM.Adapters.GSA;
 using BH.oM.Structure.SurfaceProperties;
 using BH.Engine.Structure;
-
+using BH.Engine.Adapters.GSA;
 
 namespace BH.Adapter.GSA
 {
@@ -39,7 +39,7 @@ namespace BH.Adapter.GSA
         {
             panProp.Name = panProp.DescriptionOrName().ToGSACleanName();
             string name = panProp.TaggedName();
-            string mat = panProp.Material.AdapterId(typeof(GSAId)).ToString();
+            string mat = panProp.Material.GSAId().ToString();
 
             string command = "PROP_2D";
             string colour = "NO_RGB";

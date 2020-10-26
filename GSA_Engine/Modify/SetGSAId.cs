@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2020, the respective contributors. All rights reserved.
  *
@@ -20,16 +20,23 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-
-using BH.oM.Base;
-using System.ComponentModel;
+using System;
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
+using System.Linq;
 using System.Collections.Generic;
+using System.ComponentModel;
+using BH.oM.Reflection.Attributes;
+using BH.oM.Base;
+using BH.oM.Structure.Loads;
 
-namespace BH.oM.Adapters.GSA
+namespace BH.Engine.Adapters.GSA
 {
-    public class GSAId : IAdapterId
+    public static partial class Modify
     {
-        public object Id { get; set; }
+        public static void SetGSAId(this IBHoMObject BHoMObject, object id)
+        {
+            BHoMObject.SetAdapterId(typeof(GSAId), id);
+        }
     }
 }
-

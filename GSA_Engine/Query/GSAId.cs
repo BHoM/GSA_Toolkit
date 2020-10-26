@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2020, the respective contributors. All rights reserved.
  *
@@ -21,15 +21,36 @@
  */
 
 
-using BH.oM.Base;
-using System.ComponentModel;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using BH.oM.Structure.Elements;
+using BH.oM.Base;
+using BH.Engine.Adapter;
+using BH.oM.Adapters.GSA;
 
-namespace BH.oM.Adapters.GSA
+namespace BH.Engine.Adapters.GSA
 {
-    public class GSAId : IAdapterId
+    public static partial class Query
     {
-        public object Id { get; set; }
+
+        /***************************************************/
+        /**** Public Methods                            ****/
+        /***************************************************/
+
+        public static int GSAId(this IBHoMObject BHoMObject)
+        {
+            return BHoMObject.AdapterId<int>(typeof(GSAId));
+        }
+
+        public static IEnumerable<int> GSAMultiId(this IBHoMObject BHoMObject)
+        {
+            return BHoMObject.AdapterId<IEnumerable<int>>(typeof(GSAId));
+        }
+
+        /***************************************************/
+
     }
 }
-
