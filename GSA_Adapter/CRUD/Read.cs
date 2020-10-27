@@ -318,6 +318,11 @@ namespace BH.Adapter.GSA
             materials.Add(new Concrete() { Name = "CONC_LONG" });
             materials.Add(new Aluminium() { Name = "ALUMINIUM" });
 
+            foreach (IMaterialFragment material in materials)
+            {
+                SetAdapterId(material, material.Name);
+            }
+
 
             //foreach (string name in names)
             //{
@@ -332,4 +337,3 @@ namespace BH.Adapter.GSA
         /***************************************************/
     }
 }
-
