@@ -148,7 +148,7 @@ namespace BH.Adapter.GSA
             List<ISectionProperty> secPropList = ReadSectionProperties();
             List<Node> nodeList = ReadNodes();
 
-            Dictionary<string, ISectionProperty> secProps = secPropList.Where(x => x != null).ToDictionary(x => x.GSAId().ToString());
+            Dictionary<string, ISectionProperty> secProps = secPropList.Where(x => x != null).ToDictionary(x => GetAdapterId<int>(x).ToString());
             Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.GSAId().ToString());
 
             return Convert.FromGsaBars(barArr, secProps, nodes, ids);
