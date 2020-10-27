@@ -108,8 +108,8 @@ namespace BH.Adapter.GSA
                 }
                 if (link.SecondaryNodes.Count > 1)
                 {
+                    allIds.Add(GetAdapterId<int>(link));
                     link.Fragments.Remove(typeof(GSAId)); // to remove the existing single id on the link
-                    allIds.Add(link.AdapterId<int>(typeof(GSAId)));
                     link.SetAdapterId(typeof(GSAId), allIds);
                 }
             }
@@ -194,4 +194,3 @@ namespace BH.Adapter.GSA
         /***************************************************/
     }
 }
-
