@@ -203,7 +203,7 @@ namespace BH.Adapter.GSA
         public List<ISectionProperty> ReadSectionProperties(List<string> ids = null)
         {
             List<IMaterialFragment> matList = ReadMaterials(null, true);
-            Dictionary<string, IMaterialFragment> materials = matList.ToDictionary(x => (x.GSAId().ToString() ?? x.Name).ToString());
+            Dictionary<string, IMaterialFragment> materials = matList.ToDictionary(x => GetAdapterId(x).ToString());
 
             string allProps = m_gsaCom.GwaCommand("GET_ALL, PROP_SEC").ToString();
             string[] proArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
