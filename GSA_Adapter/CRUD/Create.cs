@@ -131,7 +131,7 @@ namespace BH.Adapter.GSA
                 id++;
             }
 
-            mesh.SetGSAId(allIds);
+            SetAdapterId(mesh, allIds);
 
             return success;
         }
