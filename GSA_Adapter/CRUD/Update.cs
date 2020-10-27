@@ -62,7 +62,7 @@ namespace BH.Adapter.GSA
                     continue;
                 }
 
-                success &= ComCall(Convert.ToGsaString(mesh, (int)mesh.GSAId(), 0));
+                success &= ComCall(Convert.ToGsaString(mesh, GetAdapterId<int>(mesh), 0));
             }
 
             return success;
@@ -71,4 +71,3 @@ namespace BH.Adapter.GSA
         /***************************************************/
     }
 }
-
