@@ -82,7 +82,7 @@ namespace BH.Adapter.GSA
                     return true;
             }
 
-            return ComCall(Convert.IToGsaString(prop, prop.GSAId().ToString()));
+            return ComCall(Convert.IToGsaString(prop,  GetAdapterId<int>(prop).ToString()));
         }
 
         /***************************************************/
