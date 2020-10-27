@@ -243,7 +243,7 @@ namespace BH.Adapter.GSA
             List<ISurfaceProperty> secPropList = ReadProperty2d();
             List<Node> nodeList = ReadNodes();
 
-            Dictionary<string, ISurfaceProperty> props = secPropList.ToDictionary(x => x.GSAId().ToString());
+            Dictionary<string, ISurfaceProperty> props = secPropList.ToDictionary(x => GetAdapterId<int>(x).ToString());
             Dictionary<string, Node> nodes = nodeList.ToDictionary(x => x.GSAId().ToString());
 
             return Convert.FromGsaFEMesh(gsaElements, props, nodes);
