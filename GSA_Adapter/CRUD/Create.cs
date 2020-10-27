@@ -66,7 +66,7 @@ namespace BH.Adapter.GSA
 
         private bool CreateObject(BH.oM.Base.IBHoMObject obj)
         {
-            return ComCall(Convert.IToGsaString(obj, obj.GSAId().ToString()));
+            return ComCall(Convert.IToGsaString(obj, GetAdapterId<int>(obj).ToString()));
         }
 
         /***************************************************/
