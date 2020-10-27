@@ -269,7 +269,7 @@ namespace BH.Adapter.GSA
             List<LinkConstraint> constraintList = ReadLinkConstraint(null);
             List<Node> nodeList = ReadNodes();
 
-            Dictionary<string, LinkConstraint> constraints = constraintList.ToDictionary(x => x.GSAId().ToString());
+            Dictionary<string, LinkConstraint> constraints = constraintList.ToDictionary(x => GetAdapterId<int>(x).ToString());
             Dictionary<string, Node> nodes = nodeList.ToDictionary(x => GetAdapterId<int>(x).ToString());
 
             int[] potentialBeamRefs = GenerateIndices(ids, typeof(RigidLink));
