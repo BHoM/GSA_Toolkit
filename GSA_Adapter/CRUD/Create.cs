@@ -94,7 +94,7 @@ namespace BH.Adapter.GSA
             bool success = true;
             foreach (RigidLink link in links)
             {
-                success &= ComCall(Convert.ToGsaString(link, link.GSAId().ToString(), 0));
+                success &= ComCall(Convert.ToGsaString(link, GetAdapterId<int>(link).ToString(), 0));
             }
 
             foreach (RigidLink link in links)
