@@ -297,8 +297,12 @@ namespace BH.Adapter.GSA
                     {
                         idsOut.Add(id);
                     }
-                    else if (o is IBHoMObject && int.TryParse((o as IBHoMObject).GSAId().ToString(), out id))
-                        idsOut.Add(id);
+                    else if (o is IBHoMObject )
+                    {
+                        id = GetAdapterId<int>((IBHoMObject)o);
+                        if (id != 0)
+                            idsOut.Add(id);
+                    }
                 }
                 return idsOut;
             }
@@ -387,4 +391,3 @@ namespace BH.Adapter.GSA
         /***************************************************/
     }
 }
-
