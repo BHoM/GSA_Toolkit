@@ -309,9 +309,6 @@ namespace BH.Adapter.GSA
 
         private List<IMaterialFragment> GetStandardGsaMaterials()
         {
-            // TODO: What about the other materials in MaterialType enum? Shouldn't they match?
-            List<string> names = new List<string> { "STEEL", "CONC_SHORT", "CONC_LONG", "ALUMINIUM", "GLASS" };
-
             List<IMaterialFragment> materials = new List<IMaterialFragment>();
             materials.Add(new Steel() { Name = "STEEL" });
             materials.Add(new Concrete() { Name = "CONC_SHORT" });
@@ -322,14 +319,6 @@ namespace BH.Adapter.GSA
             {
                 SetAdapterId(material, material.Name);
             }
-
-
-            //foreach (string name in names)
-            //{
-            //    //IMaterialFragment mat = new IMaterialFragment { Name = "GSA Standard " + name };
-            //    mat.CustomData.Add(m_AdapterName, name);
-            //    materials.Add(mat);
-            //}
 
             return materials;
         }
