@@ -34,9 +34,15 @@ namespace BH.Engine.Adapters.GSA
 {
     public static partial class Modify
     {
+        /***************************************************/
+        /**** Public Methods                            ****/
+        /***************************************************/
+        
         public static void SetGSAId(this IBHoMObject BHoMObject, object id)
         {
             BHoMObject.SetAdapterId(typeof(GSAId), id);
         }
+        
+        /***************************************************/
     }
 }
