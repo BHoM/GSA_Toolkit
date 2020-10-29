@@ -45,10 +45,6 @@ namespace BH.Engine.Adapters.GSA
             return BHoMObject.AdapterId<int>(typeof(GSAId));
         }
 
-        public static IEnumerable<int> GSAMultiId(this IBHoMObject BHoMObject)
-        {
-            return BHoMObject.AdapterId<IEnumerable<int>>(typeof(GSAId));
-        }
 
         /***************************************************/
 
