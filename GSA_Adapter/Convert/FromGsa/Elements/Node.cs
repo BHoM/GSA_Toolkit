@@ -111,15 +111,7 @@ namespace BH.Adapter.GSA
             node.ApplyTaggedName(name);
             node.SetAdapterId(typeof(GSAId), id);
             return node;
-            //Node node = new Node { Position = new Point { X = gn.Coor[0], Y = gn.Coor[1], Z = gn.Coor[2] } };
-            //node.ApplyTaggedName(gn.Name);
-            //node.CustomData.Add(AdapterID, gn.Ref);
 
-            ////Check if the node is restrained in some way
-            //if (gn.Restraint != 0 || gn.Stiffness.Sum() != 0)
-            //    node.Constraint = GetConstraint(gn.Restraint, gn.Stiffness);
-
-            //return node;
         }
 
         /***************************************************/
