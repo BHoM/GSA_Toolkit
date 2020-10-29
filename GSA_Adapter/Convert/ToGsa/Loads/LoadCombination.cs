@@ -62,29 +62,6 @@ namespace BH.Adapter.GSA
                 type = fragment.AnalysisType;
                 stage = fragment.Stage;
             }
-            else if (comb.CustomData.ContainsKey("Task Type"))
-            {
-                string taskTypeOld = comb.CustomData["Task Type"].ToString();
-                switch (taskTypeOld)
-                {
-                    case "NL_STATIC":
-                        type = AnalysisType.NonLinearStatic;
-                        break;
-                    case "FORM_FIND":
-                        type = AnalysisType.FormFinding;
-                        break;
-                    case "SOAP_FILM":
-                        type = AnalysisType.SoapFilm;
-                        break;
-                    case "STATIC":
-                    default:
-                        type = AnalysisType.LinearStatic;
-                        break;
-                }
-                stage = 0;
-
-                Engine.Reflection.Compute.RecordWarning("Task type was found through the use of custom data. This of extracting task type is being deprecated. Try setting the task type of you loadcombination by the use of the `SetAnalysisType` method instead.");
-            }
             else
             {
                 type = AnalysisType.LinearStatic;
