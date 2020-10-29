@@ -54,6 +54,7 @@
     <Compile Include="Enum\Country.cs" />
     <Compile Include="Enum\SteelDesignSpecification.cs" />
     <Compile Include="Enum\AnalysisType.cs" />
+    <Compile Include="Fragments\DummyTag.cs" />
     <Compile Include="Fragments\GSAId.cs" />
     <Compile Include="Fragments\AnalysisTaskFragment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
