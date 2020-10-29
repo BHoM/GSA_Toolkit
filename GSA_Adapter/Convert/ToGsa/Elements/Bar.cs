@@ -29,6 +29,7 @@ using BH.oM.Structure.Constraints;
 using BH.oM.Base;
 using System;
 using BH.Engine.Adapters.GSA;
+using BH.Engine.Base;
 
 namespace BH.Adapter.GSA
 {
@@ -119,7 +120,9 @@ namespace BH.Adapter.GSA
 
         private static string CheckDummy(BHoMObject obj)
         {
-            if (obj.CustomData.ContainsKey("Dummy"))
+            DummyTag dummy = obj.FindFragment<DummyTag>();
+
+            if (dummy != null && dummy.IsDummy)
                 return "DUMMY";
 
             return "";
