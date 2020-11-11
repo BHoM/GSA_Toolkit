@@ -80,7 +80,7 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        private static string ForceTypeString(this BarTemperatureLoad load)
+        private static string ForceTypeString(this BarUniformTemperatureLoad load)
         {
             return "TEMP_BEAM";
         }

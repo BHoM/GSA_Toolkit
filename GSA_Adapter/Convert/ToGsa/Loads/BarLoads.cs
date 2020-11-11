@@ -82,7 +82,7 @@ namespace BH.Adapter.GSA
         }
 
         /***************************************************/
-        public static List<string> ToGsaString(this BarTemperatureLoad load, double[] unitFactors)
+        public static List<string> ToGsaString(this BarUniformTemperatureLoad load, double[] unitFactors)
         {
             List<string> forceStrings = new List<string>();
             string command = load.IForceTypeString();
