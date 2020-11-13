@@ -24,6 +24,7 @@ using BH.oM.Structure.Elements;
 using BH.oM.Structure.Loads;
 using BH.oM.Geometry;
 using System.Collections.Generic;
+using BH.Engine.Spatial;
 using BH.Engine.Structure;
 
 
