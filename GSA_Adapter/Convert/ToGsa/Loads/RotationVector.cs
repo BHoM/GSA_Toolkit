@@ -65,7 +65,7 @@ namespace BH.Adapter.GSA
 
         private static Vector[] RotationVector(this BarVaryingDistributedLoad load)
         {
-            Vector[] momentVecs = { load.MomentA, load.MomentB};
+            Vector[] momentVecs = { load.MomentAtStart, load.MomentAtEnd};
             return momentVecs;
         }
 
