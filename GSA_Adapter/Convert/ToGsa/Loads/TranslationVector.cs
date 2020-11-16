@@ -67,7 +67,7 @@ namespace BH.Adapter.GSA
 
         private static Vector[] TranslationVector(this BarVaryingDistributedLoad load)
         {
-            Vector[] forceVecs = { load.ForceA, load.ForceB };
+            Vector[] forceVecs = { load.ForceAtStart, load.ForceAtEnd };
             return forceVecs;
         }
 

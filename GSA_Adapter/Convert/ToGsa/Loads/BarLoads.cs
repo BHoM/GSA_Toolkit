@@ -119,19 +119,14 @@ namespace BH.Adapter.GSA
 
         public static string[] LoadPosition(BarVaryingDistributedLoad load)
         {
-            if (load.Objects.Elements.Count == 1)
+
+            if (load.RelativePositions)
             {
-                return new string[] { load.DistanceFromA.ToString() + ",", (load.Objects.Elements[0].Length() - load.DistanceFromB).ToString() + "," };
-            }
-            if (load.DistanceFromB == 0)
-            {
-                Engine.Reflection.Compute.RecordNote("Setting the second position on BarVaryingDistributedLoad to parameteric '100%' for DistanceFromB values equal to 0.");
-                return new string[] { load.DistanceFromA.ToString() + ",", "100%" + "," };
+                return new string[] { (load.StartPosition * 100).ToString() + "%" + ",", (load.EndPosition * 100).ToString() + "%" + "," };
             }
             else
             {
-                Engine.Reflection.Compute.RecordError("GSA Adapter can currently only handle BarVaryingDistributedLoads with a single item or 'DistanceFromB' set to 0.");
-                return null;
+                return new string[] { load.StartPosition.ToString() + ",", load.EndPosition.ToString() + "," };
             }
         }
 
