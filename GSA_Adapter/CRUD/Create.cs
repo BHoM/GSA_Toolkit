@@ -167,6 +167,9 @@ namespace BH.Adapter.GSA
             {
                 success &= ComCall(gsaString);
             }
+
+            SetAdapterId(load, load.Name ?? "");
+
             return success;
         }
 
