@@ -25,6 +25,7 @@ using BH.oM.Structure.Loads;
 using System.Collections.Generic;
 using BH.oM.Adapters.GSA;
 using BH.Engine.Base;
+using BH.Engine.Adapter;
 
 namespace BH.Adapter.GSA
 {
@@ -45,6 +46,8 @@ namespace BH.Adapter.GSA
             int stage;
             TaskTypeAndStage(loadComb, out type, out stage);
             gsaStrings.Add(AnalysisTask(combNo, loadComb.Name, type, stage, combNo));
+
+            loadComb.SetAdapterId(typeof(BH.oM.Adapters.GSA.GSAId), "A" + loadComb.Number);
 
             return gsaStrings;
         }
