@@ -22,6 +22,7 @@
 
 
 using BH.oM.Structure.Loads;
+using BH.Engine.Adapter;
 
 
 namespace BH.Adapter.GSA
@@ -40,6 +41,8 @@ namespace BH.Adapter.GSA
             string str;
             string command = "LOAD_TITLE.1";
             string bridge = "BRIDGE_NO";
+
+            loadCase.SetAdapterId(typeof(BH.oM.Adapters.GSA.GSAId), loadCase.Number);
 
             str = command + "," + loadCase.Number + "," + title + "," + type + "," + bridge;
             return str;
