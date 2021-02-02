@@ -68,7 +68,14 @@ namespace BH.Adapter.GSA
 
         public bool RunCommand(SaveAs command)
         {
-            return m_gsaCom.SaveAs("@" + command.FileName) == 0;
+            string path = System.IO.Path.GetFullPath(command.FileName);
+
+            string dir = System.IO.Path.GetDirectoryName(path);
+
+            if (!System.IO.Directory.Exists(dir))
+                System.IO.Directory.CreateDirectory(dir);
+
+            return m_gsaCom.SaveAs(path) == 0;
         }
 
         /***************************************************/
