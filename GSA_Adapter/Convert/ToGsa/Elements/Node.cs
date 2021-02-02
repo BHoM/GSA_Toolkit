@@ -26,6 +26,8 @@ using BH.oM.Adapters.GSA;
 using BH.Engine.Structure;
 using BH.oM.Structure.Elements;
 using BH.oM.Geometry;
+using BH.Engine.Geometry;
+using System.Collections.Generic;
 
 
 namespace BH.Adapter.GSA
@@ -36,19 +38,55 @@ namespace BH.Adapter.GSA
         /**** Public  Methods                           ****/
         /***************************************************/
 
-        private static string ToGsaString(this Node node, string index)
+        public static List<string> ToGsaString(this Node node, string index)
         {
             string command = "NODE.2";
             string name = node.TaggedName().ToGSACleanName();
 
             string restraint = GetRestraintString(node);
             Point position = node.Position();
-            string str = command + ", " + index + ", " + name + " , NO_RGB, " + position.X + " , " + position.Y + " , " + position.Z + ", NO_GRID, " + 0 + "," + restraint;
-            return str;
+
+            string axisString;
+            string axisId = GetAndCreateAxis(node, out axisString);
+
+            List<string> gsaStrings = new List<string>();
+
+            if (!string.IsNullOrWhiteSpace(axisString))
+                gsaStrings.Add(axisString);
+
+            string str = command + ", " + index + ", " + name + " , NO_RGB, " + position.X + " , " + position.Y + " , " + position.Z + ", NO_GRID, " + axisId + "," + restraint;
+
+            gsaStrings.Add(str);
+            return gsaStrings;
         }
 
         /***************************************************/
         /**** Private  Methods                          ****/
+        /***************************************************/
+
+        private static string GetAndCreateAxis(Node node, out string axisString)
+        {
+            Basis basis = node.Orientation;
+
+            //Check if global orientation
+            if (basis == null || (basis.X.Angle(Vector.XAxis) < Tolerance.Angle && (basis.Y.Angle(Vector.YAxis) < Tolerance.Angle)))
+            {
+                axisString = "";
+                return "0";
+            }
+
+            //AXIS	1	Axis 1	CART	0.000000	0.000000	0.000000	0.500000	0.500000	0.000000	0.000000	1.00000	0.000000
+            string command = "AXIS";
+            string id = node.AdapterId<int>(typeof(GSAId)).ToString();
+            string name = $"Node {id} local axis";
+            string origin = "CART, 0, 0, 0";
+            string x = $"{basis.X.X} , {basis.X.Y} , {basis.X.Z}";
+            string y = $"{basis.Y.X} , {basis.Y.Y} , {basis.Y.Z}";
+
+            axisString = $"{command}, {id}, {name}, {origin}, {x}, {y}";
+            return id;
+        }
+
         /***************************************************/
 
         private static string GetRestraintString(Node node)

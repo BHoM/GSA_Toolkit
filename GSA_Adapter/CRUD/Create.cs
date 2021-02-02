@@ -71,6 +71,18 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
+        private bool CreateObject(Node node)
+        {
+            bool success = true;
+            foreach (string str in Convert.ToGsaString(node, GetAdapterId<int>(node).ToString()))
+            {
+                success &= ComCall(str);
+            }
+            return success;
+        }
+
+        /***************************************************/
+
         private bool CreateObject(ISectionProperty prop)
         {
             //Try creating a catalogue section
