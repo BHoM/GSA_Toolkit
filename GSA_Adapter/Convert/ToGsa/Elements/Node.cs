@@ -28,6 +28,7 @@ using BH.oM.Structure.Elements;
 using BH.oM.Geometry;
 using BH.Engine.Geometry;
 using System.Collections.Generic;
+using BH.Engine.Adapters.GSA;
 
 
 namespace BH.Adapter.GSA
@@ -77,7 +78,7 @@ namespace BH.Adapter.GSA
 
             //AXIS	1	Axis 1	CART	0.000000	0.000000	0.000000	0.500000	0.500000	0.000000	0.000000	1.00000	0.000000
             string command = "AXIS";
-            string id = node.AdapterId<int>(typeof(GSAId)).ToString();
+            string id = node.GSAId().ToString();
             string name = $"Node {id} local axis";
             string origin = "CART, 0, 0, 0";
             string x = $"{basis.X.X} , {basis.X.Y} , {basis.X.Z}";
