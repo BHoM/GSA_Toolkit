@@ -28,6 +28,7 @@ using BH.oM.Structure.SectionProperties;
 using BH.oM.Structure.SurfaceProperties;
 using BH.oM.Structure.Constraints;
 using BH.oM.Structure.Loads;
+using BH.oM.Geometry;
 using BH.oM.Structure.Results;
 using BH.oM.Structure.Requests;
 using BH.oM.Analytical.Results;
@@ -192,10 +193,32 @@ namespace BH.Adapter.GSA
             string allNodes = m_gsaCom.GwaCommand("GET_ALL, NODE").ToString();
             string[] nodeArr = string.IsNullOrWhiteSpace(allNodes) ? new string[0] : allNodes.Split('\n');
 
+            Dictionary<int, Basis> axes = ReadAxes();
+
             if (ids == null)
-                return nodeArr.Select(x => Convert.FromGsaNode(x)).ToList();
+                return nodeArr.Select(x => Convert.FromGsaNode(x, axes)).ToList();
             else
-                return nodeArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Convert.FromGsaNode(x)).ToList();
+                return nodeArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Convert.FromGsaNode(x, axes)).ToList();
+        }
+
+        /***************************************/
+
+        private Dictionary<int, Basis> ReadAxes(List<string> ids = null)
+        {
+            string allAxes = m_gsaCom.GwaCommand("GET_ALL, AXIS").ToString();
+            string[] axesArr = string.IsNullOrWhiteSpace(allAxes) ? new string[0] : allAxes.Split('\n');
+
+            Dictionary<int, Basis> axes = new Dictionary<int, Basis>();
+
+            foreach (string axisString in axesArr)
+            {
+                int id;
+                Basis basis = Convert.FromGsaAxis(axisString, out id);
+                if (basis != null)
+                    axes[id] = basis;
+            }
+
+            return axes;
         }
 
         /***************************************/
