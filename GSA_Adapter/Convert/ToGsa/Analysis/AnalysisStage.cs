@@ -48,9 +48,10 @@ namespace BH.Adapter.GSA
             for (int i = 0; i < elements.Count; i++)
             {
                 string id = "";
+                int idInt; 
 
                 // String type
-                if (int.TryParse(elements[i].ToString(), out int idInt))
+                if (int.TryParse(elements[i].ToString(), out idInt))
                 {
                     id = idInt.ToString();
                 }
