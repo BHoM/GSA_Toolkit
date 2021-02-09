@@ -57,6 +57,7 @@
     <Compile Include="Fragments\DummyTag.cs" />
     <Compile Include="Fragments\GSAId.cs" />
     <Compile Include="Fragments\AnalysisTaskFragment.cs" />
+    <Compile Include="Analysis\AnalysisStage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\GSAConfig.cs" />
   </ItemGroup>
