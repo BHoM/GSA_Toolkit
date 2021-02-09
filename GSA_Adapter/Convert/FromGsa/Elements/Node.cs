@@ -38,7 +38,7 @@ namespace BH.Adapter.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
-        public static Node FromGsaNode(string gsaString)
+        public static Node FromGsaNode(string gsaString, Dictionary<int, Basis> axes)
         {
             if (gsaString == "")
             {
@@ -52,8 +52,18 @@ namespace BH.Adapter.GSA
 
             Point pos = new Point() { X = double.Parse(arr[4]), Y = double.Parse(arr[5]), Z = double.Parse(arr[6]) };
 
-            Constraint6DOF con;
+            Basis basis = null;
             if (arr.Length > 7)
+            {
+                int axesId;
+                if (int.TryParse(arr[8], out axesId))
+                {
+                    axes.TryGetValue(axesId, out basis);
+                }
+            }
+
+            Constraint6DOF con;
+            if (arr.Length > 9)
             {
                 List<bool> fixities;
                 List<double> stiff;
@@ -107,11 +117,31 @@ namespace BH.Adapter.GSA
             else
                 con = null;
 
-            Node node = Engine.Structure.Create.Node(pos, "", con);
+            Node node = new Node { Position = pos, Support = con, Orientation = basis };
             node.ApplyTaggedName(name);
             node.SetAdapterId(typeof(GSAId), id);
             return node;
 
+        }
+
+        /***************************************************/
+
+        public static Basis FromGsaAxis(string gsaString, out int id)
+        {
+            if (gsaString == "")
+            {
+                id = -1;
+                return null;
+            }
+
+            string[] arr = gsaString.Split(',');
+
+            id = Int32.Parse(arr[1]);
+
+            Vector x = new Vector() { X = double.Parse(arr[7]), Y = double.Parse(arr[8]), Z = double.Parse(arr[9]) };
+            Vector y = new Vector() { X = double.Parse(arr[10]), Y = double.Parse(arr[11]), Z = double.Parse(arr[12]) };
+
+            return Engine.Geometry.Create.Basis(x, y);
         }
 
         /***************************************************/
