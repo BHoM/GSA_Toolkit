@@ -28,6 +28,7 @@ using BH.oM.Structure.SectionProperties;
 using BH.oM.Structure.SurfaceProperties;
 using System;
 using System.Collections.Generic;
+using BH.Engine.Adapter;
 
 namespace BH.Adapter.GSA
 {
@@ -41,6 +42,9 @@ namespace BH.Adapter.GSA
         {
             string command = "ANAL_STAGE";
             string name = stage.Name;
+            index = stage.Number.ToString();
+
+            stage.SetAdapterId(typeof(BH.oM.Adapters.GSA.GSAId), stage.Number);
 
             List<Object> elements = stage.Elements;
             string objectIds = "";
