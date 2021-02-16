@@ -106,6 +106,8 @@ namespace BH.Adapter.GSA
             {
                 case LoadPanelSupportConditions.AllSides:
                     return "SUP_ALL";
+                case LoadPanelSupportConditions.Auto:
+                    return "SUP_AUTO";
                 case LoadPanelSupportConditions.ThreeSides:
                     return "SUP_THREE";
                 case LoadPanelSupportConditions.TwoSides:
