@@ -29,6 +29,7 @@ using BH.oM.Adapters.GSA;
 using BH.Engine.Structure;
 using BH.oM.Structure.MaterialFragments;
 using BH.oM.Geometry;
+using BH.oM.Adapters.GSA.MaterialFragments;
 
 
 namespace BH.Adapter.GSA
@@ -80,6 +81,29 @@ namespace BH.Adapter.GSA
             string damp = material.DampingRatio.ToString();
 
             string str = command + "," + num + "," + mModel + "," + name + "," + colour + "," + type + ",14," + E + "," + nu + "," + rho + "," + alpha + "," + G + "," + damp + ",0,0,NO_ENV";
+            return str;
+
+        }
+
+        /***************************************************/
+
+        private static string ToGsaString(this Fabric material, string index)
+        {
+            string command = "MAT";
+            string num = index;
+            string mModel = "MAT_FABRIC";
+            material.Name = material.DescriptionOrName().ToGSACleanName();
+            string name = material.TaggedName();
+            string colour = "NO_RGB";
+            string type = GetMaterialType(material).ToString();
+            string Ex = material.WarpModulus.ToString();
+            string Ey = material.WeftModulus.ToString();
+            string nu = material.PoissonsRatio.ToString();
+            string G = material.ShearModulus.ToString();
+            string rho = material.Density.ToString();
+            string damp = material.DampingRatio.ToString();
+
+            string str = command + "," + num + "," + mModel + "," + name + "," + colour + ",4," + Ex + "," + Ey + "," + nu + "," + G + ",1," + ",0,NO_ENV";
             return str;
 
         }

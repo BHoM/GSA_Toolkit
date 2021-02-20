@@ -20,67 +20,44 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Structure.MaterialFragments;
-using BH.oM.Structure.SurfaceProperties;
-using System;
+using BH.Engine.Serialiser;
 using BH.Engine.Adapter;
 using BH.oM.Adapters.GSA;
-using System.Collections.Generic;
-using BH.oM.Adapters.GSA.SurfaceProperties;
-
+using BH.oM.Structure.Elements;
+using BH.Engine.Adapters.GSA;
+using BH.oM.Adapters.GSA.Elements;
 
 namespace BH.Adapter.GSA
 {
     public static partial class Convert
     {
         /***************************************************/
-        /**** Public Methods                            ****/
+        /**** Public  Methods                           ****/
         /***************************************************/
-      
-        public static ISurfaceProperty FromGsaSurfaceProperty(string gsaString, Dictionary<string, IMaterialFragment> materials)
+
+        public static string ToGsaString(this Spacer spacer, string index)
         {
-            ISurfaceProperty panProp = null;
+            string command = "EL.2";
+            string name = spacer.TaggedName().ToGSACleanName();
+            string type = "SPACER";
 
-            if (gsaString == "")
-            {
-                return null;
-            }
+            string spacerPropertyIndex = spacer.SpacerProperty != null ? spacer.SpacerProperty.GSAId().ToString() : "1";
+            int group = 0;
 
-            string[] gsaStrings = gsaString.Split(',');
+            string startIndex = spacer.StartNode.GSAId().ToString();
+            string endIndex = spacer.EndNode.GSAId().ToString();
 
-            int id;
 
-            Int32.TryParse(gsaStrings[1], out id);
-            string name = gsaStrings[2];
-            string materialId = gsaStrings[5];
-            string description = gsaStrings[6];
+  
+            string dummy = CheckDummy(spacer);
 
-            if (description == "SHELL")
-            {
-                panProp = new ConstantThickness();
-                panProp.Material = materials[materialId];
-                double t = double.Parse(gsaStrings[7]);
-                ((ConstantThickness)panProp).Thickness = t;
-            }
-            else if (description == "LOAD")
-            {
-                panProp = new LoadingPanelProperty();
-                ((LoadingPanelProperty)panProp).LoadApplication = GetLoadingConditionFromString(gsaStrings[7]);
-                ((LoadingPanelProperty)panProp).ReferenceEdge = int.Parse(gsaStrings[8]);
-            }
-            else if (description == "FABRIC")
-            {
-                panProp = new FabricPanelProperty();
-                panProp.Material = materials[materialId];
-            }
-
-            panProp.SetAdapterId(typeof(GSAId), id);
-            panProp.Name = name;
-            return panProp;
+            string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + spacerPropertyIndex + ", " + group + ", " + startIndex + ", " + endIndex + " , 0 , 0 , NO_RLS , NO_OFFSET , " + dummy;
+            return str;
         }
 
         /***************************************************/
 
     }
 }
+
 

@@ -20,14 +20,18 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Structure.MaterialFragments;
-using BH.oM.Structure.SurfaceProperties;
-using System;
+using BH.Engine.Serialiser;
 using BH.Engine.Adapter;
 using BH.oM.Adapters.GSA;
+using BH.oM.Structure.Elements;
+using BH.oM.Structure.SectionProperties;
+using BH.oM.Structure.Constraints;
+using Interop.gsa_8_7;
+using System;
 using System.Collections.Generic;
-using BH.oM.Adapters.GSA.SurfaceProperties;
-
+using BH.oM.Adapters.GSA.SpacerProperties;
+using BH.oM.Adapters.GSA.Elements;
+using BH.oM.Structure;
 
 namespace BH.Adapter.GSA
 {
@@ -36,51 +40,39 @@ namespace BH.Adapter.GSA
         /***************************************************/
         /**** Public Methods                            ****/
         /***************************************************/
-      
-        public static ISurfaceProperty FromGsaSurfaceProperty(string gsaString, Dictionary<string, IMaterialFragment> materials)
-        {
-            ISurfaceProperty panProp = null;
 
-            if (gsaString == "")
-            {
-                return null;
-            }
+        //public static List<Spacer> FromGsaSpacers(IEnumerable<GsaElement> gsaElements, Dictionary<string, IProperty> spaProps, Dictionary<string, Node> nodes)
+        //{
+        //    List<Spacer> spacerList = new List<Spacer>();
 
-            string[] gsaStrings = gsaString.Split(',');
+        //    foreach (GsaElement gsaSpacer in gsaElements)
+        //    {
 
-            int id;
+        //        Node n1, n2;
+        //        nodes.TryGetValue(gsaSpacer.Topo[0].ToString(), out n1);
+        //        nodes.TryGetValue(gsaSpacer.Topo[1].ToString(), out n2);
 
-            Int32.TryParse(gsaStrings[1], out id);
-            string name = gsaStrings[2];
-            string materialId = gsaStrings[5];
-            string description = gsaStrings[6];
+        //        Spacer spacer = new Spacer { StartNode = n1, EndNode = n2 };
+        //        spacer.ApplyTaggedName(gsaSpacer.Name);
 
-            if (description == "SHELL")
-            {
-                panProp = new ConstantThickness();
-                panProp.Material = materials[materialId];
-                double t = double.Parse(gsaStrings[7]);
-                ((ConstantThickness)panProp).Thickness = t;
-            }
-            else if (description == "LOAD")
-            {
-                panProp = new LoadingPanelProperty();
-                ((LoadingPanelProperty)panProp).LoadApplication = GetLoadingConditionFromString(gsaStrings[7]);
-                ((LoadingPanelProperty)panProp).ReferenceEdge = int.Parse(gsaStrings[8]);
-            }
-            else if (description == "FABRIC")
-            {
-                panProp = new FabricPanelProperty();
-                panProp.Material = materials[materialId];
-            }
 
-            panProp.SetAdapterId(typeof(GSAId), id);
-            panProp.Name = name;
-            return panProp;
-        }
+
+        //        IProperty prop;
+        //        spaProps.TryGetValue(gsaSpacer.Property.ToString(), out prop);
+
+        //        spacer.SpacerProperty = prop;
+
+        //        int id = gsaSpacer.Ref;
+        //        spacer.SetAdapterId(typeof(GSAId), id);
+
+        //        spacerList.Add(spacer);
+
+        //    }
+        //    return spacerList;
+        //}
 
         /***************************************************/
-
+        
     }
 }
 
