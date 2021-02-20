@@ -32,6 +32,7 @@ using BH.oM.Structure.SectionProperties;
 using BH.oM.Base;
 using BH.oM.Adapter;
 using BH.Engine.Adapters.GSA;
+using BH.oM.Adapters.GSA.SurfaceProperties;
 
 namespace BH.Adapter.GSA
 {
@@ -205,6 +206,20 @@ namespace BH.Adapter.GSA
 
             return factors;
         }
+
+        /***************************************************/
+
+        private bool CreateObject(FabricPanelProperty fabricProperty)
+        {
+            bool success = true;
+
+            foreach (string gsaString in fabricProperty.ToGsaStrings(GetAdapterId<int>(fabricProperty).ToString()))
+            {
+                success &= ComCall(gsaString);
+            }
+            return success;
+        }
+
 
         /***************************************************/
     }

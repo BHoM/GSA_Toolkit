@@ -35,6 +35,8 @@ using System.Collections.Generic;
 using BH.oM.Structure.SurfaceProperties;
 using BH.oM.Reflection.Attributes;
 using BH.Engine.Structure;
+using BH.oM.Adapters.GSA.SpacerProperties;
+using BH.oM.Adapters.GSA.Elements;
 
 namespace BH.Adapter.GSA
 {
@@ -58,6 +60,7 @@ namespace BH.Adapter.GSA
                 {typeof(ISurfaceProperty), new NameOrDescriptionComparer() },
                 {typeof(IMaterialFragment), new NameOrDescriptionComparer() },
                 {typeof(LinkConstraint), new NameOrDescriptionComparer() },
+                {typeof(SpacerProperty), new NameOrDescriptionComparer() },
             };
 
             DependencyTypes = new Dictionary<Type, List<Type>>
@@ -69,7 +72,8 @@ namespace BH.Adapter.GSA
                 {typeof(ISectionProperty), new List<Type> { typeof(IMaterialFragment) } },
                 {typeof(RigidLink), new List<Type> { typeof(LinkConstraint), typeof(Node) } },
                 {typeof(FEMesh), new List<Type> { typeof(ISurfaceProperty), typeof(Node) } },
-                {typeof(ISurfaceProperty), new List<Type> { typeof(IMaterialFragment) } }
+                {typeof(ISurfaceProperty), new List<Type> { typeof(IMaterialFragment) } },
+                {typeof(Spacer), new List<Type> { typeof(SpacerProperty), typeof(Node) } }
             };
 
             if (active)

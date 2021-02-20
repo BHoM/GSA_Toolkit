@@ -20,12 +20,16 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using System.Collections.Generic;
 using BH.Engine.Serialiser;
 using BH.Engine.Adapter;
 using BH.oM.Adapters.GSA;
 using BH.oM.Structure.SurfaceProperties;
 using BH.Engine.Structure;
 using BH.Engine.Adapters.GSA;
+using BH.oM.Adapters.GSA.SurfaceProperties;
+using BH.oM.Adapters.GSA.FormFindingProperties;
+using BH.Engine.Base;
 
 namespace BH.Adapter.GSA
 {
@@ -71,6 +75,37 @@ namespace BH.Adapter.GSA
 
             return command + "," + index + "," + name + "," + colour + "," + axis + "," + mat + "," + type + "," + support + "," + edge;
 
+        }
+
+
+        /***************************************************/
+
+        public static List<string> ToGsaStrings(this FabricPanelProperty panProp, string index)
+        {
+            string command = "PROP_2D";
+            panProp.Name = panProp.DescriptionOrName().ToGSACleanName();
+            string name = panProp.TaggedName();
+            string colour = "NO_RGB";
+            string axis = "GLOBAL";
+            string mat = panProp.Material.GSAId().ToString();
+            string type = "FABRIC";
+            string thick = "0.1";
+            string mass = panProp.AdditionalMass.ToString();
+            string bending = "0";
+            string inplane = "100%";
+            string weight = "100%";
+
+            string fabricString = command + "," + index + "," + name + "," + colour + "," + axis + "," + mat + "," + type + "," + thick + "," + mass + "," + bending + "," + inplane + "," + weight;
+
+            List<string> gsaStrings = new List<string>();
+            gsaStrings.Add(fabricString);
+
+            SoapStress2D stress = panProp.SoapStress;
+
+            if (stress != null)
+                gsaStrings.Add(ToGsaString(stress, index));
+
+            return gsaStrings;
         }
 
         /***************************************************/
