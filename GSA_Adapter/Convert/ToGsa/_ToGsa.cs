@@ -31,6 +31,8 @@ using System;
 using BH.Engine.Adapter;
 using BH.oM.Adapters.GSA;
 using System.ComponentModel;
+using BH.oM.Adapters.GSA.SpacerProperties;
+using BH.oM.Adapters.GSA.Elements;
 
 
 namespace BH.Adapter.GSA
@@ -59,6 +61,10 @@ namespace BH.Adapter.GSA
                 return "EL";
             else if (type == typeof(LinkConstraint))
                 return "PROP_LINK";
+            else if (type == typeof(Spacer))
+                return "EL";
+            else if (type == typeof(SpacerProperty))
+                return "PROP_SPACER";
             else if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)
                 return "List";
             return null;
