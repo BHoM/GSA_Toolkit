@@ -25,6 +25,7 @@ using BH.Engine.Adapter;
 using BH.oM.Adapters.GSA;
 using BH.oM.Structure.MaterialFragments;
 using BH.oM.Geometry;
+using BH.oM.Adapters.GSA.MaterialFragments;
 
 
 namespace BH.Adapter.GSA
@@ -138,6 +139,22 @@ namespace BH.Adapter.GSA
                         break;
 
                 }
+            }
+            else if (gStr[2] == "MAT_FABRIC")
+            {
+                double Ex, Ey, v, G;
+
+                if (!double.TryParse(gStr[6], out Ex))
+                    return null;
+                if (!double.TryParse(gStr[7], out Ey))
+                    return null;
+                if (!double.TryParse(gStr[8], out v))
+                    return null;
+                if (!double.TryParse(gStr[9], out G))
+                    return null;
+
+                mat = new Fabric { WarpModulus = Ex, WeftModulus = Ey, PoissonsRatio = v, ShearModulus = G };
+
             }
             else
             {
