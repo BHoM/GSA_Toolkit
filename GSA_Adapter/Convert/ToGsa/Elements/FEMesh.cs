@@ -25,6 +25,7 @@ using BH.Engine.Adapter;
 using BH.oM.Adapters.GSA;
 using BH.oM.Structure.Elements;
 using BH.Engine.Adapters.GSA;
+using System;
 
 namespace BH.Adapter.GSA
 {
@@ -63,11 +64,13 @@ namespace BH.Adapter.GSA
                 topology += mesh.Nodes[nodeIndex].GSAId().ToString() + ",";
             }
 
+            string orientationAngle = (face.OrientationAngle * 180 / Math.PI).ToString();
+
             string dummy = CheckDummy(face);
             //EL	1	gfdgdf	NO_RGB	QUAD4	1	1	1	2	3	4	0	0	NO_RLS	NO_OFFSET	DUMMY
             //EL  2       NO_RGB TRI3    1   1   1   2   5   0   0   NO_RLS NO_OFFSET   DUMMY
 
-            string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + propertyIndex + ", " + group + ", " + topology + " 0 , 0" + ", NO_RLS" + ", NO_OFFSET," + dummy;
+            string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + propertyIndex + ", " + group + ", " + topology + " 0 , " + orientationAngle + ", NO_RLS" + ", NO_OFFSET," + dummy;
             return str;
         }
 
