@@ -24,6 +24,9 @@ using BH.oM.Structure.Elements;
 using BH.oM.Structure.Loads;
 using BH.oM.Geometry;
 using System.Collections.Generic;
+using System.Linq;
+using BH.Engine.Adapters.GSA;
+using BH.oM.Base;
 
 
 namespace BH.Adapter.GSA
@@ -42,7 +45,7 @@ namespace BH.Adapter.GSA
             string projection = areaLoad.IsProjectedString();
             string axis = areaLoad.IsGlobal();
             double factor = areaLoad.IFactor(unitFactors);
-            string appliedTo = areaLoad.CreateIdListOrGroupName();
+            string appliedTo = areaLoad.CreateIdListOrGroupNameAreaLoad();
             Vector[] force = { areaLoad.ITranslationVector()[0], areaLoad.ITranslationVector()[1] };
             string caseNo = areaLoad.Loadcase.Number.ToString();
             string command = areaLoad.IForceTypeString();
@@ -60,12 +63,35 @@ namespace BH.Adapter.GSA
 
 
         /***************************************************/
-        /**** Public Methods                            ****/
+        /**** Private Methods                            ****/
         /***************************************************/
 
         private static string AreaLoadTypeString(this AreaUniformlyDistributedLoad load)
         {
             return "CONS";
+        }
+
+        /***************************************************/
+
+        private static string CreateIdListOrGroupNameAreaLoad(this IElementLoad<IAreaElement> areaLoad)
+        {
+            //For a named group, appy loads to the group name
+            if (!string.IsNullOrWhiteSpace(areaLoad.Objects.Name))
+                return "\"" + areaLoad.Objects.Name + "\"";
+
+            List<int> indecies = new List<int>();
+
+            //Add id for each face
+            foreach (FEMeshFace face in areaLoad.Objects.Elements.OfType<FEMesh>().SelectMany(x => x.Faces))
+            {
+                indecies.Add(face.GSAId());
+            }
+
+            //Add ids for non-FEMesh objects (should not be needed, but added to future proof.
+            indecies.AddRange(areaLoad.Objects.Elements.Where(x => !(x is FEMesh)).Select(x => x.GSAId()));
+
+            //Otherwise apply to the corresponding indecies
+            return indecies.GeterateIdString();
         }
 
         /***************************************************/
