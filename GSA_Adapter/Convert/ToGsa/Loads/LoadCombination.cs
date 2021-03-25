@@ -44,8 +44,9 @@ namespace BH.Adapter.GSA
             gsaStrings.Add(AnalysisCase(combNo, loadComb.Name, combNo, desc));
             AnalysisType type;
             int stage;
-            TaskTypeAndStage(loadComb, out type, out stage);
-            gsaStrings.Add(AnalysisTask(combNo, loadComb.Name, type, stage, combNo));
+            double residualForce, residualMoment;
+            TaskTypeAndStage(loadComb, out type, out stage, out residualForce, out residualMoment);
+            gsaStrings.Add(AnalysisTask(combNo, loadComb.Name, type, stage, combNo, residualForce, residualMoment));
 
             loadComb.SetAdapterId(typeof(BH.oM.Adapters.GSA.GSAId), "A" + loadComb.Number);
 
@@ -56,7 +57,7 @@ namespace BH.Adapter.GSA
         /**** Private Methods                           ****/
         /***************************************************/
 
-        private static void TaskTypeAndStage(LoadCombination comb, out AnalysisType type, out int stage)
+        private static void TaskTypeAndStage(LoadCombination comb, out AnalysisType type, out int stage, out double residualForce, out double residualMoment)
         {
             AnalysisTaskFragment fragment = comb.FindFragment<AnalysisTaskFragment>();
 
@@ -64,11 +65,15 @@ namespace BH.Adapter.GSA
             {
                 type = fragment.AnalysisType;
                 stage = fragment.Stage;
+                residualForce = fragment.ResidualForce;
+                residualMoment = fragment.ResidualMoment;
             }
             else
             {
                 type = AnalysisType.LinearStatic;
                 stage = 0;
+                residualForce = 1.0;
+                residualMoment = 1.0;
             }
         }
 
@@ -90,7 +95,7 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        private static string AnalysisTask(string taskNo, string name, AnalysisType type, int stage, string anal_caseNo)
+        private static string AnalysisTask(string taskNo, string name, AnalysisType type, int stage, string anal_caseNo, double residualForce, double residualMoment)
         {
             string addTask;
             string command = "TASK";
@@ -120,6 +125,7 @@ namespace BH.Adapter.GSA
                     scheme = "SINGLE";
                     break;
             }
+
 
             if (type == AnalysisType.LinearStatic)
             {
@@ -168,8 +174,8 @@ namespace BH.Adapter.GSA
                     + ",CYCLE"
                     + ", 1000000"               //num_cycle 
                     + ", ABS"                   //rel_abs_residual 
-                    + ", 1"                     // force_residual 
-                    + ", 1"                     //moment_residual 
+                    + ", " + residualForce                     // force_residual 
+                    + ", " + residualMoment                     //moment_residual 
                     + ", DISP_CTRL_YES"
                     + ", 0"                     //disp_ctrl_node 
                     + ", 1"                     //disp_ctrl_dir 

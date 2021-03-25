@@ -38,6 +38,11 @@ namespace BH.oM.Adapters.GSA
         [Description("The stage number for the combination to be run on.")]
         public virtual int Stage { get; set; } = 0;
 
+        [Description("Allowed residual Force for convergence, only used for Non-linear analysis.")]
+        public double ResidualForce { get; set; } = 1.0;
+
+        [Description("Allowed residual Moment for convergence, only used for Non-linear analysis.")]
+        public double ResidualMoment { get; set; } = 1.0;
         /***************************************************/
     }
 }
