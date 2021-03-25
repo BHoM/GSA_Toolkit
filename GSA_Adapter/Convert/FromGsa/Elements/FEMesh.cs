@@ -52,16 +52,20 @@ namespace BH.Adapter.GSA
                         continue;
                 }
 
+                int id = gsaMesh.Ref;
+
+                FEMeshFace face = new FEMeshFace() { NodeListIndices = Enumerable.Range(0, gsaMesh.NumTopo).ToList() };
+                face.SetAdapterId(typeof(GSAId), id);
+
                 FEMesh mesh = new FEMesh()
                 {
-                    Faces = new List<FEMeshFace>() { new FEMeshFace() { NodeListIndices = Enumerable.Range(0, gsaMesh.NumTopo).ToList() } },
+                    Faces = new List<FEMeshFace>() { face },
                     Nodes = gsaMesh.Topo.Select(x => nodes[x.ToString()]).ToList(),
                     Property = props[gsaMesh.Property.ToString()]
                 };
 
                 mesh.ApplyTaggedName(gsaMesh.Name);
 
-                int id = gsaMesh.Ref;
                 mesh.SetAdapterId(typeof(GSAId), id);
 
                 meshList.Add(mesh);
