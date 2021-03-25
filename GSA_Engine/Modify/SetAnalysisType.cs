@@ -39,14 +39,17 @@ namespace BH.Engine.Adapters.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
+        [PreviousVersion("5.0", "BH.Engine.Adapters.GSA.Modify.SetAnalysisType(BH.oM.Structure.Loads.LoadCombination, BH.oM.Adapters.GSA.AnalysisType, System.Int32)")]
         [Description("Sets the analysis type and stage for a LoadCombination")]
         [Input("loadcombination", "The load combination to set stage and analysis type for.")]
         [Input("stage", "The stage number for the combination to be run on.")]
+        [Input("residualForce", "Allowed residual Force for convergence, only used for Non-linear analysis.")]
+        [Input("residualMoment", "Allowed residual Moment for convergence, only used for Non-linear analysis.")]
         [Output("loadCombination", "The loadcombination with set analysis type and stage.")]
-        public static LoadCombination SetAnalysisType(LoadCombination loadcombination, AnalysisType analysisType = AnalysisType.LinearStatic, int stage = 0)
+        public static LoadCombination SetAnalysisType(LoadCombination loadcombination, AnalysisType analysisType = AnalysisType.LinearStatic, int stage = 0, double residualForce = 1.0, double residualMoment = 1.0)
         {
-            AnalysisTaskFragment fragment = new AnalysisTaskFragment { AnalysisType = analysisType, Stage = stage };
-            LoadCombination clone = loadcombination.ShallowClone();
+            AnalysisTaskFragment fragment = new AnalysisTaskFragment { AnalysisType = analysisType, Stage = stage, ResidualForce = residualForce, ResidualMoment = residualMoment };
+            LoadCombination clone = loadcombination.GetShallowClone() as LoadCombination;
 
             clone.Fragments.AddOrReplace(fragment);
             return clone;
