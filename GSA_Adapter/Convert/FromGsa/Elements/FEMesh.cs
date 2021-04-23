@@ -59,7 +59,7 @@ namespace BH.Adapter.GSA
 
                 FEMesh mesh = new FEMesh()
                 {
-                    Faces = new List<FEMeshFace>() { face },
+                    Faces = new List<FEMeshFace>() { new FEMeshFace() { NodeListIndices = Enumerable.Range(0, gsaMesh.NumTopo).ToList(), OrientationAngle = gsaMesh.Beta * System.Math.PI/180 } },
                     Nodes = gsaMesh.Topo.Select(x => nodes[x.ToString()]).ToList(),
                     Property = props[gsaMesh.Property.ToString()]
                 };
