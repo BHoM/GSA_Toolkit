@@ -39,7 +39,6 @@ namespace BH.oM.Adapters.GSA.SurfaceProperties
         [Description("A unique Name is required for some structural packages to create and identify the object.")]
         public override string Name { get; set; }
 
-
         [Description("Fabric material.")]
         public virtual IMaterialFragment Material { get; set; }
 
