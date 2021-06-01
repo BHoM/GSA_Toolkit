@@ -54,12 +54,12 @@ namespace BH.Adapter.GSA
 
                 int id = gsaMesh.Ref;
 
-                FEMeshFace face = new FEMeshFace() { NodeListIndices = Enumerable.Range(0, gsaMesh.NumTopo).ToList() };
+                FEMeshFace face = new FEMeshFace() { NodeListIndices = Enumerable.Range(0, gsaMesh.NumTopo).ToList(), OrientationAngle = gsaMesh.Beta * System.Math.PI / 180  };
                 face.SetAdapterId(typeof(GSAId), id);
 
                 FEMesh mesh = new FEMesh()
                 {
-                    Faces = new List<FEMeshFace>() { new FEMeshFace() { NodeListIndices = Enumerable.Range(0, gsaMesh.NumTopo).ToList(), OrientationAngle = gsaMesh.Beta * System.Math.PI/180 } },
+                    Faces = new List<FEMeshFace>() { new FEMeshFace() { NodeListIndices = Enumerable.Range(0, gsaMesh.NumTopo).ToList() } },
                     Nodes = gsaMesh.Topo.Select(x => nodes[x.ToString()]).ToList(),
                     Property = props[gsaMesh.Property.ToString()]
                 };
