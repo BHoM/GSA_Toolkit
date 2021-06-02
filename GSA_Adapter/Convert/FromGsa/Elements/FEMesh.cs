@@ -20,12 +20,16 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+#if GSA_10_1
+using Interop.Gsa_10_1;
+#else
+using Interop.gsa_8_7;
+#endif
 using BH.Engine.Serialiser;
 using BH.Engine.Adapter;
 using BH.oM.Adapters.GSA;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.SurfaceProperties;
-using Interop.gsa_8_7;
 using System.Collections.Generic;
 using System.Linq;
 

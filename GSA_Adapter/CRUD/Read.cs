@@ -21,6 +21,11 @@
  */
 
 
+#if VERSION10_1
+using Interop.Gsa_10_1;
+#else
+using Interop.gsa_8_7;
+#endif
 using BH.oM.Base;
 using BH.oM.Structure.MaterialFragments;
 using BH.oM.Structure.Elements;
@@ -32,7 +37,6 @@ using BH.oM.Geometry;
 using BH.oM.Structure.Results;
 using BH.oM.Structure.Requests;
 using BH.oM.Analytical.Results;
-using Interop.gsa_8_7;
 using System;
 using BH.Engine.Adapter;
 using BH.oM.Adapters.GSA;
