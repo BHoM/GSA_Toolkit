@@ -63,6 +63,12 @@ namespace BH.Adapter.GSA
                 return "PROP_LINK";
             else if (type == typeof(Spacer))
                 return "EL";
+            else if (type == typeof(Edge))
+                return "LINE";
+            else if (type == typeof(Opening))
+                return "AREA";
+            else if (type == typeof(Panel))
+                return "REGION";
             else if (type == typeof(SpacerProperty))
                 return "PROP_SPACER";
             else if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)

@@ -42,7 +42,7 @@ namespace BH.Adapter.GSA
             prop.Name = prop.DescriptionOrName().ToGSACleanName();
             string name = prop.TaggedName();
 
-            string mat = prop.Material.GSAId().ToString();// materialId;  //"STEEL";// material.Name;
+            string mat = prop.Material?.GSAId().ToString() ?? "STEEL";// materialId;  //"STEEL";// material.Name;
 
             string desc;
             string props;

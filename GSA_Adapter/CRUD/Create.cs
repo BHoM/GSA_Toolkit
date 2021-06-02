@@ -33,6 +33,7 @@ using BH.oM.Base;
 using BH.oM.Adapter;
 using BH.Engine.Adapters.GSA;
 using BH.oM.Adapters.GSA.SurfaceProperties;
+using BH.Engine.Geometry;
 
 namespace BH.Adapter.GSA
 {
@@ -48,6 +49,10 @@ namespace BH.Adapter.GSA
 
             if (typeof(RigidLink).IsAssignableFrom(typeof(T)))
                 success = CreateLinks(objects as IEnumerable<RigidLink>);
+            else if (typeof(Edge).IsAssignableFrom(typeof(T)))
+                success = CreateEdges(objects as IEnumerable<Edge>, actionConfig);
+            else if (typeof(Panel).IsAssignableFrom(typeof(T)))
+                success = CreateObjects(objects as IEnumerable<Panel>);
             else
             {
                 foreach (T obj in objects)
@@ -60,6 +65,42 @@ namespace BH.Adapter.GSA
             }
 
             UpdateViews();
+            return success;
+        }
+
+        /***************************************************/
+
+        private bool CreateEdges(IEnumerable<Edge> edges, ActionConfig actionConfig)
+        {
+            if (edges.Any(x => !x.Curve.IIsLinear()))
+            {
+                Engine.Reflection.Compute.RecordError("GSA can only handle linear edges. Please ensure each edge is a straight line segment!");
+                return false;
+            }
+
+            Dictionary<Edge, List<Node>> edgeNodes = new Dictionary<Edge, List<Node>>();
+
+            foreach (Edge edge in edges)
+            {
+                List<Node> endNodes = new List<Node>();
+                endNodes.Add(new Node { Position = edge.Curve.IStartPoint() });
+                endNodes.Add(new Node { Position = edge.Curve.IEndPoint() });
+                edgeNodes[edge] = endNodes;//Engine.Geometry.Query.IControlPoints(edge.Curve).Select(x => new Node { Position = x }).ToList();
+            }
+
+            this.FullCRUD(edgeNodes.Values.SelectMany(x => x), PushType.AdapterDefault, "", actionConfig);
+
+            foreach (var kvp in edgeNodes)
+            {
+                kvp.Key.CustomData["NodeIndecies"] = kvp.Value.Select(x => x.GSAId()).ToList();
+            }
+
+            bool success = true;
+
+            foreach (Edge edge in edges)
+            {
+                success &= CreateObject((edge as dynamic));
+            }
             return success;
         }
 
@@ -159,6 +200,27 @@ namespace BH.Adapter.GSA
             {
                 success &= ComCall(gsaString);
             }
+            return success;
+        }
+
+        /***************************************************/
+
+        private bool CreateObjects(IEnumerable<Panel> panels)
+        {
+            bool success = true;
+
+            int areaIndex = m_gsaCom.GwaCommand("HIGHEST, " + "AREA") + 1;
+
+            foreach (Panel panel in panels)
+            {
+                foreach (string gsaString in panel.ToGsaString(GetAdapterId<int>(panel).ToString(), areaIndex.ToString()))
+                {
+                    success &= ComCall(gsaString);
+                }
+                areaIndex++;
+            }
+
+
             return success;
         }
 

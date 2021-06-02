@@ -73,7 +73,9 @@ namespace BH.Adapter.GSA
                 {typeof(RigidLink), new List<Type> { typeof(LinkConstraint), typeof(Node) } },
                 {typeof(FEMesh), new List<Type> { typeof(ISurfaceProperty), typeof(Node) } },
                 {typeof(ISurfaceProperty), new List<Type> { typeof(IMaterialFragment) } },
-                {typeof(Spacer), new List<Type> { typeof(SpacerProperty), typeof(Node) } }
+                {typeof(Spacer), new List<Type> { typeof(SpacerProperty), typeof(Node) } },
+                {typeof(Opening), new List<Type> { typeof(Edge) } },
+                {typeof(Panel), new List<Type> { typeof(ISurfaceProperty), typeof(Opening), typeof(Edge) } },
             };
 
             if (active)
