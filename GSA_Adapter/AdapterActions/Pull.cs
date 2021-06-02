@@ -27,7 +27,13 @@ using BH.oM.Adapter;
 
 namespace BH.Adapter.GSA
 {
+#if GSA_10_1
+    public partial class GSA_10_1Adapter
+#elif GSA_8_7
+    public partial class GSA_8_7Adapter
+#else
     public partial class GSAAdapter
+#endif
     {
         public override IEnumerable<object> Pull(IRequest request, PullType pullType = PullType.AdapterDefault, ActionConfig actionConfig = null)
         {
