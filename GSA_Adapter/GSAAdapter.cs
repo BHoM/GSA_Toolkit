@@ -44,13 +44,25 @@ using BH.oM.Adapters.GSA.Elements;
 
 namespace BH.Adapter.GSA
 {
+#if GSA_10_1
+    public partial class GSA_10_1Adapter : BHoMAdapter
+#elif GSA_8_7
+    public partial class GSA_8_7Adapter : BHoMAdapter
+#else
     public partial class GSAAdapter : BHoMAdapter
+#endif
     {
         /***************************************************/
         /**** Constructors                              ****/
         /***************************************************/
 
+#if GSA_10_1
+        public GSA_10_1Adapter(string filePath = "", GSAConfig gsaConfig = null, bool active = false)
+#elif GSA_8_7
+        public GSA_8_7Adapter(string filePath = "", GSAConfig gsaConfig = null, bool active = false)
+#else
         public GSAAdapter(string filePath = "", GSAConfig gsaConfig = null, bool active = false)
+#endif
         {
             AdapterIdFragmentType = typeof(GSAId);
 
@@ -100,13 +112,7 @@ namespace BH.Adapter.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
-        [Description("Raises a warning for types not supported")]
-        [Input("type", "The type not supported")]
-        [Input("category", "The object category to raise a warning for. Defaults to object")]
-        public static void NotSupportedWarning(Type type, string category = "Objects")
-        {
-            Engine.Reflection.Compute.RecordWarning(category + " of type " + type.FullName + " are not supported in the GSA Adapter");
-        }
+
 
         /***************************************************/
         /**** Private  Methods - Com Interop            ****/

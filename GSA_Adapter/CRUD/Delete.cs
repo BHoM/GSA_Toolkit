@@ -29,8 +29,14 @@ using System.Linq;
 
 namespace BH.Adapter.GSA
 {
+#if GSA_10_1
+    public partial class GSA_10_1Adapter
+#elif GSA_8_7
+    public partial class GSA_8_7Adapter
+#else
     public partial class GSAAdapter
-    { 
+#endif
+    {
         /***************************************************/
         /**** Index Adapter Methods                     ****/
         /***************************************************/

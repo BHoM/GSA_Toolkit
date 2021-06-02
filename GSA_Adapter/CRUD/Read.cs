@@ -21,7 +21,7 @@
  */
 
 
-#if VERSION10_1
+#if GSA_10_1
 using Interop.Gsa_10_1;
 #else
 using Interop.gsa_8_7;
@@ -48,7 +48,13 @@ using BH.Engine.Adapters.GSA;
 
 namespace BH.Adapter.GSA
 {
+#if GSA_10_1
+    public partial class GSA_10_1Adapter
+#elif GSA_8_7
+    public partial class GSA_8_7Adapter
+#else
     public partial class GSAAdapter
+#endif
     {
         /***************************************************/
         /**** Index Adapter Methods                     ****/
