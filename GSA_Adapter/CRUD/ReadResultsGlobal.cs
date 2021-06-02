@@ -21,6 +21,11 @@
  */
 
 
+#if GSA_10_1
+using Interop.Gsa_10_1;
+#else
+using Interop.gsa_8_7;
+#endif
 using BH.oM.Base;
 using BH.oM.Analytical.Results;
 using BH.oM.Adapter;
@@ -28,7 +33,6 @@ using BH.oM.Structure.Elements;
 using BH.oM.Structure.Requests;
 using BH.oM.Data.Requests;
 using BH.oM.Structure.Results;
-using Interop.gsa_8_7;
 using System;
 using BH.Engine.Adapter;
 using BH.oM.Adapters.GSA;
