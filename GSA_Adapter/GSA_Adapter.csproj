@@ -114,7 +114,11 @@
       <HintPath>C:\ProgramData\BHoM\Assemblies\Geometry_oM.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Interop.Gsa_8_7, Version=8.7.0.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="Interop.Gsa_10_1" Condition="'$(Configuration)'=='Debug101' Or '$(Configuration)'=='Release101'">
+      <HintPath>..\libs\10.1\Interop.Gsa_10_1.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Interop.Gsa_8_7, Version=8.7.0.0, Culture=neutral, processorArchitecture=AMD64" Condition="'$(Configuration)'=='Debug87' Or '$(Configuration)'=='Release87' Or '$(Configuration)'=='Debug' Or '$(Configuration)'=='Release'">
       <HintPath>..\packages\BHoM.Interop.GSA8_7.1.0.0\lib\net45\Interop.Gsa_8_7.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
