@@ -33,6 +33,7 @@ using BH.oM.Adapters.GSA;
 using System.ComponentModel;
 using BH.oM.Adapters.GSA.SpacerProperties;
 using BH.oM.Adapters.GSA.Elements;
+using BH.oM.Reflection.Attributes;
 
 
 namespace BH.Adapter.GSA
@@ -87,6 +88,16 @@ namespace BH.Adapter.GSA
         }
 
         /***************************************************/
+
+        [Description("Raises a warning for types not supported")]
+        [Input("type", "The type not supported")]
+        [Input("category", "The object category to raise a warning for. Defaults to object")]
+        public static void NotSupportedWarning(Type type, string category = "Objects")
+        {
+            Engine.Reflection.Compute.RecordWarning(category + " of type " + type.FullName + " are not supported in the GSA Adapter");
+        }
+
+        /***************************************************/
         /**** Public Interface Methods                  ****/
         /***************************************************/
 
@@ -101,7 +112,7 @@ namespace BH.Adapter.GSA
 
         public static string ToGsaString(this object obj, string index)
         {
-            GSAAdapter.NotSupportedWarning(obj.GetType());
+            NotSupportedWarning(obj.GetType());
             return "";
         }
 
