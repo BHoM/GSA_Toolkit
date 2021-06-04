@@ -89,9 +89,9 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        [Description("Raises a warning for types not supported")]
-        [Input("type", "The type not supported")]
-        [Input("category", "The object category to raise a warning for. Defaults to object")]
+        [Description("Raises a warning for types not supported.")]
+        [Input("type", "The type not supported.")]
+        [Input("category", "The object category to raise a warning for. Defaults to object.")]
         public static void NotSupportedWarning(Type type, string category = "Objects")
         {
             Engine.Reflection.Compute.RecordWarning(category + " of type " + type.FullName + " are not supported in the GSA Adapter");
@@ -128,4 +128,3 @@ namespace BH.Adapter.GSA
         /***************************************/
     }
 }
-
