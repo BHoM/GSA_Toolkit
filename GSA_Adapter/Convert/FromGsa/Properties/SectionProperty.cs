@@ -49,8 +49,61 @@ namespace BH.Adapter.GSA
         /// </param>
         /// <param name="materials"></param>
         /// <returns></returns>
+        
+        private static void FromGSAString(string gsaString, Dictionary<string, IMaterialFragment> materials, out int id, out string materialId, out IMaterialFragment mat, out string description, out string taggedName, out char splitChar)
+        {
+            string[] gsaStrings = gsaString.Split(',');
+
+            Int32.TryParse(gsaStrings[1], out id);
+
+            //Separate data extractions speficic to each GSA version
+#if GSA_10_1
+            description = gsaStrings[21];
+            taggedName = gsaStrings[3];
+            materialId = gsaStrings[19];
+            splitChar = ' '; //To split gsaString          
+#else
+
+            description = gsaStrings[5];
+            taggedName = gsaStrings[2];
+            materialId = gsaStrings[4];
+            splitChar = '%';
+#endif
+
+            if (!materials.TryGetValue(materialId, out mat))
+            {
+                Engine.Base.Compute.RecordWarning(string.Format("Failed to extract material with id {0}. Section with Id {1} will not have any material applied to it.", materialId, id));
+            }
+        }
+
+        private static void FromGSAString(string gsaString, out double a, out double iyy, out double izz, out double j, out double avy, out double avz)
+        {
+            string[] gsaStrings = gsaString.Split(',');
+
+            //Separate data extractions speficic to each GSA version
+#if GSA_10_1
+            string[] desc = gsaStrings[21].Split(' ');
+
+            double.TryParse(desc[1], out a);
+            double.TryParse(desc[2], out iyy);
+            double.TryParse(desc[3], out izz);
+            double.TryParse(desc[4], out j);
+            double.TryParse(desc[5], out avy);
+            double.TryParse(desc[6], out avz);
+#else
+            double.TryParse(gsaStrings[10], out a);
+            double.TryParse(gsaStrings[11], out iyy);
+            double.TryParse(gsaStrings[12], out izz);
+            double.TryParse(gsaStrings[13], out j);
+            double.TryParse(gsaStrings[14], out avy);
+            double.TryParse(gsaStrings[15], out avz);
+#endif
+        }
+
         public static ISectionProperty FromGsaSectionProperty(string gsaString, Dictionary<string, IMaterialFragment> materials)
         {
+            FromGSAString(gsaString, materials, out int id, out string materialId, out IMaterialFragment mat, out string description, out string taggedName, out char splitChar);
+
             ISectionProperty secProp = null;
             string message = "";
 
@@ -59,37 +112,13 @@ namespace BH.Adapter.GSA
                 return null;
             }
 
-            string[] gsaStrings = gsaString.Split(',');
-
-            int id;
-
-            Int32.TryParse(gsaStrings[1], out id);
-
-            string materialId = gsaStrings[4];
-
-            IMaterialFragment mat;
-
-            if (!materials.TryGetValue(materialId, out mat))
-            {
-                Engine.Base.Compute.RecordWarning(string.Format("Failed to extract material with id {0}. Section with Id {1} will not have any material applied to it.", materialId, id));
-            }
-
-
-            string description = gsaStrings[5];
-
-            if (description == "EXP")
+            if (description.StartsWith("EXP"))
             {
                 //prop = "PROP," + area + "," + Iyy + "," + Izz + "," + J + "," + Avy + "," + Avz;
 
-
                 ExplicitSection expSecProp = new ExplicitSection();
-                double a, iyy, izz, j, avy, avz;
-                double.TryParse(gsaStrings[10], out a);
-                double.TryParse(gsaStrings[11], out iyy);
-                double.TryParse(gsaStrings[12], out izz);
-                double.TryParse(gsaStrings[13], out j);
-                double.TryParse(gsaStrings[14], out avy);
-                double.TryParse(gsaStrings[15], out avz);
+
+                FromGSAString(gsaString, out double a, out double iyy, out double izz, out double j, out double avy, out double avz);
 
                 expSecProp.Area = a;
                 expSecProp.Iy = iyy;
@@ -108,22 +137,38 @@ namespace BH.Adapter.GSA
 
                 if (description.StartsWith("CAT"))
                 {
-                    string[] desc = description.Split('%');
+                    string[] desc = description.Split(splitChar);
 
                     if (desc.Length < 3)
                     {
                         message += "Failed to parse the GSASection :" + description + "\n";
                     }
 
-                    //Change from EA and UA to L for angles
-                    if (desc[2].StartsWith("UA"))
-                        desc[2] = desc[2].Replace("UA", "L");
-                    else if (desc[2].StartsWith("EA"))
-                        desc[2] = desc[2].Replace("EA", "L");
-                    else if (desc[2].StartsWith("BP"))
-                        desc[2] = desc[2].Replace("BP", "UBP");
+                    //Get section type
+                    string secType = desc[1];
+                    if (desc[1].Contains("-"))
+                    {
+                        secType = secType.Split('-')[1];
+                    }
 
-                    secProp = Engine.Library.Query.Match("SectionProperties", desc[2]) as ISectionProperty;
+                    //Change from EA and UA to L for angles
+                    if (secType == "UA")
+                        secType = "L";
+                    else if (secType == "EA")
+                        secType = "L";
+                    else if (secType == "BP")
+                        secType = "UBP";
+
+                    string secName = secType + desc[2].TrimStart(secType.ToCharArray());
+
+                    secProp = Engine.Library.Query.Match("SectionProperties", secName) as ISectionProperty;
+
+                    // Test need to add .0 to section property name
+                    if (secProp == null)
+                    {
+                        secName += ".0";
+                        secProp = Engine.Library.Query.Match("SectionProperties", secName) as ISectionProperty;
+                    }
 
                     if (secProp != null)
                     {
@@ -132,19 +177,20 @@ namespace BH.Adapter.GSA
                     }
                     else
                     {
-                        if (desc[1] == "RHS" || desc[1] == "CHS")
+                        secName = secName.TrimEnd((".0").ToCharArray());
+                        if (desc[1].Contains("RHS") || desc[1].Contains("CHS"))
                         {
-                            description = "STD%" + desc[1] + "%";
-                            string trim = desc[2].TrimStart(desc[1].ToCharArray());
+                            description = "STD%" + secType + "%";
+                            string trim = desc[2].TrimStart(secType.ToCharArray());
                             string[] arr = trim.Split('x');
 
                             description += arr[0] + "%" + arr[1] + "%" + arr[2] + "%" + arr[2];
 
-                            Engine.Base.Compute.RecordNote("Section of type: " + desc[2] + " not found in the library. Custom section will be used");
+                            Engine.Base.Compute.RecordNote("Section of type: " + secName + " not found in the library. Custom section will be used");
                         }
                         else
                         {
-                            message += "Catalogue section of type " + desc[2] + " not found in library\n";
+                            message += "Catalogue section of type " + secName + " not found in library\n";
                         }
                     }
                 }
@@ -153,9 +199,8 @@ namespace BH.Adapter.GSA
                 {
                     double D, W, T, t, Wt, Wb, Tt, Tb, Tw;
                     string type;
-                    string[] desc = description.Split('%');
+                    string[] desc = description.Split(splitChar);
                     double factor;
-
 
                     if (desc[1].Contains("(cm)"))
                     {
@@ -246,7 +291,6 @@ namespace BH.Adapter.GSA
                     //Creates a section based on the material type provided, with fallback to Generic
                     if(profile != null)
                         secProp = Engine.Structure.Create.SectionPropertyFromProfile(profile, mat, "");
-
                 }
             }
 
@@ -260,7 +304,7 @@ namespace BH.Adapter.GSA
             }
 
             secProp.SetAdapterId(typeof(GSAId), id);
-            secProp.ApplyTaggedName(gsaStrings[2]);
+            secProp.ApplyTaggedName(taggedName);
             return secProp;
         }
 
