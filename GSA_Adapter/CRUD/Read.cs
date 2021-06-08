@@ -238,7 +238,11 @@ namespace BH.Adapter.GSA
             List<IMaterialFragment> matList = ReadMaterials(null, true);
             Dictionary<string, IMaterialFragment> materials = matList.ToDictionary(x => GetAdapterId(x).ToString());
 
+#if GSA_10_1
+            string allProps = m_gsaCom.GwaCommand("GET_ALL, SECTION.7").ToString();
+#else
             string allProps = m_gsaCom.GwaCommand("GET_ALL, PROP_SEC").ToString();
+#endif
             string[] proArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
 
             if (ids == null)
