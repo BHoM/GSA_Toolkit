@@ -26,7 +26,7 @@ using BH.oM.Adapters.GSA;
 using BH.oM.Structure.MaterialFragments;
 using BH.oM.Geometry;
 using BH.oM.Adapters.GSA.MaterialFragments;
-
+using BH.oM.Adapters.GSA.Analysis;
 
 namespace BH.Adapter.GSA
 {
@@ -35,6 +35,134 @@ namespace BH.Adapter.GSA
         /***************************************************/
         /**** Public Methods                            ****/
         /***************************************************/
+
+        private static void FromGSAString(string gsaString, out double E, out double v, out double tC, out double G, out double rho, out string material, out string taggedName)
+        {
+            string[] gStr = gsaString.Split(',');
+
+            //Separate data extractions specific to each GSA version
+#if GSA_10_1
+            if (gStr[0].Contains("ANAL"))
+            {
+                E = double.Parse(gStr[6]);
+                v = double.Parse(gStr[7]);
+                tC = double.Parse(gStr[9]);
+                G = double.Parse(gStr[10]);
+                rho = double.Parse(gStr[8]);
+
+                material = null;
+                taggedName = gStr[3];
+            }
+            else if(gStr[0].Contains("STEEL") || gStr[0].Contains("CONCRETE") || gStr[0].Contains("FRP") || gStr[0].Contains("REBAR"))
+            {
+                E = double.Parse(gStr[4]);
+                v = double.Parse(gStr[6]);
+                tC = double.Parse(gStr[9]);
+                G = double.Parse(gStr[7]);
+                rho = double.Parse(gStr[8]);
+
+                material = gStr[0].Split(("_.".ToCharArray()))[1];
+                taggedName = gStr[3];
+            }
+            else if (gStr[0].Contains("ALUMINIUM") || gStr[0].Contains("TIMBER") || gStr[0].Contains("GLASS"))
+            {
+                E = double.Parse(gStr[3]);
+                v = double.Parse(gStr[5]);
+                tC = double.Parse(gStr[8]);
+                G = double.Parse(gStr[6]);
+                rho = double.Parse(gStr[7]);
+
+                material = gStr[0].Split("_.".ToCharArray())[1];
+                taggedName = gStr[2];
+            }
+            else
+            {
+                E = v = tC = G = rho = 0;
+                material = taggedName = null;
+            }
+#else
+            E = double.Parse(gStr[7]);
+            v = double.Parse(gStr[8]);
+            tC = double.Parse(gStr[10]);
+            G = double.Parse(gStr[11]);
+            rho = double.Parse(gStr[9]);
+
+            material = gStr[5].Split('_')[1];
+            taggedName = gStr[3];
+#endif
+        }
+
+        private static void FromGSAString(string gsaString, out double E1, out double E2, out double E3, out double v1, out double v2, out double v3, out double G1, out double G2, out double G3, out double tC1, out double tC2, out double tC3, out double rho, out string material, out string taggedName)
+        {
+            string[] gStr = gsaString.Split(',');
+
+            //Separate data extractions speficic to each GSA version
+#if GSA_10_1
+           E1 = double.Parse(gStr[6]);
+           E2 = double.Parse(gStr[7]);
+           E3 = double.Parse(gStr[8]);
+
+           v1 = double.Parse(gStr[9]);
+           v2 = double.Parse(gStr[10]);
+           v3 = double.Parse(gStr[11]);
+
+           G1 = double.Parse(gStr[13]);
+           G2 = double.Parse(gStr[14]);
+           G3 = double.Parse(gStr[15]);
+
+           tC1 = double.Parse(gStr[16]);
+           tC2 = double.Parse(gStr[17]);
+           tC3 = double.Parse(gStr[18]);
+
+           rho = double.Parse(gStr[12]);
+
+           material = null;
+           taggedName = gStr[3];
+#else
+           E1 = double.Parse(gStr[7]);
+           E2 = double.Parse(gStr[8]);
+           E3 = double.Parse(gStr[9]);
+
+           v1 = double.Parse(gStr[10]);
+           v2 = double.Parse(gStr[11]);
+           v3 = double.Parse(gStr[12]);
+
+           G1 = double.Parse(gStr[14]);
+           G2 = double.Parse(gStr[15]);
+           G3 = double.Parse(gStr[16]);
+
+           tC1 = double.Parse(gStr[17]);
+           tC2 = double.Parse(gStr[18]);
+           tC3 = double.Parse(gStr[19]);
+
+           rho = double.Parse(gStr[13]);
+
+           material = gStr[5].Split('_')[1];
+           taggedName = gStr[3];
+#endif
+        }
+
+        private static void FromGSAString(string gsaString, out double Ex, out double Ey, out double v, out double G, out string taggedName)
+        {
+            string[] gStr = gsaString.Split(',');
+
+            //Separate data extractions specific to each GSA version
+#if GSA_10_1
+            Ex = double.Parse(gStr[3]);
+            Ey = double.Parse(gStr[4]);
+            v = double.Parse(gStr[5]);
+            G = double.Parse(gStr[6]);
+
+            taggedName = gStr[2];
+#else
+            Ex = double.Parse(gStr[6]);
+            Ey = double.Parse(gStr[7]);
+            v = double.Parse(gStr[8]);
+            G = double.Parse(gStr[9]);
+
+            taggedName = gStr[3];
+#endif
+        }
 
         public static IMaterialFragment FromGsaMaterial(string gsaString)
         {
@@ -48,124 +176,70 @@ namespace BH.Adapter.GSA
 
             IMaterialFragment mat;
 
-            if (gStr[2] == "MAT_ELAS_ISO")
+            if (gsaString.Contains("MAT_ELAS_ISO"))
             {
+                FromGSAString(gsaString, out double E, out double v, out double tC, out double G, out double rho, out string material, out string taggedName);
+
                 //BHMF.MaterialType type = GetTypeFromString(gStr[5]);
 
-                double E, v, tC, G, rho;
-
-                if (!double.TryParse(gStr[7], out E))
-                    return null;
-                if (!double.TryParse(gStr[8], out v))
-                    return null;
-                if (!double.TryParse(gStr[10], out tC))
-                    return null;
-                if (!double.TryParse(gStr[11], out G))
-                    return null;
-                if (!double.TryParse(gStr[9], out rho))
-                    return null;
-
-                switch (gStr[5])
+                switch (material)
                 {
-                    case "MT_ALUMINIUM":
+                    case "ALUMINIUM":
                         mat = Engine.Structure.Create.Aluminium("", E, v, tC, rho);
                         break;
-                    case "MT_CONCRETE":
+                    case "CONCRETE":
                         mat = Engine.Structure.Create.Concrete("", E, v, tC, rho);
                         break;
-                    case "MT_STEEL":
-                    case "MT_REBAR":
+                    case "STEEL":
+                    case "REBAR":
                         mat = Engine.Structure.Create.Steel("", E, v, tC, rho);
                         break;
-                    case "MT_TIMBER":
+                    case "TIMBER":
                         mat = Engine.Structure.Create.Timber("", new Vector { X = E, Y = E, Z = E }, new Vector { X = v, Y = v, Z = v }, new Vector { X = G, Y = G, Z = G }, new Vector { X = tC, Y = tC, Z = tC }, rho, 0);
                         break;
                     default:
                         mat = new GenericIsotropicMaterial { YoungsModulus = E, Density = rho, PoissonsRatio = v, ThermalExpansionCoeff = tC };
-                        Engine.Base.Compute.RecordWarning(string.Format("Material with id {0} and name {1} is of a type not currently fully supported or has no type defined. A generic isotropic material will be assumed", gStr[1], gStr[3]));
+                        Engine.Base.Compute.RecordWarning(string.Format("Material with id {0} and name {1} is of a type not currently fully supported or has no type defined. A generic isotropic material will be assumed", gStr[1], taggedName));
                         break;
-
                 }
+
+                mat.ApplyTaggedName(taggedName);
             }
-            else if (gStr[2] == "MAT_ELAS_ORTHO")
+            else if (gsaString.Contains("MAT_ELAS_ORTHO"))
             {
-                double E1, E2, E3, v1, v2, v3, tC1, tC2, tC3, G1, G2, G3, rho;
-
-                if (!double.TryParse(gStr[7], out E1))
-                    return null;
-                if (!double.TryParse(gStr[8], out E2))
-                    return null;
-                if (!double.TryParse(gStr[9], out E3))
-                    return null;
-
-                if (!double.TryParse(gStr[10], out v1))
-                    return null;
-                if (!double.TryParse(gStr[11], out v2))
-                    return null;
-                if (!double.TryParse(gStr[12], out v3))
-                    return null;
-
-                if (!double.TryParse(gStr[13], out rho))
-                    return null;
-
-                if (!double.TryParse(gStr[14], out tC1))
-                    return null;
-                if (!double.TryParse(gStr[15], out tC2))
-                    return null;
-                if (!double.TryParse(gStr[16], out tC3))
-                    return null;
-
-                if (!double.TryParse(gStr[17], out G1))
-                    return null;
-                if (!double.TryParse(gStr[18], out G2))
-                    return null;
-                if (!double.TryParse(gStr[19], out G3))
-                    return null;
+                FromGSAString(gsaString, out double E1, out double E2, out double E3, out double v1, out double v2, out double v3, out double G1, out double G2, out double G3, out double tC1, out double tC2, out double tC3, out double rho, out string material, out string taggedName);
 
                 Vector e = new Vector { X = E1, Y = E2, Z = E3 };
                 Vector v = new Vector { X = v1, Y = v2, Z = v3 };
                 Vector tC = new Vector { X = tC1, Y = tC2, Z = tC3 };
                 Vector g = new Vector { X = G1, Y = G2, Z = G3 };
 
-                switch (gStr[5])
+                switch (material)
                 {
-
-                    case "MT_TIMBER":
+                    case "TIMBER":
                         mat = Engine.Structure.Create.Timber("", e, v, g, tC, rho, 0);
                         break;
                     default:
                         mat = new GenericOrthotropicMaterial { YoungsModulus = e, ShearModulus = g, Density = rho, ThermalExpansionCoeff = tC, PoissonsRatio = v };
-                        Engine.Base.Compute.RecordWarning(string.Format("Material with id {0} and name {1} is of a type not currently fully supported or has no orthotropic type defined. A generic orthotropic material will be assumed", gStr[1], gStr[3]));
+                        Engine.Base.Compute.RecordWarning(string.Format("Material with id {0} and name {1} is of a type not currently fully supported or has no orthotropic type defined. A generic orthotropic material will be assumed", gStr[1], taggedName));
                         break;
-
                 }
+                mat.ApplyTaggedName(taggedName);
             }
-            else if (gStr[2] == "MAT_FABRIC")
+            else if (gsaString.Contains("FABRIC"))
             {
-                double Ex, Ey, v, G;
-
-                if (!double.TryParse(gStr[6], out Ex))
-                    return null;
-                if (!double.TryParse(gStr[7], out Ey))
-                    return null;
-                if (!double.TryParse(gStr[8], out v))
-                    return null;
-                if (!double.TryParse(gStr[9], out G))
-                    return null;
+                FromGSAString(gsaString, out double Ex, out double Ey, out double v, out double G, out string taggedName);
 
                 mat = new Fabric { WarpModulus = Ex, WeftModulus = Ey, PoissonsRatio = v, ShearModulus = G };
-
+                mat.ApplyTaggedName(taggedName);
             }
             else
             {
                 return null;
             }
 
-
-            mat.ApplyTaggedName(gStr[3]);
-
             int id = int.Parse(gStr[1]);
-            mat.SetAdapterId(typeof(GSAId), id);
+            mat.SetAdapterId(typeof(GSAId),id);
 
             return mat;
         }

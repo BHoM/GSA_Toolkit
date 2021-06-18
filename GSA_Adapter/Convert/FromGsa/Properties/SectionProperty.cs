@@ -50,20 +50,35 @@ namespace BH.Adapter.GSA
         /// <param name="materials"></param>
         /// <returns></returns>
         
-        private static void FromGSAString(string gsaString, Dictionary<string, IMaterialFragment> materials, out int id, out string materialId, out IMaterialFragment mat, out string description, out string taggedName, out char splitChar)
+        private static void FromGSAString(string gsaString, Dictionary<string, IMaterialFragment> materials, out int id, out IMaterialFragment mat, out string description, out string taggedName, out char splitChar)
         {
             string[] gsaStrings = gsaString.Split(',');
+            string materialId;
 
             Int32.TryParse(gsaStrings[1], out id);
 
-            //Separate data extractions speficic to each GSA version
+            //Separate data extractions specific to each GSA version
 #if GSA_10_1
             description = gsaStrings[21];
             taggedName = gsaStrings[3];
-            materialId = gsaStrings[19];
-            splitChar = ' '; //To split gsaString          
-#else
+            splitChar = ' '; //To split gsaString
 
+            string matType;
+            string matId;
+
+            if (gsaStrings[18] == "0")
+            {
+                matId = gsaStrings[20];
+                matType = gsaStrings[19];
+            }
+            else
+            {
+                matId = gsaStrings[18];
+                matType = "ANAL";
+            }
+
+            materialId = matType + ":" + matId;
+#else
             description = gsaStrings[5];
             taggedName = gsaStrings[2];
             materialId = gsaStrings[4];
@@ -80,7 +95,7 @@ namespace BH.Adapter.GSA
         {
             string[] gsaStrings = gsaString.Split(',');
 
-            //Separate data extractions speficic to each GSA version
+            //Separate data extractions specific to each GSA version
 #if GSA_10_1
             string[] desc = gsaStrings[21].Split(' ');
 
@@ -102,7 +117,7 @@ namespace BH.Adapter.GSA
 
         public static ISectionProperty FromGsaSectionProperty(string gsaString, Dictionary<string, IMaterialFragment> materials)
         {
-            FromGSAString(gsaString, materials, out int id, out string materialId, out IMaterialFragment mat, out string description, out string taggedName, out char splitChar);
+            FromGSAString(gsaString, materials, out int id, out IMaterialFragment mat, out string description, out string taggedName, out char splitChar);
 
             ISectionProperty secProp = null;
             string message = "";
