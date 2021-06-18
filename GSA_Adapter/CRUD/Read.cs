@@ -92,10 +92,8 @@ namespace BH.Adapter.GSA
                 return null;
             }
 
-
             return null;
         }
-
 
         /***************************************************/
         /**** Protected Methods                         ****/
@@ -112,8 +110,22 @@ namespace BH.Adapter.GSA
         {
             List<IMaterialFragment> materials = new List<IMaterialFragment>();
 
+#if GSA_10_1
+            string allProps = m_gsaCom.GwaCommand("GET_ALL, MAT_ANAL.1").ToString();
+            allProps += "\n" + m_gsaCom.GwaCommand("GET_ALL, MAT_STEEL.3").ToString();
+            allProps += "\n" + m_gsaCom.GwaCommand("GET_ALL, MAT_CONCRETE.17").ToString();
+            allProps += "\n" + m_gsaCom.GwaCommand("GET_ALL, MAT_FRP.3").ToString();
+            allProps += "\n" + m_gsaCom.GwaCommand("GET_ALL, MAT_ALUMINIUM").ToString();
+            allProps += "\n" + m_gsaCom.GwaCommand("GET_ALL, MAT_TIMBER.10").ToString();
+            allProps += "\n" + m_gsaCom.GwaCommand("GET_ALL, MAT_GLASS.10").ToString();
+            allProps += "\n" + m_gsaCom.GwaCommand("GET_ALL, MAT_FABRIC.10").ToString();
+            allProps += "\n" + m_gsaCom.GwaCommand("GET_ALL, MAT_REBAR.1").ToString();
+#else
             string allProps = m_gsaCom.GwaCommand("GET_ALL, MAT").ToString();
+#endif
             string[] matArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
+            matArr = matArr.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+
             if (ids == null)
                 materials = matArr.Select(x => Convert.FromGsaMaterial(x)).Where(x => x != null).ToList();
             else
@@ -123,6 +135,45 @@ namespace BH.Adapter.GSA
                 materials.AddRange(GetStandardGsaMaterials());
 
             return materials;
+        }
+
+        public Dictionary<string, IMaterialFragment> ReadMaterialDictionary()
+        {
+            List<IMaterialFragment> materials = ReadMaterials(null, false);
+            List<string> keys = new List<string>();
+            Dictionary<string, IMaterialFragment> materialDictionary = new Dictionary<string, IMaterialFragment>();
+
+#if GSA_10_1
+            string allProps = m_gsaCom.GwaCommand("GET_ALL, MAT_ANAL.1").ToString();
+            allProps += "\n" + m_gsaCom.GwaCommand("GET_ALL, MAT_STEEL.3").ToString();
+            allProps += "\n" + m_gsaCom.GwaCommand("GET_ALL, MAT_CONCRETE.17").ToString();
+            allProps += "\n" + m_gsaCom.GwaCommand("GET_ALL, MAT_FRP.3").ToString();
+            allProps += "\n" + m_gsaCom.GwaCommand("GET_ALL, MAT_ALUMINIUM.9").ToString();
+            allProps += "\n" + m_gsaCom.GwaCommand("GET_ALL, MAT_TIMBER.10").ToString();
+            allProps += "\n" + m_gsaCom.GwaCommand("GET_ALL, MAT_GLASS.10").ToString();
+            allProps += "\n" + m_gsaCom.GwaCommand("GET_ALL, MAT_FABRIC.10").ToString();
+            allProps += "\n" + m_gsaCom.GwaCommand("GET_ALL, MAT_REBAR.1").ToString();
+#else
+            string allProps = m_gsaCom.GwaCommand("GET_ALL, MAT").ToString();
+#endif
+            string[] matArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
+            matArr = matArr.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+
+            for (int i = 0; i < materials.Count(); i ++)
+            {
+#if GSA_10_1
+                string key = matArr[i].Split(("_.").ToCharArray())[1] + ":" + materials[i].GSAId();
+#else
+                string key = materials[i].GSAId().ToString();
+#endif
+                if (!keys.Contains(key))
+                {
+                    keys.Add(key);
+                    materialDictionary.Add(key, materials[i]);
+                }
+            }
+
+            return materialDictionary;
         }
 
         /***************************************************/
@@ -146,14 +197,13 @@ namespace BH.Adapter.GSA
 
         public List<Bar> ReadBars(List<string> ids = null)
         {
-
             //int[] potentialBeamRefs = GenerateIndices(ids, typeof(Bar));
 
             //GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
             //m_gsaCom.Elements(potentialBeamRefs, out gsaElements);
 
-
             string allNodes = m_gsaCom.GwaCommand("GET_ALL, EL.2").ToString();
+
             string[] barArr = string.IsNullOrWhiteSpace(allNodes) ? new string[0] : allNodes.Split('\n');
 
             List<ISectionProperty> secPropList = ReadSectionProperties();
@@ -195,7 +245,6 @@ namespace BH.Adapter.GSA
 
         public List<Node> ReadNodes(List<string> ids = null)
         {
-
             //GsaNode[] gsaNodes;
             //m_gsaCom.Nodes(GenerateIndices(ids, typeof(Node)), out gsaNodes);
 
@@ -235,12 +284,13 @@ namespace BH.Adapter.GSA
 
         public List<ISectionProperty> ReadSectionProperties(List<string> ids = null)
         {
-            List<IMaterialFragment> matList = ReadMaterials(null, true);
-            Dictionary<string, IMaterialFragment> materials = matList.ToDictionary(x => GetAdapterId(x).ToString());
-
 #if GSA_10_1
+            Dictionary<string, IMaterialFragment> materials = ReadMaterialDictionary();
+
             string allProps = m_gsaCom.GwaCommand("GET_ALL, SECTION.7").ToString();
 #else
+            List<IMaterialFragment> matList = ReadMaterials(null, true);
+            Dictionary<string, IMaterialFragment> materials = matList.ToDictionary(x => GetAdapterId(x).ToString());
             string allProps = m_gsaCom.GwaCommand("GET_ALL, PROP_SEC").ToString();
 #endif
             string[] proArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
@@ -268,7 +318,6 @@ namespace BH.Adapter.GSA
         }
 
         /***************************************/
-
 
         public List<FEMesh> ReadFEMesh(List<string> ids = null)
         {
