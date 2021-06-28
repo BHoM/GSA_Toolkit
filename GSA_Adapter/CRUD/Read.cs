@@ -253,13 +253,35 @@ namespace BH.Adapter.GSA
             string[] nodeArr = string.IsNullOrWhiteSpace(allNodes) ? new string[0] : allNodes.Split('\n');
 
             Dictionary<int, Basis> axes = ReadAxes();
+            Dictionary<int, double[]> dampProp = ReadDampProperty();
 
             if (ids == null)
-                return nodeArr.Select(x => Convert.FromGsaNode(x, axes)).ToList();
+                return nodeArr.Select(x => Convert.FromGsaNode(x, dampProp, axes)).ToList();
             else
-                return nodeArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Convert.FromGsaNode(x, axes)).ToList();
+                return nodeArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Convert.FromGsaNode(x, dampProp, axes)).ToList();
         }
 
+        /***************************************/
+
+        public Dictionary<int, double[]> ReadDampProperty()
+        {
+            Dictionary<int, double[]> dampPropertyDictionary = new Dictionary<int, double[]>();
+#if GSA_10_1
+            string allDamp = m_gsaCom.GwaCommand("GET_ALL, PROP_DAMP.2").ToString();
+            string[] dampProp = string.IsNullOrWhiteSpace(allDamp) ? new string[0] : allDamp.Split('\n');
+
+            foreach(string a in dampProp)
+            {
+                string[] arr = a.Split(',');
+                double[] stiff = new List<double>() { Double.Parse(arr[5]), Double.Parse(arr[6]), Double.Parse(arr[7]), Double.Parse(arr[8]), Double.Parse(arr[9]), Double.Parse(arr[10]) }.ToArray();
+                dampPropertyDictionary.Add(Int32.Parse(arr[1]), stiff);
+            }
+
+            return dampPropertyDictionary;
+#else
+            return null;
+#endif
+        }
         /***************************************/
 
         private Dictionary<int, Basis> ReadAxes(List<string> ids = null)

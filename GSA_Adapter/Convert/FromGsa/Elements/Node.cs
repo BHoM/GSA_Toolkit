@@ -28,6 +28,7 @@ using BH.oM.Structure.Elements;
 using BH.oM.Structure.Constraints;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 
 namespace BH.Adapter.GSA
@@ -37,8 +38,7 @@ namespace BH.Adapter.GSA
         /***************************************************/
         /**** Public Methods                            ****/
         /***************************************************/
-
-        public static Node FromGsaNode(string gsaString, Dictionary<int, Basis> axes)
+        public static Node FromGsaNode(string gsaString, Dictionary<int, double[]> dampProp, Dictionary<int, Basis> axes)
         {
             if (gsaString == "")
             {
@@ -53,20 +53,91 @@ namespace BH.Adapter.GSA
             Point pos = new Point() { X = double.Parse(arr[4]), Y = double.Parse(arr[5]), Z = double.Parse(arr[6]) };
 
             Basis basis = null;
-            if (arr.Length > 7)
+            if (arr.Length > 8)
             {
                 int axesId;
+
                 if (int.TryParse(arr[8], out axesId))
                 {
                     axes.TryGetValue(axesId, out basis);
                 }
             }
 
-            Constraint6DOF con;
+            FromGsaConstraint(arr, dampProp, out Constraint6DOF con);
+
+            Node node = new Node { Position = pos, Support = con, Orientation = basis };
+            node.ApplyTaggedName(name);
+            node.SetAdapterId(typeof(GSAId), id);
+            return node;
+        }
+
+        /***************************************************/
+
+        public static Basis FromGsaAxis(string gsaString, out int id)
+        {
+            if (gsaString == "")
+            {
+                id = -1;
+                return null;
+            }
+
+            string[] arr = gsaString.Split(',');
+
+            id = Int32.Parse(arr[1]);
+
+            Vector x = new Vector() { X = double.Parse(arr[7]), Y = double.Parse(arr[8]), Z = double.Parse(arr[9]) };
+            Vector y = new Vector() { X = double.Parse(arr[10]), Y = double.Parse(arr[11]), Z = double.Parse(arr[12]) };
+
+            return Engine.Geometry.Create.Basis(x, y);
+        }
+
+        public static Constraint6DOF FromGsaConstraint(string[] arr, Dictionary<int, double[]> dampProp, out Constraint6DOF con)
+        {
+            List<bool> fixities;
+            List<double> stiff;
+
+#if GSA_10_1
+            if (arr.Length > 7)
+            {
+                if (arr[7] == "free")
+                    fixities = new List<bool>() { false, false, false, false, false, false };
+                else if (arr[7] == "fix")
+                    fixities = new List<bool>() { true, true, true, true, true, true };
+                else if (arr[7] == "pin")
+                    fixities = new List<bool>() { true, true, true, false, false, false };
+                else
+                {
+                    int noX = arr[7].ToCharArray().Where(x => x == 'x').Count();
+                    int noY = arr[7].ToCharArray().Where(x => x == 'y').Count();
+                    int noZ = arr[7].ToCharArray().Where(x => x == 'z').Count();
+
+                    fixities = new List<bool>()
+                    {
+                        noX%2 != 0,
+                        noY%2 != 0,
+                        noZ%2 != 0,
+                        noX > 1,
+                        noY > 1,
+                        noZ > 1,
+                    };
+                }
+
+                if(arr.Length > 12 && arr[12] != "0")
+                    stiff = dampProp[Int32.Parse(arr[12])].ToList();
+                else
+                    stiff = new List<double>() { 0, 0, 0, 0, 0, 0 };
+            }
+            else
+            {
+                 con = null;
+                 return con;
+            }
+
+            con = Engine.Structure.Create.Constraint6DOF("", fixities, stiff);
+            return con;
+#else
             if (arr.Length > 9)
             {
-                List<bool> fixities;
-                List<double> stiff;
                 if (arr[9] == "REST")
                 {
                     fixities = new List<bool>()
@@ -117,31 +188,8 @@ namespace BH.Adapter.GSA
             else
                 con = null;
 
-            Node node = new Node { Position = pos, Support = con, Orientation = basis };
-            node.ApplyTaggedName(name);
-            node.SetAdapterId(typeof(GSAId), id);
-            return node;
-
-        }
-
-        /***************************************************/
-
-        public static Basis FromGsaAxis(string gsaString, out int id)
-        {
-            if (gsaString == "")
-            {
-                id = -1;
-                return null;
-            }
-
-            string[] arr = gsaString.Split(',');
-
-            id = Int32.Parse(arr[1]);
-
-            Vector x = new Vector() { X = double.Parse(arr[7]), Y = double.Parse(arr[8]), Z = double.Parse(arr[9]) };
-            Vector y = new Vector() { X = double.Parse(arr[10]), Y = double.Parse(arr[11]), Z = double.Parse(arr[12]) };
-
-            return Engine.Geometry.Create.Basis(x, y);
+            return con;
+#endif
         }
 
         /***************************************************/
