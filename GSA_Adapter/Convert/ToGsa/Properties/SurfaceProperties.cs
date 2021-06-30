@@ -116,17 +116,17 @@ namespace BH.Adapter.GSA
         {
             switch (str)
             {
-                case "SUP_ALL":
+                case "ALL":
                     return LoadPanelSupportConditions.AllSides;
-                case "SUP_THREE":
+                case "THREE":
                     return LoadPanelSupportConditions.ThreeSides;
-                case "SUP_TWO":
+                case "TWO":
                     return LoadPanelSupportConditions.TwoSides;
-                case "SUP_TWO_ADJ":
+                case "TWO_ADJ":
                     return LoadPanelSupportConditions.TwoAdjacentSides;
-                case "SUP_ONE":
+                case "ONE":
                     return LoadPanelSupportConditions.OneSide;
-                case "SUP_ONE_MOM":
+                case "ONE_MOM":
                     return LoadPanelSupportConditions.Cantilever;
                 default:
                     return LoadPanelSupportConditions.AllSides;

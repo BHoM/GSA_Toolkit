@@ -60,12 +60,13 @@ namespace BH.Adapter.GSA
 
                 FEMeshFace face = new FEMeshFace() { NodeListIndices = Enumerable.Range(0, gsaMesh.NumTopo).ToList(), OrientationAngle = gsaMesh.Beta * System.Math.PI / 180  };
                 face.SetAdapterId(typeof(GSAId), id);
+                props.TryGetValue(gsaMesh.Property.ToString(), out ISurfaceProperty property);
 
                 FEMesh mesh = new FEMesh()
                 {
                     Faces = new List<FEMeshFace>() { face },
                     Nodes = gsaMesh.Topo.Select(x => nodes[x.ToString()]).ToList(),
-                    Property = props[gsaMesh.Property.ToString()]
+                    Property = property
                 };
 
                 mesh.ApplyTaggedName(gsaMesh.Name);
