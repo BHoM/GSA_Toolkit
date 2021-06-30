@@ -77,7 +77,6 @@ namespace BH.Adapter.GSA
                 Bar bar = new Bar { StartNode = n1, EndNode = n2 };
                 bar.ApplyTaggedName(gsaBar.Name);
 
-
                 bar.FEAType = feType;
 
                 bar.OrientationAngle = gsaBar.Beta;
@@ -106,7 +105,6 @@ namespace BH.Adapter.GSA
 
             foreach (string gsaBar in gsaStrings)
             {
-
                 string[] arr = gsaBar.Split(',');
 
                 string index = arr[1];
