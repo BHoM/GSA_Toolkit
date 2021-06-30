@@ -327,10 +327,15 @@ namespace BH.Adapter.GSA
 
         public List<ISurfaceProperty> ReadProperty2d(List<string> ids = null)
         {
+#if GSA_10_1
+            Dictionary<string, IMaterialFragment> materials = ReadMaterialDictionary();
+
+            string allProps = m_gsaCom.GwaCommand("GET_ALL, PROP_2D.7").ToString();
+#else
             List<IMaterialFragment> matList = ReadMaterials(null, true);
             Dictionary<string, IMaterialFragment> materials = matList.ToDictionary(x => GetAdapterId(x).ToString());
-
             string allProps = m_gsaCom.GwaCommand("GET_ALL, PROP_2D").ToString();
+#endif
             string[] proArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
 
             if (ids == null)
@@ -351,7 +356,7 @@ namespace BH.Adapter.GSA
             List<ISurfaceProperty> secPropList = ReadProperty2d();
             List<Node> nodeList = ReadNodes();
 
-            Dictionary<string, ISurfaceProperty> props = secPropList.ToDictionary(x => GetAdapterId<int>(x).ToString());
+            Dictionary<string, ISurfaceProperty> props = secPropList.Where(x => x != null).ToDictionary(x => GetAdapterId<int>(x).ToString());
             Dictionary<string, Node> nodes = nodeList.ToDictionary(x => GetAdapterId<int>(x).ToString());
 
             return Convert.FromGsaFEMesh(gsaElements, props, nodes);
