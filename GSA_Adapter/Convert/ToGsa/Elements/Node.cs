@@ -41,7 +41,6 @@ namespace BH.Adapter.GSA
 
         public static List<string> ToGsaString(this Node node, string index)
         {
-            string command = "NODE.2";
             string name = node.TaggedName().ToGSACleanName();
 
             string restraint = GetRestraintString(node);
@@ -55,8 +54,18 @@ namespace BH.Adapter.GSA
             if (!string.IsNullOrWhiteSpace(axisString))
                 gsaStrings.Add(axisString);
 
-            string str = command + ", " + index + ", " + name + " , NO_RGB, " + position.X + " , " + position.Y + " , " + position.Z + ", NO_GRID, " + axisId + "," + restraint;
+#if GSA_10_1
+            string dampPropId = GetAndCreateDamperProperty(node, out string dampPropString);
 
+            if (!string.IsNullOrWhiteSpace(dampPropString))
+                gsaStrings.Add(dampPropString);
+
+            //To do: Spring Property, Mass Property
+
+            string str = "NODE.3" + ", " + index + ", " + name + " , NO_RGB, " + position.X + " , " + position.Y + " , " + position.Z + "," + restraint + "," + axisId + ",0,0,0," + dampPropId;
+#else
+            string str = "NODE.2" + ", " + index + ", " + name + " , NO_RGB, " + position.X + " , " + position.Y + " , " + position.Z + ", NO_GRID, " + axisId + "," + restraint;
+#endif
             gsaStrings.Add(str);
             return gsaStrings;
         }
@@ -88,6 +97,31 @@ namespace BH.Adapter.GSA
             return id;
         }
 
+            /***************************************************/
+
+            private static string GetAndCreateDamperProperty(Node node, out string dampPropString)
+        {
+            if (node.Support != null)
+            {
+                //PROP_DAMP.2	1	Damper Property 1   NO_RGB	AXIAL	0.000000	0.000000	0.000000	0.500000	0.500000	0.000000
+                string command = "PROP_DAMP.2";
+                string id = node.GSAId().ToString();
+                string name = $"Node {id} damper property";
+                string stiff = "";
+                foreach (double s in node.Support.ElasticValues())
+                {
+                    stiff += "," + s.ToString();
+                }
+
+                dampPropString = $"{command}, {id}, {name}, NO_RGB, GENERAL {stiff}";
+                return id;
+            }
+
+                dampPropString = null;
+                return "0";
+
+        }
+
         /***************************************************/
 
         private static string GetRestraintString(Node node)
@@ -96,8 +130,29 @@ namespace BH.Adapter.GSA
             {
                 string rest = "REST";
 
-
                 bool[] fixities = node.Support.Fixities();
+                double[] stiffnesses = node.Support.ElasticValues();
+
+#if GSA_10_1
+                rest = (fixities[0] == true) ? "x" : "";
+                rest += (fixities[1] == true) ? "y" : "";
+                rest += (fixities[2] == true) ? "z" : "";
+                rest += (fixities[3] == true) ? "xx" : "";
+                rest += (fixities[4] == true) ? "yy" : "";
+                rest += (fixities[5] == true) ? "zz" : "";
+
+                if (rest == "xyz")
+                    rest = "pin";
+                else if (rest == "")
+                    rest = "free";
+                else if (rest == "xyzxxyyzz")
+                    rest = "fix";
+
+                return rest;
+            }
+            else
+                return "free";
+#else
                 for (int i = 0; i < fixities.Length; i++)
                 {
                     rest += "," + (fixities[i] ? 1 : 0);
@@ -105,17 +160,16 @@ namespace BH.Adapter.GSA
 
                 rest += ",STIFF";
 
-                double[] stiffnesses = node.Support.ElasticValues();
                 for (int i = 0; i < stiffnesses.Length; i++)
                 {
                     rest += "," + ((stiffnesses[i] > 0) ? stiffnesses[i] : 0);
                 }
 
-
                 return rest;
             }
             else
                 return "NO_REST,NO_STIFF";
+#endif
 
 
         }

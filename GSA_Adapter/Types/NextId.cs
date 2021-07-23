@@ -28,6 +28,7 @@ using BH.oM.Adapters.GSA;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using BH.oM.Structure.MaterialFragments;
 
 namespace BH.Adapter.GSA
 {
@@ -51,7 +52,10 @@ namespace BH.Adapter.GSA
                 return null; //TODO: Needed?
             else if (type == typeof(ILoad) || type.GetInterfaces().Contains(typeof(ILoad)))
                 return null;
-
+#if GSA_10_1
+            else if (typeof(IMaterialFragment).IsAssignableFrom(type))
+                return null;        //Materials handled differently, separate by type, in GSA 10. Ids assigned in create method instead.
+#endif
             string typeString = type.ToGsaString();
 
             int index;
