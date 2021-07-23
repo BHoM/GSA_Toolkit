@@ -28,6 +28,7 @@ using BH.oM.Structure.SectionProperties;
 using BH.oM.Spatial.ShapeProfiles;
 using System;
 using BH.Engine.Adapters.GSA;
+using BH.oM.Structure.MaterialFragments;
 
 namespace BH.Adapter.GSA
 {
@@ -50,7 +51,6 @@ namespace BH.Adapter.GSA
             if (!ICreateDescAndPropString(prop, out desc, out props))
                 return "";
 
-            string command = "PROP_SEC";
             string colour = "NO_RGB";
             string principle = "NO";
             string type = prop.SectionType();
@@ -61,7 +61,26 @@ namespace BH.Adapter.GSA
 
             //PROP_SEC    2   Section 2   NO_RGB  1   CAT % UB % UB914x419x388 % 19990407   NO NA  0   NO_PROP NO_MOD_PROP FLAME_CUT NO_J
 
-            string str = command + "," + index + "," + name + "," + colour + "," + mat + "," + desc + "," + principle + "," + type + "," + cost + "," + props + "," + mods + "," + plate_type + "," + calc_J;
+#if GSA_10_1
+
+            string analNum = "0";
+            string material = "";
+            string matNum = "0";
+
+            if (prop.Material.GetType().ToGsaString() != "UNDEF" && prop.Material.GetType() == typeof(GenericIsotropicMaterial))
+            {
+                analNum = mat;
+            }
+            else if (prop.Material.GetType().ToGsaString() == "UNDEF" && prop.Material.GetType() == typeof(GenericOrthotropicMaterial))
+            {
+                matNum = mat;
+                material = prop.Material.GetType().ToString().ToUpper();
+            }
+
+            string str = "SECTION.7," + index + "," + colour + ",1D_GENERIC,0,CENTROID,0,0," + analNum + "," + mat + "," + matNum;
+#else
+            string str = "PROP_SEC" + "," + index + "," + name + "," + colour + "," + mat + "," + desc + "," + principle + "," + type + "," + cost + "," + props + "," + mods + "," + plate_type + "," + calc_J;
+#endif
             return str;
         }
 

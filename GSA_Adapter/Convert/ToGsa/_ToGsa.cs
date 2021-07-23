@@ -50,8 +50,21 @@ namespace BH.Adapter.GSA
                 return "NODE";
             else if (type == typeof(Bar))
                 return "EL";
+#if GSA_10_1
+            else if (type == typeof(Steel)) // Does not support pushing of non orthoropic, non - generic materials
+                return "MAT_STEEL";
+            else if (type == typeof(Concrete))
+                return "MAT_CONCRETE";
+            else if (type == typeof(Timber))
+                return "MAT_TIMBER";
+            else if (type == typeof(Aluminium))
+                return "MAT_ALUMINIUM";
+            else if (type == typeof(GenericIsotropicMaterial) || type == typeof(GenericOrthotropicMaterial))
+                return "MAT_ANAL";
+#else
             else if (typeof(IMaterialFragment).IsAssignableFrom(type))
                 return "MAT";
+#endif
             else if (typeof(ISectionProperty).IsAssignableFrom(type))
                 return "PROP_SEC";
             else if (typeof(ISurfaceProperty).IsAssignableFrom(type))
