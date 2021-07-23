@@ -33,6 +33,7 @@ using BH.oM.Base;
 using BH.oM.Adapter;
 using BH.Engine.Adapters.GSA;
 using BH.oM.Adapters.GSA.SurfaceProperties;
+using BH.oM.Structure.MaterialFragments;
 
 namespace BH.Adapter.GSA
 {
@@ -54,6 +55,10 @@ namespace BH.Adapter.GSA
 
             if (typeof(RigidLink).IsAssignableFrom(typeof(T)))
                 success = CreateLinks(objects as IEnumerable<RigidLink>);
+#if GSA_10_1
+            else if (typeof(IMaterialFragment).IsAssignableFrom(typeof(T)))
+                success = CreateMaterials(objects as IEnumerable<IMaterialFragment>);
+#endif
             else
             {
                 foreach (T obj in objects)
@@ -66,6 +71,20 @@ namespace BH.Adapter.GSA
             }
 
             UpdateViews();
+            return success;
+        }
+
+        /***************************************************/
+
+        private bool CreateMaterials(IEnumerable<IMaterialFragment> materials)
+        {
+            bool success = true;
+            foreach (IMaterialFragment material in materials)
+            {
+                int index = m_gsaCom.GwaCommand("HIGHEST, " + Convert.ToGsaString(material.GetType())) + 1;
+                this.SetAdapterId(material, index);
+                success &= ComCall(Convert.IToGsaString(material, index.ToString()));
+            }
             return success;
         }
 

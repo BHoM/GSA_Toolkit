@@ -27,13 +27,13 @@ namespace BH.Adapter.GSA
 
     public enum MaterialType
     {
-        MT_STEEL,
-        MT_CONCRETE,
-        MT_ALUMINIUM,
-        MT_GLASS,
-        MT_TIMBER,
-        MT_UNDEF,
-        MT_REBAR
+        STEEL,
+        CONCRETE,
+        ALUMINIUM,
+        GLASS,
+        TIMBER,
+        UNDEF,
+        REBAR
     }
 
     /***************************************/

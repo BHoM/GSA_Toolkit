@@ -192,7 +192,7 @@ namespace BH.Adapter.GSA
                         break;
                     case "STEEL":
                     case "REBAR":
-                        mat = Engine.Structure.Create.Steel("", E, v, tC, rho);
+                        mat = Engine.Structure.Create.Steel("", E, v, tC, rho); // add yield/ ultimate stress
                         break;
                     case "TIMBER":
                         mat = Engine.Structure.Create.Timber("", new Vector { X = E, Y = E, Z = E }, new Vector { X = v, Y = v, Z = v }, new Vector { X = G, Y = G, Z = G }, new Vector { X = tC, Y = tC, Z = tC }, rho, 0);
