@@ -30,6 +30,7 @@ using BH.Engine.Structure;
 using BH.oM.Structure.MaterialFragments;
 using BH.oM.Geometry;
 using BH.oM.Adapters.GSA.MaterialFragments;
+using BH.Engine.Base;
 
 
 namespace BH.Adapter.GSA
@@ -148,7 +149,7 @@ namespace BH.Adapter.GSA
         private static IOrthotropic CheckMaterialVectors(this IOrthotropic material)
         {
             List<string> failingProperties = new List<string>();
-            IOrthotropic clone = material.GetShallowClone() as IOrthotropic;
+            IOrthotropic clone = material.ShallowClone() as IOrthotropic;
 
             if (material.YoungsModulus == null)
             {
