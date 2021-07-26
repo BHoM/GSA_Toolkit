@@ -26,6 +26,7 @@ using BH.oM.Adapters.GSA;
 using BH.oM.Structure.MaterialFragments;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Spatial.ShapeProfiles;
+using BH.Engine.Base;
 using System;
 using System.Collections.Generic;
 
@@ -126,7 +127,7 @@ namespace BH.Adapter.GSA
 
                     if (secProp != null)
                     {
-                        secProp = secProp.GetShallowClone() as ISectionProperty;
+                        secProp = secProp.ShallowClone() as ISectionProperty;
                         secProp.Material = mat;
                     }
                     else

@@ -29,6 +29,7 @@ using System.ComponentModel;
 using BH.oM.Reflection.Attributes;
 using BH.oM.Base;
 using BH.oM.Structure.Loads;
+using BH.Engine.Base;
 
 namespace BH.Engine.Adapters.GSA
 {
@@ -45,7 +46,7 @@ namespace BH.Engine.Adapters.GSA
         public static LoadCombination SetAnalysisType(LoadCombination loadcombination, AnalysisType analysisType = AnalysisType.LinearStatic, int stage = 0)
         {
             AnalysisTaskFragment fragment = new AnalysisTaskFragment { AnalysisType = analysisType, Stage = stage };
-            LoadCombination clone = loadcombination.GetShallowClone() as LoadCombination;
+            LoadCombination clone = loadcombination.ShallowClone() as LoadCombination;
 
             clone.Fragments.AddOrReplace(fragment);
             return clone;
