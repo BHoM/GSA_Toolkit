@@ -127,7 +127,7 @@ namespace BH.Adapter.GSA
 
                     if (secProp != null)
                     {
-                        secProp = secProp.ShallowClone() as ISectionProperty;
+                        secProp = secProp.ShallowClone();
                         secProp.Material = mat;
                     }
                     else
@@ -268,4 +268,3 @@ namespace BH.Adapter.GSA
 
     }
 }
-
