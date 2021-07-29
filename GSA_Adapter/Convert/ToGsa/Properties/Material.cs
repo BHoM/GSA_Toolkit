@@ -149,7 +149,7 @@ namespace BH.Adapter.GSA
         private static IOrthotropic CheckMaterialVectors(this IOrthotropic material)
         {
             List<string> failingProperties = new List<string>();
-            IOrthotropic clone = material.ShallowClone() as IOrthotropic;
+            IOrthotropic clone = material.ShallowClone();
 
             if (material.YoungsModulus == null)
             {
@@ -212,4 +212,3 @@ namespace BH.Adapter.GSA
 
     }
 }
-
