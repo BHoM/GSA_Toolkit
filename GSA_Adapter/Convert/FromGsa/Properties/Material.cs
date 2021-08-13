@@ -178,7 +178,9 @@ namespace BH.Adapter.GSA
 
             if (gsaString.Contains("MAT_ELAS_ISO"))
             {
-                FromGSAString(gsaString, out double E, out double v, out double tC, out double G, out double rho, out string material, out string taggedName);
+                double E, v, tC, G, rho;
+                string material, taggedName;
+                FromGSAString(gsaString, out E, out v, out tC, out G, out rho, out material, out taggedName);
 
                 //BHMF.MaterialType type = GetTypeFromString(gStr[5]);
 
@@ -207,7 +209,9 @@ namespace BH.Adapter.GSA
             }
             else if (gsaString.Contains("MAT_ELAS_ORTHO"))
             {
-                FromGSAString(gsaString, out double E1, out double E2, out double E3, out double v1, out double v2, out double v3, out double G1, out double G2, out double G3, out double tC1, out double tC2, out double tC3, out double rho, out string material, out string taggedName);
+                double E1, E2, E3, v1, v2, v3, G1, G2, G3, tC1, tC2, tC3, rho;
+                string material, taggedName;
+                FromGSAString(gsaString, out E1, out E2, out E3, out v1, out v2, out v3, out G1, out G2, out G3, out tC1, out tC2, out tC3, out rho, out material, out taggedName);
 
                 Vector e = new Vector { X = E1, Y = E2, Z = E3 };
                 Vector v = new Vector { X = v1, Y = v2, Z = v3 };
@@ -228,7 +232,9 @@ namespace BH.Adapter.GSA
             }
             else if (gsaString.Contains("FABRIC"))
             {
-                FromGSAString(gsaString, out double Ex, out double Ey, out double v, out double G, out string taggedName);
+                double Ex, Ey, v, G;
+                string taggedName;
+                FromGSAString(gsaString, out Ex, out Ey, out v, out G, out taggedName);
 
                 mat = new Fabric { WarpModulus = Ex, WeftModulus = Ey, PoissonsRatio = v, ShearModulus = G };
                 mat.ApplyTaggedName(taggedName);
