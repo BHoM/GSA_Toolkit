@@ -48,7 +48,7 @@ namespace BH.Adapter.GSA
             material.Name = material.DescriptionOrName().ToGSACleanName();
             string name = material.TaggedName();
             string colour = "NO_RGB";
-            string type = GetMaterialType(material).ToString();
+            string type = GetMaterialType(material);
             string E = material.YoungsModulus.ToString();
             string nu = material.PoissonsRatio.ToString();
             string rho = material.Density.ToString();
@@ -117,7 +117,7 @@ namespace BH.Adapter.GSA
             else if (type == "UNDEF")
             { str = "MAT_ANAL.1" + "," + num + "," + mModel + "," + name + "," + colour + ",6," + E + "," + nu + "," + rho + "," + alpha + "," + G + "," + damp + ",0,0"; }
 #else
-            str = "MAT" + "," + num + "," + "MT_" + mModel + "," + name + "," + colour + "," + type + ",6," + E + "," + nu + "," + rho + "," + alpha + "," + G + "," + damp + ",0,0,NO_ENV";
+            str = "MAT" + "," + num + "," + mModel + "," + name + "," + colour + "," + type + ",6," + E + "," + nu + "," + rho + "," + alpha + "," + G + "," + damp + ",0,0,NO_ENV";
 #endif
             return str;
         }
@@ -132,7 +132,7 @@ namespace BH.Adapter.GSA
             material.Name = material.DescriptionOrName().ToGSACleanName();
             string name = material.TaggedName();
             string colour = "NO_RGB";
-            string type = GetMaterialType(material).ToString();
+            string type = GetMaterialType(material);
             string E = CommaSeparatedValues(material.YoungsModulus);
             string nu = CommaSeparatedValues(material.PoissonsRatio);
             string rho = material.Density.ToString();
@@ -161,7 +161,7 @@ return str;
             material.Name = material.DescriptionOrName().ToGSACleanName();
             string name = material.TaggedName();
             string colour = "NO_RGB";
-            string type = GetMaterialType(material).ToString();
+            string type = GetMaterialType(material);
             string Ex = material.WarpModulus.ToString();
             string Ey = material.WeftModulus.ToString();
             string nu = material.PoissonsRatio.ToString();
@@ -200,20 +200,31 @@ return str;
 
         /***************************************************/
 
-        private static MaterialType GetMaterialType(IMaterialFragment material)
+        private static string GetMaterialType(IMaterialFragment material)
         {
-
+#if GSA_10_1
             if (material is Steel)
-                return MaterialType.STEEL;
+                return "STEEL";
             else if (material is Concrete)
-                return MaterialType.CONCRETE;
+                return "CONCRETE";
             else if (material is Aluminium)
-                return MaterialType.ALUMINIUM;
+                return "ALUMINIUM";
             else if (material is Timber)
-                return MaterialType.TIMBER;
+                return "TIMBER";
             else
-                return MaterialType.UNDEF;
-
+                return "UNDEF";
+#else
+            if (material is Steel)
+                return "MT_STEEL";
+            else if (material is Concrete)
+                return "MT_CONCRETE";
+            else if (material is Aluminium)
+                return "MT_ALUMINIUM";
+            else if (material is Timber)
+                return "MT_TIMBER";
+            else
+                return "MT_UNDEF";
+#endif
         }
 
         /***************************************************/
