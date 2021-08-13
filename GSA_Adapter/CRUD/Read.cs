@@ -152,7 +152,7 @@ namespace BH.Adapter.GSA
 #if GSA_10_1
                 string key = matArr[i].Split(("_.").ToCharArray())[1] + ":" + materials[i].GSAId();
 #else
-                string key = materials[i].GSAId().ToString();
+                string key = GetAdapterId(materials[i]).ToString();
 #endif
                 if (!keys.Contains(key))
                 {

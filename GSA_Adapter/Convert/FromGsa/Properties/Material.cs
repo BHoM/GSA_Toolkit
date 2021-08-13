@@ -127,13 +127,13 @@ namespace BH.Adapter.GSA
            v2 = double.Parse(gStr[11]);
            v3 = double.Parse(gStr[12]);
 
-           G1 = double.Parse(gStr[14]);
-           G2 = double.Parse(gStr[15]);
-           G3 = double.Parse(gStr[16]);
+           G1 = double.Parse(gStr[17]);
+           G2 = double.Parse(gStr[18]);
+           G3 = double.Parse(gStr[19]);
 
-           tC1 = double.Parse(gStr[17]);
-           tC2 = double.Parse(gStr[18]);
-           tC3 = double.Parse(gStr[19]);
+           tC1 = double.Parse(gStr[14]);
+           tC2 = double.Parse(gStr[15]);
+           tC3 = double.Parse(gStr[16]);
 
            rho = double.Parse(gStr[13]);
 

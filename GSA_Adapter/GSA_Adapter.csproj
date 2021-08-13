@@ -195,7 +195,6 @@
     <Compile Include="Convert\ToGsa\Elements\Spacer.cs" />
     <Compile Include="Convert\ToGsa\Properties\FormFindingProperties.cs" />
     <Compile Include="Convert\ToGsa\Properties\SpacerProperty.cs" />
-    <Compile Include="Enums\MaterialType.cs" />
     <Compile Include="Convert\FromGsa\Properties\SurfaceProperty.cs" />
     <Compile Include="Convert\ToGsa\Elements\Bar.cs" />
     <Compile Include="Convert\ToGsa\Elements\FEMesh.cs" />
