@@ -92,7 +92,7 @@ namespace BH.Adapter.GSA
             else if (description == "LOAD")
             {
                 t = 0;
-                loadCondition = gsaStrings[7].Split('_')[1];
+                loadCondition = gsaStrings[7].TrimStart("SUP_".ToCharArray());
                 refEdge = int.Parse(gsaStrings[8]);
             }
             else

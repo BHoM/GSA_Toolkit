@@ -167,12 +167,13 @@ namespace BH.Adapter.GSA
                     }
 
                     //Get section type
-                    string secType = desc[1];
-                    if (desc[1].Contains("-"))
+                    string orgSecType = desc[1];
+                    if (orgSecType.Contains("-"))
                     {
-                        secType = secType.Split('-')[1];
+                        orgSecType = orgSecType.Split('-')[1];
                     }
 
+                    string secType = orgSecType;
                     //Change from EA and UA to L for angles
                     if (secType == "UA")
                         secType = "L";
@@ -181,7 +182,7 @@ namespace BH.Adapter.GSA
                     else if (secType == "BP")
                         secType = "UBP";
 
-                    string secName = secType + desc[2].TrimStart(secType.ToCharArray());
+                    string secName = secType + desc[2].TrimStart(orgSecType.ToCharArray());
 
                     secProp = Engine.Library.Query.Match("SectionProperties", secName) as ISectionProperty;
 
