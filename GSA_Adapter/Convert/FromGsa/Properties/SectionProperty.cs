@@ -117,7 +117,12 @@ namespace BH.Adapter.GSA
 
         public static ISectionProperty FromGsaSectionProperty(string gsaString, Dictionary<string, IMaterialFragment> materials)
         {
-            FromGSAString(gsaString, materials, out int id, out IMaterialFragment mat, out string description, out string taggedName, out char splitChar);
+            int id;
+            IMaterialFragment mat;
+            string description;
+            string taggedName;
+            char splitChar;
+            FromGSAString(gsaString, materials, out id, out mat, out description, out taggedName, out splitChar);
 
             ISectionProperty secProp = null;
             string message = "";
@@ -133,7 +138,9 @@ namespace BH.Adapter.GSA
 
                 ExplicitSection expSecProp = new ExplicitSection();
 
-                FromGSAString(gsaString, out double a, out double iyy, out double izz, out double j, out double avy, out double avz);
+                double a, iyy, izz, j, avy, avz;
+
+                FromGSAString(gsaString, out a, out iyy, out izz, out j, out avy, out avz);
 
                 expSecProp.Area = a;
                 expSecProp.Iy = iyy;

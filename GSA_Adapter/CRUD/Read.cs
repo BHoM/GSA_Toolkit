@@ -299,8 +299,7 @@ namespace BH.Adapter.GSA
 
             string allProps = m_gsaCom.GwaCommand("GET_ALL, SECTION.7").ToString();
 #else
-            List<IMaterialFragment> matList = ReadMaterialDictionary(null, true);
-            Dictionary<string, IMaterialFragment> materials = matList.ToDictionary(x => GetAdapterId(x).ToString());
+            Dictionary<string, IMaterialFragment> materials = ReadMaterialDictionary(null, true);
             string allProps = m_gsaCom.GwaCommand("GET_ALL, PROP_SEC").ToString();
 #endif
             string[] proArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
