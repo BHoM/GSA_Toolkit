@@ -121,8 +121,11 @@ namespace BH.Adapter.GSA
 
             Int32.TryParse(gsaStrings[1], out id);
             string name = gsaStrings[2];
-            
-            FromGSAString(gsaString, out string description, out string materialId, out double t, out string loadCondition, out int refEdge);
+
+            string description, materialId, loadCondition;
+            double t;
+            int refEdge;
+            FromGSAString(gsaString, out description, out materialId, out t, out loadCondition, out refEdge);
 
             if (description == "SHELL")
             {

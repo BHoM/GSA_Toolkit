@@ -60,7 +60,8 @@ namespace BH.Adapter.GSA
 
                 FEMeshFace face = new FEMeshFace() { NodeListIndices = Enumerable.Range(0, gsaMesh.NumTopo).ToList(), OrientationAngle = gsaMesh.Beta * System.Math.PI / 180  };
                 face.SetAdapterId(typeof(GSAId), id);
-                props.TryGetValue(gsaMesh.Property.ToString(), out ISurfaceProperty property);
+                ISurfaceProperty property;
+                props.TryGetValue(gsaMesh.Property.ToString(), out property);
 
                 FEMesh mesh = new FEMesh()
                 {

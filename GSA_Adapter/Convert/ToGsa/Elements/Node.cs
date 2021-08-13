@@ -55,7 +55,8 @@ namespace BH.Adapter.GSA
                 gsaStrings.Add(axisString);
 
 #if GSA_10_1
-            string dampPropId = GetAndCreateDamperProperty(node, out string dampPropString);
+            string dampPropString;
+            string dampPropId = GetAndCreateDamperProperty(node, out dampPropString);
 
             if (!string.IsNullOrWhiteSpace(dampPropString))
                 gsaStrings.Add(dampPropString);

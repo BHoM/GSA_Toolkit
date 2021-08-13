@@ -63,7 +63,8 @@ namespace BH.Adapter.GSA
                 }
             }
 
-            FromGsaConstraint(arr, dampProp, out Constraint6DOF con);
+            Constraint6DOF con;
+            FromGsaConstraint(arr, dampProp, out con);
 
             Node node = new Node { Position = pos, Support = con, Orientation = basis };
             node.ApplyTaggedName(name);
