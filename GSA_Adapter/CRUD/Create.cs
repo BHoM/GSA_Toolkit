@@ -116,8 +116,19 @@ namespace BH.Adapter.GSA
             if (catString != null)
             {
                 bool success = ComCall(catString, false);
+#if GSA_10_1
+                if (success)
+                {
+                    string catPropRead = m_gsaCom.GwaCommand("GET, SECTION.7," + prop.GSAId() + ",").ToString();
+                    string[] arr = catPropRead.Split(',');
+                    if (arr.Length > 21 && arr[21].ToUpper() != "NONE")
+                        return true;
+                }
+#else
+                
                 if (success)
                     return true;
+#endif
             }
 
             return ComCall(Convert.IToGsaString(prop,  GetAdapterId<int>(prop).ToString()));
