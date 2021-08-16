@@ -60,7 +60,7 @@ namespace BH.Adapter.GSA
 #if GSA_10_1
             string matType = type.Substring(0, 1) + type.Substring(1).ToLower();
 
-            if (type == "STEEL")
+            if (material is Steel)
             {
                 Steel steel = material as Steel;
 
@@ -74,7 +74,7 @@ namespace BH.Adapter.GSA
 
                 str = "MAT_" + type + ".3," + num + "," + mat + "," + fy + "," + fu + ",0,0";
             }
-            else if (type == "CONCRETE")
+            else if (material is Concrete)
             {
                 Concrete concrete = material as Concrete;
 
@@ -92,18 +92,18 @@ namespace BH.Adapter.GSA
 
                 str = "MAT_" + type + "," + num + "," + mat + "," + "CYLINDER,N," + fck + "," + fcd + "," + fcdc + "," + fcdt + "," + fcfib + ",0,0,2,0.003,0.003,0.0006,0.003,0.003,0.002,0.003,NO,0.02,0,1,1,0,0,0,0,0";
             }
-            else if (type == "ALUMINIUM")
-            {
-                Aluminium aluminium = material as Aluminium;
-                string F = ""; // Strenght
+            //else if (material is Aluminium)
+            //{
+            //    Aluminium aluminium = material as Aluminium;
+            //    string F = ""; // Strenght
 
-                string uls = "MAT_CURVE_PARAM.2,,UNDEF,1,1";
-                string sls = "MAT_CURVE_PARAM.2,,UNDEF,1,1";
-                string prop = "MAT_ANAL.1,,0,MAT_ELAS_ISO,6," + E + "," + nu + "," + rho + "," + alpha + "," + G + "," + damp;
+            //    string uls = "MAT_CURVE_PARAM.2,,UNDEF,1,1";
+            //    string sls = "MAT_CURVE_PARAM.2,,UNDEF,1,1";
+            //    string prop = "MAT_ANAL.1,,0,MAT_ELAS_ISO,6," + E + "," + nu + "," + rho + "," + alpha + "," + G + "," + damp;
 
-                str = "MAT_" + type + ".9" + "," + num + "," + name + "," + E + "," + F + "," + nu + "," + G + "," + rho + "," + alpha + "," + prop + "0,0,0,0,0,0,0," + uls + "," + sls + ",0," + type;
-            }
-            else if (type == "TIMBER")
+            //    str = "MAT_" + type + ".9" + "," + num + "," + name + "," + E + "," + F + "," + nu + "," + G + "," + rho + "," + alpha + "," + prop + "0,0,0,0,0,0,0," + uls + "," + sls + ",0," + type;
+            //}
+            else if (material is Timber)
             {
                 Timber timber = material as Timber;
                 string F = ""; // Strenght
@@ -114,8 +114,13 @@ namespace BH.Adapter.GSA
 
                 str = "MAT_" + type + ".9" + "," + num + "," + name + "," + E + "," + F + "," + nu + "," + G + "," + rho + "," + alpha + "," + prop + "0,0,0,0,0,0,0," + uls + "," + sls + ",0," + type;
             }
-            else if (type == "UNDEF")
-            { str = "MAT_ANAL.1" + "," + num + "," + mModel + "," + name + "," + colour + ",6," + E + "," + nu + "," + rho + "," + alpha + "," + G + "," + damp + ",0,0"; }
+            else
+            {
+                if (material is Aluminium)
+                    Engine.Reflection.Compute.RecordWarning("Aluminium is currently not supported by the GSA API. An analysis material has been created rather than a proper aluminium material in GSA.");
+
+                str = "MAT_ANAL.1" + "," + num + "," + mModel + "," + name + "," + colour + ",6," + E + "," + nu + "," + rho + "," + alpha + "," + G + "," + damp + ",0,0";
+            }
 #else
             str = "MAT" + "," + num + "," + mModel + "," + name + "," + colour + "," + type + ",6," + E + "," + nu + "," + rho + "," + alpha + "," + G + "," + damp + ",0,0,NO_ENV";
 #endif
@@ -200,7 +205,7 @@ return str;
 
         /***************************************************/
 
-        private static string GetMaterialType(IMaterialFragment material)
+        private static string GetMaterialType(this IMaterialFragment material)
         {
 #if GSA_10_1
             if (material is Steel)
