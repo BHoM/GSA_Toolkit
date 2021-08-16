@@ -30,6 +30,7 @@ using BH.Engine.Adapters.GSA;
 using BH.oM.Adapters.GSA.SurfaceProperties;
 using BH.oM.Adapters.GSA.FormFindingProperties;
 using BH.Engine.Base;
+using BH.oM.Structure.MaterialFragments;
 
 namespace BH.Adapter.GSA
 {
@@ -55,8 +56,23 @@ namespace BH.Adapter.GSA
             string inplane = "100%";
             string weight = "0";
 
-            return command + "," + index + "," + name + "," + colour + "," + axis + "," + mat + "," + type + "," + thick + "," + weight + "," + mass + "," + bending + "," + inplane;
 
+#if GSA_10_1
+
+            string analNum, materialType, matNum;
+            panProp.Material.MaterialIdentifiers(out analNum, out materialType, out matNum);
+
+            string ref_pt = "CENTROID";
+            string ref_z = "0";
+            string shear = "100%";
+            string design = "0";
+            mass = "0";
+            weight = "100%";
+            //PROP_2D.7 | num | name | colour | type | axis | mat | mat_type | grade | design | profile | ref_pt | ref_z | mass | flex | shear | inplane | weight |
+            return $"PROP_2D.7, {index}, {name}, {colour}, {type}, {axis}, {analNum}, {materialType}, {matNum}, {design}, {thick}, {ref_pt}, {ref_z}, {mass}, {bending}, {shear}, {inplane}, {weight}";
+#else
+            return command + "," + index + "," + name + "," + colour + "," + axis + "," + mat + "," + type + "," + thick + "," + weight + "," + mass + "," + bending + "," + inplane;
+#endif
         }
 
         /***************************************************/
