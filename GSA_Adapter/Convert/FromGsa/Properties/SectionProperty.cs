@@ -38,83 +38,6 @@ namespace BH.Adapter.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
-        /// <summary>Structure.Creates a BHoM section from a gsa string</summary>
-        /// <param name="gsaString">
-        /// <summary>
-        /// Comma separated string on the format: [PROP_SEC | num | name | colour | mat | desc | principal | type | cost | 
-        /// is_prop { | area | I11 | I22 | J | K1 | K2} | 
-        /// is_mod { | area_to_by | area_m | I11_to_by | I11_m | I22_to_by | I22_m | J_to_by | J_m | K1_to_by | K1_m | K2_to_by | K2_m | mass | stress} | 
-        /// plate_type | calc_J]
-        /// </summary>
-        /// </param>
-        /// <param name="materials"></param>
-        /// <returns></returns>
-        
-        private static void FromGSAString(string gsaString, Dictionary<string, IMaterialFragment> materials, out int id, out IMaterialFragment mat, out string description, out string taggedName, out char splitChar)
-        {
-            string[] gsaStrings = gsaString.Split(',');
-            string materialId;
-
-            Int32.TryParse(gsaStrings[1], out id);
-
-            //Separate data extractions specific to each GSA version
-#if GSA_10_1
-            description = gsaStrings[21];
-            taggedName = gsaStrings[3];
-            splitChar = ' '; //To split gsaString
-
-            string matType;
-            string matId;
-
-            if (gsaStrings[18] == "0")
-            {
-                matId = gsaStrings[20];
-                matType = gsaStrings[19];
-            }
-            else
-            {
-                matId = gsaStrings[18];
-                matType = "ANAL";
-            }
-
-            materialId = matType + ":" + matId;
-#else
-            description = gsaStrings[5];
-            taggedName = gsaStrings[2];
-            materialId = gsaStrings[4];
-            splitChar = '%';
-#endif
-
-            if (!materials.TryGetValue(materialId, out mat))
-            {
-                Engine.Base.Compute.RecordWarning(string.Format("Failed to extract material with id {0}. Section with Id {1} will not have any material applied to it.", materialId, id));
-            }
-        }
-
-        private static void FromGSAString(string gsaString, out double a, out double iyy, out double izz, out double j, out double avy, out double avz)
-        {
-            string[] gsaStrings = gsaString.Split(',');
-
-            //Separate data extractions specific to each GSA version
-#if GSA_10_1
-            string[] desc = gsaStrings[21].Split(' ');
-
-            double.TryParse(desc[1], out a);
-            double.TryParse(desc[2], out iyy);
-            double.TryParse(desc[3], out izz);
-            double.TryParse(desc[4], out j);
-            double.TryParse(desc[5], out avy);
-            double.TryParse(desc[6], out avz);
-#else
-            double.TryParse(gsaStrings[10], out a);
-            double.TryParse(gsaStrings[11], out iyy);
-            double.TryParse(gsaStrings[12], out izz);
-            double.TryParse(gsaStrings[13], out j);
-            double.TryParse(gsaStrings[14], out avy);
-            double.TryParse(gsaStrings[15], out avz);
-#endif
-        }
-
         public static ISectionProperty FromGsaSectionProperty(string gsaString, Dictionary<string, IMaterialFragment> materials)
         {
             int id;
@@ -333,6 +256,72 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
+        private static void FromGSAString(string gsaString, Dictionary<string, IMaterialFragment> materials, out int id, out IMaterialFragment mat, out string description, out string taggedName, out char splitChar)
+        {
+            string[] gsaStrings = gsaString.Split(',');
+            string materialId;
+
+            Int32.TryParse(gsaStrings[1], out id);
+
+            //Separate data extractions specific to each GSA version
+#if GSA_10_1
+            description = gsaStrings[21];
+            taggedName = gsaStrings[3];
+            splitChar = ' '; //To split gsaString
+
+            string matType;
+            string matId;
+
+            if (gsaStrings[18] == "0")
+            {
+                matId = gsaStrings[20];
+                matType = gsaStrings[19];
+            }
+            else
+            {
+                matId = gsaStrings[18];
+                matType = "ANAL";
+            }
+
+            materialId = matType + ":" + matId;
+#else
+            description = gsaStrings[5];
+            taggedName = gsaStrings[2];
+            materialId = gsaStrings[4];
+            splitChar = '%';
+#endif
+
+            if (!materials.TryGetValue(materialId, out mat))
+            {
+                Engine.Reflection.Compute.RecordWarning(string.Format("Failed to extract material with id {0}. Section with Id {1} will not have any material applied to it.", materialId, id));
+            }
+        }
+
+        private static void FromGSAString(string gsaString, out double a, out double iyy, out double izz, out double j, out double avy, out double avz)
+        {
+            string[] gsaStrings = gsaString.Split(',');
+
+            //Separate data extractions specific to each GSA version
+#if GSA_10_1
+            string[] desc = gsaStrings[21].Split(' ');
+
+            double.TryParse(desc[1], out a);
+            double.TryParse(desc[2], out iyy);
+            double.TryParse(desc[3], out izz);
+            double.TryParse(desc[4], out j);
+            double.TryParse(desc[5], out avy);
+            double.TryParse(desc[6], out avz);
+#else
+            double.TryParse(gsaStrings[10], out a);
+            double.TryParse(gsaStrings[11], out iyy);
+            double.TryParse(gsaStrings[12], out izz);
+            double.TryParse(gsaStrings[13], out j);
+            double.TryParse(gsaStrings[14], out avy);
+            double.TryParse(gsaStrings[15], out avz);
+#endif
+        }
+
+        /***************************************************/
     }
 }
 
