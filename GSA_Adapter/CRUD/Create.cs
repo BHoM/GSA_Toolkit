@@ -119,6 +119,8 @@ namespace BH.Adapter.GSA
 #if GSA_10_1
                 if (success)
                 {
+                    //GSA10 reports back a success for a failing section description, and just places "None" for the profile
+                    //Pulling back section row to check this. A bit inefficient, but have not found a quicker way to resolve this.
                     string catPropRead = m_gsaCom.GwaCommand("GET, SECTION.7," + prop.GSAId() + ",").ToString();
                     string[] arr = catPropRead.Split(',');
                     if (arr.Length > 21 && arr[21].ToUpper() != "NONE")
