@@ -40,16 +40,24 @@ namespace BH.Adapter.GSA
 
         private static string ToGsaString(this ISectionProperty prop, string index)
         {
+            string desc, props;
+            if (!ICreateDescAndPropString(prop, out desc, out props))
+                return "";
+#if GSA_10_1
+
+            desc = desc.Replace("%", " ");
+#endif
+            return ToGsaString(prop, index, desc, props);
+        }
+
+        /***************************************************/
+
+        private static string ToGsaString(this ISectionProperty prop, string index, string description, string props)
+        {
             prop.Name = prop.DescriptionOrName().ToGSACleanName();
             string name = prop.TaggedName();
 
             string mat = prop.Material.GSAId().ToString();// materialId;  //"STEEL";// material.Name;
-
-            string desc;
-            string props;
-
-            if (!ICreateDescAndPropString(prop, out desc, out props))
-                return "";
 
             string colour = "NO_RGB";
             string principle = "NO";
@@ -65,14 +73,12 @@ namespace BH.Adapter.GSA
 
             string analNum, materialType, matNum;
             prop.Material.MaterialIdentifiers(out analNum, out materialType, out matNum);
-
-            desc = desc.Replace("%", " ");
             //SECTION_COMP | ref | name | matAnal | matType | matRef | desc | offset_y | offset_z | rotn | reflect | pool
-            string sectionComp = "SECTION_COMP.4,," + analNum + "," + materialType + "," + matNum + "," + desc + ",0,0,0,NONE,0,NONE,0";
+            string sectionComp = "SECTION_COMP.4,," + analNum + "," + materialType + "," + matNum + "," + description + ",0,0,0,NONE,0,NONE,0";
             //SECTION.7 | ref | colour | name | memb | pool | point | refY | refZ | mass | fraction | cost | left | right | slab | num { <comp> }
             string str = "SECTION.7," + index + "," + colour + "," + name + ",1D_GENERIC,0,CENTROID,0,0,0,1,0,0,0,0,1," + sectionComp + "," + prop.ISectionMaterialComp();
 #else
-            string str = "PROP_SEC" + "," + index + "," + name + "," + colour + "," + mat + "," + desc + "," + principle + "," + type + "," + cost + "," + props + "," + mods + "," + plate_type + "," + calc_J;
+            string str = "PROP_SEC" + "," + index + "," + name + "," + colour + "," + mat + "," + description + "," + principle + "," + type + "," + cost + "," + props + "," + mods + "," + plate_type + "," + calc_J;
 #endif
             return str;
         }
@@ -154,11 +160,9 @@ namespace BH.Adapter.GSA
                             catProp += arr[i];
                         }
 
+                        return ToGsaString(secProp, secProp.GSAId().ToString(), catProp, "NO_PROP");
 
-
-                        return "PROP_SEC," + secProp.GSAId().ToString() + ", " + name + ", NO_RGB," + secProp.Material.GSAId() + "," + catProp + ", NO," + secProp.SectionType() + ", 0, NO_PROP," + secProp.ModifiersString() + ", FLAME_CUT, NO_J";
-
-
+                        //return "PROP_SEC," + secProp.GSAId().ToString() + ", " + name + ", NO_RGB," + secProp.Material.GSAId() + "," + catProp + ", NO," + secProp.SectionType() + ", 0, NO_PROP," + secProp.ModifiersString() + ", FLAME_CUT, NO_J";
                     }
                 }
             }
