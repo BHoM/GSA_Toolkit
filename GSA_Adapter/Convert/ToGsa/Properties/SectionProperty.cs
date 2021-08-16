@@ -63,19 +63,9 @@ namespace BH.Adapter.GSA
 
 #if GSA_10_1
 
-            string analNum = "0";
-            string materialType = "";
-            string matNum = "0";
+            string analNum, materialType, matNum;
+            prop.Material.MaterialIdentifiers(out analNum, out materialType, out matNum);
 
-            if (prop.Material.GetMaterialType() == "UNDEF" || prop.Material is Aluminium)   //Aluminium current unsuported in the GSA API
-            {
-                analNum = mat;
-            }
-            else
-            {
-                matNum = mat;
-                materialType = prop.Material.GetMaterialType();
-            }
             desc = desc.Replace("%", " ");
             //SECTION_COMP | ref | name | matAnal | matType | matRef | desc | offset_y | offset_z | rotn | reflect | pool
             string sectionComp = "SECTION_COMP.4,," + analNum + "," + materialType + "," + matNum + "," + desc + ",0,0,0,NONE,0,NONE,0";
