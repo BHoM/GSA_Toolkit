@@ -37,6 +37,57 @@ namespace BH.Adapter.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
+        public static ISurfaceProperty FromGsaSurfaceProperty(string gsaString, Dictionary<string, IMaterialFragment> materials)
+        {
+            ISurfaceProperty panProp = null;
+
+            if (gsaString == "")
+            {
+                return null;
+            }
+
+            string[] gsaStrings = gsaString.Split(',');
+
+            int id;
+
+            Int32.TryParse(gsaStrings[1], out id);
+            string name = gsaStrings[2];
+
+            string description, materialId, loadCondition;
+            double t;
+            int refEdge;
+            FromGSAString(gsaString, out description, out materialId, out t, out loadCondition, out refEdge);
+
+            if (description == "SHELL")
+            {
+                panProp = new ConstantThickness();
+                panProp.Material = materials[materialId];
+                ((ConstantThickness)panProp).Thickness = t;
+            }
+            else if (description == "LOAD")
+            {
+                panProp = new LoadingPanelProperty();
+                ((LoadingPanelProperty)panProp).LoadApplication = GetLoadingConditionFromString(loadCondition);
+                ((LoadingPanelProperty)panProp).ReferenceEdge = refEdge;
+            }
+            else if (description == "FABRIC")
+            {
+                panProp = new FabricPanelProperty();
+                panProp.Material = materials[materialId];
+            }
+            else
+            {
+                Engine.Reflection.Compute.RecordWarning(string.Format("2D Property with id {0} and name {1} is of a type currently not supported. Will return a null object.",  gsaStrings[1], name));
+                return null;
+            }
+
+            panProp.SetAdapterId(typeof(GSAId), id);
+            panProp.Name = name;
+            return panProp;
+        }
+
+        /***************************************************/
+
         private static void FromGSAString(string gsaString, out string description, out string materialId, out double t, out string loadCondition, out int refEdge)
         {
             string[] gsaStrings = gsaString.Split(',');
@@ -102,57 +153,6 @@ namespace BH.Adapter.GSA
                 refEdge = 0;
             }
 #endif
-        }
-
-        /***************************************************/
-
-        public static ISurfaceProperty FromGsaSurfaceProperty(string gsaString, Dictionary<string, IMaterialFragment> materials)
-        {
-            ISurfaceProperty panProp = null;
-
-            if (gsaString == "")
-            {
-                return null;
-            }
-
-            string[] gsaStrings = gsaString.Split(',');
-
-            int id;
-
-            Int32.TryParse(gsaStrings[1], out id);
-            string name = gsaStrings[2];
-
-            string description, materialId, loadCondition;
-            double t;
-            int refEdge;
-            FromGSAString(gsaString, out description, out materialId, out t, out loadCondition, out refEdge);
-
-            if (description == "SHELL")
-            {
-                panProp = new ConstantThickness();
-                panProp.Material = materials[materialId];
-                ((ConstantThickness)panProp).Thickness = t;
-            }
-            else if (description == "LOAD")
-            {
-                panProp = new LoadingPanelProperty();
-                ((LoadingPanelProperty)panProp).LoadApplication = GetLoadingConditionFromString(loadCondition);
-                ((LoadingPanelProperty)panProp).ReferenceEdge = refEdge;
-            }
-            else if (description == "FABRIC")
-            {
-                panProp = new FabricPanelProperty();
-                panProp.Material = materials[materialId];
-            }
-            else
-            {
-                Engine.Reflection.Compute.RecordWarning(string.Format("2D Property with id {0} and name {1} is of a type currently not supported. Will return a null object.",  gsaStrings[1], name));
-                return null;
-            }
-
-            panProp.SetAdapterId(typeof(GSAId), id);
-            panProp.Name = name;
-            return panProp;
         }
 
         /***************************************************/
