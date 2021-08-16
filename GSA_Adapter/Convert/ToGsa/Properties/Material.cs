@@ -31,6 +31,7 @@ using BH.oM.Structure.MaterialFragments;
 using BH.oM.Geometry;
 using BH.oM.Adapters.GSA.MaterialFragments;
 using BH.Engine.Base;
+using BH.Engine.Adapters.GSA;
 
 
 namespace BH.Adapter.GSA
@@ -197,6 +198,27 @@ return str;
         /***************************************************/
         /**** Private  Methods                          ****/
         /***************************************************/
+
+#if GSA_10_1
+
+        private static void MaterialIdentifiers(this IMaterialFragment material, out string analNum, out string materialType, out string matNum)
+        {
+            analNum = "0";
+            materialType = "";
+            matNum = "0";
+
+            if (material.GetMaterialType() == "UNDEF" || material is Aluminium)   //Aluminium current unsuported in the GSA API
+            {
+                analNum = material.GSAId().ToString();
+            }
+            else
+            {
+                matNum = material.GSAId().ToString();
+                materialType = material.GetMaterialType();
+            }
+        }
+
+#endif
 
         private static string CommaSeparatedValues(Vector v)
         {
