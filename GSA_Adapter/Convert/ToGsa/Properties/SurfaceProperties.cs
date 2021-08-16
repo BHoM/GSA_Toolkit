@@ -79,7 +79,11 @@ namespace BH.Adapter.GSA
 
         private static string ToGsaString(LoadingPanelProperty panProp, string index)
         {
+#if GSA_10_1
+            string command = "PROP_2D.2";
+#else
             string command = "PROP_2D";
+#endif
             panProp.Name = panProp.DescriptionOrName().ToGSACleanName();
             string name = panProp.TaggedName();
             string colour = "NO_RGB";
