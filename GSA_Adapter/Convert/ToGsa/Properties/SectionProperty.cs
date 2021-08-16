@@ -64,20 +64,23 @@ namespace BH.Adapter.GSA
 #if GSA_10_1
 
             string analNum = "0";
-            string material = "";
+            string materialType = "";
             string matNum = "0";
 
-            if (prop.Material.GetType().ToGsaString() != "UNDEF" && prop.Material.GetType() == typeof(GenericIsotropicMaterial))
+            if (prop.Material.GetMaterialType() == "UNDEF" || prop.Material is Aluminium)   //Aluminium current unsuported in the GSA API
             {
                 analNum = mat;
             }
-            else if (prop.Material.GetType().ToGsaString() == "UNDEF" && prop.Material.GetType() == typeof(GenericOrthotropicMaterial))
+            else
             {
                 matNum = mat;
-                material = prop.Material.GetType().ToString().ToUpper();
+                materialType = prop.Material.GetMaterialType();
             }
-
-            string str = "SECTION.7," + index + "," + colour + ",1D_GENERIC,0,CENTROID,0,0," + analNum + "," + mat + "," + matNum;
+            desc = desc.Replace("%", " ");
+            //SECTION_COMP | ref | name | matAnal | matType | matRef | desc | offset_y | offset_z | rotn | reflect | pool
+            string sectionComp = "SECTION_COMP.4,," + analNum + "," + materialType + "," + matNum + "," + desc + ",0,0,0,NONE,0,NONE,0";
+            //SECTION.7 | ref | colour | name | memb | pool | point | refY | refZ | mass | fraction | cost | left | right | slab | num { <comp> }
+            string str = "SECTION.7," + index + "," + colour + "," + name + ",1D_GENERIC,0,CENTROID,0,0,0,1,0,0,0,0,1," + sectionComp + "," + prop.ISectionMaterialComp();
 #else
             string str = "PROP_SEC" + "," + index + "," + name + "," + colour + "," + mat + "," + desc + "," + principle + "," + type + "," + cost + "," + props + "," + mods + "," + plate_type + "," + calc_J;
 #endif
@@ -85,6 +88,37 @@ namespace BH.Adapter.GSA
         }
 
         /***************************************************/
+
+#if GSA_10_1
+        private static string ISectionMaterialComp(this ISectionProperty prop)
+        {
+            return SectionMaterialComp(prop as dynamic);
+        }
+
+        /***************************************************/
+
+        private static string SectionMaterialComp(ISectionProperty prop)
+        {
+            return "0,0,NO_ENVIRON";
+        }
+
+        /***************************************************/
+
+        private static string SectionMaterialComp(SteelSection prop)
+        {
+
+            return "SECTION_STEEL.2,0,1,1,1,0.4,NO_LOCK,UNDEF,UNDEF,0,0,NO_ENVIRON";
+        }
+
+        /***************************************************/
+
+        private static string SectionMaterialComp(ConcreteSection prop)
+        {
+            return "SECTION_CONC.6,1,NO_SLAB,89.99999998,0.025,0,SECTION_LINK.3,0,0,DISCRETE,RECT,0,,SECTION_COVER.3,UNIFORM,0,0,NO_SMEAR,SECTION_TMPL.4,UNDEF,0,0,0,0,0,0,NO_ENVIRON";
+        }
+
+        /***************************************************/
+#endif
 
         public static string CreateCatalogueString(this ISectionProperty secProp)
         {
