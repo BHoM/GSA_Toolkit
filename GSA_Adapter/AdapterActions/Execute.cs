@@ -60,6 +60,9 @@ namespace BH.Adapter.GSA
 
         public bool RunCommand(Close command)
         {
+            if (command.SaveBeforeClose)
+                m_gsaCom.Save();
+
             return m_gsaCom.Close() == 0;
         }
 
@@ -130,6 +133,28 @@ namespace BH.Adapter.GSA
         public bool RunCommand(Open command)
         {
             return m_gsaCom.Open(command.FileName) == 0;
+        }
+
+        /***************************************************/
+
+        public bool RunCommand(Exit command)
+        {
+            if (command.SaveBeforeClose)
+                m_gsaCom.Save();
+
+            using (System.Diagnostics.Process gsaProcess = System.Diagnostics.Process.GetProcessById(m_gsaCom.ProcessID()))
+            { 
+                string name = gsaProcess.ProcessName;
+                if (!name.ToUpper().Contains("GSA"))
+                {
+                    Engine.Reflection.Compute.RecordError("Could not find the running GSA process");
+                    return false;
+                }
+                gsaProcess.Kill();
+            }
+
+            m_gsaCom = null;
+            return true;
         }
 
         /***************************************************/
