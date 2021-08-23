@@ -60,13 +60,20 @@ namespace BH.Adapter.GSA
                     if (string.IsNullOrEmpty(lCaseParam[0]))
                         lCaseParam[0] = "1.0";
 
-                    Loadcase templCase = lCases[lCaseParam[1]];
+                    Loadcase templCase;
+                    if (!lCases.TryGetValue(lCaseParam[1], out templCase))
+                    {
+                        templCase = new Loadcase { Number = int.Parse(lCaseParam[1]), Nature = LoadNature.Other };
+                        templCase.SetAdapterId(typeof(GSAId), templCase.Number);
+                    }
                     Tuple<double, ICase> loadCase = new Tuple<double, ICase>(double.Parse(lCaseParam[0]), templCase);
                     lCasesForTask.Add(loadCase);
                 }
             }
 
-            return new LoadCombination { Name = gStr[2], Number = int.Parse(gStr[1]), LoadCases = lCasesForTask };
+            LoadCombination combo = Engine.Structure.Create.LoadCombination(gStr[2], int.Parse(gStr[1]), lCasesForTask);
+            combo.SetAdapterId(typeof(GSAId), "A" +combo.Number);
+            return combo;
         }
         
         /***************************************************/

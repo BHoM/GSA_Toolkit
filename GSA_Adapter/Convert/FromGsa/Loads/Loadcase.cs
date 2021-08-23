@@ -54,6 +54,7 @@ namespace BH.Adapter.GSA
             if (Int32.TryParse(gStr[1], out lCasenum))
             {
                 lCase.Number = lCasenum;
+                lCase.SetAdapterId(typeof(GSAId), lCasenum);
             }
 
             return lCase;
