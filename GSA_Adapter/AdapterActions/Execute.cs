@@ -159,7 +159,7 @@ namespace BH.Adapter.GSA
                 string name = gsaProcess.ProcessName;
                 if (!name.ToUpper().Contains("GSA"))
                 {
-                    Engine.Reflection.Compute.RecordError("Could not find the running GSA process");
+                    Engine.Reflection.Compute.RecordError("Could not find the running GSA process.");
                     return false;
                 }
                 gsaProcess.Kill();
