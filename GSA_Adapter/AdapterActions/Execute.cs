@@ -61,7 +61,13 @@ namespace BH.Adapter.GSA
         public bool RunCommand(Close command)
         {
             if (command.SaveBeforeClose)
-                m_gsaCom.Save();
+            {
+                if (m_gsaCom.Save() != 0)
+                {
+                    Engine.Reflection.Compute.RecordError("File not closed. File does not have a name. Please manually save the file or use the SaveAs command before trying to Close the file. If you want to close the file anyway, please toggle SaveBeforeClose to false.");
+                    return false;
+                }
+            }
 
             return m_gsaCom.Close() == 0;
         }
@@ -140,7 +146,13 @@ namespace BH.Adapter.GSA
         public bool RunCommand(Exit command)
         {
             if (command.SaveBeforeClose)
-                m_gsaCom.Save();
+            {
+                if (m_gsaCom.Save() != 0)
+                {
+                    Engine.Reflection.Compute.RecordError("Application not exited. File does not have a name. Please manually save the file or use the SaveAs command before trying to Exit the application. If you want to close the application anyway, please toggle SaveBeforeClose to false.");
+                    return false;
+                }
+            }
 
             using (System.Diagnostics.Process gsaProcess = System.Diagnostics.Process.GetProcessById(m_gsaCom.ProcessID()))
             { 
