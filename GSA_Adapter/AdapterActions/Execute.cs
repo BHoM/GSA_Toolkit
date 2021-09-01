@@ -64,7 +64,7 @@ namespace BH.Adapter.GSA
             {
                 if (m_gsaCom.Save() != 0)
                 {
-                    Engine.Reflection.Compute.RecordError("File not closed. File does not have a name. Please manually save the file or use the SaveAs command before trying to Close the file. If you want to close the file anyway, please toggle SaveBeforeClose to false.");
+                    Engine.Reflection.Compute.RecordError($"File not closed. File does not have a name. Please manually save the file or use the {nameof(SaveAs)} command before trying to Close the file. If you want to close the file anyway, please toggle {nameof(Close.SaveBeforeClose)} to false.");
                     return false;
                 }
             }
@@ -149,7 +149,7 @@ namespace BH.Adapter.GSA
             {
                 if (m_gsaCom.Save() != 0)
                 {
-                    Engine.Reflection.Compute.RecordError("Application not exited. File does not have a name. Please manually save the file or use the SaveAs command before trying to Exit the application. If you want to close the application anyway, please toggle SaveBeforeClose to false.");
+                    Engine.Reflection.Compute.RecordError($"Application not exited. File does not have a name. Please manually save the file or use the {nameof(SaveAs)} command before trying to Exit the application. If you want to close the application anyway, please toggle {nameof(Exit.SaveBeforeClose)} to false.");
                     return false;
                 }
             }
