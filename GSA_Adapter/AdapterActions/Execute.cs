@@ -155,7 +155,12 @@ namespace BH.Adapter.GSA
             }
 
             using (System.Diagnostics.Process gsaProcess = System.Diagnostics.Process.GetProcessById(m_gsaCom.ProcessID()))
-            { 
+            {
+                if (gsaProcess == null)
+                {
+                    Engine.Reflection.Compute.RecordError("Could not find GSA process. Unable to exit application,");
+                    return false;
+                }
                 string name = gsaProcess.ProcessName;
                 if (!name.ToUpper().Contains("GSA"))
                 {
