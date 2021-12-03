@@ -49,7 +49,7 @@ namespace BH.Engine.Adapters.GSA
         public static LoadCombination SetAnalysisType(LoadCombination loadcombination, AnalysisType analysisType = AnalysisType.LinearStatic, int stage = 0, double residualForce = 1.0, double residualMoment = 1.0)
         {
             AnalysisTaskFragment fragment = new AnalysisTaskFragment { AnalysisType = analysisType, Stage = stage, ResidualForce = residualForce, ResidualMoment = residualMoment };
-            LoadCombination clone = loadcombination.GetShallowClone() as LoadCombination;
+            LoadCombination clone = loadcombination.ShallowClone();
 
             clone.Fragments.AddOrReplace(fragment);
             return clone;
