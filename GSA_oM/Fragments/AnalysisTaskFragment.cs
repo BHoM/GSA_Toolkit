@@ -43,6 +43,10 @@ namespace BH.oM.Adapters.GSA
 
         [Description("Allowed residual Moment for convergence, only used for Non-linear analysis.")]
         public double ResidualMoment { get; set; } = 1.0;
+
+        [Description("Reduce beam stiffness when in compression, only used for Non-linear analysis.")]
+        public bool BeamSlendernessEffect { get; set; } = true;
+
         /***************************************************/
     }
 }
