@@ -50,7 +50,10 @@ namespace BH.Engine.Adapters.GSA
         public static LoadCombination SetAnalysisSettings(this LoadCombination loadcombination, AnalysisType analysisType = AnalysisType.LinearStatic, int stage = 0, double residualForce = 1.0, double residualMoment = 1.0, bool beamSlendernessEffect = true)
         {
             if (loadcombination == null)
+            {
+                Reflection.Compute.RecordError("Loadcombination is null. Cannot assign settings.");
                 return null;
+            }
             AnalysisTaskFragment fragment = new AnalysisTaskFragment { AnalysisType = analysisType, Stage = stage, ResidualForce = residualForce, ResidualMoment = residualMoment, BeamSlendernessEffect = beamSlendernessEffect };
             LoadCombination clone = loadcombination.ShallowClone();
 
