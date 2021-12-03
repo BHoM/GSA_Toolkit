@@ -84,6 +84,7 @@ namespace BH.Adapter.GSA
                 {typeof(BH.oM.Structure.Loads.IElementLoad<Node>), new List<Type> { typeof(Node), typeof(BH.oM.Structure.Loads.Loadcase) } },
                 {typeof(BH.oM.Structure.Loads.IElementLoad<Bar>), new List<Type> { typeof(Bar), typeof(BH.oM.Structure.Loads.Loadcase) } },
                 {typeof(BH.oM.Structure.Loads.ILoad), new List<Type> { typeof(BH.oM.Structure.Loads.Loadcase) } },
+                {typeof(BH.oM.Structure.Loads.LoadCombination), new List<Type> { typeof(BH.oM.Structure.Loads.Loadcase) } },
                 {typeof(Bar), new List<Type> { typeof(ISectionProperty), typeof(Node) } },
                 {typeof(ISectionProperty), new List<Type> { typeof(IMaterialFragment) } },
                 {typeof(RigidLink), new List<Type> { typeof(LinkConstraint), typeof(Node) } },
