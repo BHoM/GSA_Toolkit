@@ -45,10 +45,11 @@ namespace BH.Adapter.GSA
             AnalysisType type;
             int stage;
             double residualForce, residualMoment;
-            TaskTypeAndStage(loadComb, out type, out stage, out residualForce, out residualMoment);
-            gsaStrings.Add(AnalysisTask(combNo, loadComb.Name, type, stage, combNo, residualForce, residualMoment));
+            string beamGeoStiffness;
+            TaskTypeAndStage(loadComb, out type, out stage, out residualForce, out residualMoment, out beamGeoStiffness);
+            gsaStrings.Add(AnalysisTask(combNo, loadComb.Name, type, stage, combNo, residualForce, residualMoment, beamGeoStiffness));
 
-            loadComb.SetAdapterId(typeof(BH.oM.Adapters.GSA.GSAId), "A" + loadComb.Number);
+            loadComb.SetAdapterId(typeof(GSAId), "A" + loadComb.Number);
 
             return gsaStrings;
         }
@@ -57,24 +58,19 @@ namespace BH.Adapter.GSA
         /**** Private Methods                           ****/
         /***************************************************/
 
-        private static void TaskTypeAndStage(LoadCombination comb, out AnalysisType type, out int stage, out double residualForce, out double residualMoment)
+        private static void TaskTypeAndStage(LoadCombination comb, out AnalysisType type, out int stage, out double residualForce, out double residualMoment, out string beamGeoStiffness)
         {
-            AnalysisTaskFragment fragment = comb.FindFragment<AnalysisTaskFragment>();
+            AnalysisTaskFragment fragment = comb.FindFragment<AnalysisTaskFragment>() ?? new AnalysisTaskFragment();
 
-            if (fragment != null)
-            {
-                type = fragment.AnalysisType;
-                stage = fragment.Stage;
-                residualForce = fragment.ResidualForce;
-                residualMoment = fragment.ResidualMoment;
-            }
+            type = fragment.AnalysisType;
+            stage = fragment.Stage;
+            residualForce = fragment.ResidualForce;
+            residualMoment = fragment.ResidualMoment;
+            if (fragment.BeamSlendernessEffect)
+                beamGeoStiffness = "BEAM_GEO_YES";
             else
-            {
-                type = AnalysisType.LinearStatic;
-                stage = 0;
-                residualForce = 1.0;
-                residualMoment = 1.0;
-            }
+                beamGeoStiffness = "BEAM_GEO_NO";
+
         }
 
         /***************************************************/
@@ -95,7 +91,7 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        private static string AnalysisTask(string taskNo, string name, AnalysisType type, int stage, string anal_caseNo, double residualForce, double residualMoment)
+        private static string AnalysisTask(string taskNo, string name, AnalysisType type, int stage, string anal_caseNo, double residualForce, double residualMoment, string beamGeoStiffness)
         {
             string addTask;
             string command = "TASK";
@@ -166,7 +162,7 @@ namespace BH.Adapter.GSA
                     + "," + solution
                     + "," + scheme
                     + ", 1"                     //num_case 
-                    + ", BEAM_GEO_YES"
+                    + ", " + beamGeoStiffness
                     + ", SHELL_GEO_NO"
                     + ", 0.1"                   //first_inc
                     + ", 0.0001"                //min_inc 
