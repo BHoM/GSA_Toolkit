@@ -49,6 +49,8 @@ namespace BH.Engine.Adapters.GSA
         [Output("loadCombination", "The loadcombination with set analysis type and stage.")]
         public static LoadCombination SetAnalysisSettings(this LoadCombination loadcombination, AnalysisType analysisType = AnalysisType.LinearStatic, int stage = 0, double residualForce = 1.0, double residualMoment = 1.0, bool beamSlendernessEffect = true)
         {
+            if (loadcombination == null)
+                return null;
             AnalysisTaskFragment fragment = new AnalysisTaskFragment { AnalysisType = analysisType, Stage = stage, ResidualForce = residualForce, ResidualMoment = residualMoment, BeamSlendernessEffect = beamSlendernessEffect };
             LoadCombination clone = loadcombination.ShallowClone();
 
