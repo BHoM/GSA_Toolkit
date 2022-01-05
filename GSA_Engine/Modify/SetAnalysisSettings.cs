@@ -39,7 +39,6 @@ namespace BH.Engine.Adapters.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
-        [PreviousVersion("5.0", "BH.Engine.Adapters.GSA.Modify.SetAnalysisType(BH.oM.Structure.Loads.LoadCombination, BH.oM.Adapters.GSA.AnalysisType, System.Int32)")]
         [Description("Sets the analysis type and stage for a LoadCombination")]
         [Input("loadcombination", "The load combination to set stage and analysis type for.")]
         [Input("stage", "The stage number for the combination to be run on.")]
