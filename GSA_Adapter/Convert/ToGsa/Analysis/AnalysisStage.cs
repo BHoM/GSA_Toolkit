@@ -81,7 +81,7 @@ namespace BH.Adapter.GSA
                 }
                 else
                 {
-                    BH.Engine.Reflection.Compute.RecordError("Unable to extract GSA Id. Supported types are doubles, ints, strings and BHoMObjects.");
+                    BH.Engine.Base.Compute.RecordError("Unable to extract GSA Id. Supported types are doubles, ints, strings and BHoMObjects.");
                     continue;
                 }
 

@@ -113,7 +113,7 @@ namespace BH.Adapter.GSA
 
         private static string ToGsaString(this IMaterialFragment material, string index)
         {
-            Engine.Reflection.Compute.RecordWarning("GSA_Toolkit does currently only suport Isotropic and Orthotropic materials. Material with name " + material.Name + " has NOT been pushed");
+            Engine.Base.Compute.RecordWarning("GSA_Toolkit does currently only suport Isotropic and Orthotropic materials. Material with name " + material.Name + " has NOT been pushed");
             return "";
         }
 
@@ -202,7 +202,7 @@ namespace BH.Adapter.GSA
 
                 message += ".\nAll unset (null) properties have been replaced with empty (zero length) vectors. Please check the input data!";
 
-                Engine.Reflection.Compute.RecordError(message);
+                Engine.Base.Compute.RecordError(message);
             }
 
             return clone;

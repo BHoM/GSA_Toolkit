@@ -66,7 +66,7 @@ namespace BH.Adapter.GSA
                 }
             }
 
-            return Engine.Structure.Create.LoadCombination(gStr[2], int.Parse(gStr[1]), lCasesForTask);
+            return new LoadCombination { Name = gStr[2], Number = int.Parse(gStr[1]), LoadCases = lCasesForTask };
         }
         
         /***************************************************/

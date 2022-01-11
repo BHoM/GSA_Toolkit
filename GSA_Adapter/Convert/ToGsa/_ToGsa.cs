@@ -33,7 +33,7 @@ using BH.oM.Adapters.GSA;
 using System.ComponentModel;
 using BH.oM.Adapters.GSA.SpacerProperties;
 using BH.oM.Adapters.GSA.Elements;
-using BH.oM.Reflection.Attributes;
+using BH.oM.Base.Attributes;
 
 
 namespace BH.Adapter.GSA
@@ -81,7 +81,7 @@ namespace BH.Adapter.GSA
 
             if (name.Contains(","))
             {
-                Engine.Reflection.Compute.RecordNote("Any ',' in the name of the object pushed to GSA has been replaced by a ';' due to naming limitations through the GSA API.");
+                Engine.Base.Compute.RecordNote("Any ',' in the name of the object pushed to GSA has been replaced by a ';' due to naming limitations through the GSA API.");
                 name = name.Replace(',', ';');
             }
             return name;
@@ -94,7 +94,7 @@ namespace BH.Adapter.GSA
         [Input("category", "The object category to raise a warning for. Defaults to object.")]
         public static void NotSupportedWarning(Type type, string category = "Objects")
         {
-            Engine.Reflection.Compute.RecordWarning(category + " of type " + type.FullName + " are not supported in the GSA Adapter");
+            Engine.Base.Compute.RecordWarning(category + " of type " + type.FullName + " are not supported in the GSA Adapter");
         }
 
         /***************************************************/
@@ -120,7 +120,7 @@ namespace BH.Adapter.GSA
 
         public static string ToGsaString(this Panel obj, string index)
         {
-            Engine.Reflection.Compute.RecordWarning("GSA has no meshing capabilities and does therefore not support Panel objects. \n"+
+            Engine.Base.Compute.RecordWarning("GSA has no meshing capabilities and does therefore not support Panel objects. \n"+
                                                     "To be able to push a Panel it first needs to be meshed and turned into a FEMesh.");
             return "";
         }

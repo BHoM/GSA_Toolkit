@@ -23,7 +23,7 @@
 using System.Collections.Generic;
 using System.Collections;
 using BH.oM.Adapter;
-using BH.oM.Reflection;
+using BH.oM.Base;
 using BH.oM.Adapter.Commands;
 
 namespace BH.Adapter.GSA
@@ -64,7 +64,7 @@ namespace BH.Adapter.GSA
             {
                 if (m_gsaCom.Save() != 0)
                 {
-                    Engine.Reflection.Compute.RecordError($"File not closed. File does not have a name. Please manually save the file or use the {nameof(SaveAs)} command before trying to Close the file. If you want to close the file anyway, please toggle {nameof(Close.SaveBeforeClose)} to false.");
+                    Engine.Base.Compute.RecordError($"File not closed. File does not have a name. Please manually save the file or use the {nameof(SaveAs)} command before trying to Close the file. If you want to close the file anyway, please toggle {nameof(Close.SaveBeforeClose)} to false.");
                     return false;
                 }
             }
@@ -149,7 +149,7 @@ namespace BH.Adapter.GSA
             {
                 if (m_gsaCom.Save() != 0)
                 {
-                    Engine.Reflection.Compute.RecordError($"Application not exited. File does not have a name. Please manually save the file or use the {nameof(SaveAs)} command before trying to Exit the application. If you want to close the application anyway, please toggle {nameof(Exit.SaveBeforeClose)} to false.");
+                    Engine.Base.Compute.RecordError($"Application not exited. File does not have a name. Please manually save the file or use the {nameof(SaveAs)} command before trying to Exit the application. If you want to close the application anyway, please toggle {nameof(Exit.SaveBeforeClose)} to false.");
                     return false;
                 }
             }
@@ -158,13 +158,13 @@ namespace BH.Adapter.GSA
             {
                 if (gsaProcess == null)
                 {
-                    Engine.Reflection.Compute.RecordError("Could not find GSA process. Unable to exit application,");
+                    Engine.Base.Compute.RecordError("Could not find GSA process. Unable to exit application,");
                     return false;
                 }
                 string name = gsaProcess.ProcessName;
                 if (!name.ToUpper().Contains("GSA"))
                 {
-                    Engine.Reflection.Compute.RecordError("Could not find the running GSA process.");
+                    Engine.Base.Compute.RecordError("Could not find the running GSA process.");
                     return false;
                 }
                 gsaProcess.Kill();
@@ -185,7 +185,7 @@ namespace BH.Adapter.GSA
 
         public bool RunCommand(IExecuteCommand command)
         {
-            Engine.Reflection.Compute.RecordWarning($"The command {command.GetType().Name} is not supported by this Adapter.");
+            Engine.Base.Compute.RecordWarning($"The command {command.GetType().Name} is not supported by this Adapter.");
             return false;
         }
     }

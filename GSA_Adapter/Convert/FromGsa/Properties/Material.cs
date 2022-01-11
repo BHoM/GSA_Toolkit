@@ -82,7 +82,7 @@ namespace BH.Adapter.GSA
                         break;
                     default:
                         mat = new GenericIsotropicMaterial { YoungsModulus = E, Density = rho, PoissonsRatio = v, ThermalExpansionCoeff = tC };
-                        Engine.Reflection.Compute.RecordWarning(string.Format("Material with id {0} and name {1} is of a type not currently fully supported or has no type defined. A generic isotropic material will be assumed", gStr[1], gStr[3]));
+                        Engine.Base.Compute.RecordWarning(string.Format("Material with id {0} and name {1} is of a type not currently fully supported or has no type defined. A generic isotropic material will be assumed", gStr[1], gStr[3]));
                         break;
 
                 }
@@ -135,7 +135,7 @@ namespace BH.Adapter.GSA
                         break;
                     default:
                         mat = new GenericOrthotropicMaterial { YoungsModulus = e, ShearModulus = g, Density = rho, ThermalExpansionCoeff = tC, PoissonsRatio = v };
-                        Engine.Reflection.Compute.RecordWarning(string.Format("Material with id {0} and name {1} is of a type not currently fully supported or has no orthotropic type defined. A generic orthotropic material will be assumed", gStr[1], gStr[3]));
+                        Engine.Base.Compute.RecordWarning(string.Format("Material with id {0} and name {1} is of a type not currently fully supported or has no orthotropic type defined. A generic orthotropic material will be assumed", gStr[1], gStr[3]));
                         break;
 
                 }

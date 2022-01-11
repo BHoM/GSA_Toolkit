@@ -52,7 +52,7 @@ namespace BH.Adapter.GSA
             //TODO: Handle mode selection
 
             if (request.Modes != null && request.Modes.Count > 0)
-                Engine.Reflection.Compute.RecordWarning("Mode selection is not yet implemented in the GSA_Adapter.");
+                Engine.Base.Compute.RecordWarning("Mode selection is not yet implemented in the GSA_Adapter.");
         }
 
 
@@ -78,7 +78,7 @@ namespace BH.Adapter.GSA
                     }
                     catch
                     {
-                        //Engine.Reflection.Compute.RecordError("Analysis task " + i + "could not be found in the model.");
+                        //Engine.Base.Compute.RecordError("Analysis task " + i + "could not be found in the model.");
                     }
                 }
 
@@ -154,7 +154,7 @@ namespace BH.Adapter.GSA
                     }
                     catch
                     {
-                        Engine.Reflection.Compute.RecordError("Analysis task " + i + "could not be found in the model.");
+                        Engine.Base.Compute.RecordError("Analysis task " + i + "could not be found in the model.");
                     }
                 }
 
@@ -168,7 +168,7 @@ namespace BH.Adapter.GSA
                     }
                     catch
                     {
-                        Engine.Reflection.Compute.RecordError("Analysis task " + i + "could not be found in the model.");
+                        Engine.Base.Compute.RecordError("Analysis task " + i + "could not be found in the model.");
                     }
                 }
             }
@@ -223,7 +223,7 @@ namespace BH.Adapter.GSA
             if (m_gsaCom.CaseExist(caseDescription[0].ToString(), caseId) != 1)
             {
                 if(raiseError)
-                    Engine.Reflection.Compute.RecordError("Analysis case " + caseDescription + " does not exist.");
+                    Engine.Base.Compute.RecordError("Analysis case " + caseDescription + " does not exist.");
                 return false;
             }
 
@@ -238,7 +238,7 @@ namespace BH.Adapter.GSA
 
             if (m_gsaCom.CaseResultsExist(caseDescription[0].ToString(), caseId, 0) != 1)
             {
-                Engine.Reflection.Compute.RecordWarning("Analysis case " + caseDescription + " has no results.");
+                Engine.Base.Compute.RecordWarning("Analysis case " + caseDescription + " has no results.");
                 return false;
             }
 

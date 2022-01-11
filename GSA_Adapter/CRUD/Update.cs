@@ -63,7 +63,7 @@ namespace BH.Adapter.GSA
             {
                 if (mesh == null || GetAdapterId(mesh) == null || mesh.Faces.Count != 1)
                 {
-                    Engine.Reflection.Compute.RecordError("Can only update meshes with exactly one face and with a set adapter id");
+                    Engine.Base.Compute.RecordError("Can only update meshes with exactly one face and with a set adapter id");
                     success = false;
                     continue;
                 }

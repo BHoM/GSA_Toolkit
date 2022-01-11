@@ -26,7 +26,7 @@ using BH.oM.Adapters.GSA;
 using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
-using BH.oM.Reflection.Attributes;
+using BH.oM.Base.Attributes;
 using BH.oM.Base;
 using BH.oM.Structure.Loads;
 using BH.Engine.Base;
@@ -50,7 +50,7 @@ namespace BH.Engine.Adapters.GSA
         {
             if (loadcombination == null)
             {
-                Reflection.Compute.RecordError("Loadcombination is null. Cannot assign settings.");
+                Engine.Base.Compute.RecordError("Loadcombination is null. Cannot assign settings.");
                 return null;
             }
             AnalysisTaskFragment fragment = new AnalysisTaskFragment { AnalysisType = analysisType, Stage = stage, ResidualForce = residualForce, ResidualMoment = residualMoment, BeamSlendernessEffect = beamSlendernessEffect };
