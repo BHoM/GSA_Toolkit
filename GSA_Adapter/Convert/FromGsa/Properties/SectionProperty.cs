@@ -71,7 +71,7 @@ namespace BH.Adapter.GSA
 
             if (!materials.TryGetValue(materialId, out mat))
             {
-                Engine.Reflection.Compute.RecordWarning(string.Format("Failed to extract material with id {0}. Section with Id {1} will not have any material applied to it.", materialId, id));
+                Engine.Base.Compute.RecordWarning(string.Format("Failed to extract material with id {0}. Section with Id {1} will not have any material applied to it.", materialId, id));
             }
 
 
@@ -140,7 +140,7 @@ namespace BH.Adapter.GSA
 
                             description += arr[0] + "%" + arr[1] + "%" + arr[2] + "%" + arr[2];
 
-                            Engine.Reflection.Compute.RecordNote("Section of type: " + desc[2] + " not found in the library. Custom section will be used");
+                            Engine.Base.Compute.RecordNote("Section of type: " + desc[2] + " not found in the library. Custom section will be used");
                         }
                         else
                         {
@@ -256,7 +256,7 @@ namespace BH.Adapter.GSA
                 string error = "At least part of the section extraction failed and an empty explicit section has been returned in place of the section in GSA.";
                 if (!string.IsNullOrWhiteSpace(message))
                     error += " The following error was reported by the adapter: " + message;
-                Engine.Reflection.Compute.RecordWarning(error);
+                Engine.Base.Compute.RecordWarning(error);
             }
 
             secProp.SetAdapterId(typeof(GSAId), id);

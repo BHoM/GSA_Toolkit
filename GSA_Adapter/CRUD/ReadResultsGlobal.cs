@@ -71,7 +71,7 @@ namespace BH.Adapter.GSA
                     results = ExtractGlobalDynamics(caseNumbers).ToList();
                     break;
                 default:
-                    Engine.Reflection.Compute.RecordError("Result of type " + request.ResultType + " is not yet supported");
+                    Engine.Base.Compute.RecordError("Result of type " + request.ResultType + " is not yet supported");
                     results = new List<IResult>();
                     break;
             }

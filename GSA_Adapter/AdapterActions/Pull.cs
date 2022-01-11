@@ -45,7 +45,7 @@ namespace BH.Adapter.GSA
                 readresult.AddRange(ReadBars());
                 readresult.AddRange(ReadFEMesh());
 
-                BH.Engine.Reflection.Compute.RecordWarning("No request provided: only Nodes, Bars and FEMeshes have been pulled. \nTo To Pull other types, input an appropriate IRequest.");
+                BH.Engine.Base.Compute.RecordWarning("No request provided: only Nodes, Bars and FEMeshes have been pulled. \nTo To Pull other types, input an appropriate IRequest.");
 
                 return readresult;
             }

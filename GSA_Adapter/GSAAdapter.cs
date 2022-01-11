@@ -37,7 +37,7 @@ using BH.oM.Structure.MaterialFragments;
 using BH.oM.Structure.Constraints;
 using System.Collections.Generic;
 using BH.oM.Structure.SurfaceProperties;
-using BH.oM.Reflection.Attributes;
+using BH.oM.Base.Attributes;
 using BH.Engine.Structure;
 using BH.oM.Adapters.GSA.SpacerProperties;
 using BH.oM.Adapters.GSA.Elements;
@@ -133,7 +133,7 @@ namespace BH.Adapter.GSA
             else
             {
                 if (raiseError)
-                    Engine.Reflection.Compute.RecordError("Failure calling the command: " + str);
+                    Engine.Base.Compute.RecordError("Failure calling the command: " + str);
 
                 return false;
             }
@@ -151,7 +151,7 @@ namespace BH.Adapter.GSA
                 return returnVar;
             else
             {
-                Engine.Reflection.Compute.RecordError("Failure calling the command: " + str);
+                Engine.Base.Compute.RecordError("Failure calling the command: " + str);
                 return default(T);
             }
         }
@@ -189,7 +189,7 @@ namespace BH.Adapter.GSA
                         case Country.Denmark:
                         case Country.US:
                         case Country.Germany:
-                            BH.Engine.Reflection.Compute.RecordWarning("No specific steel code of the type " + steelConfig + " existing for the country. Default values used.");
+                            BH.Engine.Base.Compute.RecordWarning("No specific steel code of the type " + steelConfig + " existing for the country. Default values used.");
                             break;
                         case Country.Undefined:
                         default:
@@ -204,7 +204,7 @@ namespace BH.Adapter.GSA
                         case Country.Undefined:
                             break;
                         default:
-                            BH.Engine.Reflection.Compute.RecordWarning("No specific steel code of the type " + steelConfig + " existing for the country. Default values used.");
+                            BH.Engine.Base.Compute.RecordWarning("No specific steel code of the type " + steelConfig + " existing for the country. Default values used.");
                             break;
                     }
                     break;
@@ -250,7 +250,7 @@ namespace BH.Adapter.GSA
                             break;
                         case Country.US:
                             country = "EU";
-                            BH.Engine.Reflection.Compute.RecordWarning("No specific concrete code of the type " + concConfig + " existing for the country. Default values used.");
+                            BH.Engine.Base.Compute.RecordWarning("No specific concrete code of the type " + concConfig + " existing for the country. Default values used.");
                             break;
                         case Country.Undefined:
                         default:
@@ -267,7 +267,7 @@ namespace BH.Adapter.GSA
                         case Country.Undefined:
                             break;
                         default:
-                            BH.Engine.Reflection.Compute.RecordWarning("No specific Concrete code of the type " + concConfig + " existing for the country. Default values used.");
+                            BH.Engine.Base.Compute.RecordWarning("No specific Concrete code of the type " + concConfig + " existing for the country. Default values used.");
                             break;
                     }
                     break;

@@ -96,12 +96,12 @@ namespace BH.Adapter.GSA
                             }
 
                             if(raiseDivisionsWarning && gsaResults.Length != divisions)
-                                Engine.Reflection.Compute.RecordWarning("Different number of results compared to the expected for object with id " + id + ", for loadcase: " + loadCase);
+                                Engine.Base.Compute.RecordWarning("Different number of results compared to the expected for object with id " + id + ", for loadcase: " + loadCase);
 
                         }
                         else
                         {
-                            Engine.Reflection.Compute.RecordError("Unable to extract results for object with id " + id + ", for loadcase: " + loadCase);
+                            Engine.Base.Compute.RecordError("Unable to extract results for object with id " + id + ", for loadcase: " + loadCase);
                         }
                     }
                 }
@@ -149,7 +149,7 @@ namespace BH.Adapter.GSA
                     converter = null;
                     header = ResHeader.REF_ACC;
                     unitFactor = 1;
-                    Engine.Reflection.Compute.RecordError("Extraction of Localised BarDeformations is not supported in GSA. To get full displacements of the Bar in global coordinates, try pulling BarDisplacements");
+                    Engine.Base.Compute.RecordError("Extraction of Localised BarDeformations is not supported in GSA. To get full displacements of the Bar in global coordinates, try pulling BarDisplacements");
                     return false;
                 case BarResultType.BarStress:
                     converter = Convert.FromGsaBarStress;
@@ -165,7 +165,7 @@ namespace BH.Adapter.GSA
                     converter = null;
                     header = ResHeader.REF_ACC;
                     unitFactor = 1;
-                    Engine.Reflection.Compute.RecordError("Result of type " + request.ResultType + " is not yet supported");
+                    Engine.Base.Compute.RecordError("Result of type " + request.ResultType + " is not yet supported");
                     return false;
             }
 
@@ -211,7 +211,7 @@ namespace BH.Adapter.GSA
                     converter = null;
                     header = ResHeader.REF_ACC;
                     unitFactor = 1;
-                    Engine.Reflection.Compute.RecordError("Result of type " + request.ResultType + " is not yet supported");
+                    Engine.Base.Compute.RecordError("Result of type " + request.ResultType + " is not yet supported");
                     return false;
             }
 
@@ -230,7 +230,7 @@ namespace BH.Adapter.GSA
         private bool GetExtractionParameters(IResultRequest request, out ResHeader header, out ForceConverter converter, out string axis, out double unitFactor, out int divisions, out int flags)
         {
             axis = null;
-            Engine.Reflection.Compute.RecordError("Request of type " + request.GetType().ToString() + " is not supported");
+            Engine.Base.Compute.RecordError("Request of type " + request.GetType().ToString() + " is not supported");
             header = ResHeader.REF_ACC;
             converter = null;
             unitFactor = 1;
@@ -247,7 +247,7 @@ namespace BH.Adapter.GSA
         {
             if (m_gsaCom.Output_Init_Arr(flags, axis, loadCase, header, divisions) != 0)
             {
-                Engine.Reflection.Compute.RecordError("Failed to initialize result extraction for loadcase: " + loadCase);
+                Engine.Base.Compute.RecordError("Failed to initialize result extraction for loadcase: " + loadCase);
                 return false;
             }
             return true;
@@ -265,7 +265,7 @@ namespace BH.Adapter.GSA
             }
             catch
             {
-                Engine.Reflection.Compute.RecordError("Failed to extract results for item " + objectId);
+                Engine.Base.Compute.RecordError("Failed to extract results for item " + objectId);
                 return null;
             }
 
@@ -359,7 +359,7 @@ namespace BH.Adapter.GSA
             }
 
             if(containsDummies)
-                Engine.Reflection.Compute.RecordNote("Model contains 'dummy'-elements. The elements with this tag do not contain any results and will not have any results extracted.");
+                Engine.Base.Compute.RecordNote("Model contains 'dummy'-elements. The elements with this tag do not contain any results and will not have any results extracted.");
 
             return ids;
         }
