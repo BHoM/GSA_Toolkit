@@ -124,7 +124,7 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        private static void IsotropicMaterialProperties(string gsaString, out double E, out double v, out double tC, out double G, out double rho, out string material, out string taggedName)
+        private static void IsotropicMaterialProperties(string gsaString, out double e, out double v, out double tC, out double g, out double rho, out string material, out string taggedName)
         {
             string[] gStr = gsaString.Split(',');
 
@@ -132,10 +132,10 @@ namespace BH.Adapter.GSA
 #if GSA_10_1
             if (gStr[0].Contains("ANAL"))
             {
-                E = double.Parse(gStr[6]);
+                e = double.Parse(gStr[6]);
                 v = double.Parse(gStr[7]);
                 tC = double.Parse(gStr[9]);
-                G = double.Parse(gStr[10]);
+                g = double.Parse(gStr[10]);
                 rho = double.Parse(gStr[8]);
 
                 material = null;
@@ -143,10 +143,10 @@ namespace BH.Adapter.GSA
             }
             else if (gStr[0].Contains("STEEL") || gStr[0].Contains("CONCRETE") || gStr[0].Contains("FRP") || gStr[0].Contains("REBAR"))
             {
-                E = double.Parse(gStr[4]);
+                e = double.Parse(gStr[4]);
                 v = double.Parse(gStr[6]);
                 tC = double.Parse(gStr[9]);
-                G = double.Parse(gStr[7]);
+                g = double.Parse(gStr[7]);
                 rho = double.Parse(gStr[8]);
 
                 material = gStr[0].Split(("_.".ToCharArray()))[1];
@@ -154,10 +154,10 @@ namespace BH.Adapter.GSA
             }
             else if (gStr[0].Contains("ALUMINIUM") || gStr[0].Contains("TIMBER") || gStr[0].Contains("GLASS"))
             {
-                E = double.Parse(gStr[3]);
+                e = double.Parse(gStr[3]);
                 v = double.Parse(gStr[5]);
                 tC = double.Parse(gStr[8]);
-                G = double.Parse(gStr[6]);
+                g = double.Parse(gStr[6]);
                 rho = double.Parse(gStr[7]);
 
                 material = gStr[0].Split("_.".ToCharArray())[1];
@@ -165,14 +165,14 @@ namespace BH.Adapter.GSA
             }
             else
             {
-                E = v = tC = G = rho = 0;
+                e = v = tC = g = rho = 0;
                 material = taggedName = null;
             }
 #else
-            E = double.Parse(gStr[7]);
+            e = double.Parse(gStr[7]);
             v = double.Parse(gStr[8]);
             tC = double.Parse(gStr[10]);
-            G = double.Parse(gStr[11]);
+            g = double.Parse(gStr[11]);
             rho = double.Parse(gStr[9]);
 
             material = gStr[5].Split('_')[1];
@@ -182,23 +182,23 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        private static void OrthotropicMaterialProperties(string gsaString, out double E1, out double E2, out double E3, out double v1, out double v2, out double v3, out double G1, out double G2, out double G3, out double tC1, out double tC2, out double tC3, out double rho, out string material, out string taggedName)
+        private static void OrthotropicMaterialProperties(string gsaString, out double e1, out double e2, out double e3, out double v1, out double v2, out double v3, out double g1, out double g2, out double g3, out double tC1, out double tC2, out double tC3, out double rho, out string material, out string taggedName)
         {
             string[] gStr = gsaString.Split(',');
 
             //Separate data extractions speficic to each GSA version
 #if GSA_10_1
-            E1 = double.Parse(gStr[6]);
-            E2 = double.Parse(gStr[7]);
-            E3 = double.Parse(gStr[8]);
+            e1 = double.Parse(gStr[6]);
+            e2 = double.Parse(gStr[7]);
+            e3 = double.Parse(gStr[8]);
 
             v1 = double.Parse(gStr[9]);
             v2 = double.Parse(gStr[10]);
             v3 = double.Parse(gStr[11]);
 
-            G1 = double.Parse(gStr[13]);
-            G2 = double.Parse(gStr[14]);
-            G3 = double.Parse(gStr[15]);
+            g1 = double.Parse(gStr[13]);
+            g2 = double.Parse(gStr[14]);
+            g3 = double.Parse(gStr[15]);
 
             tC1 = double.Parse(gStr[16]);
             tC2 = double.Parse(gStr[17]);
@@ -209,17 +209,17 @@ namespace BH.Adapter.GSA
             material = null;
             taggedName = gStr[3];
 #else
-           E1 = double.Parse(gStr[7]);
-           E2 = double.Parse(gStr[8]);
-           E3 = double.Parse(gStr[9]);
+           e1 = double.Parse(gStr[7]);
+           e2 = double.Parse(gStr[8]);
+           e3 = double.Parse(gStr[9]);
 
            v1 = double.Parse(gStr[10]);
            v2 = double.Parse(gStr[11]);
            v3 = double.Parse(gStr[12]);
 
-           G1 = double.Parse(gStr[17]);
-           G2 = double.Parse(gStr[18]);
-           G3 = double.Parse(gStr[19]);
+           g1 = double.Parse(gStr[17]);
+           g2 = double.Parse(gStr[18]);
+           g3 = double.Parse(gStr[19]);
 
            tC1 = double.Parse(gStr[14]);
            tC2 = double.Parse(gStr[15]);
@@ -234,23 +234,23 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        private static void FabricMaterialProperties(string gsaString, out double Ex, out double Ey, out double v, out double G, out string taggedName)
+        private static void FabricMaterialProperties(string gsaString, out double ex, out double ey, out double v, out double g, out string taggedName)
         {
             string[] gStr = gsaString.Split(',');
 
             //Separate data extractions specific to each GSA version
 #if GSA_10_1
-            Ex = double.Parse(gStr[3]);
-            Ey = double.Parse(gStr[4]);
+            ex = double.Parse(gStr[3]);
+            ey = double.Parse(gStr[4]);
             v = double.Parse(gStr[5]);
-            G = double.Parse(gStr[6]);
+            g = double.Parse(gStr[6]);
 
             taggedName = gStr[2];
 #else
-            Ex = double.Parse(gStr[6]);
-            Ey = double.Parse(gStr[7]);
+            ex = double.Parse(gStr[6]);
+            ey = double.Parse(gStr[7]);
             v = double.Parse(gStr[8]);
-            G = double.Parse(gStr[9]);
+            g = double.Parse(gStr[9]);
 
             taggedName = gStr[3];
 #endif
