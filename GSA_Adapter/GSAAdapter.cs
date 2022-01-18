@@ -105,6 +105,10 @@ namespace BH.Adapter.GSA
 
                 if (gsaConfig != null)
                     SetConfig(gsaConfig);
+
+#if GSA_10_1
+                m_gsaCom.DisplayGsaWindow(true);
+#endif
             }
         }
 
