@@ -71,7 +71,7 @@ namespace BH.Adapter.GSA
                 }
             }
 
-            LoadCombination combo = Engine.Structure.Create.LoadCombination(gStr[2], int.Parse(gStr[1]), lCasesForTask);
+            LoadCombination combo = new LoadCombination { Name = gStr[2], Number = int.Parse(gStr[1]), LoadCases = lCasesForTask };
             combo.SetAdapterId(typeof(GSAId), "A" +combo.Number);
             return combo;
         }

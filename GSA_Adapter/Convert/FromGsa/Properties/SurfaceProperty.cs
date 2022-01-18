@@ -77,7 +77,7 @@ namespace BH.Adapter.GSA
             }
             else
             {
-                Engine.Reflection.Compute.RecordWarning(string.Format("2D Property with id {0} and name {1} is of a type currently not supported. Will return a null object.",  gsaStrings[1], name));
+                Engine.Base.Compute.RecordWarning(string.Format("2D Property with id {0} and name {1} is of a type currently not supported. Will return a null object.",  gsaStrings[1], name));
                 return null;
             }
 
