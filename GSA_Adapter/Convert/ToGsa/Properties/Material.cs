@@ -118,7 +118,7 @@ namespace BH.Adapter.GSA
             else
             {
                 if (material is Aluminium)
-                    Engine.Reflection.Compute.RecordWarning("Aluminium is currently not supported by the GSA API. An analysis material has been created rather than a proper aluminium material in GSA.");
+                    Engine.Base.Compute.RecordWarning("Aluminium is currently not supported by the GSA API. An analysis material has been created rather than a proper aluminium material in GSA.");
 
                 str = "MAT_ANAL.1" + "," + num + "," + mModel + "," + name + "," + colour + ",6," + E + "," + nu + "," + rho + "," + alpha + "," + G + "," + damp + ",0,0";
             }

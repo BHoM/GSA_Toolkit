@@ -293,7 +293,7 @@ namespace BH.Adapter.GSA
 
             if (!materials.TryGetValue(materialId, out mat))
             {
-                Engine.Reflection.Compute.RecordWarning(string.Format("Failed to extract material with id {0}. Section with Id {1} will not have any material applied to it.", materialId, id));
+                Engine.Base.Compute.RecordWarning(string.Format("Failed to extract material with id {0}. Section with Id {1} will not have any material applied to it.", materialId, id));
             }
         }
 
