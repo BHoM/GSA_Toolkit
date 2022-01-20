@@ -71,7 +71,7 @@ namespace BH.Adapter.GSA
             }
 
             UpdateViews();
-            return success;
+            return true;
         }
 
         /***************************************************/

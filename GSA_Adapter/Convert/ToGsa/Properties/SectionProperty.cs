@@ -20,6 +20,8 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using System.Collections.Generic;
+using System.Linq;
 using BH.Engine.Serialiser;
 using BH.Engine.Adapter;
 using BH.oM.Adapters.GSA;
@@ -469,6 +471,38 @@ namespace BH.Adapter.GSA
 
         /***************************************/
 
+#if GSA_10_1
+
+        private static bool CreateDescString(this TaperedProfile section, out string desc)
+        {
+            if (section.Profiles.Count == 1)
+                return CreateDescString(section.Profiles.First().Value as dynamic, out desc);
+
+            IProfile startProfile, endProfile;
+
+            if (section.Profiles.Count == 2 && section.Profiles.TryGetValue(0, out startProfile) && section.Profiles.TryGetValue(1, out endProfile))
+            {
+                if (startProfile.GetType() == endProfile.GetType())
+                {
+                    string desc1, desc2;
+                    if (CreateDescString(startProfile as dynamic, out desc1))
+                    {
+                        if (CreateDescString(endProfile as dynamic, out desc2))
+                        {
+                            desc2 = desc2.Split('%').Skip(2).Aggregate((a, b) => a + "%" + b);
+                            desc = desc1 + "%:%" + desc2;
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            Engine.Base.Compute.RecordWarning("The GSA adapter currently only support tapered sections with two profiles of the same type. Section set as explicit with 0-properties.");
+            desc = "";
+            return false;
+        }
+#endif
+        /***************************************/
         private static bool CreateDescString(IProfile profile, out string desc)
         {
             NotSupportedWarning(profile.GetType(), "Section profiles");
