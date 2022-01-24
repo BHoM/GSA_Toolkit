@@ -47,7 +47,7 @@ namespace BH.Adapter.GSA
                 return null;
 
             LoadNature loadNature = BHoMLoadNature(gStr[3]);
-            Loadcase lCase = Engine.Structure.Create.Loadcase(gStr[2], int.Parse(gStr[1]), loadNature);
+            Loadcase lCase = new Loadcase { Name = gStr[2], Number = int.Parse(gStr[1]), Nature = loadNature };
 
             int lCasenum = 0;
 
