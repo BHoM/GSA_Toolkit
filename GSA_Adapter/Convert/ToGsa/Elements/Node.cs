@@ -45,7 +45,7 @@ namespace BH.Adapter.GSA
             string name = node.TaggedName().ToGSACleanName();
 
             string restraint = GetRestraintString(node);
-            Point position = node.Position();
+            Point position = node.Position;
 
             string axisString;
             string axisId = GetAndCreateAxis(node, out axisString);
