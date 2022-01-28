@@ -68,6 +68,8 @@ namespace BH.Adapter.GSA
 
             Modules.Structure.ModuleLoader.LoadModules(this);
 
+            this.AdapterModules.Add(new BH.oM.Adapters.GSA.Modules.GetPanelNodes());
+
             AdapterComparers = new Dictionary<Type, object>
             {
                 {typeof(Bar), new BarEndNodesDistanceComparer(3) },
@@ -90,7 +92,8 @@ namespace BH.Adapter.GSA
                 {typeof(RigidLink), new List<Type> { typeof(LinkConstraint), typeof(Node) } },
                 {typeof(FEMesh), new List<Type> { typeof(ISurfaceProperty), typeof(Node) } },
                 {typeof(ISurfaceProperty), new List<Type> { typeof(IMaterialFragment) } },
-                {typeof(Spacer), new List<Type> { typeof(SpacerProperty), typeof(Node) } }
+                {typeof(Spacer), new List<Type> { typeof(SpacerProperty), typeof(Node) } },
+                {typeof(Panel), new List<Type> { typeof(ISurfaceProperty), typeof(Node) } }
             };
 
             if (active)
