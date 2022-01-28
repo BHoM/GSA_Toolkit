@@ -34,6 +34,7 @@ using BH.oM.Adapter;
 using BH.Engine.Adapters.GSA;
 using BH.oM.Adapters.GSA.SurfaceProperties;
 using BH.oM.Structure.MaterialFragments;
+using BH.oM.Structure.Fragments;
 
 namespace BH.Adapter.GSA
 {
@@ -113,9 +114,10 @@ namespace BH.Adapter.GSA
         {
             //Try creating a catalogue section
             string catString = prop.CreateCatalogueString();
+            bool success = false;
             if (catString != null)
             {
-                bool success = ComCall(catString, false);
+                success = ComCall(catString, false);
 #if GSA_10_1
                 if (success)
                 {
@@ -124,7 +126,9 @@ namespace BH.Adapter.GSA
                     string catPropRead = m_gsaCom.GwaCommand("GET, SECTION.7," + prop.GSAId() + ",").ToString();
                     string[] arr = catPropRead.Split(',');
                     if (arr.Length > 21 && arr[21].ToUpper() != "NONE")
-                        return true;
+                        success = true;
+                    else
+                        success = false;
                 }
 #else
                 
@@ -133,7 +137,19 @@ namespace BH.Adapter.GSA
 #endif
             }
 
-            return ComCall(Convert.IToGsaString(prop,  GetAdapterId<int>(prop).ToString()));
+            if(!success)
+                success = ComCall(Convert.IToGsaString(prop, GetAdapterId<int>(prop).ToString()));
+
+#if GSA_10_1
+            if (success)
+            {
+                SectionModifier modifier = prop.FindFragment<SectionModifier>();
+                if (modifier != null)
+                    success &= ComCall(Convert.IToGsaString(modifier, GetAdapterId<int>(prop).ToString()));
+            }
+#endif
+
+            return success;
         }
 
         /***************************************************/
