@@ -20,6 +20,7 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using System;
 using System.Collections.Generic;
 using BH.Engine.Serialiser;
 using BH.Engine.Adapter;
@@ -31,6 +32,7 @@ using BH.oM.Adapters.GSA.SurfaceProperties;
 using BH.oM.Adapters.GSA.FormFindingProperties;
 using BH.Engine.Base;
 using BH.oM.Structure.MaterialFragments;
+using BH.oM.Structure.Fragments;
 
 namespace BH.Adapter.GSA
 {
@@ -55,7 +57,17 @@ namespace BH.Adapter.GSA
             string bending = "100%";
             string inplane = "100%";
             string weight = "0";
+            string shear = "100%";
 
+            SurfacePropertyModifier mod = panProp.FindFragment<SurfacePropertyModifier>();
+
+            if (mod != null)
+            {
+                mass = mod.Mass * 100 + "%";
+                bending = Math.Min(mod.MXX, mod.MYY) * 100 + "%";
+                inplane = Math.Min(mod.FXX, mod.FYY) * 100 + "%";
+                shear = Math.Min(mod.VXZ, mod.VXZ) * 100 + "%";
+            }
 
 #if GSA_10_1
 
@@ -64,7 +76,7 @@ namespace BH.Adapter.GSA
 
             string ref_pt = "CENTROID";
             string ref_z = "0";
-            string shear = "100%";
+
             string design = "0";
             mass = "0";
             weight = "100%";
