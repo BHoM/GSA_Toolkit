@@ -31,6 +31,7 @@ using BH.oM.Spatial.ShapeProfiles;
 using System;
 using BH.Engine.Adapters.GSA;
 using BH.oM.Structure.MaterialFragments;
+using BH.oM.Structure.Fragments;
 
 namespace BH.Adapter.GSA
 {
@@ -516,6 +517,19 @@ namespace BH.Adapter.GSA
         {
             return Math.Abs(d - (int)d) < double.Epsilon ? d.ToString() + "." : d.ToString();
         }
+
+        /***************************************/
+#if GSA_10_1
+        private static string ToGsaString(this SectionModifier modifier, string index)
+        {
+            if (modifier == null)
+                return "";
+
+            //SECTION_MOD | ref | name | mod | centroid | stress | opArea | area | prin | opIyy | Iyy | opIzz | Izz | opJ | J | opKy | ky | opKz | kz | opVol | vol | mass
+
+            return $"SECTION_ANAL.4, { index}, {index}, GEOM, SEC, NONE, BY, {modifier.Area}, YZ, BY, {modifier.Iy}, BY, {modifier.Iz}, BY, {modifier.J}, BY, {modifier.Asy}, BY, {modifier.Asz}, BY, 1, 0";
+        }
+#endif
 
         /***************************************/
     }
