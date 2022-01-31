@@ -38,7 +38,7 @@ namespace BH.Adapter.GSA
         /***************************************************/
         /**** Public Methods                            ****/
         /***************************************************/
-        public static Node FromGsaNode(string gsaString, Dictionary<int, double[]> dampProp, Dictionary<int, Basis> axes)
+        public static Node FromGsaNode(string gsaString, Dictionary<int, double[]> dampProp, Dictionary<int, double[]> springValues, Dictionary<int, Basis> axes)
         {
             if (gsaString == "")
             {
@@ -64,7 +64,7 @@ namespace BH.Adapter.GSA
             }
 
             Constraint6DOF con;
-            FromGsaConstraint(arr, dampProp, out con);
+            FromGsaConstraint(arr, springValues, out con);
 
             Node node = new Node { Position = pos, Support = con, Orientation = basis };
             node.ApplyTaggedName(name);
@@ -92,7 +92,7 @@ namespace BH.Adapter.GSA
             return Engine.Geometry.Create.Basis(x, y);
         }
 
-        public static Constraint6DOF FromGsaConstraint(string[] arr, Dictionary<int, double[]> dampProp, out Constraint6DOF con)
+        public static Constraint6DOF FromGsaConstraint(string[] arr, Dictionary<int, double[]> spingValues, out Constraint6DOF con)
         {
             List<bool> fixities;
             List<double> stiff;
@@ -123,8 +123,10 @@ namespace BH.Adapter.GSA
                     };
                 }
 
-                if(arr.Length > 12 && arr[12] != "0")
-                    stiff = dampProp[Int32.Parse(arr[12])].ToList();
+                int springIndex = arr.Length > 10 ? int.Parse(arr[10]) : 0;
+
+                if(springIndex != 0)
+                    stiff = spingValues[springIndex].ToList();
                 else
                     stiff = new List<double>() { 0, 0, 0, 0, 0, 0 };
             }
