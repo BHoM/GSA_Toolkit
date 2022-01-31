@@ -195,6 +195,7 @@
     <Compile Include="Convert\ToGsa\Elements\Panel.cs" />
     <Compile Include="Convert\ToGsa\Elements\Spacer.cs" />
     <Compile Include="Convert\ToGsa\Properties\FormFindingProperties.cs" />
+    <Compile Include="Convert\ToGsa\Properties\Constraint6DOF.cs" />
     <Compile Include="Convert\ToGsa\Properties\SpacerProperty.cs" />
     <Compile Include="Convert\FromGsa\Properties\SurfaceProperty.cs" />
     <Compile Include="Convert\ToGsa\Elements\Bar.cs" />

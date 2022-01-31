@@ -68,7 +68,8 @@ namespace BH.Adapter.GSA
 
             Modules.Structure.ModuleLoader.LoadModules(this);
 
-            this.AdapterModules.Add(new BH.oM.Adapters.GSA.Modules.GetPanelNodes());
+            this.AdapterModules.Add(new BH.Engine.Adapters.GSA.Modules.GetPanelNodes());
+            this.AdapterModules.Add(new BH.Engine.Adapters.GSA.Modules.GetNodeSpings());
 
             AdapterComparers = new Dictionary<Type, object>
             {
@@ -79,6 +80,9 @@ namespace BH.Adapter.GSA
                 {typeof(IMaterialFragment), new NameOrDescriptionComparer() },
                 {typeof(LinkConstraint), new NameOrDescriptionComparer() },
                 {typeof(SpacerProperty), new NameOrDescriptionComparer() },
+#if GSA_10_1
+                {typeof(Constraint6DOF), new NameOrDescriptionComparer() },
+#endif
             };
 
             DependencyTypes = new Dictionary<Type, List<Type>>
@@ -93,7 +97,10 @@ namespace BH.Adapter.GSA
                 {typeof(FEMesh), new List<Type> { typeof(ISurfaceProperty), typeof(Node) } },
                 {typeof(ISurfaceProperty), new List<Type> { typeof(IMaterialFragment) } },
                 {typeof(Spacer), new List<Type> { typeof(SpacerProperty), typeof(Node) } },
-                {typeof(Panel), new List<Type> { typeof(ISurfaceProperty), typeof(Node) } }
+                {typeof(Panel), new List<Type> { typeof(ISurfaceProperty), typeof(Node) } },
+#if GSA_10_1
+                {typeof(Node), new List<Type>{typeof(Constraint6DOF) } }
+#endif
             };
 
             if (active)

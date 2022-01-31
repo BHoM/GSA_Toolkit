@@ -32,7 +32,7 @@ using System.Collections;
 using BH.oM.Adapters.GSA.Fragments;
 using BH.oM.Geometry;
 
-namespace BH.oM.Adapters.GSA.Modules
+namespace BH.Engine.Adapters.GSA.Modules
 {
     [Description("Dependency module for fetching all Loadcase stored in a list of Loadcombinations.")]
     public class GetPanelNodes : IGetDependencyModule<Panel, Node>

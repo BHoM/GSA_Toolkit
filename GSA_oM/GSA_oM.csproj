@@ -95,7 +95,6 @@
     <Compile Include="Analysis\AnalysisStage.cs" />
     <Compile Include="Fragments\PanelBoundaryNodeFragment.cs" />
     <Compile Include="MaterialFragments\Fabric.cs" />
-    <Compile Include="Modules\GetPanelNodes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\GSAConfig.cs" />
     <Compile Include="SpacerProperties\SpacerProperty.cs" />
