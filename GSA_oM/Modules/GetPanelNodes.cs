@@ -61,18 +61,35 @@ namespace BH.oM.Adapters.GSA.Modules
             List<Node> nodes = new List<Node>();
             foreach (Edge edge in edges)
             {
-                if (edge.Curve is Line)
-                    nodes.Add(new Node { Position = (edge.Curve as Line).Start });
-                else if (edge is Polyline)
-                {
-                    foreach (Point point in (edge.Curve as Polyline).ControlPoints.Take((edge.Curve as Polyline).ControlPoints.Count -1))
-                    {
-                        nodes.Add(new Node { Position = point });
-                    }
-                }
+                nodes.AddRange(IEdgeNodes(edge.Curve));
             }
 
             return nodes;
+        }
+
+        private List<Node> EdgeNodes(Line line)
+        {
+            return new List<Node> { new Node { Position = line.Start } };
+        }
+
+        private List<Node> EdgeNodes(Polyline polyLine)
+        {
+            return polyLine.ControlPoints.Take(polyLine.ControlPoints.Count - 1).Select(p => new Node() { Position = p }).ToList();
+        }
+
+        private List<Node> EdgeNodes(PolyCurve curve)
+        {
+            return curve.Curves.SelectMany(c => IEdgeNodes(c)).ToList();
+        }
+
+        private List<Node> IEdgeNodes(ICurve curve)
+        {
+            return EdgeNodes(curve as dynamic);
+        }
+
+        private List<Node> EdgeNodes(ICurve curve)
+        {
+            return new List<Node>();
         }
     }
 }
