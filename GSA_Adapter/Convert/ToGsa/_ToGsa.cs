@@ -81,6 +81,10 @@ namespace BH.Adapter.GSA
                 return "PROP_SPACER";
             else if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)
                 return "List";
+#if GSA_10_1
+            else if (type == typeof(Panel))
+                return "MEMB";
+#endif
             return null;
         }
 
@@ -131,16 +135,7 @@ namespace BH.Adapter.GSA
 
         /***************************************/
 
-#if GSA_8_7
 
-        public static string ToGsaString(this Panel obj, string index)
-        {
-            Engine.Base.Compute.RecordWarning("GSA has no meshing capabilities and does therefore not support Panel objects. \n"+
-                                                    "To be able to push a Panel it first needs to be meshed and turned into a FEMesh.");
-            return "";
-        }
-#endif
-        /***************************************/
     }
 }
 
