@@ -29,6 +29,7 @@ using BH.oM.Geometry;
 using BH.Engine.Geometry;
 using System.Collections.Generic;
 using BH.Engine.Adapters.GSA;
+using BH.Engine.Base;
 
 
 namespace BH.Adapter.GSA
@@ -55,15 +56,21 @@ namespace BH.Adapter.GSA
                 gsaStrings.Add(axisString);
 
 #if GSA_10_1
-            string dampPropString;
-            string dampPropId = GetAndCreateDamperProperty(node, out dampPropString);
+            //string dampPropString = "";
+            //string dampPropId = GetAndCreateDamperProperty(node, out dampPropString);
 
-            if (!string.IsNullOrWhiteSpace(dampPropString))
-                gsaStrings.Add(dampPropString);
+            //if (!string.IsNullOrWhiteSpace(dampPropString))
+            //    gsaStrings.Add(dampPropString);
+            string dampPropId = "0";
+            GSAId supportId = node.Support?.FindFragment<GSAId>();
 
-            //To do: Spring Property, Mass Property
+            string springProp = "0";
+            if (supportId != null)
+                springProp = supportId.Id.ToString();
 
-            string str = "NODE.3" + ", " + index + ", " + name + " , NO_RGB, " + position.X + " , " + position.Y + " , " + position.Z + "," + restraint + "," + axisId + ",0,0,0," + dampPropId;
+            //To do: Damp Property, Mass Property
+            //NODE.3 | num | name | colour | x | y | z | restraint | axis | mesh_size | springProperty | massProperty | damperProperty
+            string str = $"NODE.3, {index}, {name}, NO_RGB, {position.X},{position.Y},{position.Z},{restraint},{axisId},0,{springProp},0,{dampPropId}";
 #else
             string str = "NODE.2" + ", " + index + ", " + name + " , NO_RGB, " + position.X + " , " + position.Y + " , " + position.Z + ", NO_GRID, " + axisId + "," + restraint;
 #endif

@@ -84,6 +84,8 @@ namespace BH.Adapter.GSA
 #if GSA_10_1
             else if (type == typeof(Panel))
                 return "MEMB";
+            else if (type == typeof(Constraint6DOF))
+                return "PROP_SPR";
 #endif
             return null;
         }
