@@ -30,6 +30,7 @@ using BH.Engine.Geometry;
 using System.Collections.Generic;
 using BH.Engine.Adapters.GSA;
 using BH.Engine.Base;
+using BH.oM.Adapters.GSA.Fragments;
 
 
 namespace BH.Adapter.GSA
@@ -47,13 +48,21 @@ namespace BH.Adapter.GSA
             string restraint = GetRestraintString(node);
             Point position = node.Position;
 
-            string axisString;
-            string axisId = GetAndCreateAxis(node, out axisString);
+            //string axisString;
+            //string axisId = GetAndCreateAxis(node, out axisString);
+
+            Axes axes = node.FindFragment<Axes>();
+
+            string axisId;
+            if (axes != null)
+                axisId = axes.GSAId().ToString();
+            else
+                axisId = "0";
 
             List<string> gsaStrings = new List<string>();
 
-            if (!string.IsNullOrWhiteSpace(axisString))
-                gsaStrings.Add(axisString);
+            //if (!string.IsNullOrWhiteSpace(axisString))
+            //    gsaStrings.Add(axisString);
 
 #if GSA_10_1
             //string dampPropString = "";
@@ -82,28 +91,28 @@ namespace BH.Adapter.GSA
         /**** Private  Methods                          ****/
         /***************************************************/
 
-        private static string GetAndCreateAxis(Node node, out string axisString)
-        {
-            Basis basis = node.Orientation;
+        //private static string GetAndCreateAxis(Node node, out string axisString)
+        //{
+        //    Basis basis = node.Orientation;
 
-            //Check if global orientation
-            if (basis == null || (basis.X.Angle(Vector.XAxis) < Tolerance.Angle && (basis.Y.Angle(Vector.YAxis) < Tolerance.Angle)))
-            {
-                axisString = "";
-                return "0";
-            }
+        //    //Check if global orientation
+        //    if (basis == null || (basis.X.Angle(Vector.XAxis) < Tolerance.Angle && (basis.Y.Angle(Vector.YAxis) < Tolerance.Angle)))
+        //    {
+        //        axisString = "";
+        //        return "0";
+        //    }
 
-            //AXIS	1	Axis 1	CART	0.000000	0.000000	0.000000	0.500000	0.500000	0.000000	0.000000	1.00000	0.000000
-            string command = "AXIS";
-            string id = node.GSAId().ToString();
-            string name = $"Node {id} local axis";
-            string origin = "CART, 0, 0, 0";
-            string x = $"{basis.X.X} , {basis.X.Y} , {basis.X.Z}";
-            string y = $"{basis.Y.X} , {basis.Y.Y} , {basis.Y.Z}";
+        //    //AXIS	1	Axis 1	CART	0.000000	0.000000	0.000000	0.500000	0.500000	0.000000	0.000000	1.00000	0.000000
+        //    string command = "AXIS";
+        //    string id = node.GSAId().ToString();
+        //    string name = $"Node {id} local axis";
+        //    string origin = "CART, 0, 0, 0";
+        //    string x = $"{basis.X.X} , {basis.X.Y} , {basis.X.Z}";
+        //    string y = $"{basis.Y.X} , {basis.Y.Y} , {basis.Y.Z}";
 
-            axisString = $"{command}, {id}, {name}, {origin}, {x}, {y}";
-            return id;
-        }
+        //    axisString = $"{command}, {id}, {name}, {origin}, {x}, {y}";
+        //    return id;
+        //}
 
             /***************************************************/
 

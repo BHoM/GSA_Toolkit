@@ -40,11 +40,13 @@ using BH.oM.Analytical.Results;
 using System;
 using BH.Engine.Adapter;
 using BH.oM.Adapters.GSA;
+using BH.oM.Adapters.GSA.SpringProperties;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using BH.oM.Adapter;
 using BH.Engine.Adapters.GSA;
+using BH.oM.Adapters.GSA.Fragments;
 
 namespace BH.Adapter.GSA
 {
@@ -86,6 +88,8 @@ namespace BH.Adapter.GSA
                 return ReadLoadCases(indices as dynamic);
             if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)
                 return new List<BHoMGroup<IBHoMObject>>();
+            if (type == typeof(Axes))
+                return ReadAxes(indices as dynamic);
             if (typeof(IResult).IsAssignableFrom(type))
             {
                 Modules.Structure.ErrorMessages.ReadResultsError(type);
@@ -240,7 +244,7 @@ namespace BH.Adapter.GSA
             string allNodes = m_gsaCom.GwaCommand("GET_ALL, NODE").ToString();
             string[] nodeArr = string.IsNullOrWhiteSpace(allNodes) ? new string[0] : allNodes.Split('\n');
 
-            Dictionary<int, Basis> axes = ReadAxes();
+            Dictionary<int, Basis> axes = ReadAxes().ToDictionary(x => x.GSAId(), x => x.Orientation);
             Dictionary<int, double[]> dampProp = ReadDampProperty();
             Dictionary<int, double[]> springValues = ReadSpingValues();
             if (ids == null)
@@ -275,19 +279,19 @@ namespace BH.Adapter.GSA
 
         public Dictionary<int, double[]> ReadSpingValues()
         {
-            Dictionary<int, double[]> dampPropertyDictionary = new Dictionary<int, double[]>();
-#if GSA_10_1
-            string allSpings = m_gsaCom.GwaCommand("GET_ALL, PROP_SPR.4").ToString();
-            string[] springProp = string.IsNullOrWhiteSpace(allSpings) ? new string[0] : allSpings.Split('\n');
 
-            foreach (string a in springProp)
+#if GSA_10_1
+            Dictionary<int, double[]> springValues = new Dictionary<int, double[]>();
+
+            List<LinearSpringProperty> springProps = ReadSpingProperties();
+
+            foreach (LinearSpringProperty springProp in springProps)
             {
-                string[] arr = a.Split(',');
-                double[] stiff = new List<double>() { Double.Parse(arr[6]), Double.Parse(arr[8]), Double.Parse(arr[10]), Double.Parse(arr[12]), Double.Parse(arr[14]), Double.Parse(arr[16]) }.ToArray();
-                dampPropertyDictionary.Add(Int32.Parse(arr[1]), stiff);
+                double[] values = new double[] { springProp.UX, springProp.UY, springProp.UZ, springProp.RX, springProp.RY, springProp.RZ };
+                springValues[springProp.GSAId()] = values;
             }
 
-            return dampPropertyDictionary;
+            return springValues;
 #else
             return null;
 #endif
@@ -295,22 +299,59 @@ namespace BH.Adapter.GSA
 
         /***************************************/
 
-        private Dictionary<int, Basis> ReadAxes(List<string> ids = null)
+        public List<LinearSpringProperty> ReadSpingProperties(List<string> ids = null)
         {
-            string allAxes = m_gsaCom.GwaCommand("GET_ALL, AXIS").ToString();
-            string[] axesArr = string.IsNullOrWhiteSpace(allAxes) ? new string[0] : allAxes.Split('\n');
+            string allSpings = m_gsaCom.GwaCommand("GET_ALL, PROP_SPR.4").ToString();
+            string[] springProp = string.IsNullOrWhiteSpace(allSpings) ? new string[0] : allSpings.Split('\n');
 
-            Dictionary<int, Basis> axes = new Dictionary<int, Basis>();
+            return springProp.Select(x => Convert.FromGsaSpringProperty(x)).ToList();
 
-            foreach (string axisString in axesArr)
+        }
+
+        /***************************************/
+
+        private List<Axes> ReadAxes(List<string> ids = null)
+        {
+            return ReadGSAString<Axes>(ids).Select(x => Convert.FromGsaAxis(x)).Where(x => x != null).ToList();
+        }
+
+        /***************************************/
+
+        private List<string> ReadGSAString<T>(List<string> ids = null)
+        {
+            List<int> intIds = new List<int>();
+
+            if (ids != null && ids.Count != 0)
             {
-                int id;
-                Basis basis = Convert.FromGsaAxis(axisString, out id);
-                if (basis != null)
-                    axes[id] = basis;
+                foreach (string s in ids)
+                {
+                    int i;
+                    if (int.TryParse(s, out i))
+                        intIds.Add(i);
+                }
             }
 
-            return axes;
+            string gsaTypeString = Convert.ToGsaString(typeof(T));
+            if (intIds.Count == 0)
+            {
+                string allItems = m_gsaCom.GwaCommand($"GET_ALL, {gsaTypeString}").ToString();
+                if (string.IsNullOrWhiteSpace(allItems))
+                    return new List<string>();
+                else
+                    return allItems.Split('\n').Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+            }
+            else
+            {
+                List<string> items = new List<string>();
+                foreach (int id in intIds)
+                {
+                    string item = m_gsaCom.GwaCommand($"GET, {gsaTypeString}, {id}").ToString();
+                    if (!string.IsNullOrWhiteSpace(item))
+                        items.Add(item);
+                }
+                return items;
+            }
+            
         }
 
         /***************************************/

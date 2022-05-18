@@ -35,7 +35,8 @@ using BH.oM.Data.Requests;
 using BH.oM.Structure.Results;
 using System;
 using BH.Engine.Adapter;
-using BH.oM.Adapters.GSA;
+using BH.oM.Adapters.GSA.Requests;
+using BH.oM.Adapters.GSA.Results;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,6 +81,66 @@ namespace BH.Adapter.GSA
         }
 
         /***************************************************/
+
+        public IEnumerable<IResult> ReadResults(GlobalBucklingRequest request, ActionConfig actionConfig)
+        {
+            List<int> caseNumbers = CheckAndGetAnalysisCaseNumbers(request.Cases);
+            CheckModes(request);
+
+            List<GlobalBuckling> results = new List<GlobalBuckling>();
+
+            foreach (int loadCase in caseNumbers)
+            {
+                string mode = m_gsaCom.GwaCommand("GET, MODE, " + loadCase);
+
+                if (String.IsNullOrWhiteSpace(mode))
+                    continue;
+
+                string[] modeArr = mode.Split(',');
+
+                if (modeArr.Length < 3)
+                    continue;
+
+                int modeNum;
+
+                if (!int.TryParse(modeArr[2], out modeNum))
+                    continue;
+
+
+
+                string loadFactorStr = m_gsaCom.GwaCommand("GET, LOAD_FAC, " + loadCase);
+                string modeProbablilityStr = m_gsaCom.GwaCommand("GET, MODE_PROB, " + loadCase);    //Does not seem to be working as intended, but keeping for future reference
+
+                double loadFac = GetFactor(loadFactorStr);
+                double modeProb = GetFactor(modeProbablilityStr);
+
+                results.Add(new GlobalBuckling("", $"A{loadCase}", modeNum, -1, loadFac, modeProb));
+            }
+
+
+            results.Sort();
+            return results;
+        }
+
+        /***************************************************/
+
+        private static double GetFactor(string extractionString)
+        {
+            if (string.IsNullOrWhiteSpace(extractionString))
+                return double.NaN;
+
+            string[] arr = extractionString.Split(',');
+
+            if (arr.Length < 3)
+                return double.NaN;
+
+            double val;
+
+            if (!double.TryParse(arr[2], out val))
+                return double.NaN;
+
+            return val;
+        }
 
         private IEnumerable<IResult> ExtractGlobalDynamics(List<int> cases)
         {

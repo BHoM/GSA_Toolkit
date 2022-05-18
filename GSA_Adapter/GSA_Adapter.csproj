@@ -182,7 +182,10 @@
     <Compile Include="AdapterActions\Execute.cs" />
     <Compile Include="Convert\FromGsa\Elements\Bar.cs" />
     <Compile Include="Convert\FromGsa\Elements\FEMesh.cs" />
+    <Compile Include="Convert\FromGsa\Elements\Spring.cs" />
     <Compile Include="Convert\FromGsa\Elements\Spacer.cs" />
+    <Compile Include="Convert\FromGsa\Properties\Axes.cs" />
+    <Compile Include="Convert\FromGsa\Properties\SpringProperties.cs" />
     <Compile Include="Convert\FromGsa\Properties\LinkConstraint.cs" />
     <Compile Include="Convert\FromGsa\Loads\Loadcase.cs" />
     <Compile Include="Convert\FromGsa\Loads\LoadCombination.cs" />
@@ -193,9 +196,12 @@
     <Compile Include="Convert\FromGsa\Properties\SectionProperty.cs" />
     <Compile Include="Convert\ToGsa\Analysis\AnalysisStage.cs" />
     <Compile Include="Convert\ToGsa\Elements\Panel.cs" />
+    <Compile Include="Convert\ToGsa\Elements\Spring.cs" />
     <Compile Include="Convert\ToGsa\Elements\Spacer.cs" />
     <Compile Include="Convert\ToGsa\Properties\FormFindingProperties.cs" />
     <Compile Include="Convert\ToGsa\Properties\Constraint6DOF.cs" />
+    <Compile Include="Convert\ToGsa\Properties\Axes.cs" />
+    <Compile Include="Convert\ToGsa\Properties\SpringProperty.cs" />
     <Compile Include="Convert\ToGsa\Properties\SpacerProperty.cs" />
     <Compile Include="Convert\FromGsa\Properties\SurfaceProperty.cs" />
     <Compile Include="Convert\ToGsa\Elements\Bar.cs" />

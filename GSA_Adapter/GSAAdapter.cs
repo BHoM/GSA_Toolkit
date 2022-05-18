@@ -40,7 +40,10 @@ using BH.oM.Structure.SurfaceProperties;
 using BH.oM.Base.Attributes;
 using BH.Engine.Structure;
 using BH.oM.Adapters.GSA.SpacerProperties;
+using BH.oM.Adapters.GSA.SpringProperties;
 using BH.oM.Adapters.GSA.Elements;
+using BH.oM.Adapters.GSA.Fragments;
+using BH.Engine.Adapters.GSA;
 
 namespace BH.Adapter.GSA
 {
@@ -70,6 +73,7 @@ namespace BH.Adapter.GSA
 
             this.AdapterModules.Add(new BH.Engine.Adapters.GSA.Modules.GetPanelNodes());
             this.AdapterModules.Add(new BH.Engine.Adapters.GSA.Modules.GetNodeSpings());
+            this.AdapterModules.Add(new BH.Engine.Adapters.GSA.Modules.GetNodeAxes());
 
             AdapterComparers = new Dictionary<Type, object>
             {
@@ -80,8 +84,10 @@ namespace BH.Adapter.GSA
                 {typeof(IMaterialFragment), new NameOrDescriptionComparer() },
                 {typeof(LinkConstraint), new NameOrDescriptionComparer() },
                 {typeof(SpacerProperty), new NameOrDescriptionComparer() },
+                {typeof(LinearSpringProperty), new NameOrDescriptionComparer() },
 #if GSA_10_1
                 {typeof(Constraint6DOF), new NameOrDescriptionComparer() },
+                {typeof(Axes), new AxesComparer(4) },
 #endif
             };
 
@@ -97,9 +103,10 @@ namespace BH.Adapter.GSA
                 {typeof(FEMesh), new List<Type> { typeof(ISurfaceProperty), typeof(Node) } },
                 {typeof(ISurfaceProperty), new List<Type> { typeof(IMaterialFragment) } },
                 {typeof(Spacer), new List<Type> { typeof(SpacerProperty), typeof(Node) } },
-                {typeof(Panel), new List<Type> { typeof(ISurfaceProperty), typeof(Node) } },
+                {typeof(Spring), new List<Type> { typeof(LinearSpringProperty), typeof(Node) } },
 #if GSA_10_1
-                {typeof(Node), new List<Type>{typeof(Constraint6DOF) } }
+                {typeof(Panel), new List<Type> { typeof(ISurfaceProperty), typeof(Node) } },
+                {typeof(Node), new List<Type>{typeof(Constraint6DOF), typeof(Axes) } }
 #endif
             };
 

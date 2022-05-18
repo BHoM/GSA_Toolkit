@@ -25,6 +25,7 @@ using System.Collections;
 using BH.oM.Adapter;
 using BH.oM.Base;
 using BH.oM.Adapter.Commands;
+using BH.oM.Adapters.GSA.Commands;
 
 namespace BH.Adapter.GSA
 {
@@ -142,6 +143,17 @@ namespace BH.Adapter.GSA
         }
 
         /***************************************************/
+
+#if GSA_10_1
+
+        public bool RunCommand(ShowSoftwareGUICommand command)
+        {
+            m_gsaCom.DisplayGsaWindow(command.ShowGUI);
+            return true;
+        }
+
+        /***************************************************/
+#endif
 
         public bool RunCommand(Exit command)
         {

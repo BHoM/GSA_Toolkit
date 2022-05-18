@@ -182,6 +182,33 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
+        public static MeshForce FromGsaMeshForce(GsaResults results, int id, string loadCase, int divisions, double timeStep = 0, int mode = -1)
+        {
+
+            return new MeshForce(
+                id,
+                results.Pos,
+                id,
+                loadCase,
+                mode,
+                timeStep,
+                MeshResultLayer.Middle,
+                0,
+                MeshResultSmoothingType.None,
+                null,
+                results.dynaResults[2],
+                results.dynaResults[3],
+                results.dynaResults[4],
+                0,
+                0,
+                0,
+                results.dynaResults[5],
+                results.dynaResults[6]
+                );
+        }
+
+        /***************************************************/
+
         public static BarStrain FromGsaBarStrain(GsaResults results, int id, string loadCase, int divisions, double timeStep = 0, int mode = -1)
         {
             return new BarStrain(id, loadCase, mode, timeStep, results.Pos, divisions, results.dynaResults[0], 0, 0, 0, 0, 0, 0, 0, 0);

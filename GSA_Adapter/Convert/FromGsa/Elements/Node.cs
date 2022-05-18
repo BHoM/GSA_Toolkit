@@ -74,23 +74,23 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        public static Basis FromGsaAxis(string gsaString, out int id)
-        {
-            if (gsaString == "")
-            {
-                id = -1;
-                return null;
-            }
+        //        public static Basis FromGsaAxis(string gsaString, out int id)
+        //        {
+        //            if (gsaString == "")
+        //            {
+        //                id = -1;
+        //                return null;
+        //            }
 
-            string[] arr = gsaString.Split(',');
+        //            string[] arr = gsaString.Split(',');
 
-            id = Int32.Parse(arr[1]);
+        //            id = Int32.Parse(arr[1]);
 
-            Vector x = new Vector() { X = double.Parse(arr[7]), Y = double.Parse(arr[8]), Z = double.Parse(arr[9]) };
-            Vector y = new Vector() { X = double.Parse(arr[10]), Y = double.Parse(arr[11]), Z = double.Parse(arr[12]) };
+        //            Vector x = new Vector() { X = double.Parse(arr[7]), Y = double.Parse(arr[8]), Z = double.Parse(arr[9]) };
+        //            Vector y = new Vector() { X = double.Parse(arr[10]), Y = double.Parse(arr[11]), Z = double.Parse(arr[12]) };
 
-            return Engine.Geometry.Create.Basis(x, y);
-        }
+        //            return Engine.Geometry.Create.Basis(x, y);
+        //        }
 
         public static Constraint6DOF FromGsaConstraint(string[] arr, Dictionary<int, double[]> spingValues, out Constraint6DOF con)
         {
@@ -125,15 +125,15 @@ namespace BH.Adapter.GSA
 
                 int springIndex = arr.Length > 10 ? int.Parse(arr[10]) : 0;
 
-                if(springIndex != 0)
+                if (springIndex != 0)
                     stiff = spingValues[springIndex].ToList();
                 else
                     stiff = new List<double>() { 0, 0, 0, 0, 0, 0 };
             }
             else
             {
-                 con = null;
-                 return con;
+                con = null;
+                return con;
             }
 
             con = Engine.Structure.Create.Constraint6DOF("", fixities, stiff);

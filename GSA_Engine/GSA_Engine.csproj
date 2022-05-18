@@ -107,6 +107,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Objects\EqualityComparers\AxesComparer.cs" />
+    <Compile Include="Objects\Modules\GetNodeAxes.cs" />
     <Compile Include="Objects\Modules\GetNodeSpings.cs" />
     <Compile Include="Objects\Modules\GetPanelNodes.cs" />
     <Compile Include="Query\GSAId.cs" />

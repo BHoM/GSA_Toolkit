@@ -45,6 +45,9 @@
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
+    <Reference Include="Data_oM">
+      <HintPath>..\..\..\..\..\..\..\ProgramData\BHoM\Assemblies\Data_oM.dll</HintPath>
+    </Reference>
     <Reference Include="Dimensional_oM">
       <HintPath>C:\ProgramData\BHoM\Assemblies\Dimensional_oM.dll</HintPath>
       <Private>False</Private>
@@ -80,7 +83,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ShowSoftwareGUICommand.cs" />
     <Compile Include="Elements\Spacer.cs" />
+    <Compile Include="Elements\Spring.cs" />
     <Compile Include="Enum\ConcreteDesignSpecification.cs" />
     <Compile Include="Enum\Country.cs" />
     <Compile Include="Enum\SpacerLengthType.cs" />
@@ -93,11 +98,15 @@
     <Compile Include="Fragments\GSAId.cs" />
     <Compile Include="Fragments\AnalysisTaskFragment.cs" />
     <Compile Include="Analysis\AnalysisStage.cs" />
+    <Compile Include="Fragments\NodeAxes.cs" />
     <Compile Include="Fragments\PanelBoundaryNodeFragment.cs" />
     <Compile Include="MaterialFragments\Fabric.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Requests\GlobalBucklingRequest.cs" />
+    <Compile Include="Results\GlobalBuckling.cs" />
     <Compile Include="Settings\GSAConfig.cs" />
     <Compile Include="SpacerProperties\SpacerProperty.cs" />
+    <Compile Include="SpringProperties\LinearSpringProperty.cs" />
     <Compile Include="SurfaceProperties\FabricPanelProperty.cs" />
   </ItemGroup>
   <ItemGroup>

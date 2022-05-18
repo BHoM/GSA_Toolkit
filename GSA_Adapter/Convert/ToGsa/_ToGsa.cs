@@ -32,7 +32,9 @@ using BH.Engine.Adapter;
 using BH.oM.Adapters.GSA;
 using System.ComponentModel;
 using BH.oM.Adapters.GSA.SpacerProperties;
+using BH.oM.Adapters.GSA.SpringProperties;
 using BH.oM.Adapters.GSA.Elements;
+using BH.oM.Adapters.GSA.Fragments;
 using BH.oM.Base.Attributes;
 
 
@@ -79,6 +81,10 @@ namespace BH.Adapter.GSA
                 return "EL";
             else if (type == typeof(SpacerProperty))
                 return "PROP_SPACER";
+            else if (type == typeof(Spring))
+                return "EL";
+            else if (type == typeof(LinearSpringProperty))
+                return "PROP_SPR";
             else if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)
                 return "List";
 #if GSA_10_1
@@ -86,6 +92,8 @@ namespace BH.Adapter.GSA
                 return "MEMB";
             else if (type == typeof(Constraint6DOF))
                 return "PROP_SPR";
+            else if (type == typeof(Axes))
+                return "AXIS";
 #endif
             return null;
         }

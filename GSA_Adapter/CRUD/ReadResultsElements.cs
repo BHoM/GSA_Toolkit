@@ -220,6 +220,36 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
+        private bool GetExtractionParameters(MeshResultRequest request, out ResHeader header, out ForceConverter converter, out string axis, out double unitFactor, out int divisions, out int flags)
+        {
+
+            divisions = 1;
+            double[] unitFactors = GetUnitFactors();
+
+            flags = 0;
+
+            switch (request.ResultType)
+            {
+                case oM.Structure.Results.MeshResultType.Forces:
+                    header = ResHeader.REF_FORCE_EL2D_PRJ;
+                    converter = Convert.FromGsaMeshForce;
+                    unitFactor = unitFactors[(int)UnitType.FORCE];
+                    axis = Output_Axis.Local;
+                    break;
+                default:
+                    converter = null;
+                    header = ResHeader.REF_ACC;
+                    unitFactor = 1;
+                    Engine.Base.Compute.RecordError("Result of type " + request.ResultType + " is not yet supported");
+                    axis = Output_Axis.Local;
+                    return false;
+            }
+
+            return true;
+        }
+
+        /***************************************************/
+
         private bool IGetExtractionParameters(IResultRequest request, out ResHeader header, out ForceConverter converter, out string axis, out double unitFactor, out int divisions, out int flags)
         {
             return GetExtractionParameters(request as dynamic, out header, out converter, out axis, out unitFactor, out divisions, out flags);
