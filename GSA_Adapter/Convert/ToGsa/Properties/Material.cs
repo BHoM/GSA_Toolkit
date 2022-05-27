@@ -175,16 +175,18 @@ return str;
             string rho = material.Density.ToString();
             string damp = material.DampingRatio.ToString();
 
+
 #if GSA_10_1
             string uls = "MAT_CURVE_PARAM.2,,UNDEF,1,1";
             string sls = "MAT_CURVE_PARAM.2,,UNDEF,1,1";
-            string prop = "MAT_ANAL.1," + name + ",,MAT_FABRIC,5," + Ex + "," + Ey + "," + nu + "," + G + "," + rho + ",1,0,00,0,0,0,0," + uls + "," + sls;
-            
-            string str = "MAT_" + type + "," + num + "," + prop + ",0," + type;
+            string prop = "MAT_ANAL.1," + name + ",,MAT_FABRIC,5," + Ex + "," + Ey + "," + nu + "," + G + "," + rho + ",1,0,00,0,0,0,0," + uls + "," + sls; //string str = "MAT_" + type + "," + num + "," + prop + ",0," + type;
+            string str = "MAT_ANAL.1, " + num + ", " + mModel + ", " + name + ", " + colour + ", 5, " + Ex + ", " + Ey + ", " + nu + ", " + G + ", " + rho + "0, , 0";
 #else
             string str = command + "," + num + "," + mModel + "," + name + "," + colour + ",4," + Ex + "," + Ey + "," + nu + "," + G + ",1," + ",0,NO_ENV";
 #endif
             return str;
+
+
         }
 
         /***************************************************/
@@ -238,6 +240,8 @@ return str;
                 return "ALUMINIUM";
             else if (material is Timber)
                 return "TIMBER";
+            else if (material is Fabric)
+                return "FABRIC";
             else
                 return "UNDEF";
 #else
