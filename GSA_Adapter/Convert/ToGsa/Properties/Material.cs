@@ -176,11 +176,13 @@ return str;
             string damp = material.DampingRatio.ToString();
 
 #if GSA_10_1
-            string uls = "MAT_CURVE_PARAM.2,,UNDEF,1,1";
-            string sls = "MAT_CURVE_PARAM.2,,UNDEF,1,1";
-            string prop = "MAT_ANAL.1," + name + ",,MAT_FABRIC,5," + Ex + "," + Ey + "," + nu + "," + G + "," + rho + ",1,0,00,0,0,0,0," + uls + "," + sls;
-            
-            string str = "MAT_" + type + "," + num + "," + prop + ",0," + type;
+
+            string end = "0,0,0,0,0,0,0,MAT_CURVE_PARAM.3,,UNDEF,0,0,0,0,0,0,1,1,MAT_CURVE_PARAM.3,,UNDEF,0,0,0,0,0,0,1,1,0,Fabric";
+            //MAT_ANAL.1		-268435456	MAT_FABRIC	5	800000	400000	0.45	30000	3	1
+            string prop = $"MAT_ANAL.1, {name}, -268435456, {mModel}, 5, {Ex}, {Ey}, {nu}, {G}, {rho}, 1,";
+            //MAT_FABRIC.10   1   Fabric #	1	2	3	4	5	0
+            string str = $"MAT_FABRIC.10, {num}, {name}, {Ex}, {Ey}, {nu}, {G}, {rho}, 1," + prop + end;
+
 #else
             string str = command + "," + num + "," + mModel + "," + name + "," + colour + ",4," + Ex + "," + Ey + "," + nu + "," + G + ",1," + ",0,NO_ENV";
 #endif
