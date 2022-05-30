@@ -240,7 +240,6 @@ namespace BH.Adapter.GSA
 
         private static bool CreateDescAndPropString(ExplicitSection secProp, out string desc, out string prop)
         {
-            desc = "EXP";
             string area = secProp.Area.ToString();
             string Iyy = secProp.Iy.ToString();
             string Izz = secProp.Iz.ToString();
@@ -248,6 +247,12 @@ namespace BH.Adapter.GSA
             string Kvy = (secProp.Asy / secProp.Area).ToString();
             string Kvz = (secProp.Asz / secProp.Area).ToString();
 
+
+#if GSA_10_1
+            desc = "EXP(m) " + area + " " + Iyy + " " + Izz + " " + J + " " + Kvy + " " + Kvz;
+#else
+            desc = "EXP";
+#endif
             prop = "PROP," + area + "," + Iyy + "," + Izz + "," + J + "," + Kvy + "," + Kvz;
             return true;
         }
@@ -257,7 +262,6 @@ namespace BH.Adapter.GSA
         private static bool CreateDescAndPropString(CableSection secProp, out string desc, out string prop)
         {
             //TODO: Handle cables as non-explicit
-            desc = "EXP";
             string area = secProp.Area.ToString();
             string Iyy = secProp.Iy.ToString();
             string Izz = secProp.Iz.ToString();
@@ -265,6 +269,11 @@ namespace BH.Adapter.GSA
             string Kvy = (secProp.Asy / secProp.Area).ToString();
             string Kvz = (secProp.Asz / secProp.Area).ToString();
 
+#if GSA_10_1
+            desc = "EXP(m) " + area + " " + Iyy + " " + Izz + " " + J + " " + Kvy + " " + Kvz;
+#else
+            desc = "EXP";
+#endif
             prop = "PROP," + area + "," + Iyy + "," + Izz + "," + J + "," + Kvy + "," + Kvz;
             return true;
         }
