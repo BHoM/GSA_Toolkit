@@ -127,7 +127,15 @@ namespace BH.Adapter.GSA
             string inplane = "100%";
             string weight = "100%";
 
-            string fabricString = command + "," + index + "," + name + "," + colour + "," + axis + "," + mat + "," + type + "," + thick + "," + mass + "," + bending + "," + inplane + "," + weight;
+            string fabricString = "";
+
+#if GSA_10_1
+            command = "PROP_2D.7";
+            fabricString = command + "," + index + "," + name + "," + colour + "," + type + "," + axis + "," + "0" + "," + type + "," + mat + ", 1, " + thick + ", CENTROID, 0, " + mass + ", " + bending + ", 0, " + inplane + "," + weight;
+#else
+            fabricString = command + "," + index + "," + name + "," + colour + "," + axis + "," + mat + "," + type + "," + thick + "," + mass + "," + bending + "," + inplane + "," + weight;
+#endif
+
 
             List<string> gsaStrings = new List<string>();
             gsaStrings.Add(fabricString);
