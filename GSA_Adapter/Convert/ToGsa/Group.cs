@@ -58,8 +58,21 @@ namespace BH.Adapter.GSA
                 return "\"" + load.Objects.Name + "\"";
 
             //Otherwise apply to the corresponding indecies
-            return load.Objects.Elements.Select(x => int.Parse(x.GSAId().ToString())).GeterateIdString();
+            return load.Objects.Elements.SelectMany(x => x.GSAIds()).OrderBy(x => x).GeterateIdString();
 
+        }
+
+        /***************************************************/
+
+        public static IEnumerable<int> GSAIds(this IBHoMObject obj)
+        {
+            //If FEMesh, then get ID for each face
+            if (obj is FEMesh)
+            {
+                return (obj as FEMesh).Faces.Select(x => x.GSAId());
+            }
+            else
+                return new List<int> { obj.GSAId() };
         }
 
         /***************************************************/
