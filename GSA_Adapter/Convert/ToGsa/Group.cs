@@ -64,7 +64,7 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        public static IEnumerable<int> GSAIds(this IBHoMObject obj)
+        private static IEnumerable<int> GSAIds(this IBHoMObject obj)
         {
             //If FEMesh, then get ID for each face
             if (obj is FEMesh)
