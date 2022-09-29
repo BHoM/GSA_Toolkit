@@ -34,10 +34,8 @@ namespace BH.Adapter.GSA
 {
 #if GSA_10_1
     public partial class GSA101Adapter
-#elif GSA_8_7
-    public partial class GSA87Adapter
 #else
-    public partial class GSAAdapter
+    public partial class GSA87Adapter
 #endif
     {
         protected override int IUpdateTags(Type type, IEnumerable<object> ids, IEnumerable<HashSet<string>> newTags, ActionConfig actionConfig = null)
