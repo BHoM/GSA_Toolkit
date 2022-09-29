@@ -46,10 +46,8 @@ namespace BH.Adapter.GSA
 {
 #if GSA_10_1
     public partial class GSA101Adapter : BHoMAdapter
-#elif GSA_8_7
-    public partial class GSA87Adapter : BHoMAdapter
 #else
-    public partial class GSAAdapter : BHoMAdapter
+    public partial class GSA87Adapter : BHoMAdapter
 #endif
     {
         /***************************************************/
@@ -58,10 +56,8 @@ namespace BH.Adapter.GSA
 
 #if GSA_10_1
         public GSA101Adapter(string filePath = "", GSAConfig gsaConfig = null, bool active = false)
-#elif GSA_8_7
-        public GSA87Adapter(string filePath = "", GSAConfig gsaConfig = null, bool active = false)
 #else
-        public GSAAdapter(string filePath = "", GSAConfig gsaConfig = null, bool active = false)
+        public GSA87Adapter(string filePath = "", GSAConfig gsaConfig = null, bool active = false)
 #endif
         {
             AdapterIdFragmentType = typeof(GSAId);

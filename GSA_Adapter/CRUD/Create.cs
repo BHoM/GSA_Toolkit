@@ -40,10 +40,8 @@ namespace BH.Adapter.GSA
 {
 #if GSA_10_1
     public partial class GSA101Adapter
-#elif GSA_8_7
+#else 
     public partial class GSA87Adapter
-#else
-    public partial class GSAAdapter
 #endif
     {
         /***************************************************/
