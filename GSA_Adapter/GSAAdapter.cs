@@ -45,9 +45,9 @@ using BH.oM.Adapters.GSA.Elements;
 namespace BH.Adapter.GSA
 {
 #if GSA_10_1
-    public partial class GSA_10_1Adapter : BHoMAdapter
+    public partial class GSA101Adapter : BHoMAdapter
 #elif GSA_8_7
-    public partial class GSA_8_7Adapter : BHoMAdapter
+    public partial class GSA87Adapter : BHoMAdapter
 #else
     public partial class GSAAdapter : BHoMAdapter
 #endif
@@ -57,9 +57,9 @@ namespace BH.Adapter.GSA
         /***************************************************/
 
 #if GSA_10_1
-        public GSA_10_1Adapter(string filePath = "", GSAConfig gsaConfig = null, bool active = false)
+        public GSA101Adapter(string filePath = "", GSAConfig gsaConfig = null, bool active = false)
 #elif GSA_8_7
-        public GSA_8_7Adapter(string filePath = "", GSAConfig gsaConfig = null, bool active = false)
+        public GSA87Adapter(string filePath = "", GSAConfig gsaConfig = null, bool active = false)
 #else
         public GSAAdapter(string filePath = "", GSAConfig gsaConfig = null, bool active = false)
 #endif
