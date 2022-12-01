@@ -45,6 +45,8 @@ using System.Collections.Generic;
 using System.Linq;
 using BH.oM.Adapter;
 using BH.Engine.Adapters.GSA;
+using BH.oM.Adapters.GSA.Elements;
+using BH.oM.Adapters.GSA.SpacerProperties;
 
 namespace BH.Adapter.GSA
 {
@@ -82,6 +84,8 @@ namespace BH.Adapter.GSA
                 return ReadProperty2d(indices as dynamic);
             if (type == typeof(Loadcase))
                 return ReadLoadCases(indices as dynamic);
+            if (type == typeof(Spacer))
+                return ReadSpacers(indices as dynamic);
             if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)
                 return new List<BHoMGroup<IBHoMObject>>();
             if (typeof(IResult).IsAssignableFrom(type))
@@ -187,9 +191,11 @@ namespace BH.Adapter.GSA
 
             //GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
             //m_gsaCom.Elements(potentialBeamRefs, out gsaElements);
-
+#if GSA_10_1
+            string allNodes = m_gsaCom.GwaCommand("GET_ALL, EL.4").ToString();
+#else
             string allNodes = m_gsaCom.GwaCommand("GET_ALL, EL.2").ToString();
-
+#endif
             string[] barArr = string.IsNullOrWhiteSpace(allNodes) ? new string[0] : allNodes.Split('\n');
 
             List<ISectionProperty> secPropList = ReadSectionProperties();
@@ -400,6 +406,40 @@ namespace BH.Adapter.GSA
             //    return proArr.Select(x => Convert.FromGsaSectionProperty(x, materials)).ToList();
             //else
             //    return proArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Convert.FromGsaSectionProperty(x, materials)).ToList();
+        }
+
+        /***************************************/
+
+        public List<Spacer> ReadSpacers(List<string> ids = null)
+        {
+            List<Node> nodeList = ReadNodes();
+            List<SpacerProperty> spacerProps = ReadSpacerProperties();
+
+            Dictionary<string, Node> nodes = nodeList.ToDictionary(x => GetAdapterId<int>(x).ToString());
+            Dictionary<string, SpacerProperty> secProps = spacerProps.Where(x => x != null).ToDictionary(x => GetAdapterId<int>(x).ToString());
+
+            int[] potentialBeamRefs = GenerateIndices(ids, typeof(Spacer));
+            GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
+            m_gsaCom.Elements(potentialBeamRefs, out gsaElements);
+
+            return Convert.FromGsaSpacers(gsaElements, secProps, nodes);
+
+ 
+        }
+
+        /***************************************/
+
+        public List<SpacerProperty> ReadSpacerProperties(List<string> ids = null)
+        {
+
+            string allProps = m_gsaCom.GwaCommand("GET_ALL, PROP_SPACER").ToString();
+
+            string[] proArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
+
+            if (ids == null)
+                return proArr.Select(x => Convert.FromGsaSpacerProperty(x)).ToList();
+            else
+                return proArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Convert.FromGsaSpacerProperty(x)).ToList();
         }
 
 

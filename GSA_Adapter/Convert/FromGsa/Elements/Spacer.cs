@@ -46,38 +46,40 @@ namespace BH.Adapter.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
-        //public static List<Spacer> FromGsaSpacers(IEnumerable<GsaElement> gsaElements, Dictionary<string, IProperty> spaProps, Dictionary<string, Node> nodes)
-        //{
-        //    List<Spacer> spacerList = new List<Spacer>();
+        public static List<Spacer> FromGsaSpacers(IEnumerable<GsaElement> gsaElements, Dictionary<string, SpacerProperty> spaProps, Dictionary<string, Node> nodes)
+        {
+            List<Spacer> spacerList = new List<Spacer>();
 
-        //    foreach (GsaElement gsaSpacer in gsaElements)
-        //    {
+            foreach (GsaElement gsaSpacer in gsaElements)
+            {
+                if (gsaSpacer.eType != 19)
+                    continue;
 
-        //        Node n1, n2;
-        //        nodes.TryGetValue(gsaSpacer.Topo[0].ToString(), out n1);
-        //        nodes.TryGetValue(gsaSpacer.Topo[1].ToString(), out n2);
+                Node n1, n2;
+                nodes.TryGetValue(gsaSpacer.Topo[0].ToString(), out n1);
+                nodes.TryGetValue(gsaSpacer.Topo[1].ToString(), out n2);
 
-        //        Spacer spacer = new Spacer { StartNode = n1, EndNode = n2 };
-        //        spacer.ApplyTaggedName(gsaSpacer.Name);
+                Spacer spacer = new Spacer { StartNode = n1, EndNode = n2 };
+                spacer.ApplyTaggedName(gsaSpacer.Name);
 
 
 
-        //        IProperty prop;
-        //        spaProps.TryGetValue(gsaSpacer.Property.ToString(), out prop);
+               SpacerProperty prop;
+               spaProps.TryGetValue(gsaSpacer.Property.ToString(), out prop);
 
-        //        spacer.SpacerProperty = prop;
+                spacer.SpacerProperty = prop;
 
-        //        int id = gsaSpacer.Ref;
-        //        spacer.SetAdapterId(typeof(GSAId), id);
+                int id = gsaSpacer.Ref;
+                spacer.SetAdapterId(typeof(GSAId), id);
 
-        //        spacerList.Add(spacer);
+                spacerList.Add(spacer);
 
-        //    }
-        //    return spacerList;
-        //}
+            }
+            return spacerList;
+        }
 
         /***************************************************/
-        
+
     }
 }
 
