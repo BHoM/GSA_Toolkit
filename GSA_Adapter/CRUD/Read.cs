@@ -86,6 +86,8 @@ namespace BH.Adapter.GSA
                 return ReadLoadCases(indices as dynamic);
             if (type == typeof(Spacer))
                 return ReadSpacers(indices as dynamic);
+            if (type == typeof(SpacerProperty))
+                return ReadSpacerProperties(indices as dynamic);
             if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)
                 return new List<BHoMGroup<IBHoMObject>>();
             if (typeof(IResult).IsAssignableFrom(type))
