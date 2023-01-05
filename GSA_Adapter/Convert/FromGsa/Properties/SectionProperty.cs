@@ -107,13 +107,13 @@ namespace BH.Adapter.GSA
 
                     string secName = secType + desc[2].TrimStart(orgSecType.ToCharArray());
 
-                    secProp = Engine.Library.Query.Match("SectionProperties", secName) as ISectionProperty;
+                    secProp = Engine.Library.Query.Match("Structure\\SectionProperties", secName) as ISectionProperty;
 
                     // Test need to add .0 to section property name
                     if (secProp == null)
                     {
                         secName += ".0";
-                        secProp = Engine.Library.Query.Match("SectionProperties", secName) as ISectionProperty;
+                        secProp = Engine.Library.Query.Match("Structure\\SectionProperties", secName) as ISectionProperty;
                     }
 
                     if (secProp != null)
