@@ -36,7 +36,7 @@ namespace BH.Adapter.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
-        public static LoadCombination FromGsaAnalTask(string gsaString, Dictionary<string, Loadcase> lCases)
+        public static LoadCombination FromGsaAnalTask(string gsaString, Dictionary<int, Loadcase> lCases)
         {
 
             if (string.IsNullOrWhiteSpace(gsaString))
@@ -61,7 +61,7 @@ namespace BH.Adapter.GSA
                         lCaseParam[0] = "1.0";
 
                     Loadcase templCase;
-                    if (!lCases.TryGetValue(lCaseParam[1], out templCase))
+                    if (!lCases.TryGetValue(int.Parse(lCaseParam[1]), out templCase))
                     {
                         templCase = new Loadcase { Number = int.Parse(lCaseParam[1]), Nature = LoadNature.Other };
                         templCase.SetAdapterId(typeof(GSAId), templCase.Number);

@@ -105,27 +105,7 @@ namespace BH.Adapter.GSA
 
         public List<IMaterialFragment> ReadMaterials(List<string> ids = null)
         {
-            return ReadMaterials(ids, false);
-        }
-
-        /***************************************************/
-
-        public List<IMaterialFragment> ReadMaterials(List<string> ids = null, bool includeStandard = false)
-        {
-            List<IMaterialFragment> materials = ReadMaterialDictionary(ids, includeStandard).Select(x => x.Value).ToList();
-
-            if (ids != null && ids.Count != 0)
-                materials = materials.Where(x => ids.Contains(x.GSAId().ToString())).ToList();
-
-            return materials;
-        }
-
-        public Dictionary<string, IMaterialFragment> ReadMaterialDictionary(List<string> ids = null, bool includeStandard = false)
-        {
-            //List<IMaterialFragment> materials = ReadMaterials(null, false);
             List<IMaterialFragment> materials = new List<IMaterialFragment>();
-            List<string> keys = new List<string>();
-            Dictionary<string, IMaterialFragment> materialDictionary = new Dictionary<string, IMaterialFragment>();
 
 #if GSA_10_1
             string allProps = m_gsaCom.GwaCommand("GET_ALL, MAT_ANAL.1").ToString();
@@ -148,24 +128,22 @@ namespace BH.Adapter.GSA
             else
                 materials = matArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Convert.FromGsaMaterial(x)).Where(x => x != null).ToList();
 
-            if (includeStandard)
-                materials.AddRange(GetStandardGsaMaterials());
+            return materials;
+        }
 
-            for (int i = 0; i < materials.Count(); i++)
+        /***************************************************/
+
+        public Dictionary<string, IMaterialFragment> ReadMaterialDictionary(List<string> ids = null, bool includeStandard = false)
+        {
+            Dictionary<string, IMaterialFragment> materials = GetCachedOrReadAsDictionary<string, IMaterialFragment>(ids);
+            if (includeStandard)
             {
-#if GSA_10_1
-                string key = matArr[i].Split(("_.").ToCharArray())[1] + ":" + materials[i].GSAId();
-#else
-                string key = GetAdapterId(materials[i]).ToString();
-#endif
-                if (!keys.Contains(key))
+                foreach (IMaterialFragment standardMaterial in GetStandardGsaMaterials())
                 {
-                    keys.Add(key);
-                    materialDictionary.Add(key, materials[i]);
+                    materials[standardMaterial.Name] = standardMaterial;
                 }
             }
-
-            return materialDictionary;
+            return materials;
         }
 
         /***************************************************/
@@ -189,22 +167,16 @@ namespace BH.Adapter.GSA
 
         public List<Bar> ReadBars(List<string> ids = null)
         {
-            //int[] potentialBeamRefs = GenerateIndices(ids, typeof(Bar));
-
-            //GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
-            //m_gsaCom.Elements(potentialBeamRefs, out gsaElements);
 #if GSA_10_1
-            string allNodes = m_gsaCom.GwaCommand("GET_ALL, EL.4").ToString();
+            string allBars = m_gsaCom.GwaCommand("GET_ALL, EL.4").ToString();
 #else
-            string allNodes = m_gsaCom.GwaCommand("GET_ALL, EL.2").ToString();
+            string allBars = m_gsaCom.GwaCommand("GET_ALL, EL.2").ToString();
 #endif
-            string[] barArr = string.IsNullOrWhiteSpace(allNodes) ? new string[0] : allNodes.Split('\n');
+            string[] barArr = string.IsNullOrWhiteSpace(allBars) ? new string[0] : allBars.Split('\n');
 
-            List<ISectionProperty> secPropList = ReadSectionProperties();
-            List<Node> nodeList = ReadNodes();
 
-            Dictionary<string, ISectionProperty> secProps = secPropList.Where(x => x != null).ToDictionary(x => GetAdapterId<int>(x).ToString());
-            Dictionary<string, Node> nodes = nodeList.ToDictionary(x => GetAdapterId<int>(x).ToString());
+            Dictionary<int, ISectionProperty> secProps = GetCachedOrReadAsDictionary<int, ISectionProperty>();
+            Dictionary<int, Node> nodes = GetCachedOrReadAsDictionary<int, Node>();
 
             return Convert.FromGsaBars(barArr, secProps, nodes, ids);
         }
@@ -224,8 +196,7 @@ namespace BH.Adapter.GSA
                     analList.Add(anal);
             }
 
-            List<Loadcase> lCaseList = ReadLoadCases();
-            Dictionary<string, Loadcase> lCases = lCaseList.ToDictionary(x => x.Number.ToString());
+            Dictionary<int, Loadcase> lCases = GetCachedOrReadAsDictionary<int, Loadcase>();
 
             if (ids == null)
                 lComabinations = analList.Select(x => Convert.FromGsaAnalTask(x, lCases)).ToList();
@@ -366,11 +337,8 @@ namespace BH.Adapter.GSA
             GsaElement[] gsaElements = new GsaElement[potentialMeshRefs.Length];
             m_gsaCom.Elements(potentialMeshRefs, out gsaElements);
 
-            List<ISurfaceProperty> secPropList = ReadProperty2d();
-            List<Node> nodeList = ReadNodes();
-
-            Dictionary<string, ISurfaceProperty> props = secPropList.Where(x => x != null).ToDictionary(x => GetAdapterId<int>(x).ToString());
-            Dictionary<string, Node> nodes = nodeList.ToDictionary(x => GetAdapterId<int>(x).ToString());
+            Dictionary<int, ISurfaceProperty> props = GetCachedOrReadAsDictionary<int, ISurfaceProperty>();
+            Dictionary<int, Node> nodes = GetCachedOrReadAsDictionary<int, Node>();
 
             return Convert.FromGsaFEMesh(gsaElements, props, nodes);
         }
@@ -392,11 +360,8 @@ namespace BH.Adapter.GSA
 
         public List<RigidLink> ReadRigidLink(List<string> ids = null)
         {
-            List<LinkConstraint> constraintList = ReadLinkConstraint(null);
-            List<Node> nodeList = ReadNodes();
-
-            Dictionary<string, LinkConstraint> constraints = constraintList.ToDictionary(x => GetAdapterId<int>(x).ToString());
-            Dictionary<string, Node> nodes = nodeList.ToDictionary(x => GetAdapterId<int>(x).ToString());
+            Dictionary<int, LinkConstraint> constraints = GetCachedOrReadAsDictionary<int, LinkConstraint>();
+            Dictionary<int, Node> nodes = GetCachedOrReadAsDictionary<int, Node>();
 
             int[] potentialBeamRefs = GenerateIndices(ids, typeof(RigidLink));
             GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
@@ -414,19 +379,14 @@ namespace BH.Adapter.GSA
 
         public List<Spacer> ReadSpacers(List<string> ids = null)
         {
-            List<Node> nodeList = ReadNodes();
-            List<SpacerProperty> spacerProps = ReadSpacerProperties();
-
-            Dictionary<string, Node> nodes = nodeList.ToDictionary(x => GetAdapterId<int>(x).ToString());
-            Dictionary<string, SpacerProperty> secProps = spacerProps.Where(x => x != null).ToDictionary(x => GetAdapterId<int>(x).ToString());
+            Dictionary<int, Node> nodes = GetCachedOrReadAsDictionary<int, Node>();
+            Dictionary<int, SpacerProperty> secProps = GetCachedOrReadAsDictionary<int,SpacerProperty>();
 
             int[] potentialBeamRefs = GenerateIndices(ids, typeof(Spacer));
             GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
             m_gsaCom.Elements(potentialBeamRefs, out gsaElements);
 
             return Convert.FromGsaSpacers(gsaElements, secProps, nodes);
-
- 
         }
 
         /***************************************/
@@ -469,6 +429,7 @@ namespace BH.Adapter.GSA
 
         private List<IMaterialFragment> GetStandardGsaMaterials()
         {
+#if !GSA_10_1
             List<IMaterialFragment> materials = new List<IMaterialFragment>();
             materials.Add(new Steel() { Name = "STEEL" });
             materials.Add(new Concrete() { Name = "CONC_SHORT" });
@@ -481,6 +442,10 @@ namespace BH.Adapter.GSA
             }
 
             return materials;
+#else
+            return new List<IMaterialFragment>();
+#endif
+
         }
 
         /***************************************************/

@@ -116,7 +116,12 @@ namespace BH.Adapter.GSA
                 return null;
             }
 
-            int id = int.Parse(gStr[1]);
+            string id = gStr[1];
+
+#if GSA_10_1
+            id = gsaString.Split(("_.").ToCharArray())[1] + ":" + id;
+#endif
+
             mat.SetAdapterId(typeof(GSAId),id);
 
             return mat;
