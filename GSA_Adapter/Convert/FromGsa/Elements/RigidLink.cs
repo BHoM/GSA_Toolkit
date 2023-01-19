@@ -41,7 +41,7 @@ namespace BH.Adapter.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
-        public static List<RigidLink> FromGsaRigidLinks(IEnumerable<GsaElement> gsaElements, Dictionary<string, LinkConstraint> constraints, Dictionary<string, Node> nodes)
+        public static List<RigidLink> FromGsaRigidLinks(IEnumerable<GsaElement> gsaElements, Dictionary<int, LinkConstraint> constraints, Dictionary<int, Node> nodes)
         {
             List<RigidLink> linkList = new List<RigidLink>();
 
@@ -50,17 +50,17 @@ namespace BH.Adapter.GSA
                 if (gsaLink.eType != 9)
                     continue;
 
-                RigidLink face = new RigidLink()
+                RigidLink link = new RigidLink()
                 {
-                    PrimaryNode = nodes[gsaLink.Topo[0].ToString()],
-                    SecondaryNodes = new List<Node> { nodes[gsaLink.Topo[1].ToString()] },
-                    Constraint = constraints[gsaLink.Property.ToString()]
+                    PrimaryNode = nodes[gsaLink.Topo[0]],
+                    SecondaryNodes = new List<Node> { nodes[gsaLink.Topo[1]] },
+                    Constraint = constraints[gsaLink.Property]
                 };
 
-                face.ApplyTaggedName(gsaLink.Name);
+                link.ApplyTaggedName(gsaLink.Name);
                 int id = gsaLink.Ref;
-                face.SetAdapterId(typeof(GSAId), id);
-                linkList.Add(face);
+                link.SetAdapterId(typeof(GSAId), id);
+                linkList.Add(link);
 
             }
             return linkList;

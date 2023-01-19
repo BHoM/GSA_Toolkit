@@ -41,7 +41,7 @@ namespace BH.Adapter.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
-        public static List<FEMesh> FromGsaFEMesh(IEnumerable<GsaElement> gsaElements, Dictionary<string, ISurfaceProperty> props, Dictionary<string, Node> nodes)
+        public static List<FEMesh> FromGsaFEMesh(IEnumerable<GsaElement> gsaElements, Dictionary<int, ISurfaceProperty> props, Dictionary<int, Node> nodes)
         {
             List<FEMesh> meshList = new List<FEMesh>();
 
@@ -61,12 +61,12 @@ namespace BH.Adapter.GSA
                 FEMeshFace face = new FEMeshFace() { NodeListIndices = Enumerable.Range(0, gsaMesh.NumTopo).ToList(), OrientationAngle = gsaMesh.Beta * System.Math.PI / 180  };
                 face.SetAdapterId(typeof(GSAId), id);
                 ISurfaceProperty property;
-                props.TryGetValue(gsaMesh.Property.ToString(), out property);
+                props.TryGetValue(gsaMesh.Property, out property);
 
                 FEMesh mesh = new FEMesh()
                 {
                     Faces = new List<FEMeshFace>() { face },
-                    Nodes = gsaMesh.Topo.Select(x => nodes[x.ToString()]).ToList(),
+                    Nodes = gsaMesh.Topo.Select(x => nodes[x]).ToList(),
                     Property = property
                 };
 
