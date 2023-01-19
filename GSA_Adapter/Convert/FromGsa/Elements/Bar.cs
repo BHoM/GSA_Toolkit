@@ -43,7 +43,7 @@ namespace BH.Adapter.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
-        public static List<Bar> FromGsaBars(IEnumerable<GsaElement> gsaElements, Dictionary<string, ISectionProperty> secProps, Dictionary<string, Node> nodes)
+        public static List<Bar> FromGsaBars(IEnumerable<GsaElement> gsaElements, Dictionary<int, ISectionProperty> secProps, Dictionary<int, Node> nodes)
         {
             List<Bar> barList = new List<Bar>();
 
@@ -71,8 +71,8 @@ namespace BH.Adapter.GSA
                 }
 
                 Node n1, n2;
-                nodes.TryGetValue(gsaBar.Topo[0].ToString(), out n1);
-                nodes.TryGetValue(gsaBar.Topo[1].ToString(), out n2);
+                nodes.TryGetValue(gsaBar.Topo[0], out n1);
+                nodes.TryGetValue(gsaBar.Topo[1], out n2);
 
                 Bar bar = new Bar { StartNode = n1, EndNode = n2 };
                 bar.ApplyTaggedName(gsaBar.Name);
@@ -82,7 +82,7 @@ namespace BH.Adapter.GSA
                 bar.OrientationAngle = gsaBar.Beta;
 
                 ISectionProperty prop;
-                secProps.TryGetValue(gsaBar.Property.ToString(), out prop);
+                secProps.TryGetValue(gsaBar.Property, out prop);
 
                 bar.SectionProperty = prop;
 
@@ -97,7 +97,7 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        public static List<Bar> FromGsaBars(IEnumerable<string> gsaStrings, Dictionary<string, ISectionProperty> secProps, Dictionary<string, Node> nodes, List<string> ids)
+        public static List<Bar> FromGsaBars(IEnumerable<string> gsaStrings, Dictionary<int, ISectionProperty> secProps, Dictionary<int, Node> nodes, List<string> ids)
         {
             List<Bar> barList = new List<Bar>();
 
@@ -135,15 +135,15 @@ namespace BH.Adapter.GSA
 
                 Bar bar = new Bar()
                 {
-                    StartNode = nodes[arr[7]],
-                    EndNode = nodes[arr[8]],
+                    StartNode = nodes[int.Parse(arr[7])],
+                    EndNode = nodes[int.Parse(arr[8])],
                     FEAType = feType,
                 };
 
                 bar.ApplyTaggedName(arr[2]);
 
                 ISectionProperty prop;
-                if (secProps.TryGetValue(arr[5], out prop))
+                if (secProps.TryGetValue(int.Parse(arr[5]), out prop))
                     bar.SectionProperty = prop;
 
                 if (arr.Length > 10)

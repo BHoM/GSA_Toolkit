@@ -46,7 +46,7 @@ namespace BH.Adapter.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
-        public static List<Spacer> FromGsaSpacers(IEnumerable<GsaElement> gsaElements, Dictionary<string, SpacerProperty> spaProps, Dictionary<string, Node> nodes)
+        public static List<Spacer> FromGsaSpacers(IEnumerable<GsaElement> gsaElements, Dictionary<int, SpacerProperty> spaProps, Dictionary<int, Node> nodes)
         {
             List<Spacer> spacerList = new List<Spacer>();
 
@@ -56,16 +56,14 @@ namespace BH.Adapter.GSA
                     continue;
 
                 Node n1, n2;
-                nodes.TryGetValue(gsaSpacer.Topo[0].ToString(), out n1);
-                nodes.TryGetValue(gsaSpacer.Topo[1].ToString(), out n2);
+                nodes.TryGetValue(gsaSpacer.Topo[0], out n1);
+                nodes.TryGetValue(gsaSpacer.Topo[1], out n2);
 
                 Spacer spacer = new Spacer { StartNode = n1, EndNode = n2 };
                 spacer.ApplyTaggedName(gsaSpacer.Name);
 
-
-
-               SpacerProperty prop;
-               spaProps.TryGetValue(gsaSpacer.Property.ToString(), out prop);
+                SpacerProperty prop;
+                spaProps.TryGetValue(gsaSpacer.Property, out prop);
 
                 spacer.SpacerProperty = prop;
 
