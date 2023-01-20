@@ -27,6 +27,8 @@ using BH.oM.Structure.Elements;
 using BH.Engine.Adapter;
 using BH.oM.Adapters.GSA;
 using BH.Engine.Adapters.GSA;
+using BH.oM.Structure.MaterialFragments;
+using System.Linq;
 
 namespace BH.Adapter.GSA
 {
@@ -73,6 +75,19 @@ namespace BH.Adapter.GSA
         }
 
         /***************************************************/
+
+#if GSA_10_1
+        private bool Update(IEnumerable<IMaterialFragment> materials, ActionConfig actionConfig = null) 
+        {
+            bool success = true;
+            foreach (IMaterialFragment material in materials)
+            {
+                string index = this.GetAdapterId<string>(material).Split(':').FirstOrDefault();
+                success &= ComCall(Convert.IToGsaString(material, index));
+            }
+            return success;
+        }
+#endif
     }
 }
 
