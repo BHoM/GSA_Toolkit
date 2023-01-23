@@ -34,7 +34,7 @@ using System.ComponentModel;
 using BH.oM.Adapters.GSA.SpacerProperties;
 using BH.oM.Adapters.GSA.Elements;
 using BH.oM.Base.Attributes;
-
+using BH.oM.Adapters.GSA.MaterialFragments;
 
 namespace BH.Adapter.GSA
 {
@@ -56,9 +56,11 @@ namespace BH.Adapter.GSA
             else if (type == typeof(Concrete))
                 return "MAT_CONCRETE";
             else if (type == typeof(Timber))
-                return "MAT_TIMBER";
+                return "MAT_ANAL";//return "MAT_TIMBER";
             else if (type == typeof(Aluminium))
-                return "MAT_ALUMINIUM";
+                return "MAT_ANAL";//return "MAT_ALUMINIUM";
+            else if (type == typeof(Fabric))
+                return "MAT_FABRIC";//return "MAT_ALUMINIUM";
             else if (type == typeof(GenericIsotropicMaterial) || type == typeof(GenericOrthotropicMaterial))
                 return "MAT_ANAL";
 #else

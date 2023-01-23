@@ -75,19 +75,23 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
+#if GSA_10_1
         private bool CreateMaterials(IEnumerable<IMaterialFragment> materials)
         {
             bool success = true;
             foreach (IMaterialFragment material in materials)
             {
-                int index = m_gsaCom.GwaCommand("HIGHEST, " + Convert.ToGsaString(material.GetType())) + 1;
-                this.SetAdapterId(material, index);
+                string type = Convert.ToGsaString(material.GetType());
+                int index = m_gsaCom.GwaCommand("HIGHEST, " + type) + 1;
+                this.SetAdapterId(material, $"{type.Split('_').Last()}:{index}");
                 success &= ComCall(Convert.IToGsaString(material, index.ToString()));
             }
             return success;
         }
 
         /***************************************************/
+
+#endif
 
         private bool CreateObject(BH.oM.Base.IBHoMObject obj)
         {
