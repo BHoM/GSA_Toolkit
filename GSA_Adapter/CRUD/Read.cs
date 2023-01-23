@@ -121,7 +121,7 @@ namespace BH.Adapter.GSA
             string allProps = m_gsaCom.GwaCommand("GET_ALL, MAT").ToString();
 #endif
             string[] matArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
-            matArr = matArr.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+            matArr = matArr.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToArray();
 
             if (ids == null)
                 materials = matArr.Select(x => Convert.FromGsaMaterial(x)).Where(x => x != null).ToList();
