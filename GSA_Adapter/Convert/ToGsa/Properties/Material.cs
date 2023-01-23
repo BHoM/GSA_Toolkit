@@ -211,16 +211,28 @@ return str;
 
             if (material.GetMaterialType() == "UNDEF" || material is Aluminium)   //Aluminium current unsuported in the GSA API
             {
-                analNum = material.GSAId().ToString();
+                analNum = material.MaterialId();
             }
             else
             {
-                matNum = material.GSAId().ToString();
+                matNum = material.MaterialId();
                 materialType = material.GetMaterialType();
             }
         }
 
+        /***************************************************/
+
 #endif
+        public static string MaterialId(this IMaterialFragment material)
+        {
+#if GSA_10_1
+            return material.AdapterId<string>(typeof(GSAId)).Split(':').Last();
+#else
+            return material.GSAId().ToString();
+#endif
+        }
+
+        /***************************************************/
 
         private static string CommaSeparatedValues(Vector v)
         {
@@ -238,8 +250,10 @@ return str;
                 return "CONCRETE";
             else if (material is Aluminium)
                 return "ALUMINIUM";
-            else if (material is Timber)
-                return "TIMBER";
+            else if (material is Fabric)
+                return "FABRIC";
+            //else if (material is Timber)
+            //    return "TIMBER";
             else
                 return "UNDEF";
 #else

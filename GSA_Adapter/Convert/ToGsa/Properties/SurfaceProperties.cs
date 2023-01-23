@@ -46,7 +46,6 @@ namespace BH.Adapter.GSA
         {
             panProp.Name = panProp.DescriptionOrName().ToGSACleanName();
             string name = panProp.TaggedName();
-            string mat = panProp.Material.GSAId().ToString();
 
             string command = "PROP_2D";
             string colour = "NO_RGB";
@@ -83,6 +82,7 @@ namespace BH.Adapter.GSA
             //PROP_2D.7 | num | name | colour | type | axis | mat | mat_type | grade | design | profile | ref_pt | ref_z | mass | flex | shear | inplane | weight |
             return $"PROP_2D.7, {index}, {name}, {colour}, {type}, {axis}, {analNum}, {materialType}, {matNum}, {design}, {thick}, {ref_pt}, {ref_z}, {mass}, {bending}, {shear}, {inplane}, {weight}";
 #else
+            string mat = panProp.Material.GSAId().ToString();
             return command + "," + index + "," + name + "," + colour + "," + axis + "," + mat + "," + type + "," + thick + "," + weight + "," + mass + "," + bending + "," + inplane;
 #endif
         }
@@ -119,7 +119,7 @@ namespace BH.Adapter.GSA
             string name = panProp.TaggedName();
             string colour = "NO_RGB";
             string axis = "GLOBAL";
-            string mat = panProp.Material.GSAId().ToString();
+            string mat = panProp.Material.MaterialId();
             string type = "FABRIC";
             string thick = "0.1";
             string mass = panProp.AdditionalMass.ToString();
