@@ -60,8 +60,6 @@ namespace BH.Adapter.GSA
             prop.Name = prop.DescriptionOrName().ToGSACleanName();
             string name = prop.TaggedName();
 
-            string mat = prop.Material.GSAId().ToString();// materialId;  //"STEEL";// material.Name;
-
             string colour = "NO_RGB";
             string principle = "NO";
             string type = prop.SectionType();
@@ -81,6 +79,7 @@ namespace BH.Adapter.GSA
             //SECTION.7 | ref | colour | name | memb | pool | point | refY | refZ | mass | fraction | cost | left | right | slab | num { <comp> }
             string str = "SECTION.7," + index + "," + colour + "," + name + ",1D_GENERIC,0,CENTROID,0,0,0,1,0,0,0,0,1," + sectionComp + "," + prop.ISectionMaterialComp();
 #else
+            string mat = prop.Material.GSAId().ToString();// materialId;  //"STEEL";// material.Name;
             string str = "PROP_SEC" + "," + index + "," + name + "," + colour + "," + mat + "," + description + "," + principle + "," + type + "," + cost + "," + props + "," + mods + "," + plate_type + "," + calc_J;
 #endif
             return str;

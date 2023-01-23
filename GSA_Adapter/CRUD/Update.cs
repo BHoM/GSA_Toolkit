@@ -82,8 +82,7 @@ namespace BH.Adapter.GSA
             bool success = true;
             foreach (IMaterialFragment material in materials)
             {
-                string index = this.GetAdapterId<string>(material).Split(':').FirstOrDefault();
-                success &= ComCall(Convert.IToGsaString(material, index));
+                success &= ComCall(Convert.IToGsaString(material, material.MaterialId()));
             }
             return success;
         }
