@@ -135,7 +135,11 @@ namespace BH.Adapter.GSA
 
         public Dictionary<string, IMaterialFragment> ReadMaterialDictionary(List<string> ids = null, bool includeStandard = false)
         {
+#if GSA_10_1
             Dictionary<string, IMaterialFragment> materials = GetCachedOrReadAsDictionary<string, IMaterialFragment>(ids);
+#else
+            Dictionary<string, IMaterialFragment> materials = GetCachedOrReadAsDictionary<int, IMaterialFragment>(ids?.Select(x => int.Parse(x)).ToList()).ToDictionary(x => x.Key.ToString(), x => x.Value);
+#endif
             if (includeStandard)
             {
                 foreach (IMaterialFragment standardMaterial in GetStandardGsaMaterials())
