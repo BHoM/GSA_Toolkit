@@ -91,7 +91,7 @@ namespace BH.Adapter.GSA
             indecies.AddRange(areaLoad.Objects.Elements.Where(x => !(x is FEMesh)).Select(x => x.GSAId()));
 
             //Otherwise apply to the corresponding indecies
-            return indecies.GeterateIdString();
+            return indecies.GenerateIDString();
         }
 
         /***************************************************/
