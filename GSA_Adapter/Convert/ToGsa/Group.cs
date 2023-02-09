@@ -42,7 +42,7 @@ namespace BH.Adapter.GSA
             string command = "LIST";
             string name = group.Name;
             string type = group.IElementType();
-            string desc = group.Elements.Select(x => int.Parse(x.GSAId().ToString())).GeterateIdString();
+            string desc = group.Elements.Select(x => int.Parse(x.GSAId().ToString())).GenerateIDString();
 
             return command + ", " + index + ", " + name + ", " + type + ", " + desc;
         }
@@ -58,7 +58,7 @@ namespace BH.Adapter.GSA
                 return "\"" + load.Objects.Name + "\"";
 
             //Otherwise apply to the corresponding indecies
-            return load.Objects.Elements.SelectMany(x => x.GSAIds()).OrderBy(x => x).GeterateIdString();
+            return load.Objects.Elements.SelectMany(x => x.GSAIds()).OrderBy(x => x).GenerateIDString();
 
         }
 
@@ -77,7 +77,7 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        public static string GeterateIdString(this IEnumerable<int> ids)
+        public static string GenerateIDString(this IEnumerable<int> ids)
         {
             string str = "";
 
