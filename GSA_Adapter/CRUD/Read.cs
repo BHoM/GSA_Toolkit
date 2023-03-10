@@ -73,6 +73,8 @@ namespace BH.Adapter.GSA
                 return ReadMaterials(indices as dynamic);
             else if (type == typeof(LoadCombination))
                 return ReadLoadCombinations(indices as dynamic);
+            if (type == typeof(PointLoad))
+                return ReadNodeLoads(indices as dynamic);
             else if (type == typeof(ILoad) || type.GetInterfaces().Contains(typeof(ILoad)))
                 return new List<ILoad>(); //TODO: Implement load extraction
             if (type == typeof(RigidLink))
@@ -445,8 +447,39 @@ namespace BH.Adapter.GSA
                 return proArr.Select(x => Convert.FromGsaSoapStress2D(x, unitFactor)).ToList();
             else
                 return proArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Convert.FromGsaSoapStress2D(x, unitFactor)).ToList();
-        }
+		}
+		
+		/***************************************************/
+		
+        public List<PointLoad> ReadNodeLoads(List<string> ids = null)
+        {
+            List<PointLoad> pointLoads = new List<PointLoad>();
 
+            double[] unitFactors = GetUnitFactors();
+
+            int nodeLoadsCount = m_gsaCom.GwaCommand("HIGHEST, LOAD_NODE.2");
+            List<string> nodeLoadList = new List<string>();
+            for (int i = 0; i < nodeLoadsCount; i++)
+            {
+                string nodeLoad = m_gsaCom.GwaCommand("GET, LOAD_NODE.2," + (i + 1)).ToString();
+                if (!string.IsNullOrWhiteSpace(nodeLoad))
+                    nodeLoadList.Add(nodeLoad);
+            }
+
+            List<Loadcase> lCaseList = ReadLoadCases();
+            Dictionary<string, Loadcase> lCases = lCaseList.ToDictionary(x => x.Number.ToString());
+
+            List<Node> nodeList = ReadNodes();
+            Dictionary<string, Node> nodes = nodeList.ToDictionary(x => GetAdapterId<int>(x).ToString());
+
+            if (ids == null)
+                pointLoads = nodeLoadList.Select(x => Convert.FromGsaNodeLoad(x, lCases, nodes, unitFactors[0])).ToList();
+            else
+                pointLoads = nodeLoadList.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Convert.FromGsaNodeLoad(x, lCases, nodes, unitFactors[0])).ToList();
+
+            return pointLoads;
+
+        }
 
         /***************************************************/
         /**** Private  Methods                          ****/
