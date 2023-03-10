@@ -27,7 +27,6 @@ using BH.Engine.Adapter;
 using BH.oM.Adapters.GSA;
 using System.Collections.Generic;
 
-
 namespace BH.Adapter.GSA
 {
     public static partial class Convert
@@ -44,6 +43,41 @@ namespace BH.Adapter.GSA
 
             List<Tuple<double, ICase>> lCasesForTask = new List<Tuple<double, ICase>>();
             string[] gStr = gsaString.Split(',');
+
+
+            if (gStr[4].Contains("("))
+            {
+                Char[] separator = { '(', ')' };
+                string[] splitString = gStr[4].Split(separator);
+
+                string newString = "";
+
+                for (int i = 1; i < splitString.Length; i += 2)
+                {
+                    string[] preString = splitString[i - 1].Split('+');
+                    string paranthesisFactor = preString[preString.Length - 1];
+                    string cleanParanthesisFactor = paranthesisFactor.Replace(" ", "");
+
+                    for (int j = 0; j < preString.Length - 1; j++)
+                    {
+                        string cleanStr = preString[j].Replace(" ", "");
+                        newString = string.Concat(newString, cleanStr, " + ");
+                    }
+
+                    string[] paranthesisCases = splitString[i].Split('+');
+
+                    for (int k = 0; k < paranthesisCases.Length - 1; k++)
+                    {
+                        string cleanParanthesisCase = paranthesisCases[k].Replace(" ", "");
+                        newString = string.Concat(newString, cleanParanthesisFactor, cleanParanthesisCase, " + ");
+                    }
+
+                    string cleanLastParanthesisCase = paranthesisCases[paranthesisCases.Length - 1].Replace(" ", "");
+                    newString = string.Concat(newString, cleanParanthesisFactor, cleanLastParanthesisCase);
+                }
+                gStr[4] = newString;
+            }
+
             string[] lCaseArr = gStr[4].Split('+');
 
             if (gStr.Length < 5)
