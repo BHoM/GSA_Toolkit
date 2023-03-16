@@ -114,7 +114,16 @@ namespace BH.Adapter.GSA
 
             if (description == "SHELL")
             {
-                t = double.Parse(gsaStrings[10]);
+                t = 0;
+                if (gsaStrings[10].Contains("(m)"))
+                    t = double.Parse(gsaStrings[10].Replace("(m)", "")) * 1;
+                else if (gsaStrings[10].Contains("(cm)"))
+                    t = double.Parse(gsaStrings[10].Replace("(cm)", "")) * 0.01;
+                else if (gsaStrings[10].Contains("(mm)"))
+                    t = double.Parse(gsaStrings[10].Replace("(mm)", "")) * 0.001;
+                else
+                    t = double.Parse(gsaStrings[10]);
+                
                 loadCondition = null;
                 refEdge = 0;
             }
@@ -136,7 +145,16 @@ namespace BH.Adapter.GSA
 
             if (description == "SHELL")
             {
-                t = double.Parse(gsaStrings[7]);
+                t = 0;
+                if (gsaStrings[7].Contains("(m)"))
+                    t = double.Parse(gsaStrings[7].Replace("(m)", "")) * 1;
+                else if (gsaStrings[7].Contains("(cm)"))
+                    t = double.Parse(gsaStrings[7].Replace("(cm)", "")) * 0.01;
+                else if (gsaStrings[7].Contains("(mm)"))
+                    t = double.Parse(gsaStrings[7].Replace("(mm)", "")) * 0.001;
+                else
+                    t = double.Parse(gsaStrings[7]);
+
                 loadCondition = null;
                 refEdge = 0;
             }
