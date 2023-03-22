@@ -103,18 +103,20 @@ namespace BH.Adapter.GSA
             double my = 0;
             double mz = 0;
      
+            double convertedFactor = double.Parse(gStr[6]) / unitFactor;
+            
             if (gStr[5] == "X")
-                fx = double.Parse(gStr[6]) / unitFactor;
-            if (gStr[5] == "Y")
-                fy = double.Parse(gStr[6]) / unitFactor;
-            if (gStr[5] == "Z")
-                fz = double.Parse(gStr[6]) / unitFactor;
-            if (gStr[5] == "XX")
-                mx = double.Parse(gStr[6]) / unitFactor;
-            if (gStr[5] == "YY")
-                my = double.Parse(gStr[6]) / unitFactor;
-            if (gStr[5] == "ZZ")
-                mz = double.Parse(gStr[6]) / unitFactor;
+                fx = convertedFactor;
+            else if (gStr[5] == "Y")
+                fy = convertedFactor;
+            else if (gStr[5] == "Z")
+                fz = convertedFactor;
+            else if (gStr[5] == "XX")
+                mx = convertedFactor;
+            else if (gStr[5] == "YY")
+                my = convertedFactor;
+            else if (gStr[5] == "ZZ")
+                mz = convertedFactor;
 
             LoadAxis axis = LoadAxis.Global;
             if (gStr[4] == "LOCAL")
