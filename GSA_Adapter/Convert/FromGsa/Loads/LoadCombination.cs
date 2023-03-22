@@ -44,7 +44,6 @@ namespace BH.Adapter.GSA
             List<Tuple<double, ICase>> lCasesForTask = new List<Tuple<double, ICase>>();
             string[] gStr = gsaString.Split(',');
 
-
             if (gStr[4].Contains("("))
             {
                 Char[] separator = { '(', ')' };
