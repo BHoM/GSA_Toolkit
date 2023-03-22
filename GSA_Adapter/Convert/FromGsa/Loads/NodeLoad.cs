@@ -31,7 +31,6 @@ using BH.oM.Geometry;
 using BH.oM.Base;
 using System.Linq;
 
-
 namespace BH.Adapter.GSA
 {
     public static partial class Convert
