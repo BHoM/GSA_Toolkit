@@ -47,7 +47,7 @@ namespace BH.Adapter.GSA
             if (gStr[4].Contains("("))
             {
                 Char[] separators = { '(', ')' };
-                string[] splitString = gStr[4].Split(separator);
+                string[] splitString = gStr[4].Split(separators);
 
                 string newString = "";
 
