@@ -38,7 +38,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using BH.Engine.Adapters.GSA;
-using BH.oM.Structure.Results;
 
 namespace BH.Adapter.GSA
 {
@@ -219,99 +218,6 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        private bool GetExtractionParameters(MeshResultRequest request, out ResHeader header, out ForceConverter converter, out string axis, out double unitFactor, out int divisions, out int flags)
-        {
-            axis = Output_Axis.Local;
-            divisions = 0;
-            flags = 0;
-
-            double[] unitFactors = GetUnitFactors();
-
-            switch (request.LayerPosition)
-            {
-                case -1:
-                    flags = (int)Output_Init_Flags.OP_INIT_2D_BOTTOM;
-                    break;
-                case 0:
-                    flags = (int)Output_Init_Flags.OP_INIT_2D_MIDDLE;
-                    break;
-                case 1:
-                    flags = (int)Output_Init_Flags.OP_INIT_2D_TOP;
-                    break;
-                case 2:
-                    converter = null;
-                    header = ResHeader.REF_ACC;
-                    unitFactor = unitFactors[(int)UnitType.FORCE];
-                    flags = 0;
-                    Engine.Base.Compute.RecordError("Result of layer position " + request.LayerPosition + " is not yet supported");
-                    return false;
-                case 3:
-                    converter = null;
-                    header = ResHeader.REF_ACC;
-                    unitFactor = unitFactors[(int)UnitType.FORCE];
-                    flags = 0;
-                    Engine.Base.Compute.RecordError("Result of layer position " + request.LayerPosition + " is not yet supported");
-                    return false;
-                case 4:
-                    converter = null;
-                    header = ResHeader.REF_ACC;
-                    unitFactor = unitFactors[(int)UnitType.FORCE];
-                    flags = 0;
-                    Engine.Base.Compute.RecordError("Result of layer position " + request.LayerPosition + " is not yet supported");
-                    return false;
-                case 5:
-                    converter = null;
-                    header = ResHeader.REF_ACC;
-                    unitFactor = unitFactors[(int)UnitType.FORCE];
-                    flags = 0;
-                    Engine.Base.Compute.RecordError("Result of layer position " + request.LayerPosition + " is not yet supported");
-                    return false;
-            }
-
-            switch (request.ResultType)
-            {
-                case MeshResultType.Forces:
-                    converter = null;
-                    header = ResHeader.REF_FORCE_EL2D_DRV;
-                    unitFactor = unitFactors[(int)UnitType.FORCE];
-                    Engine.Base.Compute.RecordError("Result of layer position " + request.ResultType + " is not yet supported");
-                    return false;
-                case MeshResultType.Displacements:
-                    converter = null;
-                    header = ResHeader.REF_DISP_EL2D;
-                    unitFactor = unitFactors[(int)UnitType.LENGTH];
-                    Engine.Base.Compute.RecordError("Result of layer position " + request.ResultType + " is not yet supported");
-                    return false;
-                case MeshResultType.MeshModeShape:
-                    converter = null;
-                    header = ResHeader.REF_ACC;
-                    unitFactor = 1;
-                    Engine.Base.Compute.RecordError("Result of layer position " + request.ResultType + " is not yet supported");
-                    return false;
-                case MeshResultType.Stresses:
-                    converter = Convert.FromGsaMeshStress;
-                    header = ResHeader.REF_STRESS_EL2D_DRV;
-                    unitFactor = unitFactors[(int)UnitType.STRESS];
-                    break;
-                case MeshResultType.VonMises:
-                    converter = null;
-                    header = ResHeader.REF_ACC;
-                    unitFactor = 1;
-                    Engine.Base.Compute.RecordError("Result of layer position " + request.ResultType + " is not yet supported");
-                    return false;
-                default:
-                    converter = null;
-                    header = ResHeader.REF_ACC;
-                    unitFactor = 1;
-                    Engine.Base.Compute.RecordError("Result of type " + request.ResultType + " is not yet supported");
-                    return false;
-            }
-
-            return true;
-        }
-
-        /***************************************************/
-
         private bool IGetExtractionParameters(IResultRequest request, out ResHeader header, out ForceConverter converter, out string axis, out double unitFactor, out int divisions, out int flags)
         {
             return GetExtractionParameters(request as dynamic, out header, out converter, out axis, out unitFactor, out divisions, out flags);
@@ -468,50 +374,6 @@ namespace BH.Adapter.GSA
             return nodes.Select(x => x.Ref).ToList();
         }
 
-
-        /***************************************************/
-
-        private List<int> GetAllIds(MeshResultRequest request)
-        {
-            string allBars = m_gsaCom.GwaCommand("GET_ALL, EL.2").ToString();
-            string[] barArr = string.IsNullOrWhiteSpace(allBars) ? new string[0] : allBars.Split('\n');
-
-            List<int> ids = new List<int>();
-            bool containsDummies = false;
-            foreach (string gsaBar in barArr)
-            {
-
-                string[] arr = gsaBar.Split(',');
-
-                string index = arr[1];
-
-                //Check that the element type is a mesh
-                switch (arr[4])
-                {
-                    case "TRI3":
-                    case "TRI6":
-                    case "QUAD4":
-                    case "QUAD8":
-                        break;
-                    default:
-                        continue;
-                }
-
-                //Check if dummy
-                if (arr.Last().ToUpper() == "DUMMY")
-                {
-                    containsDummies = true;
-                    continue;
-                }
-
-                ids.Add(int.Parse(index));
-            }
-
-            if (containsDummies)
-                Engine.Base.Compute.RecordNote("Model contains 'dummy'-elements. The elements with this tag do not contain any results and will not have any results extracted.");
-
-            return ids;
-        }
 
         /***************************************************/
 

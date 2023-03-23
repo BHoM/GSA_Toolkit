@@ -189,32 +189,6 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        public static MeshStress FromGsaMeshStress(GsaResults results, int id, string loadCase, int divisions, double timeStep = 0, int mode = -1)
-        {
-            return new MeshStress(
-                id,
-                0,
-                0,
-                loadCase,
-                mode,
-                timeStep,
-                MeshResultLayer.Lower,
-                -1,
-                MeshResultSmoothingType.None,
-                oM.Geometry.Basis.XY,
-                results.dynaResults[0],
-                results.dynaResults[1],
-                results.dynaResults[2],
-                results.dynaResults[4],
-                results.dynaResults[3],
-                results.dynaResults[6],
-                results.dynaResults[5],
-                results.dynaResults[7]
-                );
-        }
-
-        /***************************************************/
-
         public static GlobalReactions FromGsaGlobalReactions(string id, string force, string moment)
         {
             string[] fArr = force.Split(',');
