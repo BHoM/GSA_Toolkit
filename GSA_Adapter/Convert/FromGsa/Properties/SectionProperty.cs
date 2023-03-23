@@ -145,16 +145,6 @@ namespace BH.Adapter.GSA
 
                             Engine.Base.Compute.RecordNote("Section of type: " + secName + " not found in the library. Custom section will be used");
                         }
-                        else if (desc[1].Contains("CHS"))
-                        {
-                            description = "STD%" + secType + "%";
-                            string trim = desc[2].TrimStart(secType.ToCharArray());
-                            string[] arr = trim.Split('x');
-
-                            description += arr[0] + "%" + arr[1];
-
-                            Engine.Base.Compute.RecordNote("Section of type: " + secName + " not found in the library. Custom section will be used");
-                        }
                         else
                         {
                             message += "Catalogue section of type " + secName + " not found in library\n";
