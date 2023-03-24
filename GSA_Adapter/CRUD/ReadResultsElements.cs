@@ -201,7 +201,7 @@ namespace BH.Adapter.GSA
                 case NodeResultType.NodeDisplacement:
                     converter = Convert.FromGsaNodeDisplacement;
                     header = ResHeader.REF_DISP;
-                    unitFactor = unitFactors[(int)UnitType.LENGTH];
+                    unitFactor = unitFactors[(int)UnitType.DISP];
                     break;
                 case NodeResultType.NodeVelocity:
                 case NodeResultType.NodeAcceleration:
