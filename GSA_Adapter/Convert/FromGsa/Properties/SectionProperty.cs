@@ -124,7 +124,7 @@ namespace BH.Adapter.GSA
                     else
                     {
                         secName = secName.TrimEnd((".0").ToCharArray());
-                        if (desc[1].Contains("CHS"))
+                        if (desc[1].Contains("RHS"))
                         {
                             description = "STD" + splitChar + secType + splitChar;
                             string trim = desc[2].TrimStart(secType.ToCharArray());
@@ -141,6 +141,36 @@ namespace BH.Adapter.GSA
                             string[] arr = trim.Split('x');
 
                             description += arr[0] + splitChar + arr[1] + splitChar + arr[2] + splitChar + arr[2];
+
+                            Engine.Base.Compute.RecordNote("Section of type: " + secName + " not found in the library. Custom section will be used");
+                        }
+                        else if (desc[1].Contains("CHS"))
+                        {
+                            description = "STD%" + secType + "%";
+                            string trim = desc[2].TrimStart(secType.ToCharArray());
+                            string[] arr = trim.Split('x');
+
+                            description += arr[0] + "%" + arr[1];
+
+                            Engine.Base.Compute.RecordNote("Section of type: " + secName + " not found in the library. Custom section will be used");
+                        }
+                        else if (desc[1].Contains("UB"))
+                        {
+                            description = "STD%" + secType + "%";
+                            string trim = desc[2].TrimStart(secType.ToCharArray());
+                            string[] arr = trim.Split('x');
+
+                            description += arr[0] + "%" + arr[1] + "%" + arr[2];
+
+                            Engine.Base.Compute.RecordNote("Section of type: " + secName + " not found in the library. Custom section will be used");
+                        }
+                        else if (desc[1].Contains("UC"))
+                        {
+                            description = "STD%" + secType + "%";
+                            string trim = desc[2].TrimStart(secType.ToCharArray());
+                            string[] arr = trim.Split('x');
+
+                            description += arr[0] + "%" + arr[1] + "%" + arr[2];
 
                             Engine.Base.Compute.RecordNote("Section of type: " + secName + " not found in the library. Custom section will be used");
                         }

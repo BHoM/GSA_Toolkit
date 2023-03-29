@@ -44,6 +44,8 @@ namespace BH.Adapter.GSA
             if (string.IsNullOrWhiteSpace(gsaString))
                 return null;
 
+            //Example gsaString: "LOAD_NODE.2,,7,1,GLOBAL,Z,-24.016"
+
             string[] gStr = gsaString.Split(',');
 
             if (gStr.Length < 7)
