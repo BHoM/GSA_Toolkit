@@ -47,6 +47,7 @@ using BH.oM.Adapter;
 using BH.Engine.Adapters.GSA;
 using BH.oM.Adapters.GSA.Elements;
 using BH.oM.Adapters.GSA.SpacerProperties;
+using BH.oM.Adapters.GSA.FormFindingProperties;
 
 namespace BH.Adapter.GSA
 {
@@ -88,6 +89,10 @@ namespace BH.Adapter.GSA
                 return ReadSpacers(indices as dynamic);
             if (type == typeof(SpacerProperty))
                 return ReadSpacerProperties(indices as dynamic);
+            if (type == typeof(SoapStress1D))
+                return ReadSoapStress1D(indices as dynamic);
+            if (type == typeof(SoapStress2D))
+                return ReadSoapStress2D(indices as dynamic);
             if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)
                 return new List<BHoMGroup<IBHoMObject>>();
             if (typeof(IResult).IsAssignableFrom(type))
@@ -406,6 +411,40 @@ namespace BH.Adapter.GSA
                 return proArr.Select(x => Convert.FromGsaSpacerProperty(x)).ToList();
             else
                 return proArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Convert.FromGsaSpacerProperty(x)).ToList();
+        }
+
+        /***************************************/
+
+        public List<SoapStress1D> ReadSoapStress1D(List<string> ids = null)
+        {
+            double[] unitFactors = GetUnitFactors();
+            double unitFactor = unitFactors[(int)UnitType.FORCE];
+
+            string allProps = m_gsaCom.GwaCommand("GET_ALL, SOAP_STRESS_1D").ToString();
+
+            string[] proArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
+
+            if (ids == null)
+                return proArr.Select(x => Convert.FromGsaSoapStress1D(x, unitFactor)).ToList();
+            else
+                return proArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Convert.FromGsaSoapStress1D(x, unitFactor)).ToList();
+        }
+
+        /***************************************/
+
+        public List<SoapStress2D> ReadSoapStress2D(List<string> ids = null)
+        {
+            double[] unitFactors = GetUnitFactors();
+            double unitFactor = unitFactors[(int)UnitType.FORCE];
+
+            string allProps = m_gsaCom.GwaCommand("GET_ALL, SOAP_STRESS_2D").ToString();
+
+            string[] proArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
+
+            if (ids == null)
+                return proArr.Select(x => Convert.FromGsaSoapStress2D(x, unitFactor)).ToList();
+            else
+                return proArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Convert.FromGsaSoapStress2D(x, unitFactor)).ToList();
         }
 
 
