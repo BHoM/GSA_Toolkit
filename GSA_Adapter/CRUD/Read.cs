@@ -466,11 +466,8 @@ namespace BH.Adapter.GSA
                     nodeLoadList.Add(nodeLoad);
             }
 
-            List<Loadcase> lCaseList = ReadLoadCases();
-            Dictionary<string, Loadcase> lCases = lCaseList.ToDictionary(x => x.Number.ToString());
-
-            List<Node> nodeList = ReadNodes();
-            Dictionary<string, Node> nodes = nodeList.ToDictionary(x => GetAdapterId<int>(x).ToString());
+            Dictionary<int, Loadcase> lCases = GetCachedOrReadAsDictionary<int, Loadcase>();
+            Dictionary<int, Node> nodes = GetCachedOrReadAsDictionary<int, Node>();
 
             if (ids == null)
                 pointLoads = nodeLoadList.Select(x => Convert.FromGsaNodeLoad(x, lCases, nodes, unitFactors[0])).ToList();
