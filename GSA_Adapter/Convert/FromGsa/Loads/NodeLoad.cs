@@ -39,7 +39,7 @@ namespace BH.Adapter.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
-        public static PointLoad FromGsaNodeLoad(string gsaString, Dictionary<string, Loadcase> lCases, Dictionary<string, Node> nodes, double unitFactor)
+        public static PointLoad FromGsaNodeLoad(string gsaString, Dictionary<int, Loadcase> lCases, Dictionary<int, Node> nodes, double unitFactor)
         {
             if (string.IsNullOrWhiteSpace(gsaString))
                 return null;
@@ -51,13 +51,13 @@ namespace BH.Adapter.GSA
             if (gStr.Length < 7)
                 return null;
 
-            string lCaseNo = gStr[3];
+            int lCaseNo = int.Parse(gStr[3]);
 
             Loadcase loadCase;
             if (!lCases.TryGetValue(lCaseNo, out loadCase))
             {
-                loadCase = new Loadcase { Number = int.Parse(lCaseNo), Nature = LoadNature.Other };
-                loadCase.SetAdapterId(typeof(GSAId), int.Parse(lCaseNo));
+                loadCase = new Loadcase { Number = lCaseNo, Nature = LoadNature.Other };
+                loadCase.SetAdapterId(typeof(GSAId), lCaseNo);
             }
 
             string[] nodeNos = gStr[2].Split(' ');
@@ -89,7 +89,7 @@ namespace BH.Adapter.GSA
                 if (!string.IsNullOrEmpty(cleanStr))
                 {
                     Node node;
-                    if (!nodes.TryGetValue(cleanStr, out node))
+                    if (!nodes.TryGetValue(int.Parse(cleanStr), out node))
                     {
                         node = new Node();
                         node.SetAdapterId(typeof(GSAId), int.Parse(cleanStr));
