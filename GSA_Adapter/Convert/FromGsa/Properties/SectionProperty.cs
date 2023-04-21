@@ -126,21 +126,21 @@ namespace BH.Adapter.GSA
                         secName = secName.TrimEnd((".0").ToCharArray());
                         if (desc[1].Contains("CHS"))
                         {
-                            description = "STD%" + secType + "%";
+                            description = "STD" + splitChar + secType + splitChar;
                             string trim = desc[2].TrimStart(secType.ToCharArray());
                             string[] arr = trim.Split('x');
 
-                            description += arr[0] + "%" + arr[1];
+                            description += arr[0] + splitChar + arr[1];
 
                             Engine.Base.Compute.RecordNote("Section of type: " + secName + " not found in the library. Custom section will be used");
                         }
                         else if (desc[1].Contains("RHS"))
                         {
-                            description = "STD%" + secType + "%";
+                            description = "STD" + splitChar + secType + splitChar;
                             string trim = desc[2].TrimStart(secType.ToCharArray());
                             string[] arr = trim.Split('x');
 
-                            description += arr[0] + "%" + arr[1] + "%" + arr[2] + "%" + arr[2];
+                            description += arr[0] + splitChar + arr[1] + splitChar + arr[2] + splitChar + arr[2];
 
                             Engine.Base.Compute.RecordNote("Section of type: " + secName + " not found in the library. Custom section will be used");
                         }
