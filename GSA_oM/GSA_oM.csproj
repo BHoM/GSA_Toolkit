@@ -80,9 +80,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Elements\RigidConstraint.cs" />
     <Compile Include="Elements\Spacer.cs" />
     <Compile Include="Enum\ConcreteDesignSpecification.cs" />
     <Compile Include="Enum\Country.cs" />
+    <Compile Include="Enum\RigidConstraintLinkType.cs" />
     <Compile Include="Enum\SpacerLengthType.cs" />
     <Compile Include="Enum\SpacerType.cs" />
     <Compile Include="Enum\SteelDesignSpecification.cs" />

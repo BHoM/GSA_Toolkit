@@ -35,6 +35,7 @@ using BH.Engine.Adapters.GSA;
 using BH.oM.Adapters.GSA.SurfaceProperties;
 using BH.oM.Structure.MaterialFragments;
 using BH.oM.Structure.Fragments;
+using BH.oM.Adapters.GSA.Elements;
 
 namespace BH.Adapter.GSA
 {
@@ -276,6 +277,13 @@ namespace BH.Adapter.GSA
             return success;
         }
 
+
+        /***************************************************/
+
+        private bool CreateObject(RigidConstraint rigidConstraint)
+        {
+            return ComCall(rigidConstraint.ToGsaString());
+        }
 
         /***************************************************/
     }

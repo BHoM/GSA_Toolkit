@@ -83,6 +83,8 @@ namespace BH.Adapter.GSA
                 return ReadRigidLink(indices as dynamic);
             if (type == typeof(LinkConstraint))
                 return ReadLinkConstraint(indices as dynamic);
+            if (type == typeof(RigidConstraint))
+                return ReadRigidConstraint(indices as dynamic);
             if (type == typeof(FEMesh))
                 return ReadFEMesh(indices as dynamic);
             if (type == typeof(ISurfaceProperty))
@@ -414,6 +416,18 @@ namespace BH.Adapter.GSA
             //    return proArr.Select(x => Convert.FromGsaSectionProperty(x, materials)).ToList();
             //else
             //    return proArr.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Convert.FromGsaSectionProperty(x, materials)).ToList();
+        }
+
+        /***************************************/
+
+        public List<RigidConstraint> ReadRigidConstraint(List<string> ids = null)
+        {
+            string allProps = m_gsaCom.GwaCommand("GET_ALL, RIGID").ToString();
+            string[] proArr = string.IsNullOrWhiteSpace(allProps) ? new string[0] : allProps.Split('\n');
+
+            Dictionary<int, Node> nodes = GetCachedOrReadAsDictionary<int, Node>();
+
+            return Convert.FromGsaRigidConstraint(proArr, nodes);
         }
 
         /***************************************/
