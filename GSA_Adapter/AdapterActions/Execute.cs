@@ -25,6 +25,7 @@ using System.Collections;
 using BH.oM.Adapter;
 using BH.oM.Base;
 using BH.oM.Adapter.Commands;
+using System.Linq;
 
 namespace BH.Adapter.GSA
 {
@@ -40,11 +41,46 @@ namespace BH.Adapter.GSA
 
         public override Output<List<object>, bool> Execute(IExecuteCommand command, ActionConfig actionConfig = null)
         {
+            return RunCommandWithOutput(command as dynamic);
+        }
+
+        /***************************************************/
+
+        public Output<List<object>, bool> RunCommandWithOutput(IExecuteCommand command)
+        {
             var output = new Output<List<object>, bool>() { Item1 = null, Item2 = false };
 
             output.Item2 = RunCommand(command as dynamic);
 
             return output;
+        }
+
+        /***************************************************/
+
+        public Output<List<object>, bool> RunCommandWithOutput(CustomCommand command)
+        {
+            object ret = null;
+            try
+            {
+                ret = this.ReturnComCall<object>(command.Command);
+            }
+            catch (System.Exception e)
+            {
+                BH.Engine.Base.Compute.RecordError(e, "Failed to run custom command.");
+            }
+
+            if (ret == null)
+                return new Output<List<object>, bool> { Item1 = new List<object>(), Item2 = false };
+
+            List<object> returnCollection;
+            if (!(ret is string) && ret is IEnumerable enumerable)
+            {
+                returnCollection = enumerable.Cast<object>().ToList();
+            }
+            else
+                returnCollection = new List<object> { ret };
+
+            return new Output<List<object>, bool> { Item1 = returnCollection, Item2 = true };
         }
 
         /***************************************************/
