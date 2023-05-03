@@ -124,7 +124,7 @@ namespace BH.Adapter.GSA
                     else
                     {
                         secName = secName.TrimEnd((".0").ToCharArray());
-                        if (desc[1].Contains("RHS") || desc[1].Contains("CHS"))
+                        if (desc[1].Contains("CHS"))
                         {
                             description = "STD" + splitChar + secType + splitChar;
                             string trim = desc[2].TrimStart(secType.ToCharArray());
