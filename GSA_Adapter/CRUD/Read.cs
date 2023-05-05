@@ -75,6 +75,8 @@ namespace BH.Adapter.GSA
                 return ReadLoadCombinations(indices as dynamic);
             if (type == typeof(PointLoad))
                 return ReadNodeLoads(indices as dynamic);
+            else if (type == typeof(BarPrestressLoad))
+                return ReadBarPrestressLoads(indices as dynamic);
             else if (type == typeof(ILoad) || type.GetInterfaces().Contains(typeof(ILoad)))
                 return new List<ILoad>(); //TODO: Implement load extraction
             if (type == typeof(RigidLink))
@@ -215,6 +217,34 @@ namespace BH.Adapter.GSA
                 lComabinations = analList.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Convert.FromGsaAnalTask(x, lCases)).ToList();
 
             return lComabinations;
+        }
+
+        /***************************************/
+
+        public List<BarPrestressLoad> ReadBarPrestressLoads(List<string> ids = null)
+        {
+            List<BarPrestressLoad> prestressLoads = new List<BarPrestressLoad>();
+
+            double[] unitFactors = GetUnitFactors();
+
+            int prestressLoadsCount = m_gsaCom.GwaCommand("HIGHEST, LOAD_BEAM_PRE");
+            List<string> prestressLoadList = new List<string>();
+            for (int i = 0; i < prestressLoadsCount; i++)
+            {
+                string prestressLoad = m_gsaCom.GwaCommand("GET, LOAD_BEAM_PRE," + (i + 1)).ToString();
+                if (!string.IsNullOrWhiteSpace(prestressLoad) & prestressLoad.StartsWith("LOAD_BEAM_PRE"))
+                    prestressLoadList.Add(prestressLoad);
+            }
+
+            Dictionary<int, Loadcase> lCases = GetCachedOrReadAsDictionary<int, Loadcase>();
+            Dictionary<int, Bar> bars = GetCachedOrReadAsDictionary<int, Bar>();
+
+            if (ids == null)
+                prestressLoads = prestressLoadList.Select(x => Convert.FromGsaBarPrestressLoad(x, lCases, bars, unitFactors[0])).ToList();
+            else
+                prestressLoads = prestressLoadList.Where(x => ids.Contains(x.Split(',')[1])).Select(x => Convert.FromGsaBarPrestressLoad(x, lCases, bars, unitFactors[0])).ToList();
+
+            return prestressLoads;
         }
 
         /***************************************/
