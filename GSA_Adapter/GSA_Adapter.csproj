@@ -186,6 +186,7 @@
     <Compile Include="Convert\FromGsa\Elements\FEMesh.cs" />
     <Compile Include="Convert\FromGsa\Elements\Spacer.cs" />
     <Compile Include="Convert\FromGsa\Loads\NodeLoad.cs" />
+    <Compile Include="Convert\FromGsa\Loads\BarPrestressLoad.cs" />
     <Compile Include="Convert\FromGsa\Properties\FormFindingProperties.cs" />
     <Compile Include="Convert\FromGsa\Properties\SpacerProperty.cs" />
     <Compile Include="Convert\FromGsa\Properties\LinkConstraint.cs" />
