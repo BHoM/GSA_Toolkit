@@ -80,17 +80,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Elements\RigidConstraint.cs" />
     <Compile Include="Elements\Spacer.cs" />
     <Compile Include="Enum\ConcreteDesignSpecification.cs" />
     <Compile Include="Enum\Country.cs" />
-    <Compile Include="Enum\RigidConstraintLinkType.cs" />
     <Compile Include="Enum\SpacerLengthType.cs" />
     <Compile Include="Enum\SpacerType.cs" />
     <Compile Include="Enum\SteelDesignSpecification.cs" />
     <Compile Include="Enum\AnalysisType.cs" />
     <Compile Include="FormFindingProperties\SoapStress1D.cs" />
     <Compile Include="FormFindingProperties\SoapStress2D.cs" />
+    <Compile Include="Fragments\GSARigidConstraint.cs" />
     <Compile Include="Fragments\DummyTag.cs" />
     <Compile Include="Fragments\GSAId.cs" />
     <Compile Include="Fragments\AnalysisTaskFragment.cs" />

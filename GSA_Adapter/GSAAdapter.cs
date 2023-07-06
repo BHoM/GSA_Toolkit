@@ -94,7 +94,6 @@ namespace BH.Adapter.GSA
                 {typeof(ISurfaceProperty), new List<Type> { typeof(IMaterialFragment) } },
                 {typeof(Spacer), new List<Type> { typeof(SpacerProperty), typeof(Node) } },
                 {typeof(Panel), new List<Type> { typeof(ISurfaceProperty), typeof(Node) } },
-                {typeof(RigidConstraint), new List<Type> { typeof(Node) } },
 #if GSA_10_1
                 {typeof(Node), new List<Type>{typeof(Constraint6DOF) } }
 #endif

@@ -160,31 +160,45 @@ namespace BH.Adapter.GSA
         //
         private bool CreateLinks(IEnumerable<RigidLink> links)
         {
-            
             bool success = true;
-            foreach (RigidLink link in links)
-            {
-                success &= ComCall(Convert.ToGsaString(link, GetAdapterId<int>(link).ToString(), 0));
-            }
 
             foreach (RigidLink link in links)
             {
-                List<int> allIds = new List<int>();
-                for (int i = 1; i < link.SecondaryNodes.Count; i++)
+                if (Convert.CheckRigCon(link) == false)
                 {
-                    int id =  (int)NextFreeId(link.GetType(), i == 1);
-                    success &= ComCall(Convert.ToGsaString(link, id.ToString(), i));
-                    allIds.Add(id);
+                    if (link.SecondaryNodes.Count > 1)
+                    {
+                        List<int> secondaryIds = new List<int>();
+                        foreach (Node secondaryNode in link.SecondaryNodes)
+                        {
+                            int id = (int)NextFreeId(link.GetType(), false);
+                            success &= ComCall(Convert.ToGsaString(link, id.ToString()));
+                            secondaryIds.Add(id);
+                        }
+
+                        var allIds = new List<int> { GetAdapterId<int>(link) };
+                        allIds.AddRange(secondaryIds);
+                        link.Fragments.Remove(typeof(GSAId));
+                        link.SetAdapterId(typeof(GSAId), allIds);
+                    }
+                    else
+                    {
+                        int id = (int)NextFreeId(link.GetType(), false);
+                        success &= ComCall(Convert.ToGsaString(link, id.ToString()));
+                        link.Fragments.Remove(typeof(GSAId));
+                        link.SetAdapterId(typeof(GSAId), id);
+                    }
                 }
-                if (link.SecondaryNodes.Count > 1)
+                else
                 {
-                    allIds.Insert(0, GetAdapterId<int>(link));
-                    link.Fragments.Remove(typeof(GSAId)); // to remove the existing single id on the link
-                    link.SetAdapterId(typeof(GSAId), allIds);
+                    success &= ComCall(Convert.ToGsaString(link, GetAdapterId<int>(link).ToString()));
                 }
             }
+
             return success;
         }
+
+
 
         /***************************************************/
 
@@ -280,12 +294,6 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-        private bool CreateObject(RigidConstraint rigidConstraint)
-        {
-            return ComCall(rigidConstraint.ToGsaString());
-        }
-
-        /***************************************************/
     }
 }
 
