@@ -1,4 +1,4 @@
-Debug87
-Debug101
-Release87
-Release101
+BHoM/GSA_Toolkit/Debug87
+BHoM/GSA_Toolkit/Debug101
+BHoM/GSA_Toolkit/Release87
+BHoM/GSA_Toolkit/Release101
