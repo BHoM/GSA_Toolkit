@@ -73,7 +73,7 @@ namespace BH.Adapter.GSA
                 string linkName = tokens[1];
                 int primaryNodeName = int.Parse(tokens[2]);
                 string linkTypeString = tokens[3];
-                string[] constrainedNodeNames = tokens[4].Split(',');
+                string[] constrainedNodeNames = tokens[4].Split(' ');
 
                 Node primaryNode;
                 nodes.TryGetValue(primaryNodeName, out primaryNode);
