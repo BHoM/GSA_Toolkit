@@ -172,7 +172,8 @@ namespace BH.Adapter.GSA
                         foreach (Node secondaryNode in link.SecondaryNodes)
                         {
                             int id = (int)NextFreeId(link.GetType(), false);
-                            success &= ComCall(Convert.ToGsaString(link, id.ToString()));
+                            int secondaryIndex = link.SecondaryNodes.IndexOf(secondaryNode);
+                            success &= ComCall(Convert.ToGsaString(link, id.ToString(), secondaryIndex));
                             secondaryIds.Add(id);
                         }
 
