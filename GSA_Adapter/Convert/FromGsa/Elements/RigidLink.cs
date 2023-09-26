@@ -197,9 +197,9 @@ namespace BH.Adapter.GSA
 
                 link.ApplyTaggedName(linkName);
 
-                GSARigidConstraint RCtag = new GSARigidConstraint
+                IsRigidConstraint RCtag = new IsRigidConstraint
                 {
-                    IsRigidConstraint = true
+                    RigidConstraint = true
                 };
 
                 link.Fragments.Add(RCtag);

@@ -136,9 +136,9 @@ namespace BH.Adapter.GSA
 
         public static bool CheckRigCon(BHoMObject obj)
         {
-            GSARigidConstraint tag = obj.FindFragment<GSARigidConstraint>();
+            IsRigidConstraint tag = obj.FindFragment<IsRigidConstraint>();
 
-            if (tag != null && tag.IsRigidConstraint)
+            if (tag != null && tag.RigidConstraint)
                 return true;
 
             return false;

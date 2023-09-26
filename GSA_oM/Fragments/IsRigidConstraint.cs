@@ -26,11 +26,11 @@ using System.ComponentModel;
 
 namespace BH.oM.Adapters.GSA
 {
-    [Description("Fragment telling whether the element is a Rigid Constraint or Rigid Link")]
-    public class GSARigidConstraint : IFragment
+    [Description("A fragment to identify whether the RigidLink is a Constraint or Link (i.e. element) in GSA.")]
+    public class IsRigidConstraint : IFragment
     {
-        [Description("True means the element will be treated as a rigid constraint in GSA.")]
-        public virtual bool IsRigidConstraint { get; set; } = false;
+        [Description("True means the RigidLink will be treated as a Rigid Constraint in GSA, false means it will be treated as a Link.")]
+        public virtual bool RigidConstraint { get; set; } = false;
     }
 }
 
