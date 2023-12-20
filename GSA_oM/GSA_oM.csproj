@@ -89,6 +89,7 @@
     <Compile Include="Enum\AnalysisType.cs" />
     <Compile Include="FormFindingProperties\SoapStress1D.cs" />
     <Compile Include="FormFindingProperties\SoapStress2D.cs" />
+    <Compile Include="Fragments\IsRigidConstraint.cs" />
     <Compile Include="Fragments\DummyTag.cs" />
     <Compile Include="Fragments\GSAId.cs" />
     <Compile Include="Fragments\AnalysisTaskFragment.cs" />

@@ -124,6 +124,7 @@ namespace BH.Adapter.GSA
                     else
                     {
                         secName = secName.TrimEnd((".0").ToCharArray());
+
                         if (desc[1].Contains("CHS"))
                         {
                             description = "STD" + splitChar + secType + splitChar;

@@ -404,11 +404,14 @@ namespace BH.Adapter.GSA
             Dictionary<int, LinkConstraint> constraints = GetCachedOrReadAsDictionary<int, LinkConstraint>();
             Dictionary<int, Node> nodes = GetCachedOrReadAsDictionary<int, Node>();
 
+            string allConstr = m_gsaCom.GwaCommand("GET_ALL, RIGID").ToString();
+            string[] constrArr = string.IsNullOrWhiteSpace(allConstr) ? new string[0] : allConstr.Split('\n');
+
             int[] potentialBeamRefs = GenerateIndices(ids, typeof(RigidLink));
             GsaElement[] gsaElements = new GsaElement[potentialBeamRefs.Length];
             m_gsaCom.Elements(potentialBeamRefs, out gsaElements);
 
-            return Convert.FromGsaRigidLinks(gsaElements, constraints, nodes);
+            return Convert.FromGsaRigidLinks(gsaElements, constrArr, constraints, nodes);
 
             //if (ids == null)
             //    return proArr.Select(x => Convert.FromGsaSectionProperty(x, materials)).ToList();

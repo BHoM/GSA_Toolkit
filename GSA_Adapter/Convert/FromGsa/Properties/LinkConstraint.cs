@@ -68,24 +68,24 @@ namespace BH.Adapter.GSA
                 case "YZ_PLANE_PIN":
                     constraint = Engine.Structure.Create.LinkConstraintYZPlanePin();
                     break;
-                //case "XY_PLATE":
-                //    constraint = BHP.LinkConstraint.ZPlate;
-                //    break;
-                //case "ZX_PLATE":
-                //    constraint = BHP.LinkConstraint.YPlate;
-                //    break;
-                //case "YZ_PLATE":
-                //    constraint = BHP.LinkConstraint.YPlate;
-                //    break;                                            //TODO: CHECK CONSTRUCTOR NAMES IN BHOM_ENGINE
-                //case "XY_PLATE_PIN":
-                //    constraint = BHP.LinkConstraint.ZPlatePin;
-                //    break;
-                //case "ZX_PLATE_PIN":
-                //    constraint = BHP.LinkConstraint.YPlatePin;
-                //    break;
-                //case "YZ_PLATE_PIN":
-                //    constraint = BHP.LinkConstraint.ZPlatePin;
-                //    break;
+                case "XY_PLATE":
+                    constraint = Engine.Structure.Create.LinkConstraintYPlateZPlate();     //TODO: Wrong name in engine. Should be just ZPlate.
+                    break;
+                case "ZX_PLATE":
+                    constraint = Engine.Structure.Create.LinkConstraintYPlate();
+                    break;
+                case "YZ_PLATE":
+                    constraint = Engine.Structure.Create.LinkConstraintXPlate();
+                    break;
+                case "XY_PLATE_PIN":
+                    constraint = Engine.Structure.Create.LinkConstraintZPlatePin();
+                    break;
+                case "ZX_PLATE_PIN":
+                    constraint = Engine.Structure.Create.LinkConstraintYPlatePin();
+                    break;
+                case "YZ_PLATE_PIN":
+                    constraint = Engine.Structure.Create.LinkConstraintXPlatePin();
+                    break;
                 default:
                     //String in format example: X:XYY-Y:YZZXX-Z:YY-XX:XX-YY:YY-ZZ:ZZ
                     constraint = new LinkConstraint();
