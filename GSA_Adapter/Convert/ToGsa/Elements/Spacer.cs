@@ -44,8 +44,8 @@ namespace BH.Adapter.GSA
             string spacerPropertyIndex = spacer.SpacerProperty != null ? spacer.SpacerProperty.GSAId().ToString() : "1";
             int group = 0;
 
-            string startIndex = spacer.StartNode.GSAId().ToString();
-            string endIndex = spacer.EndNode.GSAId().ToString();
+            string startIndex = spacer.Start.GSAId().ToString();
+            string endIndex = spacer.End.GSAId().ToString();
 
 
   

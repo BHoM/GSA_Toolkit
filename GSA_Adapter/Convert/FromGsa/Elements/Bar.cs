@@ -74,7 +74,7 @@ namespace BH.Adapter.GSA
                 nodes.TryGetValue(gsaBar.Topo[0], out n1);
                 nodes.TryGetValue(gsaBar.Topo[1], out n2);
 
-                Bar bar = new Bar { StartNode = n1, EndNode = n2 };
+                Bar bar = new Bar { Start = n1, End = n2 };
                 bar.ApplyTaggedName(gsaBar.Name);
 
                 bar.FEAType = feType;
@@ -135,8 +135,8 @@ namespace BH.Adapter.GSA
 
                 Bar bar = new Bar()
                 {
-                    StartNode = nodes[int.Parse(arr[7])],
-                    EndNode = nodes[int.Parse(arr[8])],
+                    Start = nodes[int.Parse(arr[7])],
+                    End = nodes[int.Parse(arr[8])],
                     FEAType = feType,
                 };
 
