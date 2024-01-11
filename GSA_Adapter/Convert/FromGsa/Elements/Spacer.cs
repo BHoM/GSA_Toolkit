@@ -59,7 +59,7 @@ namespace BH.Adapter.GSA
                 nodes.TryGetValue(gsaSpacer.Topo[0], out n1);
                 nodes.TryGetValue(gsaSpacer.Topo[1], out n2);
 
-                Spacer spacer = new Spacer { StartNode = n1, EndNode = n2 };
+                Spacer spacer = new Spacer { Start = n1, End = n2 };
                 spacer.ApplyTaggedName(gsaSpacer.Name);
 
                 SpacerProperty prop;

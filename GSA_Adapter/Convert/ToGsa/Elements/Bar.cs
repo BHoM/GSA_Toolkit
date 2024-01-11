@@ -52,8 +52,8 @@ namespace BH.Adapter.GSA
             string sectionPropertyIndex = bar.SectionProperty != null ? bar.SectionProperty.GSAId().ToString() : "1";
             int group = 0;
 
-            string startIndex = bar.StartNode.GSAId().ToString();
-            string endIndex = bar.EndNode.GSAId().ToString();
+            string startIndex = bar.Start.GSAId().ToString();
+            string endIndex = bar.End.GSAId().ToString();
 
             string orientationAngle = (bar.OrientationAngle * 180 / Math.PI).ToString();
             // TODO: Make sure that these are doing the correct thing. Release vs restraint corresponding to true vs false
