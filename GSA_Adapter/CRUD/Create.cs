@@ -134,13 +134,13 @@ namespace BH.Adapter.GSA
                         success = false;
                 }
 #else
-                
+
                 if (success)
                     return true;
 #endif
             }
 
-            if(!success)
+            if (!success)
                 success = ComCall(Convert.IToGsaString(prop, GetAdapterId<int>(prop).ToString()));
 
 #if GSA_10_1
@@ -211,7 +211,7 @@ namespace BH.Adapter.GSA
 
             for (int i = 0; i < mesh.Faces.Count; i++)
             {
-                success &= ComCall(Convert.ToGsaString(mesh,id,i));
+                success &= ComCall(Convert.ToGsaString(mesh, id, i));
                 allIds.Add(id);
                 id++;
             }
@@ -250,7 +250,8 @@ namespace BH.Adapter.GSA
 
             foreach (string gsaString in load.IToGsaString(unitFactors))
             {
-                success &= ComCall(gsaString);
+                if (gsaString != "")
+                    success &= ComCall(gsaString);
             }
 
             SetAdapterId(load, load.Name ?? "");
@@ -292,6 +293,16 @@ namespace BH.Adapter.GSA
             return success;
         }
 
+
+        /***************************************************/
+        /**** Fallback  Method                         ****/
+        /***************************************************/
+
+        private bool CreateObject(BHoMObject obj)
+        {
+            Compute.RecordError($"{obj.GetType()} is not implemented for GSA_Toolkit.");
+            return false;
+        }
 
         /***************************************************/
 

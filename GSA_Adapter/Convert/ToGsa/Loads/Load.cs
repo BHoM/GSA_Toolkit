@@ -22,8 +22,15 @@
 
 
 using BH.oM.Structure.Loads;
+using BH.oM.Structure.MaterialFragments;
 using System.Collections.Generic;
 
+using BH.oM.Base;
+using BH.oM.Base.Attributes;
+using BH.oM.Geometry;
+using System;
+using System.ComponentModel;
+using System.Linq;
 
 namespace BH.Adapter.GSA
 {
@@ -55,6 +62,18 @@ namespace BH.Adapter.GSA
             return forceStrings;
         }
 
+        /***************************************************/
+        /**** Fallback  Method                         ****/
+        /***************************************************/
+
+        public static List<string> ToGsaString(this ILoad load, double[] unitFactors)
+        {
+            Engine.Base.Compute.RecordError($"{load.GetType()} is not implemented for GSA_Toolkit.");
+            return new List<string>();
+        }
+
+        /***************************************************/
+        /**** Interface  Method                         ****/
         /***************************************************/
 
         public static List<string> IToGsaString(this ILoad load, double[] unitFactors)
