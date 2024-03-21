@@ -300,7 +300,7 @@ namespace BH.Adapter.GSA
 
         private bool CreateObject(BHoMObject obj)
         {
-            Compute.RecordError($"{obj.GetType()} is not implemented for GSA_Toolkit.");
+            Compute.RecordError($"Pushing object of type {obj.GetType()} is not implemented for GSA_Toolkit.");
             return false;
         }
 

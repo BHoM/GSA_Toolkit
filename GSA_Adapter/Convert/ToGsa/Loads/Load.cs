@@ -66,9 +66,9 @@ namespace BH.Adapter.GSA
         /**** Fallback  Method                         ****/
         /***************************************************/
 
-        public static List<string> ToGsaString(this ILoad load, double[] unitFactors)
+        private static List<string> ToGsaString(this ILoad load, double[] unitFactors)
         {
-            Engine.Base.Compute.RecordError($"{load.GetType()} is not implemented for GSA_Toolkit.");
+            Engine.Base.Compute.RecordError($"Pushing load of type {load.GetType()} is not implemented for GSA_Toolkit.");
             return new List<string>();
         }
 
