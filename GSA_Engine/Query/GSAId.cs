@@ -40,9 +40,9 @@ namespace BH.Engine.Adapters.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
-        public static int GSAId(this IBHoMObject BHoMObject)
+        public static int GSAId(this IBHoMObject bhomObject)
         {
-            return BHoMObject.AdapterId<int>(typeof(GSAId));
+            return bhomObject.AdapterId<int>(typeof(GSAId));
         }
 
 

@@ -38,9 +38,9 @@ namespace BH.Engine.Adapters.GSA
         /**** Public Methods                            ****/
         /***************************************************/
         
-        public static void SetGSAId(this IBHoMObject BHoMObject, object id)
+        public static void SetGSAId(this IBHoMObject bhomObject, object id)
         {
-            BHoMObject.SetAdapterId(typeof(GSAId), id);
+            bhomObject.SetAdapterId(typeof(GSAId), id);
         }
         
         /***************************************************/
