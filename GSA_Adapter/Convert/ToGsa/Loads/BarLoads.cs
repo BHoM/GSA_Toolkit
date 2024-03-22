@@ -38,12 +38,14 @@ namespace BH.Adapter.GSA
 
         public static List<string> ToGsaString(this IElementLoad<Bar> barLoad, double[] unitFactors)
         {
-            List<string> forceStrings = new List<string>();
+            double factor = barLoad.IFactor(unitFactors);
+            if (double.IsNaN(factor))
+                return new List<string>();
 
             string name = barLoad.Name;
             string projection = barLoad.IsProjectedString();
             string axis = barLoad.IsGlobal();
-            double factor = barLoad.IFactor(unitFactors);
+
             string appliedTo = barLoad.CreateIdListOrGroupName();
             Vector[] force = { barLoad.ITranslationVector()[0], barLoad.ITranslationVector()[1] };
             Vector[] moment = { barLoad.IRotationVector()[0], barLoad.IRotationVector()[1] };
@@ -59,6 +61,7 @@ namespace BH.Adapter.GSA
 
             string str = command + "," + name + "," + appliedTo + "," + caseNo + "," + axis + "," + projection;
 
+            List<string> forceStrings = new List<string>();
             VectorDataToString(str, force, ref forceStrings, factor, true, pos);
             VectorDataToString(str, moment, ref forceStrings, factor, false, pos);
 

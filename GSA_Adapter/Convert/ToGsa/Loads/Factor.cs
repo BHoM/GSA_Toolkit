@@ -78,6 +78,16 @@ namespace BH.Adapter.GSA
         //}
 
         /***************************************************/
+        /**** Private Methods - Fallback                ****/
+        /***************************************************/
+
+        private static double Factor(this ILoad load, double[] unitType)
+        {
+            NotSupportedWarning(load.GetType(), "Loads");
+            return double.NaN;
+        }
+
+        /***************************************************/
         /**** private Methods - Interfaces              ****/
         /***************************************************/
 
