@@ -295,16 +295,6 @@ namespace BH.Adapter.GSA
 
 
         /***************************************************/
-        /**** Fallback  Method                         ****/
-        /***************************************************/
-
-        private bool CreateObject(BHoMObject obj)
-        {
-            Compute.RecordError($"Pushing object of type {obj.GetType()} is not implemented for GSA_Toolkit.");
-            return false;
-        }
-
-        /***************************************************/
 
     }
 }
