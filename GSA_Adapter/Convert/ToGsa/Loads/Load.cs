@@ -68,7 +68,7 @@ namespace BH.Adapter.GSA
 
         private static List<string> ToGsaString(this ILoad load, double[] unitFactors)
         {
-            Engine.Base.Compute.RecordError($"Pushing load of type {load.GetType()} is not implemented for GSA_Toolkit.");
+            NotSupportedWarning(load.GetType(), "Loads");
             return new List<string>();
         }
 
