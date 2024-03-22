@@ -36,15 +36,14 @@ namespace BH.Adapter.GSA
 
         public static List<string> ToGsaString(this IElementLoad<Node> nodeLoad, double[] unitFactors)
         {
-            string command;
-            List<string> forceStrings = new List<string>();
-            double factor;
+            double factor = nodeLoad.IFactor(unitFactors);
+            if (double.IsNaN(factor))
+                return new List<string>();
 
+            string command = nodeLoad.IForceTypeString(); ;
             Vector[] force = nodeLoad.ITranslationVector();
-            command = nodeLoad.IForceTypeString();
             Vector[] moment = nodeLoad.IRotationVector();
-            factor = nodeLoad.IFactor(unitFactors);
-
+            
             string name = nodeLoad.Name;
             string str;
             string appliedTo = nodeLoad.CreateIdListOrGroupName();
@@ -54,6 +53,7 @@ namespace BH.Adapter.GSA
 
             str = command + "," + name + "," + appliedTo + "," + caseNo + "," + axis;
 
+            List<string> forceStrings = new List<string>();
             VectorDataToString(str, force, ref forceStrings, factor, true, pos);
             VectorDataToString(str, moment, ref forceStrings, factor, false, pos);
 

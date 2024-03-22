@@ -27,6 +27,8 @@ using System.Collections.Generic;
 using System.Linq;
 using BH.Engine.Adapters.GSA;
 using BH.oM.Base;
+using System.Runtime.Remoting.Messaging;
+using System.Runtime.InteropServices;
 
 
 namespace BH.Adapter.GSA
@@ -39,12 +41,13 @@ namespace BH.Adapter.GSA
 
         public static List<string> ToGsaString(this IElementLoad<IAreaElement> areaLoad, double[] unitFactors)
         {
-            List<string> forceStrings = new List<string>();
+            double factor = areaLoad.IFactor(unitFactors);
+            if(double.IsNaN(factor))
+                return new List<string>();
 
             string name = areaLoad.Name;
             string projection = areaLoad.IsProjectedString();
             string axis = areaLoad.IsGlobal();
-            double factor = areaLoad.IFactor(unitFactors);
             string appliedTo = areaLoad.CreateIdListOrGroupNameAreaLoad();
             Vector[] force = { areaLoad.ITranslationVector()[0], areaLoad.ITranslationVector()[1] };
             string caseNo = areaLoad.Loadcase.Number.ToString();
@@ -56,6 +59,7 @@ namespace BH.Adapter.GSA
 
             string str = command + "," + name + "," + appliedTo + "," + caseNo + "," + axis + "," + type + "," + projection;
 
+            List<string> forceStrings = new List<string>();
             VectorDataToString(str, force, ref forceStrings, factor, true, pos);
 
             return forceStrings;
