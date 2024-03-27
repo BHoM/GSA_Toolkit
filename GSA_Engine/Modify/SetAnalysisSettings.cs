@@ -1,6 +1,6 @@
 /*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2023, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -39,8 +39,9 @@ namespace BH.Engine.Adapters.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
-        [Description("Sets the analysis type and stage for a LoadCombination")]
+        [Description("Sets the analysis type and stage for a LoadCombination.")]
         [Input("loadcombination", "The load combination to set stage and analysis type for.")]
+        [Input("analysisType", "The type of analysis e.g. LinearStatic.")]
         [Input("stage", "The stage number for the combination to be run on.")]
         [Input("residualForce", "Allowed residual Force for convergence, only used for Non-linear analysis.")]
         [Input("residualMoment", "Allowed residual Moment for convergence, only used for Non-linear analysis.")]
@@ -63,5 +64,6 @@ namespace BH.Engine.Adapters.GSA
         /***************************************************/
     }
 }
+
 
 

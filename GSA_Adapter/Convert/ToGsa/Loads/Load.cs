@@ -1,6 +1,6 @@
 /*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2023, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -22,8 +22,15 @@
 
 
 using BH.oM.Structure.Loads;
+using BH.oM.Structure.MaterialFragments;
 using System.Collections.Generic;
 
+using BH.oM.Base;
+using BH.oM.Base.Attributes;
+using BH.oM.Geometry;
+using System;
+using System.ComponentModel;
+using System.Linq;
 
 namespace BH.Adapter.GSA
 {
@@ -55,6 +62,18 @@ namespace BH.Adapter.GSA
             return forceStrings;
         }
 
+        /***************************************************/
+        /**** Fallback  Method                         ****/
+        /***************************************************/
+
+        private static List<string> ToGsaString(this ILoad load, double[] unitFactors)
+        {
+            NotSupportedWarning(load.GetType(), "Loads");
+            return new List<string>();
+        }
+
+        /***************************************************/
+        /**** Interface  Method                         ****/
         /***************************************************/
 
         public static List<string> IToGsaString(this ILoad load, double[] unitFactors)
@@ -127,6 +146,7 @@ namespace BH.Adapter.GSA
         /***************************************************/
     }
 }
+
 
 
 

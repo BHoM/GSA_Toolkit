@@ -1,6 +1,6 @@
 /*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2023, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -37,10 +37,10 @@ namespace BH.oM.Adapters.GSA.Elements
         /***************************************************/
 
         [Description("Defines the start position of the element. Note that Nodes can contain Supports which should not be confused with Releases.")]
-        public virtual Node StartNode { get; set; }
+        public virtual Node Start { get; set; }
 
         [Description("Defines the end position of the element. Note that Nodes can contain Supports which should not be confused with Releases.")]
-        public virtual Node EndNode { get; set; }
+        public virtual Node End { get; set; }
 
         [Description("Spacer property of the spacer, defining the spacer type.")]
         public virtual SpacerProperty SpacerProperty { get; set; } = null;
@@ -48,5 +48,6 @@ namespace BH.oM.Adapters.GSA.Elements
 
     }
 }
+
 
 

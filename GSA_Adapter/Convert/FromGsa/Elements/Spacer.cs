@@ -1,6 +1,6 @@
 /*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2023, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -59,7 +59,7 @@ namespace BH.Adapter.GSA
                 nodes.TryGetValue(gsaSpacer.Topo[0], out n1);
                 nodes.TryGetValue(gsaSpacer.Topo[1], out n2);
 
-                Spacer spacer = new Spacer { StartNode = n1, EndNode = n2 };
+                Spacer spacer = new Spacer { Start = n1, End = n2 };
                 spacer.ApplyTaggedName(gsaSpacer.Name);
 
                 SpacerProperty prop;
@@ -80,6 +80,7 @@ namespace BH.Adapter.GSA
 
     }
 }
+
 
 
 

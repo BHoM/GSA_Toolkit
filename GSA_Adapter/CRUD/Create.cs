@@ -1,6 +1,6 @@
 /*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2023, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -134,13 +134,13 @@ namespace BH.Adapter.GSA
                         success = false;
                 }
 #else
-                
+
                 if (success)
                     return true;
 #endif
             }
 
-            if(!success)
+            if (!success)
                 success = ComCall(Convert.IToGsaString(prop, GetAdapterId<int>(prop).ToString()));
 
 #if GSA_10_1
@@ -211,7 +211,7 @@ namespace BH.Adapter.GSA
 
             for (int i = 0; i < mesh.Faces.Count; i++)
             {
-                success &= ComCall(Convert.ToGsaString(mesh,id,i));
+                success &= ComCall(Convert.ToGsaString(mesh, id, i));
                 allIds.Add(id);
                 id++;
             }
@@ -250,7 +250,8 @@ namespace BH.Adapter.GSA
 
             foreach (string gsaString in load.IToGsaString(unitFactors))
             {
-                success &= ComCall(gsaString);
+                if (gsaString != "")
+                    success &= ComCall(gsaString);
             }
 
             SetAdapterId(load, load.Name ?? "");
@@ -297,6 +298,7 @@ namespace BH.Adapter.GSA
 
     }
 }
+
 
 
 
