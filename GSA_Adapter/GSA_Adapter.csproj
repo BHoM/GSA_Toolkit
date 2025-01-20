@@ -11,7 +11,7 @@
 	<Copyright>Copyright © https://github.com/BHoM</Copyright>
 	<RootNamespace>BH.Engine.Adapters.GSA</RootNamespace>
 	<FileVersion>8.1.0.0</FileVersion>
-	<Configurations>Debug;Release;Debug87;Release87;Debug101;Release101</Configurations>
+	<Configurations>Debug;Release;Debug87;Release87;Debug101;Release101;Debug102;Release102</Configurations>
 	<OutputPath>..\Build\</OutputPath>  
   </PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)'=='Debug87' Or '$(Configuration)'=='Release87' Or '$(Configuration)'=='Debug' Or '$(Configuration)'=='Release'">
@@ -20,7 +20,11 @@
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)'=='Debug101' Or '$(Configuration)'=='Release101' ">
 		<AssemblyName>GSA101_Adapter</AssemblyName>
-		<DefineConstants>GSA_10_1</DefineConstants>
+		<DefineConstants>GSA_10_1;GSA_10</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Debug102' Or '$(Configuration)'=='Release102' ">
+		<AssemblyName>GSA102_Adapter</AssemblyName>
+		<DefineConstants>GSA_10_2;GSA_10</DefineConstants>
 	</PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\GSA_Engine\GSA_Engine.csproj" />
