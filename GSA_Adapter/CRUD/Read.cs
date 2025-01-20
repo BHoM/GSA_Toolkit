@@ -120,7 +120,7 @@ namespace BH.Adapter.GSA
         {
             List<IMaterialFragment> materials = new List<IMaterialFragment>();
 
-#if GSA_10_1
+#if GSA_10
             string allProps = m_gsaCom.GwaCommand("GET_ALL, MAT_ANAL.1").ToString();
             allProps += "\n" + m_gsaCom.GwaCommand("GET_ALL, MAT_STEEL.3").ToString();
             allProps += "\n" + m_gsaCom.GwaCommand("GET_ALL, MAT_CONCRETE.17").ToString();
@@ -148,7 +148,7 @@ namespace BH.Adapter.GSA
 
         public Dictionary<string, IMaterialFragment> ReadMaterialDictionary(List<string> ids = null, bool includeStandard = false)
         {
-#if GSA_10_1
+#if GSA_10
             Dictionary<string, IMaterialFragment> materials = GetCachedOrReadAsDictionary<string, IMaterialFragment>(ids);
 #else
             Dictionary<string, IMaterialFragment> materials = GetCachedOrReadAsDictionary<int, IMaterialFragment>(ids?.Select(x => int.Parse(x)).ToList()).ToDictionary(x => x.Key.ToString(), x => x.Value);
@@ -184,7 +184,7 @@ namespace BH.Adapter.GSA
 
         public List<Bar> ReadBars(List<string> ids = null)
         {
-#if GSA_10_1
+#if GSA_10
             string allBars = m_gsaCom.GwaCommand("GET_ALL, EL.4").ToString();
 #else
             string allBars = m_gsaCom.GwaCommand("GET_ALL, EL.2").ToString();
@@ -276,7 +276,7 @@ namespace BH.Adapter.GSA
         public Dictionary<int, double[]> ReadDampProperty()
         {
             Dictionary<int, double[]> dampPropertyDictionary = new Dictionary<int, double[]>();
-#if GSA_10_1
+#if GSA_10
             string allDamp = m_gsaCom.GwaCommand("GET_ALL, PROP_DAMP.2").ToString();
             string[] dampProp = string.IsNullOrWhiteSpace(allDamp) ? new string[0] : allDamp.Split('\n');
 
@@ -298,7 +298,7 @@ namespace BH.Adapter.GSA
         public Dictionary<int, double[]> ReadSpingValues()
         {
             Dictionary<int, double[]> dampPropertyDictionary = new Dictionary<int, double[]>();
-#if GSA_10_1
+#if GSA_10
             string allSpings = m_gsaCom.GwaCommand("GET_ALL, PROP_SPR.4").ToString();
             string[] springProp = string.IsNullOrWhiteSpace(allSpings) ? new string[0] : allSpings.Split('\n');
 
@@ -342,7 +342,7 @@ namespace BH.Adapter.GSA
 
             Dictionary<string, IMaterialFragment> materials = ReadMaterialDictionary(null, false);
 
-#if GSA_10_1
+#if GSA_10
             string allProps = m_gsaCom.GwaCommand("GET_ALL, SECTION.7").ToString();
 #else
             string allProps = m_gsaCom.GwaCommand("GET_ALL, PROP_SEC").ToString();
@@ -360,7 +360,7 @@ namespace BH.Adapter.GSA
         public List<ISurfaceProperty> ReadProperty2d(List<string> ids = null)
         {
             Dictionary<string, IMaterialFragment> materials = ReadMaterialDictionary(null, false);
-#if GSA_10_1
+#if GSA_10
             string allProps = m_gsaCom.GwaCommand("GET_ALL, PROP_2D.7").ToString();
 #else
             string allProps = m_gsaCom.GwaCommand("GET_ALL, PROP_2D").ToString();
@@ -539,7 +539,7 @@ namespace BH.Adapter.GSA
 
         private List<IMaterialFragment> GetStandardGsaMaterials()
         {
-#if !GSA_10_1
+#if GSA_8_7
             List<IMaterialFragment> materials = new List<IMaterialFragment>();
             materials.Add(new Steel() { Name = "STEEL" });
             materials.Add(new Concrete() { Name = "CONC_SHORT" });

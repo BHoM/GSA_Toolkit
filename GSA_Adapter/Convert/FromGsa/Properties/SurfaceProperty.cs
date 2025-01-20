@@ -93,7 +93,7 @@ namespace BH.Adapter.GSA
             string[] gsaStrings = gsaString.Split(',');
 
             //Separate data extractions specific to each GSA version
-#if GSA_10_1
+#if GSA_10
             description = gsaStrings[4];
 
             string matType;

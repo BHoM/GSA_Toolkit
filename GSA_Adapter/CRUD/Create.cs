@@ -57,7 +57,7 @@ namespace BH.Adapter.GSA
 
             if (typeof(RigidLink).IsAssignableFrom(typeof(T)))
                 success = CreateLinks(objects as IEnumerable<RigidLink>);
-#if GSA_10_1
+#if GSA_10
             else if (typeof(IMaterialFragment).IsAssignableFrom(typeof(T)))
                 success = CreateMaterials(objects as IEnumerable<IMaterialFragment>);
 #endif
@@ -78,7 +78,7 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-#if GSA_10_1
+#if GSA_10
         private bool CreateMaterials(IEnumerable<IMaterialFragment> materials)
         {
             bool success = true;
@@ -123,7 +123,7 @@ namespace BH.Adapter.GSA
             if (catString != null)
             {
                 success = ComCall(catString, false);
-#if GSA_10_1
+#if GSA_10
                 if (success)
                 {
                     //GSA10 reports back a success for a failing section description, and just places "None" for the profile
@@ -145,7 +145,7 @@ namespace BH.Adapter.GSA
             if (!success)
                 success = ComCall(Convert.IToGsaString(prop, GetAdapterId<int>(prop).ToString()));
 
-#if GSA_10_1
+#if GSA_10
             if (success)
             {
                 SectionModifier modifier = prop.FindFragment<SectionModifier>();

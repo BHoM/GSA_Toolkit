@@ -53,7 +53,7 @@ namespace BH.Adapter.GSA
             string y = load.GravityDirection.Y.ToString();
             string z = load.GravityDirection.Z.ToString();
 
-#if GSA_10_1
+#if GSA_10
             string str = command + ", " + name + ", " + list + ", , " + caseNo + "," + x + "," + y + "," + z;
 #else
             string str = command + ",," + list + "," + caseNo + "," + x + "," + y + "," + z;

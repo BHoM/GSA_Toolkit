@@ -43,7 +43,7 @@ namespace BH.Adapter.GSA
         /**** Public  Methods                           ****/
         /***************************************************/
 
-#if GSA_10_1
+#if GSA_10
 
         private static string ToGsaString(this Panel panel, string index)
         {

@@ -41,7 +41,7 @@ namespace BH.Adapter.GSA
 
         private static string ToGsaString(this Bar bar, string index)
         {
-#if GSA_10_1
+#if GSA_10
             string command = "EL.4";
 #else
             string command = "EL.2";

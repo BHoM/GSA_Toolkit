@@ -82,7 +82,7 @@ namespace BH.Adapter.GSA
 
         private static string ForceTypeString(this BarUniformTemperatureLoad load)
         {
-#if GSA_10_1
+#if GSA_10
             return "LOAD_1D_THERMAL.2";
 #else
             return "TEMP_BEAM";

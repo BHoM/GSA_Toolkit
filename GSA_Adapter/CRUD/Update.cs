@@ -78,7 +78,7 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-#if GSA_10_1
+#if GSA_10
         private bool Update(IEnumerable<IMaterialFragment> materials, ActionConfig actionConfig = null) 
         {
             bool success = true;
