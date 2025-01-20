@@ -81,6 +81,10 @@
 		  <Private>False</Private>
 		  <SpecificVersion>False</SpecificVersion>
 	  </Reference>
+	  <Reference Include="Interop.Gsa_10_2" Condition="'$(Configuration)'=='Debug102' Or '$(Configuration)'=='Release102'">
+		  <HintPath>..\libs\10.2\Interop.Gsa_10_2.dll</HintPath>
+		  <EmbedInteropTypes>True</EmbedInteropTypes>
+	  </Reference>
 	  <Reference Include="Interop.Gsa_10_1" Condition="'$(Configuration)'=='Debug101' Or '$(Configuration)'=='Release101'">
 		  <HintPath>..\libs\10.1\Interop.Gsa_10_1.dll</HintPath>
 		  <EmbedInteropTypes>True</EmbedInteropTypes>
