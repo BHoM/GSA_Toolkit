@@ -38,8 +38,6 @@ namespace BH.oM.Adapters.GSA.Analysis
 
         /***************************************************/
 
-        //Text line
-
         [Description("GSA Id. This is an int. Must be greater than 0.")]
         public virtual int Number { get; set; }
 
