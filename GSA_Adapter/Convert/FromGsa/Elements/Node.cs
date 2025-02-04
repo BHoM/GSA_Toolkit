@@ -97,7 +97,7 @@ namespace BH.Adapter.GSA
             List<bool> fixities;
             List<double> stiff;
 
-#if GSA_10_1
+#if GSA_10
             if (arr.Length > 7)
             {
                 if (arr[7] == "free")

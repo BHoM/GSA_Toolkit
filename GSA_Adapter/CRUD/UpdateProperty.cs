@@ -32,7 +32,9 @@ using BH.oM.Adapter;
 
 namespace BH.Adapter.GSA
 {
-#if GSA_10_1
+#if GSA_10_2
+    public partial class GSA102Adapter
+#elif  GSA_10_1
     public partial class GSA101Adapter
 #else
     public partial class GSA87Adapter

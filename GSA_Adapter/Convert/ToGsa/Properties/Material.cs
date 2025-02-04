@@ -58,7 +58,7 @@ namespace BH.Adapter.GSA
             string damp = material.DampingRatio.ToString();
             string str = "";
 
-#if GSA_10_1
+#if GSA_10
             string matType = type.Substring(0, 1) + type.Substring(1).ToLower();
 
             if (material is Steel)
@@ -147,7 +147,7 @@ namespace BH.Adapter.GSA
             string damp = material.DampingRatio.ToString();
             string str;
 
-#if GSA_10_1
+#if GSA_10
             str = "MAT_ANAL.1" + "," + num + "," + mModel + "," + name + "," + colour + ",14," + E + "," + nu + "," + rho + "," + alpha + "," + G + "," + damp + ",0,0";
 #else
             str = "MAT" + "," + num + "," + mModel + "," + name + "," + colour + "," + type + ",14," + E + "," + nu + "," + rho + "," + alpha + "," + G + "," + damp + ",0,0,NO_ENV";
@@ -175,7 +175,7 @@ return str;
             string rho = material.Density.ToString();
             string damp = material.DampingRatio.ToString();
 
-#if GSA_10_1
+#if GSA_10
 
             string end = "0,0,0,0,0,0,0,MAT_CURVE_PARAM.3,,UNDEF,0,0,0,0,0,0,1,1,MAT_CURVE_PARAM.3,,UNDEF,0,0,0,0,0,0,1,1,0,Fabric";
             //MAT_ANAL.1		-268435456	MAT_FABRIC	5	800000	400000	0.45	30000	3	1
@@ -201,7 +201,7 @@ return str;
         /**** Private  Methods                          ****/
         /***************************************************/
 
-#if GSA_10_1
+#if GSA_10
 
         private static void MaterialIdentifiers(this IMaterialFragment material, out string analNum, out string materialType, out string matNum)
         {
@@ -225,7 +225,7 @@ return str;
 #endif
         public static string MaterialId(this IMaterialFragment material)
         {
-#if GSA_10_1
+#if GSA_10
             return material.AdapterId<string>(typeof(GSAId)).Split(':').Last();
 #else
             return material.GSAId().ToString();
@@ -243,7 +243,7 @@ return str;
 
         private static string GetMaterialType(this IMaterialFragment material)
         {
-#if GSA_10_1
+#if GSA_10
             if (material is Steel)
                 return "STEEL";
             else if (material is Concrete)

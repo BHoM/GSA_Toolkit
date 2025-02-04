@@ -20,7 +20,9 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-#if GSA_10_1
+#if GSA_10_2
+using Interop.Gsa_10_2;
+#elif  GSA_10_1
 using Interop.Gsa_10_1;
 #else
 using Interop.gsa_8_7;
@@ -44,7 +46,9 @@ using BH.oM.Adapters.GSA.Elements;
 
 namespace BH.Adapter.GSA
 {
-#if GSA_10_1
+#if GSA_10_2
+    public partial class GSA102Adapter : BHoMAdapter
+#elif  GSA_10_1
     public partial class GSA101Adapter : BHoMAdapter
 #else
     public partial class GSA87Adapter : BHoMAdapter
@@ -53,8 +57,9 @@ namespace BH.Adapter.GSA
         /***************************************************/
         /**** Constructors                              ****/
         /***************************************************/
-
-#if GSA_10_1
+#if GSA_10_2
+        public GSA102Adapter(string filePath = "", GSAConfig gsaConfig = null, bool active = false)
+#elif GSA_10_1
         public GSA101Adapter(string filePath = "", GSAConfig gsaConfig = null, bool active = false)
 #else
         public GSA87Adapter(string filePath = "", GSAConfig gsaConfig = null, bool active = false)
@@ -76,7 +81,7 @@ namespace BH.Adapter.GSA
                 {typeof(IMaterialFragment), new NameOrDescriptionComparer() },
                 {typeof(LinkConstraint), new NameOrDescriptionComparer() },
                 {typeof(SpacerProperty), new NameOrDescriptionComparer() },
-#if GSA_10_1
+#if GSA_10
                 {typeof(Constraint6DOF), new NameOrDescriptionComparer() },
 #endif
             };
@@ -94,7 +99,7 @@ namespace BH.Adapter.GSA
                 {typeof(ISurfaceProperty), new List<Type> { typeof(IMaterialFragment) } },
                 {typeof(Spacer), new List<Type> { typeof(SpacerProperty), typeof(Node) } },
                 {typeof(Panel), new List<Type> { typeof(ISurfaceProperty), typeof(Node) } },
-#if GSA_10_1
+#if GSA_10
                 {typeof(Node), new List<Type>{typeof(Constraint6DOF) } }
 #endif
             };
@@ -112,7 +117,7 @@ namespace BH.Adapter.GSA
                 if (gsaConfig != null)
                     SetConfig(gsaConfig);
 
-#if GSA_10_1
+#if GSA_10
                 m_gsaCom.DisplayGsaWindow(true);
 #endif
             }

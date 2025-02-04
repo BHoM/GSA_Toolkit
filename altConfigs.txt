@@ -1,4 +1,6 @@
 BHoM/GSA_Toolkit/Debug87
 BHoM/GSA_Toolkit/Debug101
+BHoM/GSA_Toolkit/Debug102
 BHoM/GSA_Toolkit/Release87
 BHoM/GSA_Toolkit/Release101
+BHoM/GSA_Toolkit/Release102
