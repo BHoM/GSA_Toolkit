@@ -1,6 +1,6 @@
 /*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2025, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -275,7 +275,7 @@ namespace BH.Adapter.GSA
             Int32.TryParse(gsaStrings[1], out id);
 
             //Separate data extractions specific to each GSA version
-#if GSA_10_1
+#if GSA_10
             description = gsaStrings[21];
             taggedName = gsaStrings[3];
             splitChar = ' '; //To split gsaString
@@ -313,7 +313,7 @@ namespace BH.Adapter.GSA
             string[] gsaStrings = gsaString.Split(',');
 
             //Separate data extractions specific to each GSA version
-#if GSA_10_1
+#if GSA_10
             string[] desc = gsaStrings[21].Split(' ');
 
             double.TryParse(desc[1], out a);
@@ -335,6 +335,7 @@ namespace BH.Adapter.GSA
         /***************************************************/
     }
 }
+
 
 
 

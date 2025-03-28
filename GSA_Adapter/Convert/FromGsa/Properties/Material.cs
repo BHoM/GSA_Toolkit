@@ -1,6 +1,6 @@
 /*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2025, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -118,7 +118,7 @@ namespace BH.Adapter.GSA
 
 
 
-#if GSA_10_1
+#if GSA_10
             string id = gStr[1];
             id = gsaString.Split(("_.").ToCharArray())[1] + ":" + id;
             mat.SetAdapterId(typeof(GSAId), id);
@@ -136,7 +136,7 @@ namespace BH.Adapter.GSA
             string[] gStr = gsaString.Split(',');
 
             //Separate data extractions specific to each GSA version
-#if GSA_10_1
+#if GSA_10
             if (gStr[0].Contains("ANAL"))
             {
                 e = double.Parse(gStr[6]);
@@ -194,7 +194,7 @@ namespace BH.Adapter.GSA
             string[] gStr = gsaString.Split(',');
 
             //Separate data extractions speficic to each GSA version
-#if GSA_10_1
+#if GSA_10
             e1 = double.Parse(gStr[6]);
             e2 = double.Parse(gStr[7]);
             e3 = double.Parse(gStr[8]);
@@ -246,7 +246,7 @@ namespace BH.Adapter.GSA
             string[] gStr = gsaString.Split(',');
 
             //Separate data extractions specific to each GSA version
-#if GSA_10_1
+#if GSA_10
             ex = double.Parse(gStr[3]);
             ey = double.Parse(gStr[4]);
             v = double.Parse(gStr[5]);
@@ -266,6 +266,7 @@ namespace BH.Adapter.GSA
         /***************************************************/
     }
 }
+
 
 
 

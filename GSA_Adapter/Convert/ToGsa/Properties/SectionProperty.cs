@@ -1,6 +1,6 @@
 /*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2025, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -46,7 +46,7 @@ namespace BH.Adapter.GSA
             string desc, props;
             if (!ICreateDescAndPropString(prop, out desc, out props))
                 return "";
-#if GSA_10_1
+#if GSA_10
 
             desc = desc.Replace("%", " ");
 #endif
@@ -70,7 +70,7 @@ namespace BH.Adapter.GSA
 
             //PROP_SEC    2   Section 2   NO_RGB  1   CAT % UB % UB914x419x388 % 19990407   NO NA  0   NO_PROP NO_MOD_PROP FLAME_CUT NO_J
 
-#if GSA_10_1
+#if GSA_10
 
             string analNum, materialType, matNum;
             prop.Material.MaterialIdentifiers(out analNum, out materialType, out matNum);
@@ -87,7 +87,7 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
-#if GSA_10_1
+#if GSA_10
         private static string ISectionMaterialComp(this ISectionProperty prop)
         {
             return SectionMaterialComp(prop as dynamic);
@@ -247,7 +247,7 @@ namespace BH.Adapter.GSA
             string Kvz = (secProp.Asz / secProp.Area).ToString();
 
 
-#if GSA_10_1
+#if GSA_10
             desc = "EXP(m) " + area + " " + Iyy + " " + Izz + " " + J + " " + Kvy + " " + Kvz;
 #else
             desc = "EXP";
@@ -268,7 +268,7 @@ namespace BH.Adapter.GSA
             string Kvy = (secProp.Asy / secProp.Area).ToString();
             string Kvz = (secProp.Asz / secProp.Area).ToString();
 
-#if GSA_10_1
+#if GSA_10
             desc = "EXP(m) " + area + " " + Iyy + " " + Izz + " " + J + " " + Kvy + " " + Kvz;
 #else
             desc = "EXP";
@@ -480,7 +480,7 @@ namespace BH.Adapter.GSA
 
         /***************************************/
 
-#if GSA_10_1
+#if GSA_10
 
         private static bool CreateDescString(this TaperedProfile section, out string desc)
         {
@@ -527,7 +527,7 @@ namespace BH.Adapter.GSA
         }
 
         /***************************************/
-#if GSA_10_1
+#if GSA_10
         private static string ToGsaString(this SectionModifier modifier, string index)
         {
             if (modifier == null)
@@ -542,6 +542,7 @@ namespace BH.Adapter.GSA
         /***************************************/
     }
 }
+
 
 
 

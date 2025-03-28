@@ -1,6 +1,6 @@
 /*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2025, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -50,7 +50,7 @@ namespace BH.Adapter.GSA
                 return "NODE";
             else if (type == typeof(Bar))
                 return "EL";
-#if GSA_10_1
+#if GSA_10
             else if (type == typeof(Steel)) // Does not support pushing of non orthoropic, non - generic materials
                 return "MAT_STEEL";
             else if (type == typeof(Concrete))
@@ -83,7 +83,7 @@ namespace BH.Adapter.GSA
                 return "PROP_SPACER";
             else if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)
                 return "List";
-#if GSA_10_1
+#if GSA_10
             else if (type == typeof(Panel))
                 return "MEMB";
             else if (type == typeof(Constraint6DOF))
@@ -142,6 +142,7 @@ namespace BH.Adapter.GSA
 
     }
 }
+
 
 
 

@@ -1,6 +1,6 @@
 /*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2025, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -32,7 +32,9 @@ using BH.oM.Structure.MaterialFragments;
 
 namespace BH.Adapter.GSA
 {
-#if GSA_10_1
+#if GSA_10_2
+    public partial class GSA102Adapter
+#elif  GSA_10_1
     public partial class GSA101Adapter
 #else
     public partial class GSA87Adapter
@@ -50,7 +52,7 @@ namespace BH.Adapter.GSA
                 return null; //TODO: Needed?
             else if (type == typeof(ILoad) || type.GetInterfaces().Contains(typeof(ILoad)))
                 return null;
-#if GSA_10_1
+#if GSA_10
             else if (typeof(IMaterialFragment).IsAssignableFrom(type))
                 return null;        //Materials handled differently, separate by type, in GSA 10. Ids assigned in create method instead.
 #endif
@@ -82,6 +84,7 @@ namespace BH.Adapter.GSA
         /***************************************************/
     }
 }
+
 
 
 

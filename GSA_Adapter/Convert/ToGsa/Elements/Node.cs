@@ -1,6 +1,6 @@
 /*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2025, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -55,7 +55,7 @@ namespace BH.Adapter.GSA
             if (!string.IsNullOrWhiteSpace(axisString))
                 gsaStrings.Add(axisString);
 
-#if GSA_10_1
+#if GSA_10
             //string dampPropString = "";
             //string dampPropId = GetAndCreateDamperProperty(node, out dampPropString);
 
@@ -141,7 +141,7 @@ namespace BH.Adapter.GSA
                 bool[] fixities = node.Support.Fixities();
                 double[] stiffnesses = node.Support.ElasticValues();
 
-#if GSA_10_1
+#if GSA_10
                 rest = (fixities[0] == true) ? "x" : "";
                 rest += (fixities[1] == true) ? "y" : "";
                 rest += (fixities[2] == true) ? "z" : "";
@@ -186,6 +186,7 @@ namespace BH.Adapter.GSA
 
     }
 }
+
 
 
 

@@ -1,6 +1,6 @@
 /*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2025, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -21,7 +21,9 @@
  */
 
 
-#if GSA_10_1
+#if GSA_10_2
+using Interop.Gsa_10_2;
+#elif  GSA_10_1
 using Interop.Gsa_10_1;
 #else
 using Interop.gsa_8_7;
@@ -41,7 +43,9 @@ using BH.Engine.Adapters.GSA;
 
 namespace BH.Adapter.GSA
 {
-#if GSA_10_1
+#if GSA_10_2
+    public partial class GSA102Adapter
+#elif  GSA_10_1
     public partial class GSA101Adapter
 #else
     public partial class GSA87Adapter
@@ -400,6 +404,7 @@ namespace BH.Adapter.GSA
         /***************************************************/
     }
 }
+
 
 
 

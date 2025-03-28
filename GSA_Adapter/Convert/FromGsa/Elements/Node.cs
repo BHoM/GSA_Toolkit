@@ -1,6 +1,6 @@
 /*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2025, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -97,7 +97,7 @@ namespace BH.Adapter.GSA
             List<bool> fixities;
             List<double> stiff;
 
-#if GSA_10_1
+#if GSA_10
             if (arr.Length > 7)
             {
                 if (arr[7] == "free")
@@ -199,6 +199,7 @@ namespace BH.Adapter.GSA
 
     }
 }
+
 
 
 

@@ -1,6 +1,6 @@
 /*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2025, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -68,7 +68,7 @@ namespace BH.Adapter.GSA
                 shear = Math.Min(mod.VXZ, mod.VXZ) * 100 + "%";
             }
 
-#if GSA_10_1
+#if GSA_10
 
             string analNum, materialType, matNum;
             panProp.Material.MaterialIdentifiers(out analNum, out materialType, out matNum);
@@ -91,7 +91,7 @@ namespace BH.Adapter.GSA
 
         private static string ToGsaString(LoadingPanelProperty panProp, string index)
         {
-#if GSA_10_1
+#if GSA_10
             string command = "PROP_2D.2";
 #else
             string command = "PROP_2D";
@@ -129,7 +129,7 @@ namespace BH.Adapter.GSA
 
             string fabricString = "";
 
-#if GSA_10_1
+#if GSA_10
             command = "PROP_2D.7";
             fabricString = command + "," + index + "," + name + "," + colour + "," + type + "," + axis + "," + "0" + "," + type + "," + mat + ", 1, " + thick + ", CENTROID, 0, " + mass + ", " + bending + ", 0, " + inplane + "," + weight;
 #else
@@ -202,6 +202,7 @@ namespace BH.Adapter.GSA
 
     }
 }
+
 
 
 
