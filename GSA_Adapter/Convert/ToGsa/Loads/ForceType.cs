@@ -33,35 +33,35 @@ namespace BH.Adapter.GSA
 
         private static string ForceTypeString(this PointLoad load)
         {
-            return "LOAD_NODE";
+            return "LOAD_NODE.2";
         }
 
         /***************************************************/
 
         private static string ForceTypeString(this PointDisplacement load)
         {
-            return "DISP_NODE";
+            return "DISP_NODE.2";
         }
 
         /***************************************************/
 
         private static string ForceTypeString(this BarPointLoad load)
         {
-            return "LOAD_BEAM_POINT";
+            return "LOAD_BEAM_POINT.2";
         }
 
         /***************************************************/
 
         private static string ForceTypeString(this BarUniformlyDistributedLoad load)
         {
-            return "LOAD_BEAM_UDL";
+            return "LOAD_BEAM_UDL.2";
         }
 
         /***************************************************/
 
         private static string ForceTypeString(this BarVaryingDistributedLoad load)
         {
-            return "LOAD_BEAM_PATCH";
+            return "LOAD_BEAM_PATCH.2";
         }
 
         /***************************************************/
@@ -93,7 +93,7 @@ namespace BH.Adapter.GSA
 
         private static string ForceTypeString(this AreaUniformlyDistributedLoad load)
         {
-            return "LOAD_2D_FACE";
+            return "LOAD_2D_FACE.2";
         }
 
         /***************************************************/
