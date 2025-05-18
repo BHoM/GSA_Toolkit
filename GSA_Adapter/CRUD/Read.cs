@@ -231,12 +231,12 @@ namespace BH.Adapter.GSA
 
             double[] unitFactors = GetUnitFactors();
 
-            int prestressLoadsCount = m_gsaCom.GwaCommand("HIGHEST, LOAD_BEAM_PRE");
+            int prestressLoadsCount = m_gsaCom.GwaCommand("HIGHEST, LOAD_BEAM_PRE.2");
             List<string> prestressLoadList = new List<string>();
             for (int i = 0; i < prestressLoadsCount; i++)
             {
-                string prestressLoad = m_gsaCom.GwaCommand("GET, LOAD_BEAM_PRE," + (i + 1)).ToString();
-                if (!string.IsNullOrWhiteSpace(prestressLoad) & prestressLoad.StartsWith("LOAD_BEAM_PRE"))
+                string prestressLoad = m_gsaCom.GwaCommand("GET, LOAD_BEAM_PRE.2," + (i + 1)).ToString();
+                if (!string.IsNullOrWhiteSpace(prestressLoad) & prestressLoad.StartsWith("LOAD_BEAM_PRE.2"))
                     prestressLoadList.Add(prestressLoad);
             }
 
