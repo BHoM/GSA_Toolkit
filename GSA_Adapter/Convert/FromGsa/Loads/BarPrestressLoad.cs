@@ -48,6 +48,9 @@ namespace BH.Adapter.GSA
 
             string[] gStr = gsaString.Split(',');
 
+            if (gStr[0].Trim() == "LOAD_BEAM_PRE.3")
+                gStr.ToList().RemoveAt(2);
+
             if (gStr.Length < 4)
                 return null;
 

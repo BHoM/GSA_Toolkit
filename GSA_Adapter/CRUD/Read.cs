@@ -235,9 +235,21 @@ namespace BH.Adapter.GSA
             List<string> prestressLoadList = new List<string>();
             for (int i = 0; i < prestressLoadsCount; i++)
             {
-                string prestressLoad = m_gsaCom.GwaCommand("GET, LOAD_BEAM_PRE.2," + (i + 1)).ToString();
-                if (!string.IsNullOrWhiteSpace(prestressLoad) & prestressLoad.StartsWith("LOAD_BEAM_PRE.2"))
+                string command = "";
+#if GSA_10_1
+                command = "LOAD_BEAM_PRE.2";
+#elif GSA_10_2
+                command = "LOAD_BEAM_PRE.3";
+#else
+                command = "LOAD_BEAM_PRE";
+#endif
+                string prestressLoad = m_gsaCom.GwaCommand("GET, " + command + "," + (i + 1)).ToString();
+
+                if (!string.IsNullOrWhiteSpace(prestressLoad) & prestressLoad.StartsWith(command))
+                {                     
                     prestressLoadList.Add(prestressLoad);
+                }
+
             }
 
             Dictionary<int, Loadcase> lCases = GetCachedOrReadAsDictionary<int, Loadcase>();
