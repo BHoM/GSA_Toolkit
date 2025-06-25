@@ -80,7 +80,7 @@ namespace BH.Adapter.GSA
             string caseNo = load.Loadcase.Number.ToString();
             double value = load.Prestress;
 
-            string str = command + ",," + list + "," + caseNo + "," + value * unitFactors[(int)UnitType.FORCE];
+            string str = command + "," + name + "," + list + "," + caseNo + "," + value * unitFactors[(int)UnitType.FORCE];
             forceStrings.Add(str);
             return forceStrings;
         }
@@ -95,8 +95,12 @@ namespace BH.Adapter.GSA
             string caseNo = load.Loadcase.Number.ToString();
             string type = "CONS";
             string value = load.TemperatureChange.ToString();
-
+#if GSA_10
+            string str = command + "," + name + "," + list + "," + caseNo + "," + type + "," + value;
+#else
             string str = command + ",," + list + "," + caseNo + "," + type + "," + value;
+#endif
+
             forceStrings.Add(str);
             return forceStrings;
         }
