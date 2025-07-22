@@ -101,7 +101,11 @@ namespace BH.Adapter.GSA
             switch (type)
             {
                 case AnalysisType.NonLinearStatic:
+#if GSA_10
+                    solution = "STATIC_NL";
+#else
                     solution = "SOL_BUCKLING_NL";
+#endif
                     scheme = "SINGLE";
                     break;
 
