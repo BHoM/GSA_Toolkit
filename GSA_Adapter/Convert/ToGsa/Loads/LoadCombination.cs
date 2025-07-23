@@ -102,7 +102,7 @@ namespace BH.Adapter.GSA
             {
                 case AnalysisType.NonLinearStatic:
 #if GSA_10
-                    solution = "STATIC_NL";
+                    solution = "STATIC_NL"; 
 #else
                     solution = "SOL_BUCKLING_NL";
 #endif
