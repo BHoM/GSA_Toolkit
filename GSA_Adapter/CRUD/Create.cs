@@ -298,6 +298,10 @@ namespace BH.Adapter.GSA
 
         /***************************************************/
 
+        private bool CreateObject(Joint joint)
+        {
+            return ComCall(joint.ToGsaString());
+        }
     }
 }
 
