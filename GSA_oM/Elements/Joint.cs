@@ -44,26 +44,26 @@ namespace BH.oM.Adapters.GSA.Elements
         [Description("Defines the constrained node of the joint.")]
         public virtual Node ConstrainedNode { get; set; }
 
-        [Description("X direction.")]
+        [Description("True defines a rigid connectivity between primary and constrained node for translations along the X-axis, i.e. true prohibits relative translation along the X-axis between primary and constrained node.")]
         public virtual bool X { get; set; } = true;
 
-        [Description("Y direction.")]
+        [Description("True defines a rigid connectivity between primary and constrained node for translations along the Y-axis, i.e. true prohibits relative translation along the Y-axis between primary and constrained node.")]
         public virtual bool Y { get; set; } = true;
 
-        [Description("Z direction.")]
+        [Description("True defines a rigid connectivity between primary and constrained node for translations along the Z-axis, i.e. true prohibits relative translation along the Z-axis between primary and constrained node.")]
         public virtual bool Z { get; set; } = true;
 
-        [Description("XX direction.")]
+        [Description("True defines a rigid connectivity between primary and constrained node for rotations about the X-axis, i.e. true prohibits relative rotation about the X-axis between primary and constrained node.")]
         public virtual bool XX { get; set; } = true;
 
-        [Description("YY direction.")]
+        [Description("True defines a rigid connectivity between primary and constrained node for rotations about the Y-axis, i.e. true prohibits relative rotation about the Y-axis between primary and constrained node.")]
         public virtual bool YY { get; set; } = true;
 
-        [Description("ZZ direction.")]
+        [Description("True defines a rigid connectivity between primary and constrained node for rotations about the Z-axis, i.e. true prohibits relative rotation about the Z-axis between primary and constrained node.")]
         public virtual bool ZZ { get; set; } = true;
 
-        [Description("Stage")]
-        public virtual string Stage { get; set; } = "all";
+        [Description("List of analysis stages where the joint should be active as a list of integers. If none specified 'all' will be applied.")]
+        public virtual List<int> StageList { get; set; } = new List<int> ();
     }
 }
 

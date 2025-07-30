@@ -45,32 +45,52 @@ namespace BH.Adapter.GSA
             string primaryNode = joint.PrimaryNode.GSAId().ToString();
             string constrainedNode = joint.ConstrainedNode.GSAId().ToString();
 
-            string X = Fixity(joint.X);
-            string Y = Fixity(joint.Y);
-            string Z = Fixity(joint.Z);
-            string XX = Fixity(joint.XX);
-            string YY = Fixity(joint.YY);
-            string ZZ = Fixity(joint.ZZ);
+            string restraint = GetRestraintString(joint);
 
-            string stage = joint.Stage;
+            string stageNumbers = string.Join(" ", joint.StageList.ToArray());
 
             //JOINT.2 | name | constrained_node | X | Y | Z | XX | YY | ZZ | primary_node | stage
-            string str = command + ", " + name + ", " + constrainedNode + " , " + X + " , " + Y + " , " + Z + " , " + XX + " , " + YY + " , " + ZZ + ", " + primaryNode + ", " + stage;
+            string str = command + ", " + name + ", " + constrainedNode + " , " + restraint + " , " + primaryNode + ", " + stageNumbers;
             return str;
         }
 
         /***************************************************/
 
-        private static string Fixity(bool fixity)
+        private static string GetRestraintString(Joint joint)
         {
-            string fixString = "0";
+            string str = "";
 
-            if (fixity)
-            {
-                fixString = "1";
-            }
+            if (joint.X)
+                str += "1 , ";
+            else
+                str += "0 , ";
 
-            return fixString;
+            if (joint.Y)
+                str += "1 , ";
+            else
+                str += "0 , ";
+
+            if (joint.Z)
+                str += "1 , ";
+            else
+                str += "0 , ";
+
+            if (joint.XX)
+                str += "1 , ";
+            else
+                str += "0 , ";
+
+            if (joint.YY)
+                str += "1 , ";
+            else
+                str += "0 , ";
+
+            if (joint.ZZ)
+                str += "1";
+            else
+                str += "0";
+
+            return str;
         }
     }
 }
