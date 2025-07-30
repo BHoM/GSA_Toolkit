@@ -145,7 +145,7 @@ namespace BH.Adapter.GSA
                     axis = Output_Axis.Global;
                     converter = Convert.FromGsaBarDisplacement;
                     header = ResHeader.REF_DISP_EL1D;
-                    unitFactor = unitFactors[(int)UnitType.LENGTH];
+                    unitFactor = unitFactors[(int)UnitType.DISP];
                     break;
                 case BarResultType.BarDeformation:
                     converter = null;
