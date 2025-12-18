@@ -201,7 +201,12 @@ namespace BH.Adapter.GSA
             return success;
         }
 
+        /***************************************************/
 
+        private bool CreateObject(Joint joint)
+        {
+            return ComCall(joint.ToGsaString());
+        }
 
         /***************************************************/
 

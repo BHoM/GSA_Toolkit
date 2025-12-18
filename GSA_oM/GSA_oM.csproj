@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-	<AssemblyVersion>8.0.0.0</AssemblyVersion>
+	<AssemblyVersion>9.0.0.0</AssemblyVersion>
 	<Description>https://github.com/BHoM/GSA_Toolkit</Description>
 	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	<Version>5.0.0</Version>
@@ -10,7 +10,7 @@
 	<Company>BHoM</Company>
 	<Copyright>Copyright © https://github.com/BHoM</Copyright>
 	<RootNamespace>BH.oM.Adapters.GSA</RootNamespace>
-	<FileVersion>8.3.0.0</FileVersion>
+	<FileVersion>9.0.0.0</FileVersion>
 	<Configurations>Debug;Release;</Configurations>
 	<OutputPath>..\Build\</OutputPath>  
   </PropertyGroup>
