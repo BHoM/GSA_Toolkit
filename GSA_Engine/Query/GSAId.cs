@@ -30,6 +30,8 @@ using BH.oM.Structure.Elements;
 using BH.oM.Base;
 using BH.Engine.Adapter;
 using BH.oM.Adapters.GSA;
+using System.ComponentModel;
+using BH.oM.Base.Attributes;
 
 namespace BH.Engine.Adapters.GSA
 {
@@ -40,6 +42,9 @@ namespace BH.Engine.Adapters.GSA
         /**** Public Methods                            ****/
         /***************************************************/
 
+        [Description("Gets the GSA ID stored on a BHoM object.")]
+        [Input("bhomObject", "The BHoM object to get the GSA ID from.")]
+        [Output("id", "The GSA ID stored on the object.")]
         public static int GSAId(this IBHoMObject bhomObject)
         {
             return bhomObject.AdapterId<int>(typeof(GSAId));

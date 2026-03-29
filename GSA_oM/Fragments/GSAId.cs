@@ -29,7 +29,7 @@ namespace BH.oM.Adapters.GSA
 {
     public class GSAId : IAdapterId
     {
-        public object Id { get; set; }
+        public virtual object Id { get; set; }
     }
 }
 

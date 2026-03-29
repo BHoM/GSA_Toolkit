@@ -38,6 +38,9 @@ namespace BH.Engine.Adapters.GSA
         /**** Public Methods                            ****/
         /***************************************************/
         
+        [Description("Sets the GSA ID on a BHoM object.")]
+        [Input("bhomObject", "The BHoM object to set the GSA ID on.")]
+        [Input("id", "The GSA ID to set on the object.")]
         public static void SetGSAId(this IBHoMObject bhomObject, object id)
         {
             bhomObject.SetAdapterId(typeof(GSAId), id);
