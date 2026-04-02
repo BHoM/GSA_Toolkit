@@ -1,6 +1,6 @@
 /*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2025, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2026, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -38,6 +38,9 @@ namespace BH.Engine.Adapters.GSA
         /**** Public Methods                            ****/
         /***************************************************/
         
+        [Description("Sets the GSA ID on a BHoM object.")]
+        [Input("bhomObject", "The BHoM object to set the GSA ID on.")]
+        [Input("id", "The GSA ID to set on the object.")]
         public static void SetGSAId(this IBHoMObject bhomObject, object id)
         {
             bhomObject.SetAdapterId(typeof(GSAId), id);
@@ -46,6 +49,7 @@ namespace BH.Engine.Adapters.GSA
         /***************************************************/
     }
 }
+
 
 
 
