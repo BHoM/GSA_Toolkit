@@ -27,7 +27,7 @@ namespace BH.Adapter.GSA
 
     public enum UnitType
     {
-#if GSA_10
+#if GSA_10_2
         FORCE = 0,
         LENGTH,
         DISP,
