@@ -27,6 +27,22 @@ namespace BH.Adapter.GSA
 
     public enum UnitType
     {
+#if GSA_10
+        FORCE = 0,
+        LENGTH,
+        DISP,
+        SECTION,
+        MASS,
+        TIME,
+        TIME_MED,
+        TIME_LONG,
+        TEMP,
+        STRESS,
+        ACCEL,
+        ENERGY,
+        ANGLE
+
+#else
         FORCE = 0,
         LENGTH,
         DISP,
@@ -37,6 +53,7 @@ namespace BH.Adapter.GSA
         STRESS,
         ACCEL,
         ENERGY
+#endif
     }
 
     /***************************************/
