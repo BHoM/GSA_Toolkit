@@ -41,11 +41,6 @@ namespace BH.Adapter.GSA
 
         private static string ToGsaString(this Bar bar, string index)
         {
-#if GSA_10
-            string command = "EL.4";
-#else
-            string command = "EL.2";
-#endif
             string name = bar.TaggedName().ToGSACleanName();
             string type = GetElementTypeString(bar);
 
@@ -60,8 +55,11 @@ namespace BH.Adapter.GSA
             string startR = bar.Release != null ? CreateReleaseString(bar.Release.StartRelease) : "FFFFFF";
             string endR = bar.Release != null ? CreateReleaseString(bar.Release.EndRelease) : "FFFFFF";
             string dummy = CheckDummy(bar);
-
-            string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + sectionPropertyIndex + ", " + group + ", " + startIndex + ", " + endIndex + " , 0 ," + orientationAngle + ", RLS, " + startR + " , " + endR + ", NO_OFFSET," + dummy;
+#if GSA_10
+            string str = "EL.4" + ", " + index + "," + name + ", NO_RGB , " + type + " , " + sectionPropertyIndex + ", " + group + ", " + startIndex + ", " + endIndex + " , 0 ," + orientationAngle + ", RLS, " + startR + " , " + endR + ", NO_OFFSET," + ", NORMAL," + dummy;
+#else
+            string str = "EL.2" + ", " + index + "," + name + ", NO_RGB , " + type + " , " + sectionPropertyIndex + ", " + group + ", " + startIndex + ", " + endIndex + " , 0 ," + orientationAngle + ", RLS, " + startR + " , " + endR + ", NO_OFFSET," + dummy;
+#endif
             return str;
         }
 
