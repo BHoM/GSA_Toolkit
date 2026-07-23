@@ -52,13 +52,20 @@ namespace BH.Adapter.GSA
 
             string orientationAngle = (bar.OrientationAngle * 180 / Math.PI).ToString();
             // TODO: Make sure that these are doing the correct thing. Release vs restraint corresponding to true vs false
-            string startR = bar.Release != null ? CreateReleaseString(bar.Release.StartRelease) : "FFFFFF";
-            string endR = bar.Release != null ? CreateReleaseString(bar.Release.EndRelease) : "FFFFFF";
+
+            string RLS = "NO_RLS";
+            if (type == "BEAM")
+            {
+                string startR = bar.Release != null ? CreateReleaseString(bar.Release.StartRelease) : "FFFFFF";
+                string endR = bar.Release != null ? CreateReleaseString(bar.Release.EndRelease) : "FFFFFF";
+                RLS = "RLS, " + startR + ", " + endR;
+            }
+
             string dummy = CheckDummy(bar);
 #if GSA_10
-            string str = "EL.4" + ", " + index + "," + name + ", NO_RGB , " + type + " , " + sectionPropertyIndex + ", " + group + ", " + startIndex + ", " + endIndex + " , 0 ," + orientationAngle + ", RLS, " + startR + " , " + endR + ", NO_OFFSET," + ", NORMAL," + dummy;
+            string str = "EL.4" + ", " + index + "," + name + ", NO_RGB , " + type + " , " + sectionPropertyIndex + ", " + group + ", " + startIndex + ", " + endIndex + " , 0 ," + orientationAngle + ", " + RLS + ", 0, 0, 0, 0, " + dummy;
 #else
-            string str = "EL.2" + ", " + index + "," + name + ", NO_RGB , " + type + " , " + sectionPropertyIndex + ", " + group + ", " + startIndex + ", " + endIndex + " , 0 ," + orientationAngle + ", RLS, " + startR + " , " + endR + ", NO_OFFSET," + dummy;
+            string str = "EL.2" + ", " + index + "," + name + ", NO_RGB , " + type + " , " + sectionPropertyIndex + ", " + group + ", " + startIndex + ", " + endIndex + " , 0 ," + orientationAngle + ", " + RLS + ", NO_OFFSET," + dummy;
 #endif
             return str;
         }
