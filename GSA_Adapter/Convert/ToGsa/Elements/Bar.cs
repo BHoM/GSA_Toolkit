@@ -51,8 +51,8 @@ namespace BH.Adapter.GSA
             string endIndex = bar.End.GSAId().ToString();
 
             string orientationAngle = (bar.OrientationAngle * 180 / Math.PI).ToString();
+            
             // TODO: Make sure that these are doing the correct thing. Release vs restraint corresponding to true vs false
-
             string RLS = "NO_RLS";
             if (type == "BEAM")
             {
