@@ -26,6 +26,7 @@ using BH.oM.Adapters.GSA;
 using BH.oM.Structure.Elements;
 using BH.Engine.Adapters.GSA;
 using System;
+using BH.oM.Structure.SurfaceProperties;
 
 namespace BH.Adapter.GSA
 {
@@ -52,6 +53,11 @@ namespace BH.Adapter.GSA
             else
                 return "";
 
+#if GSA_10
+            if (mesh.Property.GetType().Equals(typeof(LoadingPanelProperty)))
+                type = "LOAD_PANEL";
+#endif
+
             string name = mesh.TaggedName().ToGSACleanName();
 
             string propertyIndex = mesh.Property.GSAId().ToString();
@@ -59,10 +65,19 @@ namespace BH.Adapter.GSA
 
             string topology = "";
 
-            foreach (int nodeIndex in face.NodeListIndices)
+            if (type == "LOAD_PANEL")
             {
-                topology += mesh.Nodes[nodeIndex].GSAId().ToString() + ",";
+                foreach (int nodeIndex in face.NodeListIndices)
+                {
+                    topology += mesh.Nodes[nodeIndex].GSAId().ToString() + " ";
+                }
+                topology += ",";
             }
+            else
+                foreach (int nodeIndex in face.NodeListIndices)
+                {
+                    topology += mesh.Nodes[nodeIndex].GSAId().ToString() + ",";
+                }
 
             string orientationAngle = (face.OrientationAngle * 180 / Math.PI).ToString();
 
