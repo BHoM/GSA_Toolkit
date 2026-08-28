@@ -75,6 +75,8 @@ namespace BH.Adapter.GSA
                 return "EL";
             else if (type == typeof(RigidLink))
                 return "EL";
+            else if (type == typeof(RigidConstraint))
+                return "RIGID";
             else if (type == typeof(LinkConstraint))
                 return "PROP_LINK";
             else if (type == typeof(Spacer))
