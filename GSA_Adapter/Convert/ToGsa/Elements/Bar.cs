@@ -41,11 +41,6 @@ namespace BH.Adapter.GSA
 
         private static string ToGsaString(this Bar bar, string index)
         {
-#if GSA_10
-            string command = "EL.4";
-#else
-            string command = "EL.2";
-#endif
             string name = bar.TaggedName().ToGSACleanName();
             string type = GetElementTypeString(bar);
 
@@ -56,12 +51,22 @@ namespace BH.Adapter.GSA
             string endIndex = bar.End.GSAId().ToString();
 
             string orientationAngle = (bar.OrientationAngle * 180 / Math.PI).ToString();
+            
             // TODO: Make sure that these are doing the correct thing. Release vs restraint corresponding to true vs false
-            string startR = bar.Release != null ? CreateReleaseString(bar.Release.StartRelease) : "FFFFFF";
-            string endR = bar.Release != null ? CreateReleaseString(bar.Release.EndRelease) : "FFFFFF";
-            string dummy = CheckDummy(bar);
+            string RLS = "NO_RLS";
+            if (type == "BEAM")
+            {
+                string startR = bar.Release != null ? CreateReleaseString(bar.Release.StartRelease) : "FFFFFF";
+                string endR = bar.Release != null ? CreateReleaseString(bar.Release.EndRelease) : "FFFFFF";
+                RLS = "RLS, " + startR + ", " + endR;
+            }
 
-            string str = command + ", " + index + "," + name + ", NO_RGB , " + type + " , " + sectionPropertyIndex + ", " + group + ", " + startIndex + ", " + endIndex + " , 0 ," + orientationAngle + ", RLS, " + startR + " , " + endR + ", NO_OFFSET," + dummy;
+            string dummy = CheckDummy(bar);
+#if GSA_10
+            string str = "EL.4" + ", " + index + "," + name + ", NO_RGB , " + type + " , " + sectionPropertyIndex + ", " + group + ", " + startIndex + ", " + endIndex + " , 0 ," + orientationAngle + ", " + RLS + ", 0, 0, 0, 0, " + dummy;
+#else
+            string str = "EL.2" + ", " + index + "," + name + ", NO_RGB , " + type + " , " + sectionPropertyIndex + ", " + group + ", " + startIndex + ", " + endIndex + " , 0 ," + orientationAngle + ", " + RLS + ", NO_OFFSET," + dummy;
+#endif
             return str;
         }
 
